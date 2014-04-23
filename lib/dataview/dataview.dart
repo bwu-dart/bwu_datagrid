@@ -455,7 +455,7 @@ class DataView {
       }
     }
 
-    List<Group> getGroups => groups;
+    List<Group> get getGroups => groups;
 
     List<Group> extractGroups(List<int>rows, [Group parentGroup]) {
       Group group;
@@ -466,7 +466,7 @@ class DataView {
       int level = parentGroup != null ? parentGroup.level + 1 : 0;
       GroupingInfo gi = groupingInfos[level];
 
-      for (final i = 0; i < gi.predefinedValues.length; i++) {
+      for (int i = 0; i < gi.predefinedValues.length; i++) {
         val = gi.predefinedValues[i];
         group = groupsByVal[val];
         if (group == null) {
@@ -479,7 +479,7 @@ class DataView {
         }
       }
 
-      for (final i = 0; i < rows.length; i++) {
+      for (int i = 0; i < rows.length; i++) {
         r = rows[i];
         val = gi.getterIsAFn ? gi.getter(r) : r[gi.getter];
         group = groupsByVal[val];
@@ -496,7 +496,7 @@ class DataView {
       }
 
       if (level < groupingInfos.length - 1) {
-        for (var i = 0; i < groups.length; i++) {
+        for (int i = 0; i < groups.length; i++) {
           group = groups[i];
           group.groups = extractGroups(group.rows, group);
         }
