@@ -1,0 +1,15 @@
+packages
+build
+out
+deploy
+_from_packages
+pubspec.lock
+.project
+.buildlog
+.settings
+*.exe
+*.*~
+*.dart.js
+*.dart.js.deps
+*.dart.js.map
+
