@@ -1,6 +1,6 @@
 library bwu_dart.bwu_datagrid.datagrid;
 
-import 'dart:async' as dom;
+import 'dart:async' as async;
 import 'dart:math' as math;
 import 'dart:html' as dom;
 
@@ -19,7 +19,7 @@ class BwuDatagrid extends PolymerElement {
   // DataGrid(dom.HtmlElement container, String data, int columns, Options options);
   dom.HtmlElement container;
   @published String data;
-  @published int columns;
+  @published List<int> columns;
   //@published GridOptions options;
 
   // settings
@@ -128,6 +128,36 @@ class BwuDatagrid extends PolymerElement {
   static const dom.EventStreamProvider<dom.CustomEvent> _onHeaderCellRendered =
       const dom.EventStreamProvider<dom.CustomEvent>(ON_HEADER_CELL_RENDERED);
 
+  /**
+   * on header-row-cell-rendered
+   */
+  static const ON_HEADER_ROW_CELL_RENDERED = 'header-row-cell-rendered';
+  async.Stream<dom.CustomEvent> get onHeaderRowCellRendered =>
+      BwuDatagrid._onHeaderRowCellRendered.forTarget(this);
+
+  static const dom.EventStreamProvider<dom.CustomEvent> _onHeaderRowCellRendered =
+      const dom.EventStreamProvider<dom.CustomEvent>(ON_HEADER_ROW_CELL_RENDERED);
+
+
+  /**
+   * on sort
+   */
+  static const ON_SORT = 'sort';
+  async.Stream<dom.CustomEvent> get onSort =>
+      BwuDatagrid._onSort.forTarget(this);
+
+  static const dom.EventStreamProvider<dom.CustomEvent> _onSort =
+      const dom.EventStreamProvider<dom.CustomEvent>(ON_SORT);
+
+  /**
+   * on columns-resized
+   */
+  static const ON_COLUMNS_RESIZED = 'columns-resized';
+  async.Stream<dom.CustomEvent> get onColumnsResized =>
+      BwuDatagrid._onColumnsResized.forTarget(this);
+
+  static const dom.EventStreamProvider<dom.CustomEvent> _ColumnsResized =
+      const dom.EventStreamProvider<dom.CustomEvent>(ON_COLUMNS_RESIZED);
 
   //////////////////////////////////////////////////////////////////////////////////////////////
   // Initialization
@@ -220,7 +250,7 @@ class BwuDatagrid extends PolymerElement {
     $canvas = new dom.Element.html("<div class='grid-canvas' />", validator: nodeValidator);
     $viewport.append($canvas);
 
-    $focusSink2 = $focusSink.clone();
+    $focusSink2 = $focusSink.clone(true);
     $container.append($focusSink2);
 
     if (!gridOptions.explicitInitialization) {
@@ -260,35 +290,40 @@ class BwuDatagrid extends PolymerElement {
       resizeCanvas();
       bindAncestorScrollEvents();
 
-      $container.on["resize.slickgrid"].listen(resizeCanvas);
+      $container.on["resize.bwu-datagrid"].listen(resizeCanvas);
       //$viewport
           //.bind("click", handleClick)
       $viewport.onScroll.listen(handleScroll);
       $headerScroller..onContextMenu.listen(handleHeaderContextMenu)
           ..onClick.listen(handleHeaderClick)
-          .delegate(".bwu-datagrid-header-column", "mouseenter", handleHeaderMouseEnter)
-          .delegate(".bwu-datagrid-header-column", "mouseleave", handleHeaderMouseLeave);
+          ..querySelectorAll(".bwu-datagrid-header-column").forEach((e) {
+            (e as dom.HtmlElement)
+            ..onMouseEnter.listen(handleHeaderMouseEnter)
+            ..onMouseLeave.listen(handleHeaderMouseLeave);
+      });
       $headerRowScroller
           .onScroll.listen(handleHeaderRowScroll);
-      $focusSink.add($focusSink2)
-          .bind("keydown", handleKeyDown);
+      $focusSink
+          ..append($focusSink2)
+          ..onKeyDown.listen(handleKeyDown);
       $canvas
           ..onKeyDown.listen(handleKeyDown)
           ..onClick.listen(handleClick)
           ..onDoubleClick.listen(handleDblClick)
           ..onContextMenu.listen(handleContextMenu)
           //..bind("draginit", handleDragInit) // TODO
-          ..onDragStart.listen((e) {/*{distance: 3}*/; handleDragStart(e);}) // TODO what is distance?
+          ..onDragStart.listen((e) {/*{distance: 3}*/; handleDragStart(e, {distance: 3});}) // TODO what is distance?
           ..onDrag.listen(handleDrag)
           ..onDragEnd.listen(handleDragEnd)
           ..querySelectorAll(".bwu-datagrid--cell").forEach((e) {
             (e as dom.HtmlElement)
               ..onMouseEnter.listen(handleMouseEnter)
               ..onMouseLeave.listen(handleMouseLeave);
+          });
 
       // Work around http://crbug.com/312427.
-      if (navigator.userAgent.toLowerCase().match('webkit') &&  // TODO match
-          navigator.userAgent.toLowerCase().match('macintosh')) { // TODO match
+      if (dom.window.navigator.userAgent.toLowerCase().match('webkit') &&  // TODO match
+          dom.window.navigator.userAgent.toLowerCase().match('macintosh')) { // TODO match
         $canvas.onMouseWheel.listen(handleMouseWheel);
       }
     }
@@ -396,7 +431,7 @@ class BwuDatagrid extends PolymerElement {
   int getMaxSupportedCssHeight() {
     int supportedHeight = 1000000;
     // FF reports the height back but still renders blank after ~6M px
-    int testUpTo = navigator.userAgent.toLowerCase().match('firefox') ? 6000000 : 1000000000; // TODO check match
+    int testUpTo = dom.window.navigator.userAgent.toLowerCase().match('firefox') ? 6000000 : 1000000000; // TODO check match
     var div = new dom.Element.html("<div style='display:none' />", validator: nodeValidator);
     dom.document.body.append(div);
 
@@ -457,13 +492,13 @@ class BwuDatagrid extends PolymerElement {
       }
 
       fire(ON_BEFORE_HEADER_CELL_DESTROY, detail: {
-        "node": $header[0],
+        "node": $header.children[0],
         "column": columnDef
       });
 
       $header
           ..attributes["title"] = toolTip != null ? tootip : ""
-          ..children.where((e) => e.id == 0).innerHtml = title; //().eq(0).html(title); // TODO check
+          ..children.where((e) => e.id == 0).forEach((e) => e.innerHtml = title); //().eq(0).html(title); // TODO check
 
       fire(ON_HEADER_CELL_RENDERED, detail: {
         "node": $header.children[0],
@@ -478,25 +513,25 @@ class BwuDatagrid extends PolymerElement {
 
   int getHeaderRowColumn(columnId) {
     var idx = getColumnIndex(columnId);
-    var $header = $headerRow.children().eq(idx);
+    var $header = $headerRow.children.where((e) => e == idx); //.eq(idx); // TODO check
     return $header && $header[0];
   }
 
   void createColumnHeaders() {
-    function onMouseEnter() {
-      $(this).classes.add("ui-state-hover");
-    }
+    var onMouseEnter = () {
+      classes.add("ui-state-hover");
+    };
 
-    function onMouseLeave() {
-      $(this).classes.remove("ui-state-hover");
-    }
+    var onMouseLeave = () {
+      classes.remove("ui-state-hover");
+    };
 
-    $headers.find(".bwu-datagrid-header-column")
-      .each(() {
-        var columnDef = $(this).data("column");
-        if (columnDef) {
-          trigger(self.onBeforeHeaderCellDestroy, {
-            "node": this,
+    $headers.querySelectorAll(".bwu-datagrid-header-column")
+      .forEach((dom.HtmlElement e) { // TODO check self/this
+        var columnDef = e.dataset["column"];
+        if (columnDef != null) {
+          fire(ON_BEFORE_HEADER_CELL_DESTROY, {
+            "node": e,
             "column": columnDef
           });
         }
@@ -504,34 +539,34 @@ class BwuDatagrid extends PolymerElement {
     $headers.children.clear();
     $headers.style.width = getHeadersWidth();
 
-    $headerRow.find(".bwu-datagrid-headerrow-column")
-      .each(() {
-        var columnDef = $(this).data("column");
+    $headerRow.querySelectorAll(".bwu-datagrid-headerrow-column")
+      .forEach((dom.HtmlElement e) { // TODO check self/this
+        var columnDef = e.dataset["column"];
         if (columnDef) {
-          trigger(self.onBeforeHeaderRowCellDestroy, {
-            "node": this,
+          fire(ON_BEFORE_HEADER_CELL_DESTROY, detail: {
+            "node": e,
             "column": columnDef
           });
         }
       });
     $headerRow.children.clear();
 
-    for (var i = 0; i < columns.length; i++) {
+    for (int i = 0; i < columns.length; i++) {
       var m = columns[i];
 
       var header = new dom.Element.html("<div class='ui-state-default slick-header-column' />", validator: nodeValidator)
-          ..append(new dom.Element.html("<span class='slick-column-name'>" + m.name + "</span>", validator: nodeValidator)
+          ..append(new dom.Element.html("<span class='slick-column-name'>" + m.name + "</span>", validator: nodeValidator))
           ..style.width = m.width - headerColumnWidthDiff
           ..attributes["id"] ='${uid}${m.id}'
           ..attributes["title"] = m.toolTip != null ? m.toolTip : ""
           ..dataset["column"] = m
-          ..classes.add(m.headerCssClass != null ? m.heaerCssClass || "";
+          ..classes.add(m.headerCssClass != null ? m.headerCssClass : "");
       $headers.append(header);
 
       if (options.enableColumnReorder || m.sortable) {
         header
           ..onMouseEnter.listen(onMouseEnter)
-          .onMouseLeave.listen(onMouseLeave);
+          ..onMouseLeave.listen(onMouseLeave);
       }
 
       if (m.sortable) {
@@ -539,18 +574,18 @@ class BwuDatagrid extends PolymerElement {
         header.append(new dom.Element.html("<span class='slick-sort-indicator' />", validator: nodeValidator));
       }
 
-      trigger(self.onHeaderCellRendered, {
+      fire(ON_HEADER_CELL_RENDERED, {
         "node": header[0],
         "column": m
       });
 
       if (options.showHeaderRow) {
-        var headerRowCell = new dom.Element.html("<div class='ui-state-default slick-headerrow-column l" + i + " r" + i + "'></div>", validator: nodeValidator)
+        var headerRowCell = new dom.Element.html("<div class='ui-state-default slick-headerrow-column l${i} r${i}'></div>", validator: nodeValidator)
             ..dataset["column"] =  m;
             $headerRow.append(headerRowCell);
 
-        trigger(self.onHeaderRowCellRendered, {
-          "node": headerRowCell[0],
+        fire(ON_HEADER_ROW_CELL_RENDERED, {
+          "node": headerRowCell.children[0],
           "column": m
         });
       }
@@ -605,50 +640,50 @@ class BwuDatagrid extends PolymerElement {
 
           if (!sortOpts) {
             sortOpts = { columnId: column.id, sortAsc: column.defaultSortAsc };
-            sortColumns.push(sortOpts);
+            sortColumns.add(sortOpts);
           } else if (sortColumns.length == 0) {
-            sortColumns.push(sortOpts);
+            sortColumns.add(sortOpts);
           }
         }
 
         setSortColumns(sortColumns);
 
         if (!options.multiColumnSort) {
-          trigger(self.onSort, {
-            multiColumnSort: false,
-            sortCol: column,
-            sortAsc: sortOpts.sortAsc}, e);
+          fire(ON_SORT, {
+            'multiColumnSort': false,
+            'sortCol': column,
+            'sortAsc': sortOpts.sortAsc}, e);
         } else {
-          trigger(self.onSort, {
-            multiColumnSort: true,
-            sortCols: $.map(sortColumns, function(col) {
-              return {sortCol: columns[getColumnIndex(col.columnId)], sortAsc: col.sortAsc };
+          fire(ON_SORT, {
+            'multiColumnSort': true,
+            'sortCols': $.map(sortColumns, (col) { // TODO map
+              return {'sortCol': columns[getColumnIndex(col.columnId)], 'sortAsc': col.sortAsc };
             })}, e);
         }
       }
     });
   }
 
-  function setupColumnReorder() {
+  void setupColumnReorder() {
     $headers.filter(":ui-sortable").sortable("destroy");
     $headers.sortable({
-      containment: "parent",
-      distance: 3,
-      axis: "x",
-      cursor: "default",
-      tolerance: "intersection",
-      helper: "clone",
-      placeholder: "slick-sortable-placeholder ui-state-default slick-header-column",
-      start: function (e, ui) {
+      'containment': "parent",
+      'distance': 3,
+      'axis': "x",
+      'cursor': "default",
+      'tolerance': "intersection",
+      'helper': "clone",
+      'placeholder': "slick-sortable-placeholder ui-state-default slick-header-column",
+      'start': (e, ui) {
         ui.placeholder.width(ui.helper.outerWidth() - headerColumnWidthDiff);
-        $(ui.helper).addClass("slick-header-column-active");
+        (ui.helper as dom.HtmlElement).classes.add("beu-datagrid-header-column-active");
       },
-      beforeStop: function (e, ui) {
-        $(ui.helper).removeClass("slick-header-column-active");
+      'beforeStop': (e, ui) {
+        (ui.helper as dom.HtmlElement).classes.remove("bwu-datagrid-header-column-active");
       },
-      stop: function (e) {
+      'stop': (e) {
         if (!getEditorLock().commitCurrentEdit()) {
-          $(this).sortable("cancel");
+          $(this).sortable("cancel"); // TODO
           return;
         }
 
@@ -666,38 +701,44 @@ class BwuDatagrid extends PolymerElement {
     });
   }
 
-  function setupColumnResize() {
-    var $col, j, c, pageX, columnElements, minPageX, maxPageX, firstResizable, lastResizable;
-    columnElements = $headers.children();
-    columnElements.find(".slick-resizable-handle").remove();
-    columnElements.each(function (i, e) {
+  void setupColumnResize() {
+    dom.HtmlElement $col;
+    int j;
+    int c;
+    int pageX;
+    List<dom.HtmlElement> columnElements;
+    int minPageX, maxPageX;
+    bool firstResizable, lastResizable;
+    columnElements = $headers.children;
+    columnElements.querySelectorAll(".bwu-datagrid-resizable-handle").remove();
+    columnElements.forEach( (i, e) {
       if (columns[i].resizable) {
-        if (firstResizable === undefined) {
+        if (firstResizable == null) {
           firstResizable = i;
         }
         lastResizable = i;
       }
     });
-    if (firstResizable === undefined) {
+    if (firstResizable == null) {
       return;
     }
-    columnElements.each(function (i, e) {
+    columnElements.forEach((i, e) {
       if (i < firstResizable || (options.forceFitColumns && i >= lastResizable)) {
         return;
       }
-      $col = $(e);
-      $("<div class='slick-resizable-handle' />")
-          .appendTo(e)
-          .bind("dragstart", function (e, dd) {
+      $col = (e as dom.HtmlElement);
+      var div = new dom.Element.html("<div class='bwu-datagrid-resizable-handle' />", validator: nodeValidator);
+      e.append(div);
+          div..onDragStart.listen((e, dd) {
             if (!getEditorLock().commitCurrentEdit()) {
               return false;
             }
             pageX = e.pageX;
-            $(this).parent().addClass("slick-header-column-active");
-            var shrinkLeewayOnRight = null, stretchLeewayOnRight = null;
+            (e as dom.HtmlElement).parent().classes.add("bwu-datagrid-header-column-active");
+            int shrinkLeewayOnRight = null, stretchLeewayOnRight = null;
             // lock each column's width option to current width
-            columnElements.each(function (i, e) {
-              columns[i].previousWidth = $(e).outerWidth();
+            columnElements.forEach((i, e) {
+              columns[i].previousWidth = (e as dom.htmlElement).outerWidth();
             });
             if (options.forceFitColumns) {
               shrinkLeewayOnRight = 0;
@@ -713,7 +754,7 @@ class BwuDatagrid extends PolymerElement {
                       stretchLeewayOnRight = null;
                     }
                   }
-                  shrinkLeewayOnRight += c.previousWidth - Math.max(c.minWidth || 0, absoluteColumnMinWidth);
+                  shrinkLeewayOnRight += c.previousWidth - math.max(c.minWidth || 0, absoluteColumnMinWidth);
                 }
               }
             }
@@ -722,7 +763,7 @@ class BwuDatagrid extends PolymerElement {
               // columns on left only affect minPageX
               c = columns[j];
               if (c.resizable) {
-                if (stretchLeewayOnLeft !== null) {
+                if (stretchLeewayOnLeft != null) {
                   if (c.maxWidth) {
                     stretchLeewayOnLeft += c.maxWidth - c.previousWidth;
                   } else {
@@ -732,23 +773,23 @@ class BwuDatagrid extends PolymerElement {
                 shrinkLeewayOnLeft += c.previousWidth - Math.max(c.minWidth || 0, absoluteColumnMinWidth);
               }
             }
-            if (shrinkLeewayOnRight === null) {
+            if (shrinkLeewayOnRight == null) {
               shrinkLeewayOnRight = 100000;
             }
-            if (shrinkLeewayOnLeft === null) {
+            if (shrinkLeewayOnLeft == null) {
               shrinkLeewayOnLeft = 100000;
             }
-            if (stretchLeewayOnRight === null) {
+            if (stretchLeewayOnRight == null) {
               stretchLeewayOnRight = 100000;
             }
-            if (stretchLeewayOnLeft === null) {
+            if (stretchLeewayOnLeft == null) {
               stretchLeewayOnLeft = 100000;
             }
             maxPageX = pageX + Math.min(shrinkLeewayOnRight, stretchLeewayOnLeft);
             minPageX = pageX - Math.min(shrinkLeewayOnLeft, stretchLeewayOnRight);
           })
-          .bind("drag", function (e, dd) {
-            var actualMinWidth, d = Math.min(maxPageX, Math.max(minPageX, e.pageX)) - pageX, x;
+          ..onDrag.listen((e, dd) {
+            var actualMinWidth, d = math.min(maxPageX, Math.max(minPageX, e.pageX)) - pageX, x;
             if (d < 0) { // shrink column
               x = d;
               for (j = i; j >= 0; j--) {
@@ -817,93 +858,97 @@ class BwuDatagrid extends PolymerElement {
               applyColumnWidths();
             }
           })
-          .bind("dragend", function (e, dd) {
+          ..onDtragEnd.listen((e, dd) {
             var newWidth;
-            $(this).parent().removeClass("slick-header-column-active");
+            (e as dom.HtmlElement).parent().classes.add("bwu-datagrid-header-column-active");
             for (j = 0; j < columnElements.length; j++) {
               c = columns[j];
               newWidth = $(columnElements[j]).outerWidth();
 
-              if (c.previousWidth !== newWidth && c.rerenderOnResize) {
+              if (c.previousWidth != newWidth && c.rerenderOnResize) {
                 invalidateAllRows();
               }
             }
             updateCanvasWidth(true);
             render();
-            trigger(self.onColumnsResized, {});
+            fire(ON_COLUMNS_RESIZED, detail: {});
           });
     });
   }
 
-  function getVBoxDelta($el) {
+  int getVBoxDelta(dom.HtmlElement $el) {
     var p = ["borderTopWidth", "borderBottomWidth", "paddingTop", "paddingBottom"];
     var delta = 0;
-    $.each(p, function (n, val) {
-      delta += parseFloat($el.css(val)) || 0;
+    p.forEach((val) {
+      delta += parseFloat($el.css(val)) || 0; // TODO
     });
     return delta;
   }
 
-  function measureCellPaddingAndBorder() {
+  void measureCellPaddingAndBorder() {
     var el;
     var h = ["borderLeftWidth", "borderRightWidth", "paddingLeft", "paddingRight"];
     var v = ["borderTopWidth", "borderBottomWidth", "paddingTop", "paddingBottom"];
 
-    el = $("<div class='ui-state-default slick-header-column' style='visibility:hidden'>-</div>").appendTo($headers);
+    el = new dom.Element.html("<div class='ui-state-default slick-header-column' style='visibility:hidden'>-</div>", validator: nodeValidator);
+    $headers.append(el);
     headerColumnWidthDiff = headerColumnHeightDiff = 0;
-    if (el.css("box-sizing") != "border-box" && el.css("-moz-box-sizing") != "border-box" && el.css("-webkit-box-sizing") != "border-box") {
-      $.each(h, function (n, val) {
-        headerColumnWidthDiff += parseFloat(el.css(val)) || 0;
+    if (el.style.boxSizing != "border-box") {
+      h.forEach((val) {
+        headerColumnWidthDiff += parseFloat(el.css(val)) || 0; // TODO
       });
-      $.each(v, function (n, val) {
-        headerColumnHeightDiff += parseFloat(el.css(val)) || 0;
+      v.forEach((val) {
+        headerColumnHeightDiff += parseFloat(el.css(val)) || 0; // TODO
       });
     }
     el.remove();
 
-    var r = $("<div class='slick-row' />").appendTo($canvas);
-    el = $("<div class='slick-cell' id='' style='visibility:hidden'>-</div>").appendTo(r);
+    var r = new dom.Element.html("<div class='slick-row' />", validator: nodeValidator);
+    $canvas.append(r);
+    el = new dom.Element.html("<div class='slick-cell' id='' style='visibility:hidden'>-</div>", validator: nodeValidator);
+    r.append(el);
     cellWidthDiff = cellHeightDiff = 0;
-    if (el.css("box-sizing") != "border-box" && el.css("-moz-box-sizing") != "border-box" && el.css("-webkit-box-sizing") != "border-box") {
-      $.each(h, function (n, val) {
-        cellWidthDiff += parseFloat(el.css(val)) || 0;
+    if (el.style.boxSizing != "border-box") {
+      h.forEach((val) {
+        cellWidthDiff += parseFloat(el.css(val)) || 0; // TODO
       });
-      $.each(v, function (n, val) {
-        cellHeightDiff += parseFloat(el.css(val)) || 0;
+      v.forEach((val) {
+        cellHeightDiff += parseFloat(el.css(val)) || 0; // TODO
       });
     }
     r.remove();
 
-    absoluteColumnMinWidth = Math.max(headerColumnWidthDiff, cellWidthDiff);
+    absoluteColumnMinWidth = math.max(headerColumnWidthDiff, cellWidthDiff);
   }
 
-  function createCssRules() {
-    $style = $("<style type='text/css' rel='stylesheet' />").appendTo($("head"));
+  void createCssRules() {
+    $style = new dom.Element.html("<style type='text/css' rel='stylesheet' />", validator: nodeValidator);
+    dom.document.head.append($style);
     var rowHeight = (options.rowHeight - cellHeightDiff);
     var rules = [
-      "." + uid + " .slick-header-column { left: 1000px; }",
-      "." + uid + " .slick-top-panel { height:" + options.topPanelHeight + "px; }",
-      "." + uid + " .slick-headerrow-columns { height:" + options.headerRowHeight + "px; }",
-      "." + uid + " .slick-cell { height:" + rowHeight + "px; }",
-      "." + uid + " .slick-row { height:" + options.rowHeight + "px; }"
+      ".${uid} .bwu-datagrid-header-column { left: 1000px; }",
+      ".${uid} .bwu-datagrid-top-panel { height:${options.topPanelHeight}px; }",
+      ".${uid} .bwu-datagrid-headerrow-columns { height:${options.headerRowHeight}px; }",
+      ".${uid} .bwu-datagrid-cell { height:${rowHeight}px; }",
+      ".${uid} .bwu-datagrid-row { height:${options.rowHeight}px; }"
     ];
 
-    for (var i = 0; i < columns.length; i++) {
-      rules.push("." + uid + " .l" + i + " { }");
-      rules.push("." + uid + " .r" + i + " { }");
+    for (int i = 0; i < columns.length; i++) {
+      rules.add(".${uid} .l${i} { }");
+      rules.add(".${uid} .r${i} { }");
     }
 
     if ($style[0].styleSheet) { // IE
       $style[0].styleSheet.cssText = rules.join(" ");
     } else {
-      $style[0].appendChild(document.createTextNode(rules.join(" ")));
+      $style[0].appendChild(dom.document.createTextNode(rules.join(" ")));
     }
   }
 
-  function getColumnCssRules(idx) {
+  void getColumnCssRules(int idx) {
     if (!stylesheet) {
-      var sheets = document.styleSheets;
-      for (var i = 0; i < sheets.length; i++) {
+      var sheets = dom.document.styleSheets;
+      for (int i = 0; i < sheets.length; i++) {
         if ((sheets[i].ownerNode || sheets[i].owningElement) == $style[0]) {
           stylesheet = sheets[i];
           break;
