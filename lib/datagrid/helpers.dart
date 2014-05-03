@@ -1,5 +1,65 @@
 part of bwu_dart.bwu_datagrid.datagrid;
 
+class Editor {
+
+}
+
+class Item {
+
+}
+
+class Data {
+  String getItemMetadata(int row) {
+
+  }
+
+  bool get getLength => true;
+
+  int get length => 0;
+
+  Item getItem(int idx) {
+
+  }
+
+  Item operator [](int idx) {
+
+  }
+
+}
+
+/* temp */
+class Headers {
+  dom.HtmlElement element;
+
+  Headers filter(String f) {
+
+  }
+
+  void sortable(String s) {
+
+  }
+}
+
+/* temp */
+class SortColumn {
+  String columnId;
+}
+/* temp */
+class Column {
+  String id;
+  String name;
+  bool sortable = false;
+  int previousWidth;
+  bool resizable = false;
+  int maxWidth;
+  int minWidth;
+  String toolTip;
+  String headerCssClass;
+  int width;
+  bool defaultSortAsc = true;
+  bool rerenderOnResize = false;
+}
+
 class EditController {
   Function commitCurrentEdit;
   Function cancelCurrentEdit;
@@ -7,7 +67,11 @@ class EditController {
   EditController(this.commitCurrentEdit, this.cancelCurrentEdit);
 }
 
-class ColumnOptions {
+class ColumnOptions { // columnDefaults
+  String id;
+  int width;
+  int maxWidth;
+
   String name = '';
   bool resizable = true;
   bool sortable = false;
@@ -19,7 +83,7 @@ class ColumnOptions {
   bool selectable = true;
 }
 
-class GridOptions {
+class GridOptions { // defaults
   bool explicitInitialization= false;
   int rowHeight = 25;
   int defaultColumnWidth = 80;
@@ -33,7 +97,7 @@ class GridOptions {
   Duration asyncEditorLoadDelay = const Duration(milliseconds: 100);
   bool forceFitColumns = false;
   bool enableAsyncPostRender = false;
-  Duration asyncPostRenderDelay = const Duration(milliseconds: 50),
+  Duration asyncPostRenderDelay = const Duration(milliseconds: 50);
   bool autoHeight = false;
   EditorLock editorLock = new EditorLock();
   bool showHeaderRow = false;
@@ -49,9 +113,10 @@ class GridOptions {
   bool dataItemColumnValueExtractor;
   bool fullWidthRows = false;
   bool multiColumnSort = false;
-  bool defaultFormatter = defaultFormatter;
+  bool defaultFormatter = true;
   bool forceSyncScrolling = false;
   String addNewRowCssClass = 'new-row';
+  bool syncColumnCellResize = false;
 
   GridOptions({
     this.explicitInitialization,
@@ -68,9 +133,9 @@ class GridOptions {
     this.forceFitColumns,
     this.enableAsyncPostRender,
     this.asyncPostRenderDelay,
-        this.autoHeight,
+    this.autoHeight,
     this.editorLock,
-        this.showHeaderRow,
+    this.showHeaderRow,
     this.headerRowHeight,
     this.showTopPanel,
     this.topPanelHeight,

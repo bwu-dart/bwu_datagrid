@@ -21,7 +21,7 @@ class AvgAggregator extends Aggregator {
     _count++;
     if (val != null && val != '' && val is num) {
       _nonNullCount++;
-      _sum += parseFloat(val);
+      _sum += double.parse(val);
     }
   }
 
@@ -93,7 +93,7 @@ class SumAggregator extends Aggregator{
   void accumulate(String item) {
     num val = item[_field];
     if (val != null && val != '' && val is double) {
-      _sum += parseFloat(val);
+      _sum += double.parse(val);
     }
   };
 
