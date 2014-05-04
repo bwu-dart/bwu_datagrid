@@ -42,6 +42,7 @@ class DataView {
     if(options != null) {
       this.options = options;
     }
+  }
 
     // private
     String idProperty = "id";  // property holding a unique row id
@@ -1022,3 +1023,4 @@ class DataView {
 //    });
 //  }
 //
+}

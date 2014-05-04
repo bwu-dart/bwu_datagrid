@@ -216,7 +216,7 @@ class EditorLock {
    * controller and returns whether the edit was successfully cancelled.  If no edit controller is
    * active, returns true.
    */
-  bool cancelCurrentEditcancelCurrentEdit() {
+  bool cancelCurrentEdit() {
     return (activeEditController ? activeEditController.cancelCurrentEdit() : true);
   }
 }

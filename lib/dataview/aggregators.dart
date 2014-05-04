@@ -26,7 +26,7 @@ class AvgAggregator extends Aggregator {
   }
 
   @override
-  void storeResult (GroupTotals groupTotals) {
+  void storeResult(GroupTotals groupTotals) {
     if (groupTotals.avg == null) {
       groupTotals.avg = {};
     }
@@ -36,7 +36,7 @@ class AvgAggregator extends Aggregator {
   }
 }
 
-class MinAggregator extends Aggregator{
+class MinAggregator extends Aggregator {
   int _field;
   double _min;
   MinAggregator(this._field);
@@ -60,7 +60,7 @@ class MinAggregator extends Aggregator{
   }
 }
 
-class MaxAggregator extends Aggregator{
+class MaxAggregator extends Aggregator {
   int _field;
   double _max;
   MaxAggregator(this._field);
@@ -84,18 +84,18 @@ class MaxAggregator extends Aggregator{
   }
 }
 
-class SumAggregator extends Aggregator{
+class SumAggregator extends Aggregator {
   int _field;
   double _sum;
-  SumAggregator(this._field) {
+  SumAggregator(this._field);
 
-    @override
+  @override
   void accumulate(String item) {
     num val = item[_field];
     if (val != null && val != '' && val is double) {
       _sum += double.parse(val);
     }
-  };
+  }
 
   @override
   void storeResult(GroupTotals groupTotals) {

@@ -1,11 +1,46 @@
 part of bwu_dart.bwu_datagrid.datagrid;
 
 class Editor {
+  void destroy() {
 
+  }
+  void loadValue(Item item) {
+
+  }
+  String serializeValue() {
+
+  }
+
+  bool get isValueChanged => false;
+
+  void applyValue(String item, String value) {
+
+  }
+
+  void focus() {
+
+  }
+
+  bool show() {}
+  bool hide() {}
+
+  void position(Map cellBox) {
+
+  }
+
+  void validate() {
+
+  }
+}
+
+class ColumnDefinition {
+  int field;
 }
 
 class Item {
+  String operator [](int idx) {
 
+  }
 }
 
 class Data {
@@ -43,6 +78,9 @@ class Headers {
 /* temp */
 class SortColumn {
   String columnId;
+  bool sortAsc = true;
+
+  SortColumn(this.columnId, this.sortAsc);
 }
 /* temp */
 class Column {
@@ -58,6 +96,8 @@ class Column {
   int width;
   bool defaultSortAsc = true;
   bool rerenderOnResize = false;
+  Editor editor;
+  String cssClass;
 }
 
 class EditController {
@@ -110,13 +150,14 @@ class GridOptions { // defaults
   String selectedCellCssClass = 'selected';
   bool multiSelect = true;
   bool enableTextSelectionOnCells = false;
-  bool dataItemColumnValueExtractor;
+  Function dataItemColumnValueExtractor; // TODO typeDef (item, columnDef)
   bool fullWidthRows = false;
   bool multiColumnSort = false;
   bool defaultFormatter = true;
   bool forceSyncScrolling = false;
   String addNewRowCssClass = 'new-row';
   bool syncColumnCellResize = false;
+  Function editCommandHandler;
 
   GridOptions({
     this.explicitInitialization,
