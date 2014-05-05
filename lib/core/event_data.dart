@@ -1,4 +1,4 @@
-part of bwu_dart.bwu_datagrid.core.range;
+part of bwu_dart.bwu_datagrid.core;
 
 /***
  * An event object for passing data to event handlers and letting them control propagation.

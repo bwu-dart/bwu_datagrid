@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.core.range;
+library bwu_dart.bwu_datagrid.core;
 
 import 'dart:async' as async;
 import 'dart:math' as math;

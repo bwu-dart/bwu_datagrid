@@ -1,37 +1,8 @@
-part of bwu_dart.bwu_datagrid.datagrid;
+library bwu_dart.bwu_datagrid.datagrid.helpers;
 
-class Editor {
-  void destroy() {
+import 'dart:html' as dom;
 
-  }
-  void loadValue(Item item) {
-
-  }
-  String serializeValue() {
-
-  }
-
-  bool get isValueChanged => false;
-
-  void applyValue(String item, String value) {
-
-  }
-
-  void focus() {
-
-  }
-
-  bool show() {}
-  bool hide() {}
-
-  void position(Map cellBox) {
-
-  }
-
-  void validate() {
-
-  }
-}
+import 'package:bwu_datagrid/editors/editors.dart';
 
 class ColumnDefinition {
   int field;

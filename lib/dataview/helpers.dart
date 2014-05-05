@@ -1,10 +1,10 @@
 part of bwu_dart.bwu_datagrid.dataview;
 
 class Options {
-  GroupItemMetadataProvider groupItemMetadataProvider; // TODO type
+  GroupitemMetadataProvider groupItemMetadataProvider; // TODO type
   bool inlineFilters;
 
-  Options({this.groupItemmetadataProvider : null, this.inlineFilters: false});
+  Options({this.groupItemMetadataProvider : null, this.inlineFilters: false});
 }
 
 class GroupingInfo {
@@ -45,3 +45,4 @@ class FunctionInfo {
 
   FunctionInfo(this.params, this.body);
 }
+

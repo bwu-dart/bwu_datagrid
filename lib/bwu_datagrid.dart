@@ -6,11 +6,11 @@ import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
 
-import 'core/core.dart';
+import 'package:bwu_datagrid/core/core.dart';
 //import 'dataview/dataview.dart';
-import 'plugin/plugin.dart';
+import 'package:bwu_datagrid/plugin/plugin.dart';
 
-part 'datagrid/helpers.dart';
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 @CustomTag('bwu-datagrid')
 class BwuDatagrid extends PolymerElement {
@@ -964,7 +964,7 @@ class BwuDatagrid extends PolymerElement {
         headerColumnWidthDiff += double.parse(el.style.getPropertyValue(prop)); // || 0; // TODO
       });
       v.forEach((prop) {
-        headerColumnHeightDiff += double.parse(el.css(prop)); //; || 0; // TODO
+        headerColumnHeightDiff += double.parse(el.style.getPropertyValue(prop)); //; || 0; // TODO
       });
     }
     el.remove();
@@ -1125,7 +1125,10 @@ class BwuDatagrid extends PolymerElement {
           continue;
         }
         var absMinWidth = math.max(c.minWidth, absoluteColumnMinWidth);
-        var shrinkSize = (shrinkProportion * (width - absMinWidth)).floor() || 1;
+        var shrinkSize = (shrinkProportion * (width - absMinWidth)).floor();
+        if(shrinkSize == 0) {
+          shrinkSize = 1;
+        }
         shrinkSize = math.min(shrinkSize, width - absMinWidth);
         total -= shrinkSize;
         shrinkLeeway -= shrinkSize;
@@ -2007,7 +2010,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void updateRowPositions() {
-    for (var row in rowsCache) {
+    for (final int row in rowsCache) {
       rowsCache[row].rowNode.style.top = "${getRowTop(row)}px";
     }
   }
@@ -3363,7 +3366,7 @@ class BwuDatagrid extends PolymerElement {
     "maxSupportedCssHeight:  ${maxSupportedCssHeight}"
     "n(umber of pages):  ${n}"
     "(current) page:  ${page}"
-    "page height (ph):  ${ph};
+    "page height (ph):  ${ph}";
     "vScrollDir:  ${vScrollDir}";
 
     dom.window.alert(s);

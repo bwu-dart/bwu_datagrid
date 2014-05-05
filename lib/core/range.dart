@@ -1,4 +1,4 @@
-part of bwu_dart.bwu_datagrid.core.range;
+part of bwu_dart.bwu_datagrid.core;
 
 /***
  * A structure containing a range of cells.

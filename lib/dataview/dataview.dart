@@ -2,11 +2,13 @@ library bwu_dart.bwu_datagrid.dataview;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
-import '../core/core.dart';
+import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 part 'aggregators.dart';
-part 'events.dart';
 part 'helpers.dart';
+part 'events.dart';
 
 //(function ($) {
 //  $.extend(true, window, {
@@ -113,11 +115,11 @@ class DataView {
       }
     }
 
-    List<int> getItems() {
+    List<Item> getItems() {
       return items;
     }
 
-    void setItems(String data, String objectIdProperty) {
+    void setItems(List<Map<String,int>> data, [String objectIdProperty]) {
       if (objectIdProperty != null) {
         idProperty = objectIdProperty;
       }
