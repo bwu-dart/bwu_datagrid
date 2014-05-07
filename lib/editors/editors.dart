@@ -11,18 +11,27 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
  * @namespace Slick
  */
 
-abstract class Editor {
-  void destroy();
-  void loadValue(Item item);
-  String serializeValue();
-  bool get isValueChanged;
-  void applyValue(String item, String value);
-  void focus();
+class Editor {
+  BwuDatagrid grid;
+  NodeBox gridPosition;
+  NodeBox position;
+  dom.HtmlElement container;
+  Column column;
+  Item item;
+  Function commitChanges;
+  Function cancelChanges;
+
+  void destroy() {}
+  void loadValue(Item item) {}
+  String serializeValue() {}
+  bool get isValueChanged => false;
+  void applyValue(Item item, String value) {}
+  void focus() {}
   void show() {}
   void hide() {}
 
-  void position(Map cellBox) {}
-  void validate();
+  //void position(NodeBox cellBox) {}
+  ValidationResults validate() {}
 }
 
 //(function ($) {

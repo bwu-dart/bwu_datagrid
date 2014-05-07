@@ -5,23 +5,20 @@ import 'dart:async' as async;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 
 abstract class Plugin {
-  Datagrid _grid;
+  BwuDatagrid _grid;
+  BwuDatagrid get grid => _grid;
 
-  void destroy();
-  void Plugin(this._grid);
+  Plugin();
+
+  void init(BwuDatagrid grid) {
+    this._grid = grid;
+  }
+  void destroy() {}
 }
 
 class SelectionModel extends Plugin {
 
-  @override
-  void init() {
-
-  }
-
-  @override
-  void destroy() {
-    // TODO: implement destroy
-  }
+  SelectionModel();
 
   void setSelectedRanges(List<int> ranges) {
 
@@ -36,8 +33,8 @@ class SelectionModel extends Plugin {
 //      BwuDatagrid._onSelectedRangesChanged.forTarget(this);
       _onSelectedRangesChanged.stream; //.forTarget(this);
 
-  static const dom.EventStreamProvider<dom.CustomEvent> _onSelectedRangesChanged =
-      const dom.EventStreamProvider<dom.CustomEvent>(ON_SELECTED_RANGES_CHANGED);
+//  static const dom.EventStreamProvider<dom.CustomEvent> _onSelectedRangesChanged =
+//      const dom.EventStreamProvider<dom.CustomEvent>(ON_SELECTED_RANGES_CHANGED);
 
 //  var controller = new StreamController.broadcast();
 //         var stream = controller.stream.asyncMap((e) => e);

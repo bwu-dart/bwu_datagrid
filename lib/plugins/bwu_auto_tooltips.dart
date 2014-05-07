@@ -1,14 +1,17 @@
 library bwu_dart.bwu_datagrid.plugin.auto_tooltips;
 
 import 'dart:html' as dom;
+import 'dart:async' as async;
 
-import 'packages:bwu_datagrid/bwu_datagrid.dart';
+import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'plugin.dart';
 
 class AutoTooltipsOptions {
   bool enableForCells = true;
   bool enableForHeaderCells = false;
   bool maxTooltipLength = null;
+
+  AutoTooltipsOptions({this.enableForCells, this.enableForHeaderCells, this.maxTooltipLength});
 }
 
 /**
@@ -21,24 +24,40 @@ class AutoTooltipsOptions {
 class AutoTooltips extends Plugin {
 
 
-  var options = new AutoTooltipsOptions();
+  AutoTooltipsOptions options;
 
-  AutoTooltips(this._grid, this.options) : super(_grid);
+  AutoTooltips([this.options]) : super() {
+    if(options = null) {
+      options = new AutoTooltipsOptions();
+    }
+  }
 
+  async.StreamSubscription mouseEnterSubscription;
+  async.StreamSubscription headerMouseEnterSubscription;
   /**
    * Initialize plugin.
    */
-  void init() {
-    if (options.enableForCells) _grid.onMouseEnter.subscribe(handleMouseEnter);
-    if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.subscribe(handleHeaderMouseEnter);
+  @override
+  void init(BwuDatagrid grid) {
+    super.init(grid);
+    if (options.enableForCells) {
+      mouseEnterSubscription = grid.onMouseEnter.listen(handleMouseEnter);
+    }
+    if (options.enableForHeaderCells) {
+      headerMouseEnterSubscription = grid.onHeaderMouseEnter.listen(handleHeaderMouseEnter);
+    }
   }
 
   /**
    * Destroy plugin.
    */
   void destroy() {
-    if (options.enableForCells) _grid.onMouseEnter.unsubscribe(handleMouseEnter);
-    if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.unsubscribe(handleHeaderMouseEnter);
+    if (mouseEnterSubscription != null) {
+      mouseEnterSubscription.cancel();
+    }
+    if (headerMouseEnterSubscription != null) {
+      headerMouseEnterSubscription.cancel();
+    }
   }
 
   /**
@@ -46,14 +65,14 @@ class AutoTooltips extends Plugin {
    * @param {jQuery.Event} e - The event
    */
   void handleMouseEnter(dom.MouseEvent e) {
-    var cell = _grid.getCellFromEvent(e);
+    var cell = grid.getCellFromEvent(e);
     if (cell != null) {
-      var $node = _grid.getCellNode(cell.row, cell['cell']);
+      var $node = grid.getCellNode(cell['row'], cell['cell']);
       var text;
-      if ($node.innerWidth() < $node[0].scrollWidth) {
-        text = $node.text().trim();
-        if (options.maxToolTipLength && text.length > options.maxToolTipLength) {
-          text = text.substr(0, options.maxToolTipLength - 3) + "...";
+      if ($node.innerWidth() < $node.children[0].scrollWidth) {
+        text = $node.text.trim();
+        if (options.maxTooltipLength && text.length > options.maxTooltipLength) {
+          text = text.substring(0, options.maxTooltipLength - 3) + "...";
         }
       } else {
         text = "";

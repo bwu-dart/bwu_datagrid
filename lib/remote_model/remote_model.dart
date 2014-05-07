@@ -123,7 +123,7 @@ class RemoteModel {
       var item = resp.results[i].item;
 
       // Old IE versions can't parse ISO dates, so change to universally-supported format.
-      item.create_ts = item.create_ts.replace(new RegExp(r"^(\d+)-(\d+)-(\d+)T(\d+:\d+:\d+)Z$"), "$2/$3/$1 $4 UTC"); // TODO
+      item.create_ts = item.create_ts.replace(new RegExp(r"^(\d+)-(\d+)-(\d+)T(\d+:\d+:\d+)Z$"), "\$2/\$3/\$1 \$4 UTC"); // TODO
       item.create_ts = new DateTime(item.create_ts);
 
       data[from + i] = item;

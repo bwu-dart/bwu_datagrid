@@ -347,14 +347,12 @@ class DataView {
         throw "Invalid id";
       }
       idxById.remove(id);
-      items.splice(idx, 1); // TODO
+      items.removeAt(idx);
       updateIdxById(idx);
       refresh();
     }
 
-    int getLength() {
-      return rows.length;
-    }
+    int getLength => rows.length;
 
     String getItem(int i) {
       String item = rows[i];
@@ -935,10 +933,6 @@ class DataView {
       var hashById;
       var inHandler;
 
-      // since this method can be called after the cell styles have been set,
-      // get the existing ones right away
-      storeCellCssStyles(grid.getCellCssStyles(key));
-
       void storeCellCssStyles(hash) {
         hashById = {};
         for (int row in hash) {
@@ -946,6 +940,11 @@ class DataView {
           hashById[id] = hash[row];
         }
       }
+
+      // since this method can be called after the cell styles have been set,
+      // get the existing ones right away
+      storeCellCssStyles(grid.getCellCssStyles(key));
+
 
       void update() {
         if (hashById) {

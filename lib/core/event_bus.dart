@@ -1,26 +1,27 @@
 part of bwu_dart.bwu_datagrid.core;
 
+const EventBus EVENT_BUS = const EventBus();
 
 /**
  * [EventBus] is a central event hub.
  */
-class EventBus extends Object with polymer.Observable {
+class EventBus {
   final _logger = new logging.Logger("EventBusModel");
 
   /**
    * A [StreamController] is maintained for each event type.
    */
-  Map<EventType, async.StreamController> streamControllers = new Map<EventType, async.StreamController>();
+  final Map<EventType, async.StreamController> streamControllers = new Map<EventType, async.StreamController>();
 
   //StreamController _historyStreamController = new StreamController();
 
-  @polymer.observable bool isSync = true; // TODO when bug is fixed (literal values for attributes)
+  final bool isSync; // TODO when bug is fixed (literal values for attributes)
 
   /**
    * Constructs an [EventBus] and allows to specify if the events should be
    * send synchroniously or asynchroniously by setting [isSync].
    */
-  EventBus({this.isSync : false});
+  const EventBus({this.isSync : true});
 
   /**
    * [onEvent] allows to access an stream for the specified [eventType].
@@ -65,18 +66,12 @@ class EventBus extends Object with polymer.Observable {
  */
 class EventType<T> {
 
-  String name;
-  bool isHistoryUpdate;
-
-  /**
-   * [hash] is the URI part after the # which is associated with this event.
-   */
-  String hash;
+  final String name;
 
   /**
    * Constructor with an optional [name] for logging purposes.
    */
-  EventType(this.name, {this.isHistoryUpdate : false, this.hash : ""});
+  const EventType(this.name);
 
   /**
    * Returns true if the provided data is of type [T].
