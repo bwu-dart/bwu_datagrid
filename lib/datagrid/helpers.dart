@@ -4,6 +4,36 @@ import 'dart:html' as dom;
 import 'dart:collection' as coll;
 
 import 'package:bwu_datagrid/editors/editors.dart';
+import 'package:bwu_datagrid/core/core.dart';
+//import 'package:bwu_datagrid/bwu_datagrid.dart';
+
+
+typedef void SortableStartFn(dom.HtmlElement e, dom.HtmlElement ui);
+typedef void SortableBeforeStopFn(dom.HtmlElement e, dom.HtmlElement ui);
+typedef void SortableStopFn(dom.HtmlElement e);
+
+class Sortable {
+  String containment;
+  int distance;
+  String axis;
+  String cursor;
+  String tolerance;
+  String helper;
+  String placeholder;
+  SortableStartFn start;
+  SortableBeforeStopFn beforeStop;
+  SortableStopFn stop;
+
+  Sortable({this.containment, this.distance, this.axis, this.cursor, this.tolerance, this.helper, this.placeholder, this.start, this.beforeStop, this.stop});
+  void cancel() {}
+  void destroy() {}
+  List toArray() { return [];}
+}
+class Filter {
+  String selector;
+  Filter(this.selector);
+  Sortable sortable = new Sortable();
+}
 
 class CellPos {
   final int row;
@@ -37,24 +67,12 @@ class Row {
 
 class RowCache {
   coll.Queue cellRenderQueue = new coll.Queue();
-  List<String> cellColSpans = [];
+  Map<int,String> cellColSpans = {};
   dom.HtmlElement rowNode;
   List<dom.HtmlElement> cellNodes = [];
   Map<int,dom.HtmlElement> cellNodesByColumnIdx = {};
 
   RowCache();
-}
-
-class EditorLock {
-  bool commitCurrentEdit() {}
-  bool cancelCurrentEdit() {}
-  bool isActive = false;
-  void deactivate(EditController editController) {
-
-  }
-  bool activate(EditController editController) {
-
-  }
 }
 
 class Range {
@@ -74,12 +92,8 @@ abstract class EditorFactory {
   Editor getEditor(Column column);
 }
 
-abstract class Formatter {
-
-}
-
 abstract class FormatterFactory {
-  Formatter getFormatter(Column column);
+  FormatterFn getFormatter(Column column);
 }
 
 class ColumnMetadata {
@@ -104,6 +118,9 @@ class RowMetadata {
 //}
 
 class Item {
+  String title;
+  int level;
+  bool collapsed;
   String operator [](int idx) {
 
   }
@@ -129,17 +146,17 @@ class Item {
 //}
 
 /* temp */
-class Headers {
-  dom.HtmlElement element;
-
-  Headers filter(String f) {
-
-  }
-
-  void sortable(String s) {
-
-  }
-}
+//class Headers {
+//  dom.HtmlElement element;
+//
+//  Headers filter(String f) {
+//
+//  }
+//
+//  void sortable(String s) {
+//
+//  }
+//}
 
 /* temp */
 class SortColumn {
@@ -190,29 +207,30 @@ class EditController {
   EditController(this.commitCurrentEdit, this.cancelCurrentEdit);
 }
 
-class Column { // columnDefaults
+class Column {
   String id;
-  String name;
+  String name = '';
   int width;
-  int maxWidth;
   int minWidth = 30;
+  int maxWidth;
   bool resizable = true;
   bool sortable = false;
   bool focusable = true;
   bool selectable = true;
   bool defaultSortAsc = true;
   String headerCssClass;
-  bool rerenderOnResize = true;
+  bool rerenderOnResize = false;
   String toolTip;
   String cssClass;
 
-  int previousWidth;
   Editor editor;
-  String field;
-  Formatter formatter;
+  FormatterFn formatter;
   bool cannotTriggerInsert;
 
-  void asyncPostRender(dom.HtmlElement node, int row, Item rowData, Column m) {
+  String field;
+  int previousWidth;
+
+  void asyncPostRender(dom.HtmlElement node, int row, /*Map/Item*/ rowData, Column m) {
 
   }
 
@@ -220,23 +238,37 @@ class Column { // columnDefaults
 
   Column.defaults();
 
-  Column.fromColumn(Column c) {
+  void extend(Column c) {
     Column d = new Column.defaults();
-    //TODO
-    if(c.cssClass != d.cssClass) cssClass = c.cssClass;
-    if(c.defaultSortAsc != d.defaultSortAsc) defaultSortAsc = c.defaultSortAsc;
-    //c.editor
-    if(c.headerCssClass != d.headerCssClass) headerCssClass = c.headerCssClass;
-    if(c.id != d.id)  id = c.id;
-    if(c.maxWidth != d.maxWidth) maxWidth = c.maxWidth;
-    if(c.minWidth != d.minWidth) minWidth = c.minWidth;
+    if(c.id != d.id) id = c.id;
     if(c.name != d.name) name = c.name;
-    //c.previousWidth
-    if(c.rerenderOnResize != d.rerenderOnResize) rerenderOnResize = c.rerenderOnResize;
+    if(c.width != d.width) width = c.width;
+    if(c.minWidth != d.minWidth) minWidth = c.minWidth;
+    if(c.maxWidth != d.maxWidth) maxWidth = c.maxWidth;
     if(c.resizable != d.resizable) resizable = c.resizable;
     if(c.sortable != d.sortable) sortable = c.sortable;
+    if(c.focusable != d.focusable) focusable = c.focusable;
+    if(c.selectable != d.selectable) selectable = c.selectable;
+    if(c.defaultSortAsc != d.defaultSortAsc) defaultSortAsc = c.defaultSortAsc;
+    if(c.headerCssClass != d.headerCssClass) headerCssClass = c.headerCssClass;
+    if(c.rerenderOnResize != d.rerenderOnResize) rerenderOnResize = c.rerenderOnResize;
     if(c.toolTip != d.toolTip) toolTip = c.toolTip;
-    if(c.width != d.width) width = c.width;
+    if(c.cssClass != d.cssClass) cssClass = c.cssClass;
+    if(c.editor != d.editor) editor = c.editor;
+    if(c.formatter != d.formatter) formatter = c.formatter;
+    if(c.cannotTriggerInsert != d.cannotTriggerInsert) cannotTriggerInsert = c.cannotTriggerInsert;
+    if(c.field != d.field) field = c.field;
+    if(c.previousWidth != d.previousWidth) previousWidth = c.previousWidth;
+  }
+}
+
+typedef String FormatterFn(int row, int cell, dynamic value, Column m, dataContext);
+
+String defaultFormatterImpl(int row, int cell, dynamic value, Column columnDef, dataContext) {
+  if (value == null) {
+    return "";
+  } else {
+    return '$value'.replaceAll(r'&',"&amp;").replaceAll(r'<',"&lt;").replaceAll(r'>',"&gt;");
   }
 }
 
@@ -270,48 +302,99 @@ class GridOptions { // defaults
   Function dataItemColumnValueExtractor; // TODO typeDef (item, columnDef)
   bool fullWidthRows = false;
   bool multiColumnSort = false;
-  bool defaultFormatter = true;
+  FormatterFn defaultFormatter;
   bool forceSyncScrolling = false;
   String addNewRowCssClass = 'new-row';
   bool syncColumnCellResize = false;
   Function editCommandHandler;
 
   GridOptions({
-    this.explicitInitialization,
-    this.rowHeight,
-    this.defaultColumnWidth,
-    this.enableAddRow,
-    this.leaveSpaceForNewRows,
-    this.editable,
-    this.autoEdit,
-    this.enableCellNavigation,
-    this.enableColumnReorder,
-    this.asyncEditorLoading,
+    this.explicitInitialization : false,
+    this.rowHeight : 25,
+    this.defaultColumnWidth : 80,
+    this.enableAddRow : false,
+    this.leaveSpaceForNewRows : false,
+    this.editable : false,
+    this.autoEdit : true,
+    this.enableCellNavigation : true,
+    this.enableColumnReorder : true,
+    this.asyncEditorLoading : false,
     this.asyncEditorLoadDelay,
-    this.forceFitColumns,
-    this.enableAsyncPostRender,
+    this.forceFitColumns: false,
+    this.enableAsyncPostRender: false,
     this.asyncPostRenderDelay,
-    this.autoHeight,
+    this.autoHeight : false,
     this.editorLock,
-    this.showHeaderRow,
-    this.headerRowHeight,
-    this.showTopPanel,
-    this.topPanelHeight,
+    this.showHeaderRow : false,
+    this.headerRowHeight : 25,
+    this.showTopPanel : false,
+    this.topPanelHeight : 25,
     this.formatterFactory,
     this.editorFactory,
-    this.cellFlashingCssClass,
-    this.selectedCellCssClass,
-    this.multiSelect,
-    this.enableTextSelectionOnCells,
+    this.cellFlashingCssClass : 'flashing',
+    this.selectedCellCssClass : 'selected',
+    this.multiSelect : true,
+    this.enableTextSelectionOnCells : false,
     this.dataItemColumnValueExtractor,
-    this.fullWidthRows,
-    this.multiColumnSort,
+    this.fullWidthRows : false,
+    this.multiColumnSort : false,
     this.defaultFormatter,
-    this.forceSyncScrolling,
-    this.addNewRowCssClass
-  });
+    this.forceSyncScrolling: false,
+    this.addNewRowCssClass : 'new-row',
+    this.syncColumnCellResize : false
+  }) {
+    if(asyncEditorLoadDelay == null) {
+      this.asyncEditorLoadDelay = const Duration(milliseconds: 100);
+    }
 
-  GridOptions extendWithArgs(GridOptions args) {
-    throw '"extendWithArgs" not implemented';
+    if(asyncPostRenderDelay == null) {
+        this.asyncPostRenderDelay = const Duration(milliseconds: 50);
+    }
+
+    if(editorLock == null) {
+      this.editorLock = new EditorLock();
+    }
+
+    if(defaultFormatter == null) {
+      this.defaultFormatter = defaultFormatterImpl;
+    }
+  }
+
+  void extend(GridOptions o) {
+    var d = new GridOptions();
+    if(o.explicitInitialization!= d.explicitInitialization) explicitInitialization = o.explicitInitialization;
+    if(o.rowHeight!= d.rowHeight) rowHeight = o.rowHeight;
+    if(o.defaultColumnWidth!= d.defaultColumnWidth) defaultColumnWidth = o.defaultColumnWidth;
+    if(o.enableAddRow!= d.enableAddRow) enableAddRow = o.enableAddRow;
+    if(o.leaveSpaceForNewRows!= d.leaveSpaceForNewRows) leaveSpaceForNewRows = o.leaveSpaceForNewRows;
+    if(o.editable!= d.editable) editable = o.editable;
+    if(o.autoEdit!= d.autoEdit) autoEdit = o.autoEdit;
+    if(o.enableCellNavigation!= d.enableCellNavigation) enableCellNavigation = o.enableCellNavigation;
+    if(o.enableColumnReorder!= d.enableColumnReorder) enableColumnReorder = o.enableColumnReorder;
+    if(o.asyncEditorLoading!= d.asyncEditorLoading) asyncEditorLoading = o.asyncEditorLoading;
+    if(o.asyncEditorLoadDelay!= d.asyncEditorLoadDelay) asyncEditorLoadDelay = o.asyncEditorLoadDelay;
+    if(o.forceFitColumns!= d.forceFitColumns) forceFitColumns = o.forceFitColumns;
+    if(o.enableAsyncPostRender!= d.enableAsyncPostRender) enableAsyncPostRender = o.enableAsyncPostRender;
+    if(o.asyncPostRenderDelay!= d.asyncPostRenderDelay) asyncPostRenderDelay = o.asyncPostRenderDelay;
+    if(o.autoHeight!= d.autoHeight) autoHeight = o.autoHeight;
+    if(o.editorLock!= d.editorLock) editorLock = o.editorLock;
+    if(o.showHeaderRow!= d.showHeaderRow) showHeaderRow = o.showHeaderRow;
+    if(o.headerRowHeight!= d.headerRowHeight) headerRowHeight = o.headerRowHeight;
+    if(o.showTopPanel!= d.showTopPanel) showTopPanel = o.showTopPanel;
+    if(o.topPanelHeight!= d.topPanelHeight) topPanelHeight = o.topPanelHeight;
+    if(o.formatterFactory!= d.formatterFactory) formatterFactory = o.formatterFactory;
+    if(o.editorFactory!= d.editorFactory) editorFactory = o.editorFactory;
+    if(o.cellFlashingCssClass!= d.cellFlashingCssClass) cellFlashingCssClass = o.cellFlashingCssClass;
+    if(o.selectedCellCssClass!= d.selectedCellCssClass) selectedCellCssClass = o.selectedCellCssClass;
+    if(o.multiSelect!= d.multiSelect) multiSelect = o.multiSelect;
+    if(o.enableTextSelectionOnCells!= d.enableTextSelectionOnCells) enableTextSelectionOnCells = o.enableTextSelectionOnCells;
+    if(o.dataItemColumnValueExtractor!= d.dataItemColumnValueExtractor) dataItemColumnValueExtractor = o.dataItemColumnValueExtractor;
+    if(o.fullWidthRows!= d.fullWidthRows) fullWidthRows = o.fullWidthRows;
+    if(o.multiColumnSort!= d.multiColumnSort) multiColumnSort = o.multiColumnSort;
+    if(o.defaultFormatter!= d.defaultFormatter) defaultFormatter = o.defaultFormatter;
+    if(o.forceSyncScrolling!= d.forceSyncScrolling) forceSyncScrolling = o.forceSyncScrolling;
+    if(o.addNewRowCssClass!= d.addNewRowCssClass) addNewRowCssClass = o.addNewRowCssClass;
+    if(o.syncColumnCellResize!= d.syncColumnCellResize) syncColumnCellResize = o.syncColumnCellResize;
+    if(o.editCommandHandler!= d.editCommandHandler) editCommandHandler = o.editCommandHandler;
   }
 }

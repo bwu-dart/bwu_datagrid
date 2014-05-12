@@ -155,19 +155,19 @@ class GroupTotals extends NonDataItem {
 /***
  * A locking helper to track the active edit controller and ensure that only a single controller
  * can be active at a time.  This prevents a whole class of state and validation synchronization
- * issues.  An edit controller (such as SlickGrid) can query if an active edit is in progress
+ * issues.  An edit controller (such as BWU Datagrid) can query if an active edit is in progress
  * and attempt a commit or cancel before proceeding.
  */
 class EditorLock {
-  dynamic activeEditController; // TODO type
-  dynamic editController; // TODO type
+  EditController activeEditController; // TODO type
+  EditController editController; // TODO type
 
   /***
    * Returns true if a specified edit controller is active (has the edit lock).
    * If the parameter is not specified, returns true if any edit controller is active.
    */
   bool get isActive {
-    return editController != null ? activeEditController == editController : activeEditController =! null;
+    return editController != null ? activeEditController == editController : activeEditController != null;
   }
 
   /***
@@ -208,7 +208,7 @@ class EditorLock {
    * and false otherwise.  If no edit controller is active, returns true.
    */
   bool commitCurrentEdit() {
-    return (activeEditController ? activeEditController.commitCurrentEdit() : true);
+    return (activeEditController != null ? activeEditController.commitCurrentEdit() : true);
   }
 
   /***
@@ -217,6 +217,6 @@ class EditorLock {
    * active, returns true.
    */
   bool cancelCurrentEdit() {
-    return (activeEditController ? activeEditController.cancelCurrentEdit() : true);
+    return (activeEditController != null ? activeEditController.cancelCurrentEdit() : true);
   }
 }

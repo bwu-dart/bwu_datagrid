@@ -6,9 +6,8 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 /***
- * Contains basic SlickGrid editors.
+ * Contains basic BwuDatagrid editors.
  * @module Editors
- * @namespace Slick
  */
 
 class Editor {

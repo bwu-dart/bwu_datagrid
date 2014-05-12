@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 
+<link rel='import' href='datagrid/bwu_datagrid_headers.html'>
+<link rel='import' href='datagrid/bwu_datagrid_header_column.html'>
+<link rel='import' href='datagrid/bwu_datagrid_headerrow_column.html'>
+
 <polymer-element name='bwu-datagrid'>
   <template>
+    <link rel="stylesheet" href="assets/grid.css">
+    <link rel="stylesheet" href="assets/default_theme.css">
     <style>
       :host {
+        background-color: blue;
         display: block;
+        overflow: hidden;
+        outline: 0;
       }
     </style>
     <content></content>

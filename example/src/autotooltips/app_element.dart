@@ -21,7 +21,7 @@ class AppElement extends PolymerElement {
     new Column(id: "effort-driven", name: "Effort Driven", field: "effortDriven")
   ];
 
-  var options = new GridOptions(
+  var gridOptions = new GridOptions(
     enableCellNavigation: true,
     enableColumnReorder: false
   );
@@ -31,23 +31,35 @@ class AppElement extends PolymerElement {
     super.enteredView();
     grid = $['myGrid'];
 
-    var data = [];
-    for (var i = 0; i < 500; i++) {
-      data[i] = {
-        'title': "Task " + i,
-        'duration': "5 days",
-        'percentComplete': new math.Random().nextInt(100).round(),
-        'start': "01/01/2009",
-        'finish': "01/05/2009",
-        'effortDriven': (i % 5 == 0)
-      };
-    }
+    try {
+      var data = new List<Map>(500);
+      for (var i = 0; i < 500; i++) {
+        data[i] = {
+          'title': "Task ${i}",
+          'duration': "5 days",
+          'percentComplete': new math.Random().nextInt(100).round(),
+          'start': "01/01/2009",
+          'finish': "01/05/2009",
+          'effortDriven': (i % 5 == 0)
+        };
+      }
 
-    //grid = new Slick.Grid("#myGrid", data, columns, options);
-    grid.data = data;
-    grid.columns = columns;
-    grid.gridOptions = options;
-    grid.registerPlugin(new AutoTooltips(new AutoTooltipsOptions(enableForHeaderCells: true)));
-    grid.render();
+      //grid = new Slick.Grid("#myGrid", data, columns, options);
+      grid.data = data;
+      grid.columns = columns;
+      grid.gridOptions = gridOptions;
+      grid.registerPlugin(new AutoTooltips(new AutoTooltipsOptions(enableForHeaderCells: true)));
+//      grid.init();
+//      grid.render();
+    } on NoSuchMethodError catch (e) {
+      print('$e\n\n${e.stackTrace}');
+    }  on RangeError catch (e) {
+      print('$e\n\n${e.stackTrace}');
+    } on TypeError catch(e) {
+      print('$e\n\n${e.stackTrace}');
+    } catch(e) {
+      print('$e');
+      //print(s);
+    }
   }
 }

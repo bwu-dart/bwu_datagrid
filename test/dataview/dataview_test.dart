@@ -1,6 +1,5 @@
 library bwu_dart.bwu_datagrid.dataview.test;
 
-import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_enhanced_config.dart';
@@ -8,7 +7,7 @@ import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 void assertEmpty(DataView dv) {
-  expect(0, equals(dv.getLength()), reason: ".rows is initialized to an empty array");
+  expect(0, equals(dv.getLength), reason: ".rows is initialized to an empty array");
   expect(dv.getItems().length, equals(0), reason: "getItems().length");
   expect(dv.getIdxById("id"), isNull, reason: "getIdxById should return undefined if not found");
   expect(dv.getRowById("id"), isNull, reason: "getRowById should return undefined if not found");
@@ -40,7 +39,7 @@ void assertConsistency(DataView dv, [String idProperty]) {
       }
   }
 
-  expect(items.length-dv.getLength(), equals(filteredOut), reason: "filtered rows");
+  expect(items.length-dv.getLength, equals(filteredOut), reason: "filtered rows");
 }
 
 @initMethod
@@ -70,7 +69,7 @@ void init() {
     test("basic", () {
         var dv = new DataView();
         dv.setItems([{'id':0},{'id':1}]);
-        expect(dv.getLength(), equals(2), reason: "rows.length");
+        expect(dv.getLength, equals(2), reason: "rows.length");
         expect(dv.getItems().length, equals(2), reason: "getItems().length");
         assertConsistency(dv);
     });

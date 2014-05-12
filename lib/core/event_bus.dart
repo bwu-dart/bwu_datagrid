@@ -1,6 +1,6 @@
 part of bwu_dart.bwu_datagrid.core;
 
-const EventBus EVENT_BUS = const EventBus();
+//const EventBus EVENT_BUS = const EventBus();
 
 /**
  * [EventBus] is a central event hub.

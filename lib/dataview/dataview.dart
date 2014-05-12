@@ -48,7 +48,7 @@ class DataView {
 
     // private
     String idProperty = "id";  // property holding a unique row id
-    List<int> items = [];         // data by index
+    List<Item> items = [];         // data by index
     List<int> rows = [];          // data by row
     Map<String,int> idxById = {};       // indexes by id
     Map<String,int> rowsById = null;    // rows by id; lazy-calculated
@@ -63,7 +63,7 @@ class DataView {
     List<String> filterArgs;
     List<int> filteredItems = [];
     Function compiledFilter;
-    String compiledFilterWithCaching;
+    Function compiledFilterWithCaching;
     List<String> filterCache = [];
 
     List<GroupingInfo> groupingInfos = [];
@@ -213,7 +213,7 @@ class DataView {
     List<GroupingInfo> get getGrouping => groupingInfos;
 
     void setGrouping(GroupingInfo groupingInfo) {
-      if (!options.groupItemMetadataProvider) {
+      if (options.groupItemMetadataProvider == null) {
         options.groupItemMetadataProvider = new GroupItemMetadataProvider();
       }
 
@@ -352,7 +352,7 @@ class DataView {
       refresh();
     }
 
-    int getLength => rows.length;
+    int get getLength => rows.length;
 
     String getItem(int i) {
       String item = rows[i];
@@ -425,7 +425,7 @@ class DataView {
     }
 
     /**
-     * @param varArgs Either a Slick.Group's "groupingKey" property, or a
+     * @param varArgs Either a Group's "groupingKey" property, or a
      *     variable argument list of grouping values denoting a unique path to the row.  For
      *     example, calling collapseGroup('high', '10%') will collapse the '10%' subgroup of
      *     the 'high' group.
@@ -854,7 +854,7 @@ class DataView {
         //onRowCountChanged.notify({previous: countBefore, current: rows.length}, null, self);
       }
       if (diff.length > 0) {
-        EVENT_BUS.fire(Events.rowsChanged, new EventData(sender: this, details: {'rows': diff}));
+        EVENT_BUS.fire(Events.rowsChanged, new EventData(sender: this, detail: {'rows': diff}));
         //onRowsChanged.notify({rows: diff}, null, self);
       }
     }
@@ -867,13 +867,13 @@ class DataView {
      *
      * NOTE:  This doesn't work with cell selection model.
      *
-     * @param grid {Slick.Grid} The grid to sync selection with.
+     * @param grid {BwuDatagrid} The grid to sync selection with.
      * @param preserveHidden {Boolean} Whether to keep selected items that go out of the
      *     view due to them getting filtered out.
      * @param preserveHiddenOnSelectionChange {Boolean} Whether to keep selected items
      *     that are currently out of the view (see preserveHidden) as selected when selection
      *     changes.
-     * @return {Slick.Event} An event that notifies when an internal list of selected row ids
+     * @return {Event} An event that notifies when an internal list of selected row ids
      *     changes.  This is useful since, in combination with the above two options, it allows
      *     access to the full list selected row ids, and not just the ones visible to the grid.
      * @method syncGridSelection
@@ -882,7 +882,7 @@ class DataView {
       var self = this;
       var inHandler;
       var selectedRowIds = self.mapRowsToIds(grid.getSelectedRows());
-      var onSelectedRowIdsChanged = new Slick.Event();
+      var onSelectedRowIdsChanged = new Event();
 
       void setSelectedRowIds(rowIds) {
         if (selectedRowIds.join(",") == rowIds.join(",")) {

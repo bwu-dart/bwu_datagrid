@@ -23,7 +23,7 @@ ul {
 }
 
 li {
-  background: url("../images/arrow_right_spearmint.png") no-repeat center left;
+  background: url("packages/bwu_datagrid/assets/images/arrow_right_spearmint.png") no-repeat center left;
   padding: 0 0 0 14px;
 
   list-style: none;
@@ -84,16 +84,16 @@ li {
 }
 
 /* Individual cell styles */
-.slick-cell.task-name {
+.bwu-datagrid-cell.task-name {
   font-weight: bold;
   text-align: right;
 }
 
-.slick-cell.task-percent {
+.bwu-datagrid-cell.task-percent {
   text-align: right;
 }
 
-.slick-cell.cell-move-handle {
+.bwu-datagrid-cell.cell-move-handle {
   font-weight: bold;
   text-align: right;
   border-right: solid gray;
@@ -106,15 +106,15 @@ li {
   background: #b6b9bd;
 }
 
-.slick-row.selected .cell-move-handle {
+.bwu-datagrid-row.selected .cell-move-handle {
   background: #D5DC8D;
 }
 
-.slick-row .cell-actions {
+.bwu-datagrid-row .cell-actions {
   text-align: left;
 }
 
-.slick-row.complete {
+.bwu-datagrid-row.complete {
   background-color: #DFD;
   color: #555;
 }
@@ -126,7 +126,7 @@ li {
   -webkit-border-radius: 3px;
 }
 
-/* Slick.Editors.Text, Slick.Editors.Date */
+/* Editors.Text, Editors.Date */
 input.editor-text {
   width: 100%;
   height: 100%;
@@ -144,7 +144,7 @@ input.editor-text {
   vertical-align: top;
 }
 
-/* Slick.Editors.PercentComplete */
+/* Editors.PercentComplete */
 input.editor-percentcomplete {
   width: 100%;
   height: 100%;
@@ -212,14 +212,14 @@ input.editor-percentcomplete {
   display: block;
 }
 
-/* Slick.Editors.YesNoSelect */
+/* Editors.YesNoSelect */
 select.editor-yesno {
   width: 100%;
   margin: 0;
   vertical-align: middle;
 }
 
-/* Slick.Editors.Checkbox */
+/* Editors.Checkbox */
 input.editor-checkbox {
   margin: 0;
   height: 100%;

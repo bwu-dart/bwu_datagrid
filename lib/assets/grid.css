@@ -5,43 +5,18 @@ No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) 
 classes should alter those!
 */
 
-.bwu-datagrid-header.ui-state-default, .bwu-datagrid-headerrow.ui-state-default {
+.bwu-datagrid-header.ui-state-default, /*.bwu-datagrid-headerrow.ui-state-default*/ {
   width: 100%;
   overflow: hidden;
   border-left: 0px;
 }
 
-.bwu-datagrid-header-columns, .bwu-datagrid-headerrow-columns {
+/*.bwu-datagrid-header-columns, .bwu-datagrid-headerrow-columns {
   position: relative;
   white-space: nowrap;
   cursor: default;
   overflow: hidden;
-}
-
-.bwu-datagrid-header-column.ui-state-default {
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  height: 16px;
-  line-height: 16px;
-  margin: 0;
-  padding: 4px;
-  border-right: 1px solid silver;
-  border-left: 0px;
-  border-top: 0px;
-  border-bottom: 0px;
-  float: left;
-}
-
-.bwu-datagrid-headerrow-column.ui-state-default {
-  padding: 4px;
-}
-
-.bwu-datagrid-header-column-sorted {
-  font-style: italic;
-}
+} */
 
 .bwu-datagrid-sort-indicator {
   display: inline-block;
@@ -86,7 +61,7 @@ classes should alter those!
   width: 100%;
 }
 
-.bwu-datagrid-cell, .bwu-datagrid-headerrow-column {
+.bwu-datagrid-cell, /*.bwu-datagrid-headerrow-column*/ {
   position: absolute;
   border: 1px solid transparent;
   border-right: 1px dotted silver;

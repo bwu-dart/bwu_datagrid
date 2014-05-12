@@ -193,8 +193,8 @@ class CellCssStylesChanged extends EventData {
 }
 
 class HeaderMouseEnter extends EventData {
-  String data;
-  HeaderMouseEnter(sender, String data, {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'data': data, 'causedBy': causedBy}) {
+  Column data;
+  HeaderMouseEnter(sender, Column data, {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'data': data, 'causedBy': causedBy}) {
     this.data = data;
   }
 }
