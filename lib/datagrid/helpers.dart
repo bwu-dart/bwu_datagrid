@@ -99,6 +99,7 @@ abstract class FormatterFactory {
 class ColumnMetadata {
   String colspan;
   bool selectable;
+
 }
 
 class ItemMetadata {

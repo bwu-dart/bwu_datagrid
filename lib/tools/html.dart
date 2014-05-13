@@ -40,13 +40,22 @@ dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement con
     }
   }
 
-  while(parent != null && parent.querySelector(selector) != e) {
+  var found = e;
+  while(parent != null && found != null) {
+    var found = parent.querySelector(selector);
+
     curr = parent;
     if(parent is dom.ShadowRoot) {
       if(goThroughShadowBoundaries) {
         parent = (parent as dom.ShadowRoot).host;
       }
+    } else {
+      parent = parent.parent;
     }
+  }
+
+  if(found != null) {
+    return found;
   }
 
   if(parent == null) {

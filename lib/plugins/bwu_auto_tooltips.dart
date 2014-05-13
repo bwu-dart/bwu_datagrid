@@ -43,10 +43,10 @@ class AutoTooltips extends Plugin {
   void init(BwuDatagrid grid) {
     super.init(grid);
     if (options.enableForCells) {
-      mouseEnterSubscription = grid.onMouseEnter.listen(handleMouseEnter);
+      mouseEnterSubscription = grid.onBwuMouseEnter.listen(handleMouseEnter);
     }
     if (options.enableForHeaderCells) {
-      headerMouseEnterSubscription = grid.onHeaderMouseEnter.listen(handleHeaderMouseEnter);
+      headerMouseEnterSubscription = grid.onBwuHeaderMouseEnter.listen(handleHeaderMouseEnter);
     }
   }
 
@@ -66,8 +66,8 @@ class AutoTooltips extends Plugin {
    * Handle mouse entering grid cell to add/remove tooltip.
    * @param {jQuery.Event} e - The event
    */
-  void handleMouseEnter(dom.MouseEvent e) {
-    var cell = grid.getCellFromEvent(e);
+  void handleMouseEnter(core.MouseEnter e) {
+    var cell = grid.getCellFromEvent(e.causedBy);
     if (cell != null) {
       var $node = grid.getCellNode(cell.row, cell.cell);
       var text;
@@ -88,11 +88,15 @@ class AutoTooltips extends Plugin {
    * @param {jQuery.Event} e     - The event
    * @param {object} args.column - The column definition
    */
-  void handleHeaderMouseEnter(dom.CustomEvent e) {
-    var detail = e.detail as core.HeaderMouseEnter;
-    var column = detail.data,
-        $node = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-header-column');
-    if (!column.toolTip) {
+  void handleHeaderMouseEnter(core.HeaderMouseEnter e) {
+    //var detail = e.detail as core.HeaderMouseEnter;
+    var column = e.data;
+    var $node = tools.closest((e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
+    if($node == null) {
+      print($node);
+      $node = tools.closest((e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
+    }
+    if (column.toolTip == null) {
       $node.attributes["title"] =tools.innerWidth($node) < $node.scrollWidth ? column.name : "";
     }
   }
