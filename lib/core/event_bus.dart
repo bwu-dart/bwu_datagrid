@@ -11,7 +11,8 @@ class EventBus {
   /**
    * A [StreamController] is maintained for each event type.
    */
-  final Map<EventType, async.StreamController> streamControllers = new Map<EventType, async.StreamController>();
+  final Map<EventType, async.StreamController> streamControllers =
+      new Map<EventType, async.StreamController>();
 
   //StreamController _historyStreamController = new StreamController();
 
@@ -21,42 +22,43 @@ class EventBus {
    * Constructs an [EventBus] and allows to specify if the events should be
    * send synchroniously or asynchroniously by setting [isSync].
    */
-  const EventBus({this.isSync : true});
+  const EventBus({this.isSync: true});
 
   /**
    * [onEvent] allows to access an stream for the specified [eventType].
    */
-  async.Stream/*<T>*/ onEvent(EventType/*<T>*/ eventType) {
+  async.Stream /*<T>*/ onEvent(EventType /*<T>*/ eventType) {
     _logger.finest('onEvent');
 
-    if(!streamControllers.containsKey(eventType)) {
+    if (!streamControllers.containsKey(eventType)) {
       _logger.finest('onEvent: new EventType: ${eventType.name}');
     }
 
     return streamControllers.putIfAbsent(eventType, () {
       return new async.StreamController.broadcast(sync: isSync);
-      }
-    ).stream;
+    }).stream;
   }
 
   /**
    * [fire] broadcasts an event of a type [eventType] to all subscribers.
    */
-  void fire(EventType/*<T>*/ eventType, /*<T>*/ data) {
+  EventData fire(EventType /*<T>*/ eventType,  /*<T>*/EventData data) {
     _logger.finest('event fired: ${eventType.name}');
 
     if (data != null && !eventType.isTypeT(data)) {
-      throw new ArgumentError('Provided data is not of same type as T of EventType.');
+      throw new ArgumentError(
+          'Provided data is not of same type as T of EventType.');
     }
 
-    if(!streamControllers.containsKey(eventType)) {
+    if (!streamControllers.containsKey(eventType)) {
       _logger.finest('fire: new EventType: ${eventType.name}');
     }
 
-      var controller = streamControllers.putIfAbsent(eventType, () {
-        return new async.StreamController.broadcast(sync: isSync);
-      });
-      controller.add(data);
+    var controller = streamControllers.putIfAbsent(eventType, () {
+      return new async.StreamController.broadcast(sync: isSync);
+    });
+    controller.add(data);
+    return data;
   }
 }
 
@@ -81,4 +83,3 @@ class EventType<T> {
    */
   bool isTypeT(data) => data is T;
 }
-

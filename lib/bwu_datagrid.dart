@@ -329,9 +329,10 @@ class BwuDatagrid extends PolymerElement {
           ..onClick.listen(handleClick)
           ..onDoubleClick.listen(handleDblClick)
           ..onContextMenu.listen(handleContextMenu)
+          ..onDrag.listen(handleDrag)
           //..bind("draginit", handleDragInit) // TODO special jQuery event before DragStart (click)
           ..onDragStart.listen((e) {/*{distance: 3}*/; handleDragStart(e, {'distance': 3});}) // TODO what is distance?
-          ..onDrag.listen(handleDrag)
+          ..onDragOver.listen(handleDrag)
           ..onDragEnd.listen(handleDragEnd)
           ..querySelectorAll(".bwu-datagrid--cell").forEach((e) {
             (e as dom.HtmlElement)
@@ -671,7 +672,7 @@ class BwuDatagrid extends PolymerElement {
         return;
       }
 
-      var $col = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-header-column') as BwuDatagridHeaders; // TODO check var $col = $(e.target).closest(".bwu-datagrid-header-column");
+      var $col = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-header-column') as BwuDatagridHeaderColumn;
       if ($col.children.length > 0) {
         return;
       }
@@ -745,7 +746,7 @@ class BwuDatagrid extends PolymerElement {
       helper: 'clone',
       placeholder: 'bwu-datagrid-sortable-placeholder ui-state-default bwu-datagrid-header-column',
       start: (e, ui) {
-        ui.placeholder.width(ui.helper.outerWidth() - headerColumnWidthDiff);
+        ui.placeholder.width(tools.outerWidth(ui) - headerColumnWidthDiff);
         (ui.helper as dom.HtmlElement).classes.add('bwu-datagrid-header-column-active');
       },
       beforeStop: (e, ui) {
@@ -773,8 +774,6 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void setupColumnResize() {
-    dom.HtmlElement $col;
-    int j;
     Column c;
     int pageX;
     List<BwuDatagridHeaderColumn> columnElements;
@@ -784,47 +783,45 @@ class BwuDatagrid extends PolymerElement {
     $headers.querySelectorAll(".bwu-datagrid-resizable-handle").forEach((dom.HtmlElement e) {
       e.remove();
     });
-    int i = 0;
-    columnElements.forEach((e) {
+    for(int i = 0; i < columnElements.length; i++) {
       if (columns[i].resizable) {
         if (firstResizable == null) {
           firstResizable = i;
         }
         lastResizable = i;
       }
-      i++;
-    });
+    }
     if (firstResizable == null) {
       return;
     }
-    i = 0;
-    columnElements.forEach((header_col) {
+    for(int i = 0; i < columnElements.length; i++) {
+      var header_col = columnElements[i];
       if (i < firstResizable || (gridOptions.forceFitColumns && i >= lastResizable)) {
         return;
       }
-      $col = (header_col as dom.HtmlElement);
-      var div = new dom.Element.html("<div class='bwu-datagrid-resizable-handle' />", validator: nodeValidator);
+
+      var div = new dom.DivElement()
+        ..classes.add('bwu-datagrid-resizable-handle')
+        ..draggable = true;
       header_col.append(div);
-          div..onDragStart.listen((dom.MouseEvent e) {
-            // TODO dd = e.detail ??
+
+      div
+          ..onDragStart.listen((dom.MouseEvent e) {
             if (!getEditorLock.commitCurrentEdit()) {
               return false;
             }
-            pageX = dom.window.scrollX + e.client.x; // TODO check .pageX;
-            (e as dom.HtmlElement).parent.classes.add("bwu-datagrid-header-column-active");
+            pageX = e.page.x;
+            (e.target as dom.HtmlElement).parent.classes.add("bwu-datagrid-header-column-active");
             int shrinkLeewayOnRight = null, stretchLeewayOnRight = null;
             // lock each column's width option to current width
-            int i = 0;
-            columnElements.forEach((e) {
-              var cs = (e as dom.HtmlElement).getComputedStyle();
-              columns[i].previousWidth = tools.parseInt(cs.width) + tools.parseInt(cs.borderLeft) + tools.parseInt(cs.borderRight);
-              i++;
-            });
+            for(int i = 0; i < columnElements.length; i++) {
+              columns[i].previousWidth = tools.outerWidth(columnElements[i]);
+            }
             if (gridOptions.forceFitColumns) {
               shrinkLeewayOnRight = 0;
               stretchLeewayOnRight = 0;
               // colums on right affect maxPageX/minPageX
-              for (j = i + 1; j < columnElements.length; j++) {
+              for (int j = i + 1; j < columnElements.length; j++) {
                 c = columns[j];
                 if (c.resizable) {
                   if (stretchLeewayOnRight != null) {
@@ -839,12 +836,12 @@ class BwuDatagrid extends PolymerElement {
               }
             }
             int shrinkLeewayOnLeft = 0, stretchLeewayOnLeft = 0;
-            for (j = 0; j <= i; j++) {
+            for (int j = 0; j <= i; j++) {
               // columns on left only affect minPageX
               c = columns[j];
               if (c.resizable) {
                 if (stretchLeewayOnLeft != null) {
-                  if (c.maxWidth > 0) {
+                  if (c.maxWidth != null) {
                     stretchLeewayOnLeft += c.maxWidth - c.previousWidth;
                   } else {
                     stretchLeewayOnLeft = null;
@@ -868,16 +865,21 @@ class BwuDatagrid extends PolymerElement {
             maxPageX = pageX + math.min(shrinkLeewayOnRight, stretchLeewayOnLeft);
             minPageX = pageX - math.min(shrinkLeewayOnLeft, stretchLeewayOnRight);
           })
-          ..onDrag.listen((e) {
-            // TODO dd = e.detail ??
-            var actualMinWidth, d = math.min(maxPageX, math.max(minPageX, dom.window.scrollX + e.client.x)) - pageX, x; // TODO check .pageX;
+
+          ..onDrag.listen((dom.MouseEvent e) {
+            int actualMinWidth;
+            if(e.page.x == 0) {
+              return;
+            }
+            int d = math.min(maxPageX, math.max(minPageX, e.page.x)) - pageX;
+            int x;
             if (d < 0) { // shrink column
               x = d;
-              for (j = i; j >= 0; j--) {
+              for (int j = i; j >= 0; j--) {
                 c = columns[j];
                 if (c.resizable) {
                   actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, absoluteColumnMinWidth);
-                  if (x && c.previousWidth + x < actualMinWidth) {
+                  if (x > 0 && c.previousWidth + x < actualMinWidth) {
                     x += c.previousWidth - actualMinWidth;
                     c.width = actualMinWidth;
                   } else {
@@ -889,10 +891,10 @@ class BwuDatagrid extends PolymerElement {
 
               if (gridOptions.forceFitColumns) {
                 x = -d;
-                for (j = i + 1; j < columnElements.length; j++) {
+                for (int j = i + 1; j < columnElements.length; j++) {
                   c = columns[j];
                   if (c.resizable) {
-                    if (x && c.maxWidth && (c.maxWidth - c.previousWidth < x)) {
+                    if (x && c.maxWidth != null && (c.maxWidth - c.previousWidth < x)) {
                       x -= c.maxWidth - c.previousWidth;
                       c.width = c.maxWidth;
                     } else {
@@ -904,10 +906,10 @@ class BwuDatagrid extends PolymerElement {
               }
             } else { // stretch column
               x = d;
-              for (j = i; j >= 0; j--) {
+              for (int j = i; j >= 0; j--) {
                 c = columns[j];
                 if (c.resizable) {
-                  if (x && c.maxWidth && (c.maxWidth - c.previousWidth < x)) {
+                  if (x > 0 && c.maxWidth != null && (c.maxWidth - c.previousWidth < x)) {
                     x -= c.maxWidth - c.previousWidth;
                     c.width = c.maxWidth;
                   } else {
@@ -919,11 +921,11 @@ class BwuDatagrid extends PolymerElement {
 
               if (gridOptions.forceFitColumns) {
                 x = -d;
-                for (j = i + 1; j < columnElements.length; j++) {
+                for (int j = i + 1; j < columnElements.length; j++) {
                   c = columns[j];
                   if (c.resizable) {
-                    actualMinWidth = math.max(c.minWidth != 0 ? c.minWidth : 0, absoluteColumnMinWidth);
-                    if (x && c.previousWidth + x < actualMinWidth) {
+                    actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, absoluteColumnMinWidth);
+                    if (x > 0 && c.previousWidth + x < actualMinWidth) {
                       x += c.previousWidth - actualMinWidth;
                       c.width = actualMinWidth;
                     } else {
@@ -939,14 +941,13 @@ class BwuDatagrid extends PolymerElement {
               applyColumnWidths();
             }
           })
-          ..onDragEnd.listen((e) {
-            // TODO dd = e.detail ??
+
+          ..onDragEnd.listen((dom.MouseEvent e) {
             var newWidth;
-            (e as dom.HtmlElement).parent.classes.add("bwu-datagrid-header-column-active");
-            for (j = 0; j < columnElements.length; j++) {
+            (e.target as dom.HtmlElement).parent.classes.add("bwu-datagrid-header-column-active");
+            for (int j = 0; j < columnElements.length; j++) {
               c = columns[j];
-              var cs = columnElements[j].getComputedStyle();
-              newWidth = cs.width + cs.borderLeft + cs.borderRight;
+              newWidth = tools.outerWidth(columnElements[j]);
 
               if (c.previousWidth != newWidth && c.rerenderOnResize) {
                 invalidateAllRows();
@@ -957,8 +958,7 @@ class BwuDatagrid extends PolymerElement {
             eventBus.fire(core.Events.COLUMNS_RESIZED, new core.ColumnsResized(this));
             //fire(ON_COLUMNS_RESIZED, detail: {});
           });
-        i++;
-    });
+    }
   }
 
   int getVBoxDelta(dom.HtmlElement $el) {
@@ -2372,16 +2372,16 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  bool handleDragInit(dom.MouseEvent e, int dd) {
+  bool handleDrag(dom.MouseEvent e, [int dd]) {
     Cell cell = getCellFromEvent(e);
     if (cell == null || !cellExists(cell.row, cell.cell)) {
       return false;
     }
 
-    var retval = eventBus.fire(core.Events.DRAG_INIT, new core.DragInit(this, dd: dd, causedBy: e));
+    var data = eventBus.fire(core.Events.DRAG_INIT, new core.DragInit(this, dd: dd, causedBy: e));
     //var retval = trigger(self.onDragInit, dd, e);
-    if (e.isImmediatePropagationStopped()) {
-      return retval;
+    if (e.currentTarget == null && e.eventPhase == 0) { // .isImmediatePropagationStopped()) {
+      return data.retVal;
     }
 
     // if nobody claims to be handling drag'n'drop by stopping immediate propagation,
@@ -2407,7 +2407,7 @@ class BwuDatagrid extends PolymerElement {
     return false;
   }
 
-  void handleDrag(dom.MouseEvent e, [Map dd]) {
+  void handleDragOver(dom.MouseEvent e, [Map dd]) {
     dd['origin-event'] = e;
      fire('drag', detail: dd) as dom.HtmlElement; // TODO eventbus fire
     //return trigger(self.onDrag, dd, e);
@@ -2565,14 +2565,14 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void handleHeaderContextMenu(dom.MouseEvent e) {
-    var $header = tools.closest((e.target as dom.HtmlElement), ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/);
+    var $header = tools.closest((e.target as dom.HtmlElement), ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/) as BwuDatagridHeaderColumn;
     var column = $header != null ? $header.column : null;
     eventBus.fire(core.Events.HEADER_CONTEX_MENU, new core.HeaderContextMenu(this, column, causedBy: e));
     //trigger(self.onHeaderContextMenu, {column: column}, e);
   }
 
   void handleHeaderClick(dom.MouseEvent e) {
-    var $header = tools.closest((e.target as dom.HtmlElement),'.bwu-datagrid-header-column' /*, ".bwu-datagrid-header-columns"*/);
+    var $header = tools.closest((e.target as dom.HtmlElement),'.bwu-datagrid-header-column' /*, ".bwu-datagrid-header-columns"*/) as BwuDatagridHeaderColumn;
     var column = $header != null ? $header.column : null;
     if (column != null) {
       eventBus.fire(core.Events.HEADER_CLICK, new core.HeaderClick(this, column, causedBy: e));
@@ -2902,8 +2902,8 @@ class BwuDatagrid extends PolymerElement {
       left: elem.offsetLeft,
       bottom: 0,
       right: 0,
-      width: tools.parseInt(cs.width) + tools.parseInt(cs.paddingLeft) + tools.parseInt(cs.paddingRight) + tools.parseInt(cs.borderLeft) + tools.parseInt(cs.borderRight), //elem.outerWidth(),
-      height: tools.parseInt(cs.height) + tools.parseInt(cs.paddingTop) + tools.parseInt(cs.paddingBottom) + tools.parseInt(cs.borderTop) + tools.parseInt(cs.borderBottom), //elem.outerHeight(), // TODO check all other outerWidth/outherHeight if they include border
+      width: tools.outerWidth(elem), //tools.parseInt(cs.width) + tools.parseInt(cs.paddingLeft) + tools.parseInt(cs.paddingRight) + tools.parseInt(cs.borderLeft) + tools.parseInt(cs.borderRight), //elem.outerWidth(),
+      height: tools.outerHeight(elem), //parseInt(cs.height) + tools.parseInt(cs.paddingTop) + tools.parseInt(cs.paddingBottom) + tools.parseInt(cs.borderTop) + tools.parseInt(cs.borderBottom), //elem.outerHeight(), // TODO check all other outerWidth/outherHeight if they include border
       visible: true);
     box.bottom = box.top + box.height;
     box.right = box.left + box.width;

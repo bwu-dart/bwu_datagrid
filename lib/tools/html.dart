@@ -26,6 +26,11 @@ int innerWidth(dom.HtmlElement e) {
    return parseInt(cs.width) + parseInt(cs.paddingLeft) + parseInt(cs.paddingRight);
 }
 
+int outerWidth(dom.HtmlElement e) {
+  var cs = e.getComputedStyle();
+   return parseInt(cs.width) + parseInt(cs.paddingLeft) + parseInt(cs.paddingRight) + parseInt(cs.borderLeftWidth) + parseInt(cs.borderRightWidth);
+}
+
 dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement context, bool goThroughShadowBoundaries: false}) {
   dom.HtmlElement curr = e;
 
@@ -40,11 +45,11 @@ dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement con
     }
   }
 
-  var found = e;
-  while(parent != null && found != null) {
-    var found = parent.querySelector(selector);
+  var found;
+  while(parent != null && found == null) {
+    found = parent.querySelector(selector);
 
-    curr = parent;
+//    curr = parent;
     if(parent is dom.ShadowRoot) {
       if(goThroughShadowBoundaries) {
         parent = (parent as dom.ShadowRoot).host;
@@ -54,13 +59,15 @@ dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement con
     }
   }
 
-  if(found != null) {
-    return found;
-  }
+  return found;
+//  if(found != null) {
+//    return found;
+//  }
 
-  if(parent == null) {
-    return null;
-  } else {
-    return curr;
-  }
+//  // TODO check if this is still useful
+//  if(parent == null) {
+//    return null;
+//  } else {
+//    return curr;
+//  }
 }

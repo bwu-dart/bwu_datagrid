@@ -303,6 +303,7 @@ class Scroll extends EventData {
 class DragInit extends EventData {
   int dd;
   dom.MouseEvent causedBy;
+  bool retVal = false;
 
   DragInit(sender, {int dd, dom.MouseEvent causedBy}) : super(sender: sender, detail: {'dd': dd, 'causedBy': causedBy}) {
     this.dd = dd;
