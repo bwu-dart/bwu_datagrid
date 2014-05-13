@@ -31,6 +31,11 @@ int outerWidth(dom.HtmlElement e) {
    return parseInt(cs.width) + parseInt(cs.paddingLeft) + parseInt(cs.paddingRight) + parseInt(cs.borderLeftWidth) + parseInt(cs.borderRightWidth);
 }
 
+int outerHeight(dom.HtmlElement e) {
+  var cs = e.getComputedStyle();
+   return parseInt(cs.height) + parseInt(cs.paddingTop) + parseInt(cs.paddingBottom) + parseInt(cs.borderTopWidth) + parseInt(cs.borderBottomWidth);
+}
+
 dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement context, bool goThroughShadowBoundaries: false}) {
   dom.HtmlElement curr = e;
 
