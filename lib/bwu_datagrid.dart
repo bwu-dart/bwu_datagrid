@@ -17,6 +17,7 @@ import 'package:bwu_datagrid/datagrid/bwu_datagrid_header_column.dart';
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_headers.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/tools/html.dart' as tools;
+import 'package:bwu_datagrid/formatters/formatters.dart';
 
 
 
@@ -569,11 +570,11 @@ class BwuDatagrid extends PolymerElement {
 
   void createColumnHeaders() {
     var onMouseEnter = (dom.MouseEvent e) {
-      classes.add("ui-state-hover");
+      (e.target as dom.HtmlElement).classes.add("ui-state-hover");
     };
 
     var onMouseLeave = (dom.MouseEvent e) {
-      classes.remove("ui-state-hover");
+      (e.target as dom.HtmlElement).classes.remove("ui-state-hover");
     };
 
     $headers.querySelectorAll(".bwu-datagrid-header-column")
@@ -1516,7 +1517,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  FormatterFn getFormatter(int row, Column column) {
+  Formatter getFormatter(int row, Column column) {
     var rowMetadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
 
     // look up by id, then index
@@ -1621,7 +1622,7 @@ class BwuDatagrid extends PolymerElement {
     assert(item is Item || item is Map);
 
     var m = columns[cell];
-    var cellCss = "bwu-datagrid-cell l${cell} r${math.min(columns.length - 1, cell + tools.parseInt(colspan) - 1)}${
+    var cellCss = "bwu-datagrid-cell l${cell} r${math.min(columns.length - 1, cell + tools.parseInt(colspan) - 1)} ${
       (m.cssClass != null ? m.cssClass : '')}";
     if (row == activeRow && cell == activeCell) {
       cellCss = "${cellCss} active";
@@ -1640,7 +1641,7 @@ class BwuDatagrid extends PolymerElement {
     // if there is a corresponding row (if not, this is the Add New row or this data hasn't been loaded yet)
     if (item != null) {
       var value = getDataItemValueForColumn(item, m);
-      cellElement.append(new dom.Text(getFormatter(row, m)(row, cell, value, m, item)));
+      /*cellElement.append(new dom.Text(*/getFormatter(row, m)(cellElement, row, cell, value, m, item); //));
     }
 
     //stringArray.add("</div>");

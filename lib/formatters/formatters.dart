@@ -1,5 +1,6 @@
 library bwu_dart.bwu_datagrid.formatters;
 
+import 'dart:html' as dom;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 /***
@@ -25,51 +26,68 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 //    }
 //  });
 
+
+//typedef String FormatterFn(dom.HtmlElement target, int row, int cell, dynamic value, Column m, dataContext);
+
+class DefaultFormatter extends Formatter {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext) {
+    if (value != null) {
+      //return "";
+    //} else {
+      /*return*/ target.text = ('$value'.replaceAll(r'&',"&amp;").replaceAll(r'<',"&lt;").replaceAll(r'>',"&gt;"));
+    }
+  }
+}
+
+
 abstract class Formatter {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext);
 }
 
 class PercentCompleteFormatter extends Formatter {
 
-  String call(int row, int cell, int value, Column columnDef, int dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext) {
     if (value == null || value == "") {
-      return "-";
+      target.text = '-';
     } else if (value < 50) {
-      return "<span style='color:red;font-weight:bold;'>${value}%</span>";
+      target.appendHtml("<span style='color:red;font-weight:bold;'>${value}%</span>");
     } else {
-      return "<span style='color:green'>${value}%</span>";
+      target.appendHtml("<span style='color:green'>${value}%</span>");
     }
   }
 }
 
 class PercentCompleteBarFormatter extends Formatter {
 
-  String call(int row, int cell, int value, ColumnDefinition columnDef, int dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic dataContext) {
     if (value == null || value == "") {
-      return "";
+      target.text = '';
     }
 
     var color;
 
     if (value < 30) {
-      color = "red";
+      color = 'red';
     } else if (value < 70) {
-      color = "silver";
+      color = 'silver';
     } else {
-      color = "green";
+      color = 'green';
     }
 
-    return "<span class='percent-complete-bar' style='background:" + color + ";width:${value}%'></span>";
+    target.appendHtml('<span class="percent-complete-bar" style="background: ${color};width:${value}%"></span>');
   }
 }
 
 class YesNoFormatter extends Formatter {
-  String call(int row, int cell, bool value, ColumnDefinition columnDef, int dataContext) {
-    return value ? "Yes" : "No";
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic  dataContext) {
+    target.text =  value ? 'Yes' : 'No';
   }
 }
 
 class CheckmarkFormatter extends Formatter {
-  String call(int row, int cell, bool value, ColumnDefinition columnDef, int dataContext) {
-    return value ? "<img src='../images/tick.png'>" : "";
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic  dataContext) {
+    if(value != null && value is bool && value) {
+      target.appendHtml('<img src="packages/bwu_datagrid/assets/images/tick.png">'); // : '';
+    }
   }
 }

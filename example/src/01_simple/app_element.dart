@@ -5,7 +5,6 @@ import 'package:polymer/polymer.dart';
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
-import 'package:bwu_datagrid/plugins/bwu_auto_tooltips.dart';
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {

@@ -5,6 +5,7 @@ import 'dart:collection' as coll;
 
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/formatters/formatters.dart';
 //import 'package:bwu_datagrid/bwu_datagrid.dart';
 
 
@@ -93,7 +94,7 @@ abstract class EditorFactory {
 }
 
 abstract class FormatterFactory {
-  FormatterFn getFormatter(Column column);
+  Formatter getFormatter(Column column);
 }
 
 class ColumnMetadata {
@@ -225,7 +226,7 @@ class Column {
   String cssClass;
 
   Editor editor;
-  FormatterFn formatter;
+  Formatter formatter;
   bool cannotTriggerInsert;
 
   String field;
@@ -235,7 +236,32 @@ class Column {
 
   }
 
-  Column({this.id, this.name, this.field});
+  Column({this.id, this.name, this.field, this.width, this.minWidth, this.maxWidth, this.cssClass, this.formatter, this.resizable, this.sortable, this.focusable, this.selectable, this.defaultSortAsc, this.rerenderOnResize}) {
+    if(name == null) {
+      this.name = '';
+    }
+    if(minWidth == null) {
+      this.minWidth = 30;
+    }
+    if(resizable == null) {
+      this.resizable = true;
+    }
+    if(sortable == null) {
+      this.sortable = false;
+    }
+    if(focusable == null) {
+      this.focusable = true;
+    }
+    if(selectable == null) {
+      this.selectable = true;
+    }
+    if(defaultSortAsc == null) {
+      this.defaultSortAsc = true;
+    }
+    if(rerenderOnResize == null) {
+      this.rerenderOnResize = false;
+    }
+  }
 
   Column.defaults();
 
@@ -249,6 +275,7 @@ class Column {
     if(c.resizable != d.resizable) resizable = c.resizable;
     if(c.sortable != d.sortable) sortable = c.sortable;
     if(c.focusable != d.focusable) focusable = c.focusable;
+    if(c.focusable != d.focusable) focusable = c.focusable;
     if(c.selectable != d.selectable) selectable = c.selectable;
     if(c.defaultSortAsc != d.defaultSortAsc) defaultSortAsc = c.defaultSortAsc;
     if(c.headerCssClass != d.headerCssClass) headerCssClass = c.headerCssClass;
@@ -260,16 +287,6 @@ class Column {
     if(c.cannotTriggerInsert != d.cannotTriggerInsert) cannotTriggerInsert = c.cannotTriggerInsert;
     if(c.field != d.field) field = c.field;
     if(c.previousWidth != d.previousWidth) previousWidth = c.previousWidth;
-  }
-}
-
-typedef String FormatterFn(int row, int cell, dynamic value, Column m, dataContext);
-
-String defaultFormatterImpl(int row, int cell, dynamic value, Column columnDef, dataContext) {
-  if (value == null) {
-    return "";
-  } else {
-    return '$value'.replaceAll(r'&',"&amp;").replaceAll(r'<',"&lt;").replaceAll(r'>',"&gt;");
   }
 }
 
@@ -303,7 +320,7 @@ class GridOptions { // defaults
   Function dataItemColumnValueExtractor; // TODO typeDef (item, columnDef)
   bool fullWidthRows = false;
   bool multiColumnSort = false;
-  FormatterFn defaultFormatter;
+  Formatter defaultFormatter;
   bool forceSyncScrolling = false;
   String addNewRowCssClass = 'new-row';
   bool syncColumnCellResize = false;
@@ -357,7 +374,7 @@ class GridOptions { // defaults
     }
 
     if(defaultFormatter == null) {
-      this.defaultFormatter = defaultFormatterImpl;
+      this.defaultFormatter = new DefaultFormatter();
     }
   }
 
