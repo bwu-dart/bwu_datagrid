@@ -879,7 +879,7 @@ class BwuDatagrid extends PolymerElement {
                 c = columns[j];
                 if (c.resizable) {
                   actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, absoluteColumnMinWidth);
-                  if (x > 0 && c.previousWidth + x < actualMinWidth) {
+                  if (x != null && c.previousWidth + x < actualMinWidth) {
                     x += c.previousWidth - actualMinWidth;
                     c.width = actualMinWidth;
                   } else {
@@ -944,7 +944,7 @@ class BwuDatagrid extends PolymerElement {
 
           ..onDragEnd.listen((dom.MouseEvent e) {
             var newWidth;
-            (e.target as dom.HtmlElement).parent.classes.add("bwu-datagrid-header-column-active");
+            (e.target as dom.HtmlElement).parent.classes.remove("bwu-datagrid-header-column-active");
             for (int j = 0; j < columnElements.length; j++) {
               c = columns[j];
               newWidth = tools.outerWidth(columnElements[j]);
