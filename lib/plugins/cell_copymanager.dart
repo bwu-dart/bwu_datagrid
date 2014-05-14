@@ -3,7 +3,7 @@ library bwu_dart.bwu_datagrid.plugin.cell_copymanager;
 import 'dart:html' as dom;
 import 'dart:async' as async;
 
-import 'package:bwu_datagrid/plugin/plugin.dart';
+import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 
 //  // register namespace
@@ -17,12 +17,13 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 class CellCopyManager extends Plugin {
   var _copiedRanges;
 
-  CellCopyManager(BwuDatagrid grid) : super(grid);
+  CellCopyManager();
 
   async.StreamSubscription keyDownSubscription;
 
   @override
-  void init() {
+  void init(BwuDatagrid grid) {
+    super.init(grid);
     keyDownSubscription = grid.onKeyDown.listen(handleKeyDown);
   }
 

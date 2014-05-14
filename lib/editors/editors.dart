@@ -13,7 +13,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 class Editor {
   BwuDatagrid grid;
   NodeBox gridPosition;
-  NodeBox position;
+  //NodeBox position;
   dom.HtmlElement container;
   Column column;
   Item item;
@@ -95,10 +95,10 @@ class TextEditor extends Editor {
     $input.focus();
   }
 
-  @override
+//  @override
   String get value => $input.val();
 
-  @override
+//  @override
   void  set value(val) => $input.val(val);
 
   @override
