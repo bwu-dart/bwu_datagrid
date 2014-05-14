@@ -333,12 +333,12 @@ class BwuDatagrid extends PolymerElement {
           //..bind("draginit", handleDragInit) // TODO special jQuery event before DragStart (click)
           ..onDragStart.listen((e) {/*{distance: 3}*/; handleDragStart(e, {'distance': 3});}) // TODO what is distance?
           ..onDragOver.listen(handleDrag)
-          ..onDragEnd.listen(handleDragEnd)
-          ..querySelectorAll(".bwu-datagrid--cell").forEach((e) {
-            (e as dom.HtmlElement)
-              ..onMouseEnter.listen(handleMouseEnter)
-              ..onMouseLeave.listen(handleMouseLeave);
-          });
+          ..onDragEnd.listen(handleDragEnd);
+//          ..querySelectorAll(".bwu-datagrid-cell").forEach((e) {
+//            (e as dom.HtmlElement)
+//              ..onMouseEnter.listen(handleMouseEnter)
+//              ..onMouseLeave.listen(handleMouseLeave);
+//          });
 
       // Work around http://crbug.com/312427.
       if (dom.window.navigator.userAgent.toLowerCase().contains('webkit') &&
@@ -1684,7 +1684,7 @@ class BwuDatagrid extends PolymerElement {
       zombieRowNodeFromLastMouseWheelEvent = rowNodeFromLastMouseWheelEvent;
     } else {
       //$canvas.children[0].remove(cacheEntry.rowNode);
-      cacheEntry.rowNode.remove();
+      cacheEntry.rowNode.remove(); // TODO remove/add event handlers
     }
 
     rowsCache.remove(row);
@@ -1932,31 +1932,33 @@ class BwuDatagrid extends PolymerElement {
 
     // Remove cells outside the range.
     var cellsToRemove = [];
-    for (var i in cacheEntry.cellNodesByColumnIdx) {
+    for (var i in cacheEntry.cellNodesByColumnIdx.keys) {
       // I really hate it when people mess with Array.prototype.
-      if (!cacheEntry.cellNodesByColumnIdx.containsKey(i)) { // TODO check
-        continue;
-      }
+//      if (!cacheEntry.cellNodesByColumnIdx.containsKey(i)) { // TODO check
+//        continue;
+//      }
 
       // This is a string, so it needs to be cast back to a number.
-      i = i | 0;
+      //i = i | 0;
 
       var colspan = cacheEntry.cellColSpans[i];
+      int intColspan = tools.parseInt(colspan);
       if (columnPosLeft[i] > range.rightPx ||
-        columnPosRight[math.min(columns.length - 1, i + colspan - 1)] < range.leftPx) {
+        columnPosRight[math.min(columns.length - 1, i + intColspan - 1)] < range.leftPx) {
         if (!(row == activeRow && i == activeCell)) {
           cellsToRemove.add(i);
         }
       }
     }
 
-    dom.HtmlElement cellToRemove;
-    while ((cellToRemove = cellsToRemove.removeLast()) != null) { // TODO check if this throws if array is empty
+    int cellToRemove;
+    while (cellsToRemove.length > 0) {
+      cellToRemove = cellsToRemove.removeLast();
       cacheEntry.cellNodesByColumnIdx[cellToRemove].remove();
       cacheEntry.cellColSpans.remove(cellToRemove);
       cacheEntry.cellNodesByColumnIdx.remove(cellToRemove);
-      if (postProcessedRows[row] != null) {
-        cellToRemove.remove();
+      if (postProcessedRows.contains(row)) {
+        postProcessedRows[row].remove(cellToRemove);
       }
       totalCellsRemoved++;
     }
@@ -2017,12 +2019,12 @@ class BwuDatagrid extends PolymerElement {
           }
         }
 
-        if (columnPosRight[math.min(ii - 1, i + colspan - 1)] > range.leftPx) {
+        intColspan = tools.parseInt(colspan);
+        if (columnPosRight[math.min(ii - 1, i + intColspan - 1)] > range.leftPx) {
           appendCellHtml(rowElement, row, i, colspan, d);
           cellsAdded++;
         }
 
-        intColspan = tools.parseInt(colspan);
         i += (intColspan > 1 ? intColspan - 1 : 0);
       }
 
@@ -2046,7 +2048,8 @@ class BwuDatagrid extends PolymerElement {
     while (processedRows.length > 0 && (processedRow = processedRows.removeLast()) != null) {
       cacheEntry = rowsCache[processedRow];
       var columnIdx;
-      while ((columnIdx = cacheEntry.cellRenderQueue.removeLast()) != null) {
+      while (cacheEntry.cellRenderQueue.length > 0) {
+        columnIdx = cacheEntry.cellRenderQueue.removeLast();
         node = x.lastChild;
         cacheEntry.rowNode.append(node);
         cacheEntry.cellNodesByColumnIdx[columnIdx] = node;
@@ -2105,6 +2108,11 @@ class BwuDatagrid extends PolymerElement {
 
     for (var i = 0; i < rows.length; i++) {
       rowsCache[rows[i]].rowNode = parentNode.append(x.firstChild);
+      rowsCache[rows[i]].rowNode.querySelectorAll(".bwu-datagrid-cell").forEach((e) {
+        (e as dom.HtmlElement)
+          ..onMouseEnter.listen(handleMouseEnter)
+          ..onMouseLeave.listen(handleMouseLeave);
+      });
     }
 
     if (needToReselectCell) {
@@ -3686,6 +3694,27 @@ class BwuDatagrid extends PolymerElement {
 
 //  static const dom.EventStreamProvider<dom.CustomEvent> _onBwuMouseEnter =
 //      const dom.EventStreamProvider<dom.CustomEvent>(core.Events.MOUSE_ENTER);
+
+
+  /**
+   * on header-mouse-leave
+   */
+  async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
+      eventBus.onEvent(core.Events.HEADER_MOUSE_LEAVE);
+      //BwuDatagrid._onBwuHeaderMouseLeave.forTarget(this);
+
+//  static const dom.EventStreamProvider<dom.CustomEvent> _onBwuHeaderMouseLeave =
+//      const dom.EventStreamProvider<dom.CustomEvent>(core.Events.HEADER_MOUSE_LEAVE);
+
+  /**
+   * on mouse-enter
+   */
+  async.Stream<core.MouseLeave> get onBwuMouseLeave =>
+      eventBus.onEvent(core.Events.MOUSE_LEAVE);
+      //BwuDatagrid._onBwuMouseLeave.forTarget(this);
+
+//  static const dom.EventStreamProvider<dom.CustomEvent> _onBwuMouseLeave =
+//      const dom.EventStreamProvider<dom.CustomEvent>(core.Events.MOUSE_LEAVE);
 
 }
 //  /**

@@ -40,7 +40,7 @@ dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement con
   dom.HtmlElement curr = e;
 
   if(context != null) {
-    print('tools.closest: context not yet supported: ${context}');
+    //print('tools.closest: context not yet supported: ${context}');
   }
 
   dom.HtmlElement parent = curr.parentNode;
@@ -50,9 +50,19 @@ dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement con
     }
   }
 
+  var foundPrevious = e;
   var found;
   while(parent != null && found == null) {
     found = parent.querySelector(selector);
+    if(found != null) {
+      if(parent.querySelectorAll(selector).contains(foundPrevious)) {
+        return foundPrevious;
+      } else {
+        return found;
+      }
+    }
+    foundPrevious = found;
+
 
 //    curr = parent;
     if(parent is dom.ShadowRoot) {
