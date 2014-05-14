@@ -11,6 +11,8 @@ BWU Datagrid is a Dart port from [SlickGrid](https://github.com/mleibman/SlickGr
 
 ### Status
 
+#### some things are already working:
+ 
 * Basic rendering
 * Scrolling and manual column resize
 
