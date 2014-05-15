@@ -51,15 +51,15 @@ class Cell {
 }
 
 class NodeBox {
-  final int top;
-  final int left;
-  final int bottom;
-  final int right;
-  final int width;
-  final int height;
-  final bool visible;
+  int top;
+  int left;
+  int bottom;
+  int right;
+  int width;
+  int height;
+  bool visible;
 
-  const NodeBox({this.top, this.left, this.bottom, this.right, this.width, this.height, this.visible});
+  NodeBox({this.top, this.left, this.bottom, this.right, this.width, this.height, this.visible});
 }
 
 class Row {
@@ -115,50 +115,15 @@ class RowMetadata {
 
 }
 
-//class ColumnDefinition {
-//  int field;
-//}
 
 class Item {
   String title;
   int level;
   bool collapsed;
   String operator [](int idx) {
-
+    print('Item [] accessor is not yet implemented');
   }
 }
-
-//class Data {
-//  ItemMetadata getItemMetadata(int row) {
-//
-//  }
-//
-//  bool get getLength => true;
-//
-//  int get length => 0;
-//
-//  Item getItem(int idx) {
-//
-//  }
-//
-//  Item operator [](int idx) {
-//
-//  }
-//
-//}
-
-/* temp */
-//class Headers {
-//  dom.HtmlElement element;
-//
-//  Headers filter(String f) {
-//
-//  }
-//
-//  void sortable(String s) {
-//
-//  }
-//}
 
 /* temp */
 class SortColumn {
@@ -166,29 +131,6 @@ class SortColumn {
   bool sortAsc = true;
 
   SortColumn(this.columnId, this.sortAsc);
-}
-
-/* temp */
-//class Column {
-//  String id;
-//  String name;
-//  bool sortable = false;
-//  int previousWidth;
-//  bool resizable = false;
-//  int maxWidth;
-//  int minWidth;
-//  String toolTip;
-//  String headerCssClass;
-//  int width;
-//  bool defaultSortAsc = true;
-//  bool rerenderOnResize = false;
-//  Editor editor;
-//  String cssClass;
-//  int field;
-//}
-
-class ValidationResults {
-  bool valid;
 }
 
 class EditCommand {
@@ -211,119 +153,96 @@ class EditController {
 
 class Column {
   String id;
-  String name = '';
+  String name;
+  String field;
   int width;
-  int minWidth = 30;
+  int minWidth;
   int maxWidth;
-  bool resizable = true;
-  bool sortable = false;
-  bool focusable = true;
-  bool selectable = true;
-  bool defaultSortAsc = true;
+  bool resizable;
+  bool sortable;
+  bool focusable;
+  bool selectable;
+  bool defaultSortAsc;
   String headerCssClass;
-  bool rerenderOnResize = false;
+  bool rerenderOnResize;
   String toolTip;
   String cssClass;
+  bool cannotTriggerInsert;
 
   Editor editor;
   Formatter formatter;
-  bool cannotTriggerInsert;
+  Validator validator;
 
-  String field;
   int previousWidth;
 
-  void asyncPostRender(dom.HtmlElement node, int row, /*Map/Item*/ rowData, Column m) {
-
+  Column({this.id, this.field, this.minWidth : 30, this.maxWidth, this.cssClass, this.formatter, this.editor, this.validator,
+    this.name: '' , this.width, this.resizable : true, this.sortable : false, this.focusable : true, this.selectable : true, this.defaultSortAsc : true, this.rerenderOnResize : false, this.cannotTriggerInsert: false}) {
   }
 
-  Column({this.id, this.name, this.field, this.width, this.minWidth, this.maxWidth, this.cssClass, this.formatter, this.resizable, this.sortable, this.focusable, this.selectable, this.defaultSortAsc, this.rerenderOnResize}) {
-    if(name == null) {
-      this.name = '';
-    }
-    if(minWidth == null) {
-      this.minWidth = 30;
-    }
-    if(resizable == null) {
-      this.resizable = true;
-    }
-    if(sortable == null) {
-      this.sortable = false;
-    }
-    if(focusable == null) {
-      this.focusable = true;
-    }
-    if(selectable == null) {
-      this.selectable = true;
-    }
-    if(defaultSortAsc == null) {
-      this.defaultSortAsc = true;
-    }
-    if(rerenderOnResize == null) {
-      this.rerenderOnResize = false;
-    }
-  }
-
-  Column.defaults();
+  Column.unititialized();
 
   void extend(Column c) {
-    Column d = new Column.defaults();
-    if(c.id != d.id) id = c.id;
-    if(c.name != d.name) name = c.name;
-    if(c.width != d.width) width = c.width;
-    if(c.minWidth != d.minWidth) minWidth = c.minWidth;
-    if(c.maxWidth != d.maxWidth) maxWidth = c.maxWidth;
-    if(c.resizable != d.resizable) resizable = c.resizable;
-    if(c.sortable != d.sortable) sortable = c.sortable;
-    if(c.focusable != d.focusable) focusable = c.focusable;
-    if(c.focusable != d.focusable) focusable = c.focusable;
-    if(c.selectable != d.selectable) selectable = c.selectable;
-    if(c.defaultSortAsc != d.defaultSortAsc) defaultSortAsc = c.defaultSortAsc;
-    if(c.headerCssClass != d.headerCssClass) headerCssClass = c.headerCssClass;
-    if(c.rerenderOnResize != d.rerenderOnResize) rerenderOnResize = c.rerenderOnResize;
-    if(c.toolTip != d.toolTip) toolTip = c.toolTip;
-    if(c.cssClass != d.cssClass) cssClass = c.cssClass;
-    if(c.editor != d.editor) editor = c.editor;
-    if(c.formatter != d.formatter) formatter = c.formatter;
-    if(c.cannotTriggerInsert != d.cannotTriggerInsert) cannotTriggerInsert = c.cannotTriggerInsert;
-    if(c.field != d.field) field = c.field;
-    if(c.previousWidth != d.previousWidth) previousWidth = c.previousWidth;
+    if(c.id != null) id = c.id;
+    if(c.name != null) name = c.name;
+    if(c.field != null) field = c.field;
+    if(c.width != null) width = c.width;
+    if(c.minWidth != null) minWidth = c.minWidth;
+    if(c.maxWidth != null) maxWidth = c.maxWidth;
+    if(c.resizable != null) resizable = c.resizable;
+    if(c.sortable != null) sortable = c.sortable;
+    if(c.focusable != null) focusable = c.focusable;
+    if(c.selectable != null) selectable = c.selectable;
+    if(c.defaultSortAsc != null) defaultSortAsc = c.defaultSortAsc;
+    if(c.headerCssClass != null) headerCssClass = c.headerCssClass;
+    if(c.rerenderOnResize != null) rerenderOnResize = c.rerenderOnResize;
+    if(c.toolTip != null) toolTip = c.toolTip;
+    if(c.cssClass != null) cssClass = c.cssClass;
+    if(c.cannotTriggerInsert != null) cannotTriggerInsert = c.cannotTriggerInsert;
+    if(c.editor != null) editor = c.editor;
+    if(c.formatter != null) formatter = c.formatter;
+    if(c.validator != null) validator = c.validator;
+    if(c.previousWidth != null) previousWidth = c.previousWidth;
+  }
+
+  void asyncPostRender(dom.HtmlElement node, int row, /*Map/Item*/ rowData, Column m) {
+    print('Column.asyncPostRender not yet implemented');
   }
 }
 
 class GridOptions { // defaults
-  bool explicitInitialization= false;
-  int rowHeight = 25;
-  int defaultColumnWidth = 80;
-  bool enableAddRow = false;
-  bool leaveSpaceForNewRows = false;
-  bool editable = false;
-  bool autoEdit = true;
-  bool enableCellNavigation = true;
-  bool enableColumnReorder = true;
-  bool asyncEditorLoading = false;
-  Duration asyncEditorLoadDelay = const Duration(milliseconds: 100);
-  bool forceFitColumns = false;
-  bool enableAsyncPostRender = false;
-  Duration asyncPostRenderDelay = const Duration(milliseconds: 50);
-  bool autoHeight = false;
-  EditorLock editorLock = new EditorLock();
-  bool showHeaderRow = false;
-  int headerRowHeight = 25;
-  bool showTopPanel = false;
-  int topPanelHeight = 25;
+  bool explicitInitialization;
+  int rowHeight;
+  int defaultColumnWidth;
+  bool enableAddRow;
+  bool leaveSpaceForNewRows;
+  bool editable;
+  bool autoEdit;
+  bool enableCellNavigation;
+  bool enableColumnReorder;
+  bool asyncEditorLoading;
+  Duration asyncEditorLoadDelay;
+  bool forceFitColumns;
+  bool enableAsyncPostRender;
+  Duration asyncPostRenderDelay;
+  bool autoHeight;
+  EditorLock editorLock;
+  bool showHeaderRow;
+  int headerRowHeight;
+  bool showTopPanel;
+  int topPanelHeight;
   FormatterFactory formatterFactory;
   EditorFactory editorFactory;
-  String cellFlashingCssClass = 'flashing';
-  String selectedCellCssClass = 'selected';
-  bool multiSelect = true;
-  bool enableTextSelectionOnCells = false;
+  String cellFlashingCssClass;
+  String selectedCellCssClass;
+  bool multiSelect;
+  bool enableTextSelectionOnCells;
   Function dataItemColumnValueExtractor; // TODO typeDef (item, columnDef)
-  bool fullWidthRows = false;
-  bool multiColumnSort = false;
+  bool fullWidthRows;
+  bool multiColumnSort;
   Formatter defaultFormatter;
-  bool forceSyncScrolling = false;
-  String addNewRowCssClass = 'new-row';
-  bool syncColumnCellResize = false;
+  bool forceSyncScrolling;
+  String addNewRowCssClass;
+  bool syncColumnCellResize;
   Function editCommandHandler;
 
   GridOptions({
@@ -378,41 +297,43 @@ class GridOptions { // defaults
     }
   }
 
+  GridOptions.unitialized();
+
   void extend(GridOptions o) {
-    var d = new GridOptions();
-    if(o.explicitInitialization!= d.explicitInitialization) explicitInitialization = o.explicitInitialization;
-    if(o.rowHeight!= d.rowHeight) rowHeight = o.rowHeight;
-    if(o.defaultColumnWidth!= d.defaultColumnWidth) defaultColumnWidth = o.defaultColumnWidth;
-    if(o.enableAddRow!= d.enableAddRow) enableAddRow = o.enableAddRow;
-    if(o.leaveSpaceForNewRows!= d.leaveSpaceForNewRows) leaveSpaceForNewRows = o.leaveSpaceForNewRows;
-    if(o.editable!= d.editable) editable = o.editable;
-    if(o.autoEdit!= d.autoEdit) autoEdit = o.autoEdit;
-    if(o.enableCellNavigation!= d.enableCellNavigation) enableCellNavigation = o.enableCellNavigation;
-    if(o.enableColumnReorder!= d.enableColumnReorder) enableColumnReorder = o.enableColumnReorder;
-    if(o.asyncEditorLoading!= d.asyncEditorLoading) asyncEditorLoading = o.asyncEditorLoading;
-    if(o.asyncEditorLoadDelay!= d.asyncEditorLoadDelay) asyncEditorLoadDelay = o.asyncEditorLoadDelay;
-    if(o.forceFitColumns!= d.forceFitColumns) forceFitColumns = o.forceFitColumns;
-    if(o.enableAsyncPostRender!= d.enableAsyncPostRender) enableAsyncPostRender = o.enableAsyncPostRender;
-    if(o.asyncPostRenderDelay!= d.asyncPostRenderDelay) asyncPostRenderDelay = o.asyncPostRenderDelay;
-    if(o.autoHeight!= d.autoHeight) autoHeight = o.autoHeight;
-    if(o.editorLock!= d.editorLock) editorLock = o.editorLock;
-    if(o.showHeaderRow!= d.showHeaderRow) showHeaderRow = o.showHeaderRow;
-    if(o.headerRowHeight!= d.headerRowHeight) headerRowHeight = o.headerRowHeight;
-    if(o.showTopPanel!= d.showTopPanel) showTopPanel = o.showTopPanel;
-    if(o.topPanelHeight!= d.topPanelHeight) topPanelHeight = o.topPanelHeight;
-    if(o.formatterFactory!= d.formatterFactory) formatterFactory = o.formatterFactory;
-    if(o.editorFactory!= d.editorFactory) editorFactory = o.editorFactory;
-    if(o.cellFlashingCssClass!= d.cellFlashingCssClass) cellFlashingCssClass = o.cellFlashingCssClass;
-    if(o.selectedCellCssClass!= d.selectedCellCssClass) selectedCellCssClass = o.selectedCellCssClass;
-    if(o.multiSelect!= d.multiSelect) multiSelect = o.multiSelect;
-    if(o.enableTextSelectionOnCells!= d.enableTextSelectionOnCells) enableTextSelectionOnCells = o.enableTextSelectionOnCells;
-    if(o.dataItemColumnValueExtractor!= d.dataItemColumnValueExtractor) dataItemColumnValueExtractor = o.dataItemColumnValueExtractor;
-    if(o.fullWidthRows!= d.fullWidthRows) fullWidthRows = o.fullWidthRows;
-    if(o.multiColumnSort!= d.multiColumnSort) multiColumnSort = o.multiColumnSort;
-    if(o.defaultFormatter!= d.defaultFormatter) defaultFormatter = o.defaultFormatter;
-    if(o.forceSyncScrolling!= d.forceSyncScrolling) forceSyncScrolling = o.forceSyncScrolling;
-    if(o.addNewRowCssClass!= d.addNewRowCssClass) addNewRowCssClass = o.addNewRowCssClass;
-    if(o.syncColumnCellResize!= d.syncColumnCellResize) syncColumnCellResize = o.syncColumnCellResize;
-    if(o.editCommandHandler!= d.editCommandHandler) editCommandHandler = o.editCommandHandler;
+    //var d = new GridOptions.unitialized();
+    if(o.explicitInitialization != null) explicitInitialization = o.explicitInitialization;
+    if(o.rowHeight!= null) rowHeight = o.rowHeight;
+    if(o.defaultColumnWidth!= null) defaultColumnWidth = o.defaultColumnWidth;
+    if(o.enableAddRow!= null) enableAddRow = o.enableAddRow;
+    if(o.leaveSpaceForNewRows!= null) leaveSpaceForNewRows = o.leaveSpaceForNewRows;
+    if(o.editable!= null) editable = o.editable;
+    if(o.autoEdit!= null) autoEdit = o.autoEdit;
+    if(o.enableCellNavigation!= null) enableCellNavigation = o.enableCellNavigation;
+    if(o.enableColumnReorder!= null) enableColumnReorder = o.enableColumnReorder;
+    if(o.asyncEditorLoading!= null) asyncEditorLoading = o.asyncEditorLoading;
+    if(o.asyncEditorLoadDelay!= null) asyncEditorLoadDelay = o.asyncEditorLoadDelay;
+    if(o.forceFitColumns!= null) forceFitColumns = o.forceFitColumns;
+    if(o.enableAsyncPostRender!= null) enableAsyncPostRender = o.enableAsyncPostRender;
+    if(o.asyncPostRenderDelay!= null) asyncPostRenderDelay = o.asyncPostRenderDelay;
+    if(o.autoHeight!= null) autoHeight = o.autoHeight;
+    if(o.editorLock!= null) editorLock = o.editorLock;
+    if(o.showHeaderRow!= null) showHeaderRow = o.showHeaderRow;
+    if(o.headerRowHeight!= null) headerRowHeight = o.headerRowHeight;
+    if(o.showTopPanel!= null) showTopPanel = o.showTopPanel;
+    if(o.topPanelHeight!= null) topPanelHeight = o.topPanelHeight;
+    if(o.formatterFactory!= null) formatterFactory = o.formatterFactory;
+    if(o.editorFactory!= null) editorFactory = o.editorFactory;
+    if(o.cellFlashingCssClass!= null) cellFlashingCssClass = o.cellFlashingCssClass;
+    if(o.selectedCellCssClass!= null) selectedCellCssClass = o.selectedCellCssClass;
+    if(o.multiSelect!= null) multiSelect = o.multiSelect;
+    if(o.enableTextSelectionOnCells!= null) enableTextSelectionOnCells = o.enableTextSelectionOnCells;
+    if(o.dataItemColumnValueExtractor!= null) dataItemColumnValueExtractor = o.dataItemColumnValueExtractor;
+    if(o.fullWidthRows!= null) fullWidthRows = o.fullWidthRows;
+    if(o.multiColumnSort!= null) multiColumnSort = o.multiColumnSort;
+    if(o.defaultFormatter!= null) defaultFormatter = o.defaultFormatter;
+    if(o.forceSyncScrolling!= null) forceSyncScrolling = o.forceSyncScrolling;
+    if(o.addNewRowCssClass!= null) addNewRowCssClass = o.addNewRowCssClass;
+    if(o.syncColumnCellResize!= null) syncColumnCellResize = o.syncColumnCellResize;
+    if(o.editCommandHandler!= null) editCommandHandler = o.editCommandHandler;
   }
 }

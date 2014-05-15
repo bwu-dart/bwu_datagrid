@@ -239,9 +239,9 @@ class BeforeCellEditorDestroy extends EventData {
 
 class BeforeEditCell extends EventData {
   Cell cell;
-  Item item;
+  /*Map/Item*/ dynamic item;
   Column column;
-  BeforeEditCell(sender, {Cell cell, Item item, Column column}) : super(sender: sender, detail: {'cell': cell, 'item': item, 'column':column}) {
+  BeforeEditCell(sender, {Cell cell, /*Map/Item*/ dynamic item, Column column}) : super(sender: sender, detail: {'cell': cell, 'item': item, 'column':column}) {
     this.cell = cell;
     this.item = item;
     this.column = column;
@@ -255,17 +255,17 @@ class ActiveCellPositionChanged extends EventData {
 
 class CellChanged extends EventData {
   Cell cell;
-  Item item;
-  CellChanged(sender, Cell cell, Item item) : super(sender: sender, detail: {'cell': cell, 'item': item}) {
+  /*Map/Item*/ dynamic item;
+  CellChanged(sender, Cell cell, /*Map/Item*/ dynamic item) : super(sender: sender, detail: {'cell': cell, 'item': item}) {
     this.cell = cell;
     this.item = item;
   }
 }
 
 class AddNewRow extends EventData {
-  Item item;
+  /*Map/Item*/ dynamic item;
   Column column;
-  AddNewRow(sender, Item item, Column column) : super(sender: sender, detail: {'item': item, 'column': column}) {
+  AddNewRow(sender, /*Map/Item*/ dynamic item, Column column) : super(sender: sender, detail: {'item': item, 'column': column}) {
     this.item = item;
     this.column = column;
   }
@@ -274,12 +274,12 @@ class AddNewRow extends EventData {
 class ValidationError extends EventData {
   Editor editor;
   dom.HtmlElement cellNode;
-  ValidationResults validationResults;
+  ValidationResult validationResults;
   Cell cell;
   Column column;
   ValidationError(sender, {Editor editor,
     dom.HtmlElement cellNode,
-    ValidationResults validationResults,
+    ValidationResult validationResults,
     Cell cell,
     Column column}) : super(sender: sender, detail: {
       'editor': editor,

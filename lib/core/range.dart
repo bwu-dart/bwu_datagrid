@@ -159,8 +159,8 @@ class GroupTotals extends NonDataItem {
  * and attempt a commit or cancel before proceeding.
  */
 class EditorLock {
-  EditController activeEditController; // TODO type
-  EditController editController; // TODO type
+  EditController activeEditController;
+  EditController editController;
 
   /***
    * Returns true if a specified edit controller is active (has the edit lock).
@@ -174,17 +174,17 @@ class EditorLock {
    * Sets the specified edit controller as the active edit controller (acquire edit lock).
    * If another edit controller is already active, and exception will be thrown.
    */
-  void activate(editController) { // TODO type
+  void activate(EditController editController) {
     if (editController == activeEditController) { // already activated?
       return;
     }
     if (activeEditController != null) {
       throw "bwu_datagrid.EditorLock.activate: an editController is still active, can't activate another editController";
     }
-    if (!editController.commitCurrentEdit) {
+    if (editController.commitCurrentEdit == null) {
       throw "bwu_datagrid.EditorLock.activate: editController must implement .commitCurrentEdit()";
     }
-    if (!editController.cancelCurrentEdit) {
+    if (editController.cancelCurrentEdit == null) {
       throw "bwu_datagrid.EditorLock.activate: editController must implement .cancelCurrentEdit()";
     }
     activeEditController = editController;
@@ -194,7 +194,7 @@ class EditorLock {
    * Unsets the specified edit controller as the active edit controller (release edit lock).
    * If the specified edit controller is not the active one, an exception will be thrown.
    */
-  void deactivate(editController) { // TODO type
+  void deactivate(EditController editController) {
     if (activeEditController != editController) {
       throw "bwu_datagrid.EditorLock.deactivate: specified editController is not the currently active one";
     }

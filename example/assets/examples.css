@@ -162,7 +162,7 @@ bwu-datagrid ^^ .editor-percentcomplete-picker {
   display: inline-block;
   width: 16px;
   height: 100%;
-  background: url("../images/pencil.gif") no-repeat center center;
+  background: url("../packages/bwu_datagrid/assets/images/pencil.gif") no-repeat center center;
   overflow: visible;
   z-index: 1000;
   float: right;
@@ -173,7 +173,7 @@ bwu-datagrid ^^ .editor-percentcomplete-helper {
   position: absolute;
   top: -2px;
   left: -9px;
-  background: url("../images/editor-helper-bg.gif") no-repeat top left;
+  background: url("../packages/bwu_datagrid/assets/images/editor-helper-bg.gif") no-repeat top left;
   padding-left: 9px;
 
   width: 120px;
