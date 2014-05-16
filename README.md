@@ -3,7 +3,7 @@
 Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_datagrid/wiki).
 
 
-**UPDATE:  May 14th, 2014
+**UPDATE:  May 16th, 2014
 
 ## BWU Datagrid is an advanced Dart Polymer grid/spreadsheet component
 BWU Datagrid is a Dart port from [SlickGrid](https://github.com/mleibman/SlickGrid) 
@@ -15,6 +15,8 @@ BWU Datagrid is a Dart port from [SlickGrid](https://github.com/mleibman/SlickGr
  
 * Basic rendering
 * Scrolling and manual column resize
+* Editing, Custom Editors, Custom Validators
+* The examples work also when built to JavaScript
 
 ### Some highlights (when it's ready):
 

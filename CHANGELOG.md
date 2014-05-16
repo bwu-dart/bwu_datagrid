@@ -1,3 +1,7 @@
+## 0.0.3
+* basic editing support
+* examples run when built to JavaScript and are available on GitHub Pages
+
 ## 0.0.2
 
 * fix formatters
