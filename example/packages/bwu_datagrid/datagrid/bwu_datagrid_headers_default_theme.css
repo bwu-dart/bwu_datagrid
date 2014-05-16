@@ -1,0 +1,5 @@
+/*.bwu-datagrid-header-columns*/
+:host {
+  background: url('header-columns-bg.gif') repeat-x center bottom;
+  border-bottom: 1px solid silver;
+}

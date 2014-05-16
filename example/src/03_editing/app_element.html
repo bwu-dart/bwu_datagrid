@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
+
+<polymer-element name='app-element'>
+  <template>
+    <!--<link rel='stylesheet' href='packages/bwu_datagrid/assets/grid.css'>
+    <link rel='stylesheet' href='packages/bwu_datagrid/assets/default_theme.css' > -->
+    <link rel='stylesheet' href='../../asset/examples.css'>
+
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+      }
+      table {
+        width: 100%;
+      }
+    </style>
+    <style>
+      bwu-datagrid ^^ .cell-title {
+        font-weight: bold;
+      }
+
+      bwu-datagrid ^^ .cell-effort-driven {
+        text-align: center;
+      }
+    </style>
+    <div style="position:relative">
+      <div style="width:600px;">
+        <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
+      </div>
+
+      <div class="options-panel">
+        <h2>Demonstrates:</h2>
+        <ul>
+          <li>adding basic keyboard navigation and editing</li>
+          <li>custom editors and validators</li>
+          <li>auto-edit settings</li>
+        </ul>
+
+        <h2>Options:</h2>
+        <button on-click="{{enableAutoEdit}}">Auto-edit ON</button>
+        &nbsp;
+        <button on-click="{{disableAutoEdit}}">Auto-edit OFF</button>
+          <h2>View Source:</h2>
+          <ul>
+              <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/gh-pages/examples/example3-editing.html" target="_sourcewindow"> View the source for this example on Github</a></li>
+          </ul>
+      </div>
+    </div>
+  </template>
+  <script type="application/dart;component=1" src="app_element.dart"></script>
+</polymer-element>
