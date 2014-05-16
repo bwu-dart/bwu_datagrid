@@ -455,7 +455,7 @@ class PercentCompleteEditor extends Editor {
 
   PercentCompleteEditor._(this.args) {
     $input = new dom.TextInputElement()..classes.add('editor-percentcomplete');
-    $input.width = tools.innerWidth(args.container) - 25;
+    $input.style.width = '${tools.innerWidth(args.container) - 25}px';
     args.container.append($input);
 
     $picker = new dom.DivElement()..classes.add('editor-percentcomplete-picker');
@@ -524,19 +524,18 @@ class PercentCompleteEditor extends Editor {
   }
 
   @override
-  void applyValue (/*Map/Item*/ dynamic item, int state) {
-    item[args.column.field] = state;
+  void applyValue (/*Map/Item*/ dynamic item, String state) {
+    item[args.column.field] = tools.parseInt(state);
   }
 
   @override
   bool get isValueChanged {
-
     return (!($input.value == '' && defaultValue == null)) && (tools.parseIntSafe($input.value) != defaultValue);
   }
 
   @override
   ValidationResult validate() {
-    if (tools.canParseInt($input.value)) {
+    if (!tools.canParseInt($input.value)) {
       return new ValidationResult(false, "Please enter a valid positive number");
     }
 
