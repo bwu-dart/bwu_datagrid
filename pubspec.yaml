@@ -15,3 +15,7 @@ dev_dependencies:
 transformers:
 - polymer:
     entry_points:
+    - example/01_simple.html
+    - example/02_formatters.html
+    - example/03_editing.html
+    - example/autotooltips.html

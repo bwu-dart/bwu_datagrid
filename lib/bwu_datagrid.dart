@@ -1073,17 +1073,17 @@ class BwuDatagrid extends PolymerElement {
   // TODO keep the rules in a collection to avoid parsing them
   Map<String,dom.CssStyleRule> getColumnCssRules(int idx) {
     if (stylesheet == null) {
-      var sheets = this.shadowRoot.styleSheets;
-      for (int i = 0; i < sheets.length; i++) {
-        if (sheets[i].ownerNode != null && sheets[i].ownerNode == $style) {
-          stylesheet = sheets[i];
-          break;
-        }
-      }
-
-      if (stylesheet == null) {
-        throw "Cannot find stylesheet.";
-      }
+//      var sheets = this.shadowRoot.styleSheets;
+//      for (int i = 0; i < sheets.length; i++) {
+//        if (sheets[i].ownerNode != null && sheets[i].ownerNode == $style) {
+//          stylesheet = sheets[i];
+//          break;
+//        }
+//      }
+//
+//      if (stylesheet == null) {
+//        throw "Cannot find stylesheet.";
+//      }
 
       stylesheet = $style.sheet;
 
@@ -2499,7 +2499,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void handleClick(dom.MouseEvent e) {
-    if (currentEditor == 0) {
+    if (currentEditor == null) {
       // if this click resulted in some cell child node getting focus,
       // don't steal it back - keyboard events will still bubble up
       // IE9+ seems to default DIVs to tabIndex=0 instead of -1, so check for cell clicks directly.
