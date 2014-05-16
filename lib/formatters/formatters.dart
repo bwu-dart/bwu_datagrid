@@ -87,7 +87,7 @@ class YesNoFormatter extends Formatter {
 class CheckmarkFormatter extends Formatter {
   void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic  dataContext) {
     if(value != null && value is bool && value) {
-      target.appendHtml('<img src="packages/bwu_datagrid/assets/images/tick.png">'); // : '';
+      target.appendHtml('<img src="packages/bwu_datagrid/asset/images/tick.png">'); // : '';
     }
   }
 }
