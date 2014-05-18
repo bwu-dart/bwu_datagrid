@@ -137,8 +137,11 @@ class EditCommand {
   int row;
   int cell;
   Editor editor;
-  String serializedValue;
-  String prevSerializedValue;
+  /**
+   * [serializedValue] and [prevSerializedValue] are normally of type [String] but for example for compound values they are of type [Map]
+   */
+  dynamic serializedValue;
+  dynamic prevSerializedValue;
   Function execute;
   Function undo;
   EditCommand({this.row, this.cell, this.editor, this.serializedValue, this.prevSerializedValue, this.execute, this.undo});
@@ -252,7 +255,7 @@ class GridOptions { // defaults
     this.enableAddRow : false,
     this.leaveSpaceForNewRows : false,
     this.editable : false,
-    this.autoEdit : true,
+    this.autoEdit : false,
     this.enableCellNavigation : true,
     this.enableColumnReorder : true,
     this.asyncEditorLoading : false,

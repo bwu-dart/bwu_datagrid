@@ -94,7 +94,7 @@ class BwuDatagrid extends PolymerElement {
   int activeRow, activeCell;
   dom.HtmlElement activeCellNode = null;
   Editor currentEditor = null;
-  String serializedEditorValue;
+  dynamic serializedEditorValue;
   EditController editController;
 
   Map<int,RowCache> rowsCache = {};

@@ -24,7 +24,11 @@ abstract class Editor {
 
   void destroy();
   void loadValue(/*Map/Item*/ dynamic item);
-  String serializeValue();
+  /**
+   * Normally returns [String] but for example for
+   * compound editors it may return [Map]
+   */
+  dynamic serializeValue();
   bool get isValueChanged;
   void applyValue(/*Map/Item*/ dynamic item, dynamic value);
   void focus();
