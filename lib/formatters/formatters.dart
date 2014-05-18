@@ -31,6 +31,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 class DefaultFormatter extends Formatter {
   void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext) {
+    target.children.clear();
     if (value != null) {
       //return "";
     //} else {
@@ -47,10 +48,15 @@ abstract class Formatter {
 class PercentCompleteFormatter extends Formatter {
 
   void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext) {
+    target.children.clear();
     if (value == null || value == "") {
       target.text = '-';
     } else if (value < 50) {
-      target.appendHtml("<span style='color:red;font-weight:bold;'>${value}%</span>");
+      target.append(
+          new dom.SpanElement()
+              ..style.color ='red'
+              ..style.fontWeight = 'bold'
+              ..text = '${value}%');
     } else {
       target.appendHtml("<span style='color:green'>${value}%</span>");
     }
@@ -74,7 +80,12 @@ class PercentCompleteBarFormatter extends Formatter {
       color = 'green';
     }
 
-    target.appendHtml('<span class="percent-complete-bar" style="background: ${color};width:${value}%"></span>');
+    target.children.clear();
+    target.append(
+        new dom.SpanElement()
+            ..classes.add('percent-complete-bar')
+            ..style.background = color
+            ..style.width= '${value}%');
   }
 }
 
@@ -86,8 +97,9 @@ class YesNoFormatter extends Formatter {
 
 class CheckmarkFormatter extends Formatter {
   void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic  dataContext) {
+    target.children.clear();
     if(value != null && value is bool && value) {
-      target.appendHtml('<img src="packages/bwu_datagrid/asset/images/tick.png">'); // : '';
+      target.append(new dom.ImageElement(src:'packages/bwu_datagrid/asset/images/tick.png'));
     }
   }
 }
