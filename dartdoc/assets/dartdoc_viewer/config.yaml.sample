@@ -1,0 +1,7 @@
+# Copy this file to config.yaml
+# config.yaml is ignored in .gitignore
+# Change the below keys to correspond with the values for Google Analytics and
+# Google Web Master Tools
+trackingCode: UA-00000000-0
+trackingDomain: example.com
+siteVerification: google0000000000000000
