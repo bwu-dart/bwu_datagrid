@@ -1403,12 +1403,12 @@ class BwuDatagrid extends PolymerElement {
     gridOptions.extend(newGridOptions); // TODO verify
     validateAndEnforceOptions();
 
-    $viewport.style.overflowY = gridOptions.autoHeight != "" ? "hidden" : "auto";
+    $viewport.style.overflowY = gridOptions.autoHeight ? "hidden" : "auto";
     render();
   }
 
   void validateAndEnforceOptions() {
-    if (gridOptions.autoHeight == null) {
+    if (gridOptions.autoHeight) {
       gridOptions.leaveSpaceForNewRows = false;
     }
   }
