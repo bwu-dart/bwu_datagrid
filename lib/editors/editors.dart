@@ -238,9 +238,9 @@ class DateEditor extends Editor  {
   DateEditor();
 
   DateEditor._(this.args) {
-    $input = new dom.TextInputElement()..classes.add('editor-text');
+    $input = new dom.DateInputElement()..classes.add('editor-text');
     args.container.append($input);
-    $input..focus()..select();
+    $input..focus(); //..select();
 //    $input.datepicker({
 //      'showOn': "button",
 //      'buttonImageOnly': true,
@@ -266,6 +266,7 @@ class DateEditor extends Editor  {
   @override
   void show () {
     if (calendarOpen) {
+      print('show, calendarOpen');
 //      datepicker.dpDiv.stop(true, true).show();
     }
   }
@@ -273,6 +274,7 @@ class DateEditor extends Editor  {
   @override
   void hide () {
     if (calendarOpen) {
+      print('hide, calendarOpen');
 //      datepicker.dpDiv.stop(true, true).hide();
     }
   }
@@ -448,6 +450,7 @@ class CheckboxEditor extends Editor {
 class PercentCompleteEditor extends Editor {
   dom.InputElement $input;
   dom.HtmlElement $picker;
+  dom.RangeInputElement $slider;
   int defaultValue;
   EditorArgs args;
 
@@ -490,6 +493,22 @@ class PercentCompleteEditor extends Editor {
         ..focus()
         ..select();
 
+
+    var $sliderWrapper = $picker.querySelector(".editor-percentcomplete-slider");
+    $slider = new dom.RangeInputElement();
+    $slider
+        ..min = '0'
+        ..max = '100'
+        ..value = _invertedRangeValueInt(defaultValue)
+        ..style.width = '25px'
+        ..style.height = '100px'
+        ..attributes['orient'] = 'vertical' // http://stackoverflow.com/questions/15935837
+        ..attributes['writing-mode'] = 'bt-lr'
+        ..style.appearance = 'slider-vertical'
+        ..onChange.listen((e) {
+          $input.value = _invertedRangeValue($slider.value);
+        });
+    $sliderWrapper.append($slider);
 //    $picker.querySelector(".editor-percentcomplete-slider").slider({
 //      'orientation': "vertical",
 //      'range': "min",
@@ -501,9 +520,11 @@ class PercentCompleteEditor extends Editor {
 
     $picker.querySelectorAll(".editor-percentcomplete-buttons button").forEach((e) => e.onClick.listen((e) {
       $input.value = (e.target.attributes['val']);
+      $slider.value = _invertedRangeValue($input.value);
       //$picker.querySelector(".editor-percentcomplete-slider").slider("value", e.target.attributes['val']);
     }));
   }
+
 
   @override
   void destroy () {
@@ -519,7 +540,23 @@ class PercentCompleteEditor extends Editor {
   @override
   void loadValue (/*Map/Item*/ dynamic item) {
     $input.value = (defaultValue = item[args.column.field]).toString();
+    $slider.value = _invertedRangeValueInt(defaultValue);
     $input.select();
+  }
+
+//  String _toInvertedRangeValue(int val) {
+//    return '${-100 + (defaultValue != null ? val : 0)}';
+//  }
+
+  String _invertedRangeValue(String val) {
+    return '${100-tools.parseInt(val)}';
+  }
+
+  String _invertedRangeValueInt(int val) {
+    if(val == null)  {
+      val = 0;
+    }
+    return '${100-val}';
   }
 
   @override
