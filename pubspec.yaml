@@ -21,5 +21,5 @@ transformers:
     - example/02_formatters.html
     - example/03_editing.html
     - example/03a_compound_editors.html
-#    - example/03b_editing_with_undo.html
+    - example/03b_editing_with_undo.html
     - example/autotooltips.html
