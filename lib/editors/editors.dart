@@ -499,6 +499,7 @@ class PercentCompleteEditor extends Editor {
     $slider
         ..min = '0'
         ..max = '100'
+        ..step = '1'
         ..value = _invertedRangeValueInt(defaultValue)
         ..style.width = '25px'
         ..style.height = '100px'

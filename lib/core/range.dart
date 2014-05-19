@@ -158,6 +158,9 @@ class GroupTotals extends NonDataItem {
  * issues.  An edit controller (such as BWU Datagrid) can query if an active edit is in progress
  * and attempt a commit or cancel before proceeding.
  */
+
+final EditorLock globalEditorLock = new EditorLock();
+
 class EditorLock {
   EditController activeEditController;
   EditController editController;

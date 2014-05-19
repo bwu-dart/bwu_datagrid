@@ -8,16 +8,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
-
-class RequiredFieldValidator extends Validator {
-  ValidationResult call(dynamic value) {
-    if (value == null || (value is String && value.isEmpty)) {
-      return new ValidationResult(false, 'This is a required field');
-    } else {
-      return new ValidationResult(true);
-    }
-  }
-}
+import '../required_field_validator.dart';
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {

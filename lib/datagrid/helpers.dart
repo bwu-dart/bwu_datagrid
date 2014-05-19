@@ -213,75 +213,76 @@ class Column {
 }
 
 class GridOptions { // defaults
-  bool explicitInitialization;
-  int rowHeight;
-  int defaultColumnWidth;
-  bool enableAddRow;
-  bool leaveSpaceForNewRows;
-  bool editable;
+  String addNewRowCssClass;
   bool autoEdit;
+  bool autoHeight;
+  Duration asyncEditorLoadDelay;
+  bool asyncEditorLoading;
+  Duration asyncPostRenderDelay;
+  String cellFlashingCssClass;
+  Function dataItemColumnValueExtractor; // TODO typeDef (item, columnDef)
+  int defaultColumnWidth;
+  Formatter defaultFormatter;
+  bool editable;
+  Function editCommandHandler;
+  EditorFactory editorFactory;
+  EditorLock editorLock;
+  bool enableAddRow;
+  bool enableAsyncPostRender;
   bool enableCellNavigation;
   bool enableColumnReorder;
-  bool asyncEditorLoading;
-  Duration asyncEditorLoadDelay;
-  bool forceFitColumns;
-  bool enableAsyncPostRender;
-  Duration asyncPostRenderDelay;
-  bool autoHeight;
-  EditorLock editorLock;
-  bool showHeaderRow;
-  int headerRowHeight;
-  bool showTopPanel;
-  int topPanelHeight;
-  FormatterFactory formatterFactory;
-  EditorFactory editorFactory;
-  String cellFlashingCssClass;
-  String selectedCellCssClass;
-  bool multiSelect;
   bool enableTextSelectionOnCells;
-  Function dataItemColumnValueExtractor; // TODO typeDef (item, columnDef)
-  bool fullWidthRows;
-  bool multiColumnSort;
-  Formatter defaultFormatter;
+  bool explicitInitialization;
+  bool forceFitColumns;
   bool forceSyncScrolling;
-  String addNewRowCssClass;
+  FormatterFactory formatterFactory;
+  bool fullWidthRows;
+  bool leaveSpaceForNewRows;
+  int headerRowHeight;
+  bool multiColumnSort;
+  bool multiSelect;
+  int rowHeight;
+  String selectedCellCssClass;
+  bool showHeaderRow;
+  bool showTopPanel;
   bool syncColumnCellResize;
-  Function editCommandHandler;
+  int topPanelHeight;
 
   GridOptions({
-    this.explicitInitialization : false,
-    this.rowHeight : 25,
-    this.defaultColumnWidth : 80,
-    this.enableAddRow : false,
-    this.leaveSpaceForNewRows : false,
-    this.editable : false,
+    this.addNewRowCssClass : 'new-row',
+    this.asyncEditorLoadDelay,
+    this.asyncEditorLoading : false,
+    this.asyncPostRenderDelay,
     this.autoEdit : false,
+    this.autoHeight : false,
+    this.cellFlashingCssClass : 'flashing',
+    this.dataItemColumnValueExtractor,
+    this.defaultColumnWidth : 80,
+    this.defaultFormatter,
+    this.editable : false,
+    this.editCommandHandler,
+    this.editorFactory,
+    this.editorLock,
+    this.enableAddRow : false,
+    this.enableAsyncPostRender: false,
     this.enableCellNavigation : true,
     this.enableColumnReorder : true,
-    this.asyncEditorLoading : false,
-    this.asyncEditorLoadDelay,
-    this.forceFitColumns: false,
-    this.enableAsyncPostRender: false,
-    this.asyncPostRenderDelay,
-    this.autoHeight : false,
-    this.editorLock,
-    this.showHeaderRow : false,
-    this.headerRowHeight : 25,
-    this.showTopPanel : false,
-    this.topPanelHeight : 25,
-    this.formatterFactory,
-    this.editorFactory,
-    this.cellFlashingCssClass : 'flashing',
-    this.selectedCellCssClass : 'selected',
-    this.multiSelect : true,
     this.enableTextSelectionOnCells : false,
-    this.dataItemColumnValueExtractor,
-    this.fullWidthRows : false,
-    this.multiColumnSort : false,
-    this.defaultFormatter,
+    this.explicitInitialization : false,
+    this.forceFitColumns: false,
     this.forceSyncScrolling: false,
-    this.addNewRowCssClass : 'new-row',
-    this.syncColumnCellResize : false
+    this.formatterFactory,
+    this.fullWidthRows : false,
+    this.headerRowHeight : 25,
+    this.leaveSpaceForNewRows : false,
+    this.multiColumnSort : false,
+    this.multiSelect : true,
+    this.rowHeight : 25,
+    this.selectedCellCssClass : 'selected',
+    this.showHeaderRow : false,
+    this.showTopPanel : false,
+    this.syncColumnCellResize : false,
+    this.topPanelHeight : 25
   }) {
     if(asyncEditorLoadDelay == null) {
       this.asyncEditorLoadDelay = const Duration(milliseconds: 100);
@@ -292,7 +293,7 @@ class GridOptions { // defaults
     }
 
     if(editorLock == null) {
-      this.editorLock = new EditorLock();
+      this.editorLock = globalEditorLock;
     }
 
     if(defaultFormatter == null) {
@@ -304,39 +305,39 @@ class GridOptions { // defaults
 
   void extend(GridOptions o) {
     //var d = new GridOptions.unitialized();
-    if(o.explicitInitialization != null) explicitInitialization = o.explicitInitialization;
-    if(o.rowHeight!= null) rowHeight = o.rowHeight;
-    if(o.defaultColumnWidth!= null) defaultColumnWidth = o.defaultColumnWidth;
-    if(o.enableAddRow!= null) enableAddRow = o.enableAddRow;
-    if(o.leaveSpaceForNewRows!= null) leaveSpaceForNewRows = o.leaveSpaceForNewRows;
-    if(o.editable!= null) editable = o.editable;
+    if(o.addNewRowCssClass!= null) addNewRowCssClass = o.addNewRowCssClass;
+    if(o.asyncEditorLoadDelay!= null) asyncEditorLoadDelay = o.asyncEditorLoadDelay;
+    if(o.asyncEditorLoading!= null) asyncEditorLoading = o.asyncEditorLoading;
+    if(o.asyncPostRenderDelay!= null) asyncPostRenderDelay = o.asyncPostRenderDelay;
     if(o.autoEdit!= null) autoEdit = o.autoEdit;
+    if(o.autoHeight!= null) autoHeight = o.autoHeight;
+    if(o.cellFlashingCssClass!= null) cellFlashingCssClass = o.cellFlashingCssClass;
+    if(o.dataItemColumnValueExtractor!= null) dataItemColumnValueExtractor = o.dataItemColumnValueExtractor;
+    if(o.defaultColumnWidth!= null) defaultColumnWidth = o.defaultColumnWidth;
+    if(o.defaultFormatter!= null) defaultFormatter = o.defaultFormatter;
+    if(o.editable!= null) editable = o.editable;
+    if(o.editCommandHandler!= null) editCommandHandler = o.editCommandHandler;
+    if(o.editorFactory!= null) editorFactory = o.editorFactory;
+    if(o.editorLock!= null) editorLock = o.editorLock;
+    if(o.enableAddRow!= null) enableAddRow = o.enableAddRow;
+    if(o.enableAsyncPostRender!= null) enableAsyncPostRender = o.enableAsyncPostRender;
     if(o.enableCellNavigation!= null) enableCellNavigation = o.enableCellNavigation;
     if(o.enableColumnReorder!= null) enableColumnReorder = o.enableColumnReorder;
-    if(o.asyncEditorLoading!= null) asyncEditorLoading = o.asyncEditorLoading;
-    if(o.asyncEditorLoadDelay!= null) asyncEditorLoadDelay = o.asyncEditorLoadDelay;
-    if(o.forceFitColumns!= null) forceFitColumns = o.forceFitColumns;
-    if(o.enableAsyncPostRender!= null) enableAsyncPostRender = o.enableAsyncPostRender;
-    if(o.asyncPostRenderDelay!= null) asyncPostRenderDelay = o.asyncPostRenderDelay;
-    if(o.autoHeight!= null) autoHeight = o.autoHeight;
-    if(o.editorLock!= null) editorLock = o.editorLock;
-    if(o.showHeaderRow!= null) showHeaderRow = o.showHeaderRow;
-    if(o.headerRowHeight!= null) headerRowHeight = o.headerRowHeight;
-    if(o.showTopPanel!= null) showTopPanel = o.showTopPanel;
-    if(o.topPanelHeight!= null) topPanelHeight = o.topPanelHeight;
-    if(o.formatterFactory!= null) formatterFactory = o.formatterFactory;
-    if(o.editorFactory!= null) editorFactory = o.editorFactory;
-    if(o.cellFlashingCssClass!= null) cellFlashingCssClass = o.cellFlashingCssClass;
-    if(o.selectedCellCssClass!= null) selectedCellCssClass = o.selectedCellCssClass;
-    if(o.multiSelect!= null) multiSelect = o.multiSelect;
     if(o.enableTextSelectionOnCells!= null) enableTextSelectionOnCells = o.enableTextSelectionOnCells;
-    if(o.dataItemColumnValueExtractor!= null) dataItemColumnValueExtractor = o.dataItemColumnValueExtractor;
-    if(o.fullWidthRows!= null) fullWidthRows = o.fullWidthRows;
-    if(o.multiColumnSort!= null) multiColumnSort = o.multiColumnSort;
-    if(o.defaultFormatter!= null) defaultFormatter = o.defaultFormatter;
+    if(o.explicitInitialization != null) explicitInitialization = o.explicitInitialization;
+    if(o.forceFitColumns!= null) forceFitColumns = o.forceFitColumns;
     if(o.forceSyncScrolling!= null) forceSyncScrolling = o.forceSyncScrolling;
-    if(o.addNewRowCssClass!= null) addNewRowCssClass = o.addNewRowCssClass;
+    if(o.formatterFactory!= null) formatterFactory = o.formatterFactory;
+    if(o.fullWidthRows!= null) fullWidthRows = o.fullWidthRows;
+    if(o.headerRowHeight!= null) headerRowHeight = o.headerRowHeight;
+    if(o.leaveSpaceForNewRows!= null) leaveSpaceForNewRows = o.leaveSpaceForNewRows;
+    if(o.multiColumnSort!= null) multiColumnSort = o.multiColumnSort;
+    if(o.multiSelect!= null) multiSelect = o.multiSelect;
+    if(o.rowHeight!= null) rowHeight = o.rowHeight;
+    if(o.selectedCellCssClass!= null) selectedCellCssClass = o.selectedCellCssClass;
+    if(o.showHeaderRow!= null) showHeaderRow = o.showHeaderRow;
+    if(o.showTopPanel!= null) showTopPanel = o.showTopPanel;
     if(o.syncColumnCellResize!= null) syncColumnCellResize = o.syncColumnCellResize;
-    if(o.editCommandHandler!= null) editCommandHandler = o.editCommandHandler;
+    if(o.topPanelHeight!= null) topPanelHeight = o.topPanelHeight;
   }
 }
