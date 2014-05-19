@@ -5,6 +5,7 @@ import 'dart:async' as async;
 
 import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
+import 'package:bwu_datagrid/core/core.dart';
 
 //  // register namespace
 //  $.extend(true, window, {

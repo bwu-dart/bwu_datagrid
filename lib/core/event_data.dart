@@ -48,6 +48,9 @@ abstract class Events {
   static const KEY_DOWN = const EventType<KeyDown>('key-down');
   static const MOUSE_ENTER = const EventType<MouseEnter>('mouse-enter');
   static const MOUSE_LEAVE = const EventType<MouseLeave>('mouse-leave');
+  static const ROW_COUNT_CHANGED = const EventType<RowCountChanged>('row-count-changed');
+  static const ROWS_CHANGED = const EventType<RowsChanged>('rows-changed');
+  static const PAGING_INFO_CHANGED = const EventType<PagingInfoChanged>('paging-info-changed');
 }
 
 /***
@@ -356,3 +359,10 @@ class MouseLeave extends EventData {
     this.causedBy = causedBy;
   }
 }
+
+
+class RowCountChanged extends EventData {}
+
+class RowsChanged extends EventData {}
+
+class PagingInfoChanged extends EventData {}

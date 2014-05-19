@@ -8,7 +8,6 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 part 'aggregators.dart';
 part 'helpers.dart';
-part 'events.dart';
 
 //(function ($) {
 //  $.extend(true, window, {
