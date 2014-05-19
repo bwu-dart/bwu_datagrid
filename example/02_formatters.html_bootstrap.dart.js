@@ -1816,10 +1816,10 @@ mh:{
 "^":"Ge;G1>",
 bu:function(a){return"RuntimeError: "+H.d(this.G1)},
 static:{Ef:function(a){return new H.mh(a)}}},
-lb:{
+q1:{
 "^":"a;"},
 tD:{
-"^":"lb;dw,Iq,is,p6",
+"^":"q1;dw,Iq,is,p6",
 BD:function(a){var z=this.rP(a)
 return z==null?!1:H.Ly(z,this.za())},
 rP:function(a){var z=J.x(a)
@@ -1860,12 +1860,12 @@ z=[]
 for(y=a.length,x=0;x<y;++x)z.push(a[x].za())
 return z}}},
 hJ:{
-"^":"lb;",
+"^":"q1;",
 bu:function(a){return"dynamic"},
 za:function(){return},
 $ishJ:true},
 tu:{
-"^":"lb;oc>",
+"^":"q1;oc>",
 za:function(){var z,y
 z=this.oc
 y=init.allClasses[z]
@@ -1873,7 +1873,7 @@ if(y==null)throw H.b("no type for '"+H.d(z)+"'")
 return y},
 bu:function(a){return this.oc}},
 fw:{
-"^":"lb;oc>,re<,tD",
+"^":"q1;oc>,re<,tD",
 za:function(){var z,y
 z=this.tD
 if(z!=null)return z
@@ -2066,10 +2066,10 @@ P.mp(H.d(w)+"\n\n"+new H.XO(w.$thrownJsError,null).bu(0))}else if(!!r.$isEz){v=t
 P.mp(H.d(v)+"\n\n"+new H.XO(v.$thrownJsError,null).bu(0))}else{u=t
 P.mp(H.d(u))}}},
 static:{yn:function(a){var z,y,x,w,v
-z=new V.CK(!1,25,80,!1,!1,!1,!1,!0,!0,!1,null,!1,!1,null,!1,null,!1,25,!1,25,null,null,"flashing","selected",!0,!1,null,!1,!1,null,!1,"new-row",!1,null)
+z=new V.CK("new-row",!1,!1,null,!1,null,"flashing",null,80,null,!1,null,null,null,!1,!1,!0,!0,!1,!1,!1,!1,null,!1,!1,25,!1,!0,25,"selected",!1,!1,!1,25)
 z.V4=C.XV
 z.Ru=C.kA
-z.iG=new M.pE(null,null)
+z.iG=$.RC()
 z.AY=new G.eR()
 y=$.Nd()
 x=P.Py(null,null,null,P.qU,W.I0)
@@ -3698,10 +3698,10 @@ return!0},"$0","gAQ",0,0,62],
 aP:[function(a){this.Xm(a)
 return!0},"$0","gtw",0,0,62],
 static:{ou:function(a){var z,y,x,w,v,u,t,s,r,q,p
-z=new V.CK(!1,25,80,!1,!1,!1,!1,!0,!0,!1,null,!1,!1,null,!1,null,!1,25,!1,25,null,null,"flashing","selected",!0,!1,null,!1,!1,null,!1,"new-row",!1,null)
+z=new V.CK("new-row",!1,!1,null,!1,null,"flashing",null,80,null,!1,null,null,null,!1,!1,!0,!0,!1,!1,!1,!1,null,!1,!1,25,!1,!0,25,"selected",!1,!1,!1,25)
 z.V4=C.XV
 z.Ru=C.kA
-z.iG=new M.pE(null,null)
+z.iG=$.RC()
 z.AY=new G.eR()
 y=H.VM([],[W.kF])
 y.push(W.Tw(null))
@@ -4125,7 +4125,7 @@ if(b.gzl()!=null)this.zl=b.gzl()
 if(b.gBe()!=null)this.Be=b.gBe()},
 f1:[function(a,b,c,d){P.mp("Column.asyncPostRender not yet implemented")},"$4","gje",8,0,68]},
 CK:{
-"^":"a;Gp<,af<,MI<,yY<,MG@,LQ<,EN<,c2<,yA<,ka<,V4<,RR<,ra<,Ru<,Sf<,iG<,TA<,K2<,yO<,WH<,Yy<,iX<,yi,ZP,BW,Kx<,DZ<,O3<,PT<,AY<,hO<,SK<,Jf<,rT"}}],["bwu_dart.bwu_datagrid.editors","package:bwu_datagrid/editors/editors.dart",,M,{
+"^":"a;SK<,EN<,Sf<,V4<,ka<,Ru<,yi,DZ<,MI<,AY<,LQ<,rT,iX<,iG<,yY<,ra<,c2<,yA<,Kx<,Gp<,RR<,hO<,Yy<,O3<,MG@,K2<,PT<,BW,af<,ZP,TA<,yO<,Jf<,WH<"}}],["bwu_dart.bwu_datagrid.editors","package:bwu_datagrid/editors/editors.dart",,M,{
 "^":"",
 xq:{
 "^":"a;Gn,Sv,bM,Lq,Pw>,Do,lj,mu"}}],["bwu_dart.bwu_datagrid.formatters","package:bwu_datagrid/formatters/formatters.dart",,G,{
@@ -13317,6 +13317,7 @@ I.$lazy($,"nullPropertyPattern","BX","zO",function(){return H.LX(H.Mj(null))})
 I.$lazy($,"nullLiteralPropertyPattern","tt","Bi",function(){return H.LX(function(){try{null.$method$}catch(z){return z.message}}())})
 I.$lazy($,"undefinedPropertyPattern","dt","eA",function(){return H.LX(H.Mj(void 0))})
 I.$lazy($,"undefinedLiteralPropertyPattern","A7","ko",function(){return H.LX(function(){try{(void 0).$method$}catch(z){return z.message}}())})
+I.$lazy($,"globalEditorLock","lb","RC",function(){return new M.pE(null,null)})
 I.$lazy($,"_toStringList","Ml","RM",function(){return[]})
 I.$lazy($,"scheduleImmediateClosure","lI","ej",function(){return P.C2()})
 I.$lazy($,"_toStringVisiting","xg","xb",function(){return P.yv(null)})

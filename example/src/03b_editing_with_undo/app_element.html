@@ -13,18 +13,14 @@
         display: block;
         width: 100%;
       }
+
       table {
         width: 100%;
       }
-    </style>
-    <style>
-      bwu-datagrid ^^ .cell-title {
-        font-weight: bold;
-      }
 
-/*      bwu-datagrid ^^ .cell-effort-driven {
+      bwu-datagrid ^^ .cell-effort-driven {
         text-align: center;
-      }*/
+      }
     </style>
 
     <div style="position:relative">
@@ -35,17 +31,17 @@
       <div class="options-panel">
         <h2>Demonstrates:</h2>
         <ul>
-          <li>compound cell editors driving multiple fields from one cell</li>
-          <li>providing validation from the editor</li>
-          <li>hooking into validation events</li>
+          <li>Using "editCommandHandler" option to intercept edit commands and implement undo support</li>
         </ul>
+
+        <h2>Controls:</h2>
+        <button on-click="{{undo}}" disabled?="{{!isUndoItem}}"><img src="packages/bwu_datagrid/asset/images/arrow_undo.png" align="absmiddle"> Undo</button>
           <h2>View Source:</h2>
           <ul>
-            <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/gh-pages/build/example/03a_compound_editors.html" target="_sourcewindow"> View the source for this example on Github</a></li>
+            <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/gh-pages/build/03b_editing_with_undo.html" target="_sourcewindow"> View the source for this example on Github</a></li>
           </ul>
       </div>
     </div>
-
 
   </template>
   <script type="application/dart;component=1" src="app_element.dart"></script>
