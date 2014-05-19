@@ -2270,7 +2270,7 @@ x=z.r0(y)
 w=H.VM(new P.hL(J.Hn(V.Ib(J.YE(x).gR(x)),y.clientWidth),J.Hn(V.Ib(C.rj.gfg(x)),y.clientHeight)),[null])
 z.wg(y)
 z=w}a.pI=z
-a.mD.gSf()
+if(a.mD.gSf())a.mD.sMG(!1)
 z=a.zr
 z.R=a.mD.gMI()
 a.HF=P.Fl(null,null)
@@ -4197,7 +4197,7 @@ if(b.gzl()!=null)this.zl=b.gzl()
 if(b.gBe()!=null)this.Be=b.gBe()},
 f1:[function(a,b,c,d){P.mp("Column.asyncPostRender not yet implemented")},"$4","gje",8,0,68]},
 CK:{
-"^":"a;Gp<,af<,MI<,yY<,MG<,LQ<,EN<,c2<,yA<,ka<,V4<,RR<,ra<,Ru<,Sf<,iG<,TA<,K2<,yO<,WH<,Yy<,iX<,yi,ZP,BW,Kx<,DZ<,O3<,PT<,AY<,hO<,SK<,Jf<,rT<"}}],["bwu_dart.bwu_datagrid.editors","package:bwu_datagrid/editors/editors.dart",,M,{
+"^":"a;Gp<,af<,MI<,yY<,MG@,LQ<,EN<,c2<,yA<,ka<,V4<,RR<,ra<,Ru<,Sf<,iG<,TA<,K2<,yO<,WH<,Yy<,iX<,yi,ZP,BW,Kx<,DZ<,O3<,PT<,AY<,hO<,SK<,Jf<,rT<"}}],["bwu_dart.bwu_datagrid.editors","package:bwu_datagrid/editors/editors.dart",,M,{
 "^":"",
 I1:{
 "^":"a;Pw>",
@@ -16898,6 +16898,7 @@ CK.prototype.gaf=function(){return this.af}
 CK.prototype.gMI=function(){return this.MI}
 CK.prototype.gyY=function(){return this.yY}
 CK.prototype.gMG=function(){return this.MG}
+CK.prototype.sMG=function(v){return this.MG=v}
 CK.prototype.gLQ=function(){return this.LQ}
 CK.prototype.gEN=function(){return this.EN}
 CK.prototype.gc2=function(){return this.c2}
