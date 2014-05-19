@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid example 01: Basic grid</title>
+    <title>BWU Datagrid example 03a: Compound Editors</title>
 
     
     
@@ -1108,24 +1108,36 @@ bwu-datagrid ^^ input.editor-checkbox {
         width: 100%;
       }
     </style>
+    <style>
+      bwu-datagrid ^^ .cell-title {
+        font-weight: bold;
+      }
 
-    <table>
-      <tbody><tr>
-        <td valign="top" width="50%">
-          <bwu-datagrid id="myGrid" style="width:600px;height:500px;"></bwu-datagrid>
-        </td>
-        <td valign="top">
-          <h2>Demonstrates:</h2>
+/*      bwu-datagrid ^^ .cell-effort-driven {
+        text-align: center;
+      }*/
+    </style>
+
+    <div style="position:relative">
+      <div style="width:600px;">
+        <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
+      </div>
+
+      <div class="options-panel">
+        <h2>Demonstrates:</h2>
+        <ul>
+          <li>compound cell editors driving multiple fields from one cell</li>
+          <li>providing validation from the editor</li>
+          <li>hooking into validation events</li>
+        </ul>
+          <h2>View Source:</h2>
           <ul>
-            <li>basic grid with minimal configuration</li>
+            <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/gh-pages/build/example/03a_compound_editors.html" target="_sourcewindow"> View the source for this example on Github</a></li>
           </ul>
-            <h2>View Source:</h2>
-            <ul>
-              <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/gh-pages/build/example/01_simple.html" target="_sourcewindow"> View the source for this example on Github</a></li>
-            </ul>
-        </td>
-      </tr>
-    </tbody></table>
+      </div>
+    </div>
+
+
   </template>
   
 </polymer-element>
@@ -1363,4 +1375,4 @@ bwu-datagrid ^^ input.editor-checkbox {
     <app-element></app-element>
   
 
-<script src="01_simple.html_bootstrap.dart.js"></script></body></html>
+<script src="03a_compound_editors.html_bootstrap.dart.js"></script></body></html>

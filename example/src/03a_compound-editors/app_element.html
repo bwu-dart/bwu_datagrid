@@ -22,10 +22,11 @@
         font-weight: bold;
       }
 
-      bwu-datagrid ^^ .cell-effort-driven {
+/*      bwu-datagrid ^^ .cell-effort-driven {
         text-align: center;
-      }
+      }*/
     </style>
+
     <div style="position:relative">
       <div style="width:600px;">
         <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
@@ -34,21 +35,18 @@
       <div class="options-panel">
         <h2>Demonstrates:</h2>
         <ul>
-          <li>adding basic keyboard navigation and editing</li>
-          <li>custom editors and validators</li>
-          <li>auto-edit settings</li>
+          <li>compound cell editors driving multiple fields from one cell</li>
+          <li>providing validation from the editor</li>
+          <li>hooking into validation events</li>
         </ul>
-
-        <h2>Options:</h2>
-        <button on-click="{{enableAutoEdit}}">Auto-edit ON</button>
-        &nbsp;
-        <button on-click="{{disableAutoEdit}}">Auto-edit OFF</button>
           <h2>View Source:</h2>
           <ul>
-              <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/gh-pages/build/example/03_editing.html" target="_sourcewindow"> View the source for this example on Github</a></li>
+            <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/gh-pages/build/example/03a_compound_editors.html" target="_sourcewindow"> View the source for this example on Github</a></li>
           </ul>
       </div>
     </div>
+
+
   </template>
   <script type="application/dart;component=1" src="app_element.dart"></script>
 </polymer-element>

@@ -231,6 +231,7 @@ return!0}return!1},
 ev:function(a,b){return H.VM(new H.U5(a,b),[null])},
 FV:function(a,b){var z
 for(z=J.GP(b);z.G();)this.h(a,z.gl())},
+V1:function(a){this.sB(a,0)},
 aN:function(a,b){return H.bQ(a,b)},
 ez:function(a,b){return H.VM(new H.A8(a,b),[null,null])},
 zV:function(a,b){var z,y,x,w
@@ -2065,7 +2066,7 @@ P.mp(H.d(w)+"\n\n"+new H.XO(w.$thrownJsError,null).bu(0))}else if(!!r.$isEz){v=t
 P.mp(H.d(v)+"\n\n"+new H.XO(v.$thrownJsError,null).bu(0))}else{u=t
 P.mp(H.d(u))}}},
 static:{yn:function(a){var z,y,x,w,v
-z=new V.CK(!1,25,80,!1,!1,!1,!0,!0,!0,!1,null,!1,!1,null,!1,null,!1,25,!1,25,null,null,"flashing","selected",!0,!1,null,!1,!1,null,!1,"new-row",!1,null)
+z=new V.CK(!1,25,80,!1,!1,!1,!1,!0,!0,!1,null,!1,!1,null,!1,null,!1,25,!1,25,null,null,"flashing","selected",!0,!1,null,!1,!1,null,!1,"new-row",!1,null)
 z.V4=C.XV
 z.Ru=C.kA
 z.iG=new M.pE(null,null)
@@ -3697,7 +3698,7 @@ return!0},"$0","gAQ",0,0,62],
 aP:[function(a){this.Xm(a)
 return!0},"$0","gtw",0,0,62],
 static:{ou:function(a){var z,y,x,w,v,u,t,s,r,q,p
-z=new V.CK(!1,25,80,!1,!1,!1,!0,!0,!0,!1,null,!1,!1,null,!1,null,!1,25,!1,25,null,null,"flashing","selected",!0,!1,null,!1,!1,null,!1,"new-row",!1,null)
+z=new V.CK(!1,25,80,!1,!1,!1,!1,!0,!0,!1,null,!1,!1,null,!1,null,!1,25,!1,25,null,null,"flashing","selected",!0,!1,null,!1,!1,null,!1,"new-row",!1,null)
 z.V4=C.XV
 z.Ru=C.kA
 z.iG=new M.pE(null,null)
@@ -4131,25 +4132,38 @@ xq:{
 "^":"",
 eR:{
 "^":"jM:52;",
-$6:function(a,b,c,d,e,f){var z
-if(d!=null){z=H.d(d)
-J.wA(a,C.xB.h8(C.xB.h8(H.ys(z,"&","&amp;"),"<","&lt;"),">","&gt;"))}},
+$6:function(a,b,c,d,e,f){var z,y
+z=J.YE(a)
+J.U2(z.gwd(a))
+if(d!=null){y=H.d(d)
+z.sa4(a,C.xB.h8(C.xB.h8(H.ys(y,"&","&amp;"),"<","&lt;"),">","&gt;"))}},
 $isEH:true},
 jM:{
 "^":"a:52;",
 $isEH:true},
 cL:{
 "^":"jM:52;",
-$6:function(a,b,c,d,e,f){var z,y
+$6:function(a,b,c,d,e,f){var z,y,x
 if(d==null||J.xC(d,""))J.wA(a,"")
 z=J.Wx(d)
 if(z.C(d,30))y="red"
 else y=z.C(d,70)?"silver":"green"
-J.oy(a,"<span class=\"percent-complete-bar\" style=\"background: "+y+";width:"+H.d(d)+"%\"></span>")},
+z=J.YE(a)
+J.U2(z.gwd(a))
+x=document.createElement("span",null)
+J.JZ(x).h(0,"percent-complete-bar")
+J.YD(x.style,y)
+J.vP(x.style,H.d(d)+"%")
+z.jx(a,x)},
 $isEH:true},
 lY:{
 "^":"jM:52;",
-$6:function(a,b,c,d,e,f){if(d!=null&&typeof d==="boolean"&&d)J.oy(a,"<img src=\"packages/bwu_datagrid/assets/images/tick.png\">")},
+$6:function(a,b,c,d,e,f){var z,y
+z=J.YE(a)
+J.U2(z.gwd(a))
+if(d!=null&&typeof d==="boolean"&&d){y=document.createElement("img",null)
+J.Yj(y,"packages/bwu_datagrid/asset/images/tick.png")
+z.jx(a,y)}},
 $isEH:true}}],["bwu_datagrid.datagrid.bwu_datagrid_header_column","package:bwu_datagrid/datagrid/bwu_datagrid_header_column.dart",,V,{
 "^":"",
 c4:{
@@ -4546,13 +4560,15 @@ SU:{
 "^":"a;",
 sB:function(a,b){throw H.b(P.f("Cannot change the length of a fixed-length list"))},
 h:function(a,b){throw H.b(P.f("Cannot add to a fixed-length list"))},
-Rz:function(a,b){throw H.b(P.f("Cannot remove from a fixed-length list"))}},
+Rz:function(a,b){throw H.b(P.f("Cannot remove from a fixed-length list"))},
+V1:function(a){throw H.b(P.f("Cannot clear a fixed-length list"))}},
 JJ:{
 "^":"a;",
 u:function(a,b,c){throw H.b(P.f("Cannot modify an unmodifiable list"))},
 sB:function(a,b){throw H.b(P.f("Cannot change the length of an unmodifiable list"))},
 h:function(a,b){throw H.b(P.f("Cannot add to an unmodifiable list"))},
 Rz:function(a,b){throw H.b(P.f("Cannot remove from an unmodifiable list"))},
+V1:function(a){throw H.b(P.f("Cannot clear an unmodifiable list"))},
 YW:function(a,b,c,d,e){throw H.b(P.f("Cannot modify an unmodifiable list"))},
 $iszM:true,
 $aszM:null,
@@ -6294,6 +6310,7 @@ Rz:function(a,b){var z
 for(z=0;z<this.gB(a);++z)if(J.xC(this.t(a,z),b)){this.YW(a,z,this.gB(a)-1,a,z+1)
 this.sB(a,this.gB(a)-1)
 return!0}return!1},
+V1:function(a){this.sB(a,0)},
 pZ:function(a,b,c){var z=J.Wx(b)
 if(z.C(b,0)||z.D(b,this.gB(a)))throw H.b(P.TE(b,0,this.gB(a)))
 z=J.Wx(c)
@@ -7188,6 +7205,8 @@ $isQF:true,
 "%":"Document|HTMLDocument|XMLDocument"},
 bA:{
 "^":"KV;",
+gwd:function(a){if(a._docChildren==null)a._docChildren=H.VM(new P.P0(a,new W.e7(a)),[null])
+return a._docChildren},
 Md:function(a,b){return W.vD(a.querySelectorAll(b),null)},
 shf:function(a,b){this.pj(a)
 a.appendChild(J.kp(document.body,b,null,null))},
@@ -7306,7 +7325,7 @@ $iscv:true,
 $isD0:true,
 "%":";Element"},
 Fs:{
-"^":"qE;oc:name=,t5:type%,R:width%",
+"^":"qE;oc:name=,LA:src},t5:type%,R:width%",
 "%":"HTMLEmbedElement"},
 Ty:{
 "^":"ea;kc:error=,G1:message=",
@@ -7365,17 +7384,17 @@ Vi:{
 "^":"D0;",
 "%":";XMLHttpRequestEventTarget"},
 tX:{
-"^":"qE;oc:name=,R:width%",
+"^":"qE;oc:name=,LA:src},R:width%",
 "%":"HTMLIFrameElement"},
 Sg:{
 "^":"Gv;Rn:data=,R:width=",
 $isSg:true,
 "%":"ImageData"},
 pA:{
-"^":"qE;R:width%",
+"^":"qE;LA:src},R:width%",
 "%":"HTMLImageElement"},
 Mi:{
-"^":"qE;d4:checked%,MB:form=,oc:name=,t5:type%,P:value%,R:width%",
+"^":"qE;d4:checked%,MB:form=,oc:name=,LA:src},t5:type%,P:value%,R:width%",
 Yx:function(a,b){return a.accept.$1(b)},
 $isMi:true,
 $iscv:true,
@@ -7409,7 +7428,7 @@ YI:{
 "^":"qE;oc:name=",
 "%":"HTMLMapElement"},
 D5:{
-"^":"qE;kc:error=",
+"^":"qE;kc:error=,LA:src}",
 "%":"HTMLAudioElement;HTMLMediaElement"},
 o9:{
 "^":"ea;G1:message=",
@@ -7517,7 +7536,7 @@ Zi:function(a){return a.getBoundingClientRect()},
 bu:function(a){return a.toString()},
 "%":"Range"},
 Ue:{
-"^":"qE;t5:type%",
+"^":"qE;LA:src},t5:type%",
 "%":"HTMLScriptElement"},
 lp:{
 "^":"qE;MB:form=,B:length%,oc:name=,Mj:selectedIndex%,t5:type=,P:value%",
@@ -7534,7 +7553,7 @@ Kb:function(a,b){return a.getElementById(b)},
 $isI0:true,
 "%":"ShadowRoot"},
 CY:{
-"^":"qE;t5:type%",
+"^":"qE;LA:src},t5:type%",
 "%":"HTMLSourceElement"},
 HN:{
 "^":"ea;kc:error=,G1:message=",
@@ -7616,7 +7635,7 @@ y6:{
 "^":"QG;YK:altKey=,EB:ctrlKey=,be:metaKey=,qx:shiftKey=",
 "%":"TouchEvent"},
 pF:{
-"^":"qE;fY:kind=",
+"^":"qE;fY:kind=,LA:src}",
 "%":"HTMLTrackElement"},
 QG:{
 "^":"ea;WB:which=",
@@ -7714,6 +7733,7 @@ Gn:{
 "^":"Gv+P8;"},
 P8:{
 "^":"a;",
+suV:function(a,b){this.hV(a,"background",b,"")},
 gtT:function(a){return this.T2(a,"border-bottom-width")},
 gGA:function(a){return this.T2(a,"border-left-width")},
 gRU:function(a){return this.T2(a,"border-right-width")},
@@ -7852,6 +7872,7 @@ z=this.NL
 if(z!==b.parentNode)return!1
 z.removeChild(b)
 return!0},
+V1:function(a){J.r4(this.NL)},
 u:function(a,b,c){var z,y
 z=this.NL
 y=z.childNodes
@@ -8670,6 +8691,7 @@ aA:{
 "^":"a;",
 u:function(a,b,c){return Q.ah()},
 Rz:function(a,b){Q.ah()},
+V1:function(a){return Q.ah()},
 $isZ0:true},
 Cs:{
 "^":"a;",
@@ -9133,7 +9155,7 @@ $1:function(a){return J.Mp(a)},
 $isEH:true}}],["logging","package:logging/logging.dart",,N,{
 "^":"",
 Rw:{
-"^":"a;oc>,eT>,n2,Cj>,wd,Gs",
+"^":"a;oc>,eT>,n2,Cj>,wd>,Gs",
 gB8:function(){var z,y,x
 z=this.eT
 y=z==null||J.xC(J.O6(z),"")
@@ -11771,8 +11793,8 @@ z=M.pN(a,b)
 if(z==null)z=new M.K6([],null,null)
 for(y=J.YE(a),x=y.gq6(a),w=null,v=0;x!=null;x=x.nextSibling,++v){u=M.iX(x,b)
 if(u==null)continue
-if(w==null)w=Array(y.gni(a).NL.childNodes.length)
-if(v>=w.length)return H.e(w,v)
+if(w==null){w=Array(y.gni(a).NL.childNodes.length)
+w.fixed$length=init}if(v>=w.length)return H.e(w,v)
 w[v]=u}z.wd=w
 return z},
 X7:function(a,b,c,d,e,f,g,h){var z,y,x,w
@@ -12051,7 +12073,7 @@ M.pw(y,J.Gr(x.vt,w),b)
 z.u(0,b,x)
 return x}},
 K6:{
-"^":"a;Cd>,wd,jb>",
+"^":"a;Cd>,wd>,jb>",
 ghK:function(){return!1},
 QE:function(a){var z=this.wd
 if(z==null||a>=z.length)return
@@ -12835,6 +12857,7 @@ J.TH=function(a){return J.YE(a).gbP(a)}
 J.TZ=function(a){return J.YE(a).gKV(a)}
 J.Tr=function(a){return J.YE(a).gCj(a)}
 J.Ts=function(a,b){return J.YE(a).sFz(a,b)}
+J.U2=function(a){return J.w1(a).V1(a)}
 J.UN=function(a,b){if(typeof a=="number"&&typeof b=="number")return(a^b)>>>0
 return J.Wx(a).w(a,b)}
 J.UP=function(a){return J.YE(a).gSz(a)}
@@ -12853,7 +12876,9 @@ J.WI=function(a){return J.YE(a).gG3(a)}
 J.X2=function(a,b){return J.YE(a).soH(a,b)}
 J.X8=function(a){return J.YE(a).gls(a)}
 J.XH=function(a){return J.Wx(a).yu(a)}
+J.YD=function(a,b){return J.YE(a).suV(a,b)}
 J.YQ=function(a,b){return J.YE(a).kx(a,b)}
+J.Yj=function(a,b){return J.YE(a).sLA(a,b)}
 J.ZP=function(a,b){return J.YE(a).Tk(a,b)}
 J.ZR=function(a){if(typeof a=="number")return-a
 return J.Wx(a).J(a)}
