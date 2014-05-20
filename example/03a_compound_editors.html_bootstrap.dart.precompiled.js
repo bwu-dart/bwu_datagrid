@@ -2041,7 +2041,7 @@ $isEH:true},
 QAa:{
 "^":"Tp:47;",
 $0:[function(){return A.Ad("app-element",C.dI)},"$0",null,0,0,null,"call"],
-$isEH:true}},1],["app_element","file:///home/zoechi/source/my/dart/polymer_ui_elements_pr/bwu_datagrid/example/src/03a_compound-editors/app_element.dart",,O,{
+$isEH:true}},1],["app_element","file:///home/zoechi/source/my/dart/polymer_ui_elements_pr/bwu_datagrid/example/src/03a_compound_editors/app_element.dart",,O,{
 "^":"",
 PV:{
 "^":"Bk:52;",
@@ -9359,7 +9359,7 @@ static:{"^":"h1,tm,EL,hS,IQ,Fn,Eb,zE,BZ,lM,ux"}},
 HV:{
 "^":"a;QG<,G1>,iJ,Fl,O0,kc>,I4<",
 bu:function(a){return"["+this.QG.oc+"] "+this.iJ+": "+this.G1},
-static:{"^":"xO"}}}],["numeric_range_editor","file:///home/zoechi/source/my/dart/polymer_ui_elements_pr/bwu_datagrid/example/src/03a_compound-editors/numeric_range_editor.dart",,M,{
+static:{"^":"xO"}}}],["numeric_range_editor","file:///home/zoechi/source/my/dart/polymer_ui_elements_pr/bwu_datagrid/example/src/03a_compound_editors/numeric_range_editor.dart",,M,{
 "^":"",
 oQ:{
 "^":"I1;Kw,zL,Gd,Gn,Sv,Tm,Pw,Do,lj,mu",
