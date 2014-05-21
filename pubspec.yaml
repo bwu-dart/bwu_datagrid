@@ -20,6 +20,7 @@ transformers:
     - example/01_simple.html
     - example/02_formatters.html
     - example/07_events.html
+    - example/14_highlighting.html
     - example/03_editing.html
     - example/03a_compound_editors.html
     - example/03b_editing_with_undo.html

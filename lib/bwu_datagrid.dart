@@ -120,7 +120,7 @@ class BwuDatagrid extends PolymerElement {
   List<int> _selectedRows = [];
 
   List<Plugin> _plugins = [];
-  Map<String,Map<int,String>> _cellCssClasses = {};
+  Map<String,Map<int,Map<String,String>>> _cellCssClasses = {};
 
   Map<String,int> _columnsById = {};
   List<SortColumn> _sortColumns = [];
@@ -132,7 +132,7 @@ class BwuDatagrid extends PolymerElement {
   async.Timer _h_editorLoader = null;
   async.Timer _h_render = null;
   async.Timer _h_postrender = null;
-  List<List<int>> _postProcessedRows = [];
+  List<List<bool>> _postProcessedRows = [];
   int _postProcessToRow = null;
   int _postProcessFromRow = null;
 
@@ -759,7 +759,7 @@ class BwuDatagrid extends PolymerElement {
         var reorderedIds = _headers.sortable.toArray(); //("toArray");
         var reorderedColumns = [];
         for (var i = 0; i < reorderedIds.length; i++) {
-          reorderedColumns.add(columns[getColumnIndex(reorderedIds[i].replace(uid, ""))]); // TODO what is uid for here?
+          reorderedColumns.add(columns[getColumnIndex(reorderedIds[i] /*.replace(uid, "")*/)]); // TODO what is uid for here?
         }
         setColumns = reorderedColumns;
 
@@ -1315,7 +1315,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _selectedRangesChangedHandler(dom.CustomEvent e, [List<Range> ranges]) {
     _selectedRows = [];
-    List<Map<String,String>> hash = [];
+    Map<int,Map<String,String>> hash = {};
     for (var i = 0; i < ranges.length; i++) {
       for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
         if (hash[j] == null) {  // prevent duplicates
@@ -1625,7 +1625,7 @@ class BwuDatagrid extends PolymerElement {
 
     // TODO:  merge them together in the setter
     for (var key in _cellCssClasses.keys) {
-      if (_cellCssClasses[key][row] && _cellCssClasses[key][row][m.id]) {
+      if (_cellCssClasses[key][row] != null && _cellCssClasses[key][row][m.id] != null) {
         cellCss += (" " + _cellCssClasses[key][row][m.id]);
       }
     }
@@ -1988,7 +1988,7 @@ class BwuDatagrid extends PolymerElement {
       if(dataView != null) {
         itemMetadata = dataView.getItemMetadata(row);
       }
-      List<ColumnMetadata>metadata = itemMetadata != null ? itemMetadata.columns : null;
+      Map<String,ColumnMetadata>metadata = itemMetadata != null ? itemMetadata.columns : null;
 
       var d = getDataMapItem(row);
 
@@ -2265,18 +2265,18 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void _updateCellCssStylesOnRenderedRows(String addedHash, List<int> removedHash) {
+  void _updateCellCssStylesOnRenderedRows(Map<int,Map<String,String>> addedHash, Map<int,Map<String,String>> removedHash) {
     dom.HtmlElement node;
-    int columnId;
-    bool addedRowHash;
-    bool removedRowHash;
-    for (var row = 0; row < _rowsCache.length; row++) { // TODO check was probably associative array
-      removedRowHash = removedHash != null && removedHash[row] != null;
-      addedRowHash = addedHash != null && addedHash[row] != null;
+    String columnId;
+    Map addedRowHash;
+    Map removedRowHash;
+    for (final row in _rowsCache.keys) { // TODO check was probably associative array
+      removedRowHash = removedHash != null ? removedHash[row] : null ;
+      addedRowHash = addedHash != null ? addedHash[row] : null;
 
-      if (removedRowHash) {
-        for (columnId in removedRowHash) {
-          if (!addedRowHash || removedRowHash[columnId] != addedRowHash[columnId]) {
+      if (removedRowHash != null) {
+        for (final columnId in removedRowHash.keys) {
+          if (addedRowHash == null|| removedRowHash[columnId] != addedRowHash[columnId]) {
             node = getCellNode(row, getColumnIndex(columnId));
             if (node != null) {
               node.classes.remove(removedRowHash[columnId]);
@@ -2285,9 +2285,9 @@ class BwuDatagrid extends PolymerElement {
         }
       }
 
-      if (addedRowHash) {
-        for (columnId in addedRowHash) {
-          if (!removedRowHash || removedRowHash[columnId] != addedRowHash[columnId]) {
+      if (addedRowHash != null) {
+        for (final columnId in addedRowHash.keys) {
+          if (removedRowHash == null|| removedRowHash[columnId] != addedRowHash[columnId]) {
             node = getCellNode(row, getColumnIndex(columnId));
             if (node != null) {
               node.classes.add(addedRowHash[columnId]);
@@ -2320,7 +2320,7 @@ class BwuDatagrid extends PolymerElement {
     _eventBus.fire(core.Events.CELL_CSS_STYLES_CHANGED, new core.CellCssStylesChanged(this, key));
   }
 
-  void setCellCssStyles(String key, List<Map<String,String>> hash) {
+  void setCellCssStyles(String key, Map<int,Map<String,String>> hash) {
     var prevHash = _cellCssClasses[key];
 
     _cellCssClasses[key] = hash;
@@ -2329,7 +2329,7 @@ class BwuDatagrid extends PolymerElement {
     _eventBus.fire(core.Events.CELL_CSS_STYLES_CHANGED, new core.CellCssStylesChanged(this, key, hash: hash));
   }
 
-  Map<int,String> getCellCssStyles(int key) {
+  Map<int,Map<String,String>> getCellCssStyles(int key) {
     return _cellCssClasses[key];
   }
 
@@ -2339,16 +2339,14 @@ class BwuDatagrid extends PolymerElement {
       var $cell = getCellNode(row, cell);
 
       Function toggleCellClass;
-      toggleCellClass = (times) {
-        if (!times) {
+      toggleCellClass = (int times) {
+        if (times == 0) {
           return;
         }
         new async.Future.delayed(new Duration(milliseconds: speed),() {
-              $cell.queue(() {
-                $cell.classes.toggle(_gridOptions.cellFlashingCssClass).dequeue();
-                toggleCellClass(times - 1);
-              });
-            });
+              $cell.classes.toggle(_gridOptions.cellFlashingCssClass);
+              new async.Future(() => toggleCellClass(times - 1));
+          });
       };
 
       toggleCellClass(4);
@@ -2959,7 +2957,7 @@ class BwuDatagrid extends PolymerElement {
     return _activeCellNode;
   }
 
-  void scrollRowIntoView(int row, bool doPaging) {
+  void scrollRowIntoView(int row, [bool doPaging = false]) {
     var rowAtTop = row * _gridOptions.rowHeight;
     var rowAtBottom = (row + 1) * _gridOptions.rowHeight - _viewportH + (_viewportHasHScroll ? _scrollbarDimensions.y : 0);
 
@@ -3317,7 +3315,7 @@ class BwuDatagrid extends PolymerElement {
       return rowMetadata.focusable;
     }
 
-    ColumnMetadata columnMetadata = rowMetadata != null ? rowMetadata.columns : null;
+    Map<String,ColumnMetadata> columnMetadata = rowMetadata != null ? rowMetadata.columns : null;
     if (columnMetadata != null && columnMetadata[columns[cell].id] != null && columnMetadata[columns[cell].id].focusable is bool) {
       return columnMetadata[columns[cell].id].focusable;
     }

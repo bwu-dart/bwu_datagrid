@@ -267,9 +267,9 @@ class ViewportChanged extends EventData {
 
 class CellCssStylesChanged extends EventData {
   String key;
-  String hash;
+  Map<int,Map<String,String>> hash;
 
-  CellCssStylesChanged(sender, String key, {String hash}) : super(sender:
+  CellCssStylesChanged(sender, String key, {Map<int,Map<String,String>> hash}) : super(sender:
       sender, detail: {
         'key': key,
         'hash': hash

@@ -100,7 +100,7 @@ abstract class FormatterFactory {
 class ColumnMetadata {
   String colspan;
   bool selectable;
-
+  bool focusable;
 }
 
 class ItemMetadata {
@@ -220,6 +220,7 @@ class GridOptions { // defaults
   bool asyncEditorLoading;
   Duration asyncPostRenderDelay;
   String cellFlashingCssClass;
+  String cellHighlightCssClass;
   Function dataItemColumnValueExtractor; // TODO typeDef (item, columnDef)
   int defaultColumnWidth;
   Formatter defaultFormatter;
@@ -256,6 +257,7 @@ class GridOptions { // defaults
     this.autoEdit : false,
     this.autoHeight : false,
     this.cellFlashingCssClass : 'flashing',
+    this.cellHighlightCssClass: 'highlight',
     this.dataItemColumnValueExtractor,
     this.defaultColumnWidth : 80,
     this.defaultFormatter,
@@ -312,6 +314,7 @@ class GridOptions { // defaults
     if(o.autoEdit!= null) autoEdit = o.autoEdit;
     if(o.autoHeight!= null) autoHeight = o.autoHeight;
     if(o.cellFlashingCssClass!= null) cellFlashingCssClass = o.cellFlashingCssClass;
+    if(o.cellHighlightCssClass!= null) cellHighlightCssClass = o.cellHighlightCssClass;
     if(o.dataItemColumnValueExtractor!= null) dataItemColumnValueExtractor = o.dataItemColumnValueExtractor;
     if(o.defaultColumnWidth!= null) defaultColumnWidth = o.defaultColumnWidth;
     if(o.defaultFormatter!= null) defaultFormatter = o.defaultFormatter;
