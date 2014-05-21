@@ -2306,7 +2306,7 @@ class BwuDatagrid extends PolymerElement {
     _cellCssClasses[key] = hash;
     _updateCellCssStylesOnRenderedRows(hash, null);
 
-    fire('cell-css-style-changed', detail: { "key": key, "hash": hash }); // TODO eventbus.fire
+    _eventBus.fire(core.Events.CELL_CSS_STYLES_CHANGED, new core.CellCssStylesChanged(this, key, hash: hash));
   }
 
   void removeCellCssStyles(String key) {
@@ -2394,28 +2394,20 @@ class BwuDatagrid extends PolymerElement {
       return false;
     }
 
-    dd['origin-event'] = e;
-    var retval = fire('drag-start', detail: dd);  // TODO eventbus.fire
-    //var retval = trigger(self.onDragStart, dd, e);
-    if(e.defaultPrevented) {
-    //if (e.isImmediatePropagationStopped()) {
-      //return retval;
-      return true;
+    var data = _eventBus.fire(core.Events.DRAG_START, new core.DragStart(this, dd: dd, causedBy: e));
+    if (data.isImmediatePropagationStopped) {
+      return data.retVal;
     }
 
     return false;
   }
 
-  void _handleDragOver(dom.MouseEvent e, [Map dd]) {
-    dd['origin-event'] = e;
-     fire('drag', detail: dd) as dom.HtmlElement; // TODO eventbus fire
-    //return trigger(self.onDrag, dd, e);
+  bool _handleDragOver(dom.MouseEvent e, [Map dd]) {
+    return _eventBus.fire(core.Events.DRAG, new core.Drag(this, dd: dd, causedBy: e)).retVal;
   }
 
   void _handleDragEnd(dom.MouseEvent e, [Map dd]) {
-    dd['origin-event'] = e;
-    fire('drag-end', detail: dd);  // TODO eventbus fire
-    //trigger(self.onDragEnd, dd, e);
+    _eventBus.fire(core.Events.DRAG_END, new core.DragEnd(this, dd:dd, causedBy: e));
   }
 
   void _handleKeyDown(dom.KeyboardEvent e) {
@@ -3406,13 +3398,13 @@ class BwuDatagrid extends PolymerElement {
                 EditCommand cmd = editCommand;
                 cmd.editor.applyValue(item, cmd.serializedValue);
                 updateRow(cmd.row);
-                _eventBus.fire(core.Events.CELL_CHANGED, new core.CellChanged(this, new Cell(_activeRow, _activeCell), item));
+                _eventBus.fire(core.Events.CELL_CHANGE, new core.CellChange(this, new Cell(_activeRow, _activeCell), item));
               },
               undo: () {
                 EditCommand cmd = editCommand;
                 cmd.editor.applyValue(item, cmd.prevSerializedValue);
                 updateRow(cmd.row);
-                _eventBus.fire(core.Events.CELL_CHANGED, new core.CellChanged(this, new Cell(_activeRow, _activeCell), item));
+                _eventBus.fire(core.Events.CELL_CHANGE, new core.CellChange(this, new Cell(_activeRow, _activeCell), item));
               });
 
             if (_gridOptions.editCommandHandler != null) {
@@ -3501,272 +3493,104 @@ class BwuDatagrid extends PolymerElement {
     dom.window.alert(s);
   }
 
-  // a debug helper to be able to access private members
-//    this.eval = function (expr) {
-//      return eval(expr);
-//    };
 
-  //////////////////////////////////////////////////////////////////////////////////////////////
-  // Public API
+  async.Stream<core.ActiveCellChanged> get onActiveCellChanged =>
+      _eventBus.onEvent(core.Events.ACTIVE_CELL_CHANGED);
 
-//    $.extend(this, {
-//      "slickGridVersion": "2.1",
+  async.Stream<core.ActiveCellPositionChanged> get onActiveCellPositionChanged =>
+      _eventBus.onEvent(core.Events.ACTIVE_CELL_POSITION_CHANGED);
 
-    // Events
-//      "onScroll": new Slick.Event(),
-//      "onSort": new Slick.Event(),
-//      "onHeaderMouseEnter": new Slick.Event(),
-//      "onHeaderMouseLeave": new Slick.Event(),
-//      "onHeaderContextMenu": new Slick.Event(),
-//      "onHeaderClick": new Slick.Event(),
-//      "onHeaderCellRendered": new Slick.Event(),
-//      "onBeforeHeaderCellDestroy": new Slick.Event(),
-//      "onHeaderRowCellRendered": new Slick.Event(),
-//      "onBeforeHeaderRowCellDestroy": new Slick.Event(),
-//      "onMouseEnter": new Slick.Event(),
-//      "onMouseLeave": new Slick.Event(),
-//      "onClick": new Slick.Event(),
-//      "onDblClick": new Slick.Event(),
-//      "onContextMenu": new Slick.Event(),
-//      "onKeyDown": new Slick.Event(),
-//      "onAddNewRow": new Slick.Event(),
-//      "onValidationError": new Slick.Event(),
-//      "onViewportChanged": new Slick.Event(),
-//      "onColumnsReordered": new Slick.Event(),
-//      "onColumnsResized": new Slick.Event(),
-//      "onCellChange": new Slick.Event(),
-//      "onBeforeEditCell": new Slick.Event(),
-//      "onBeforeCellEditorDestroy": new Slick.Event(),
-//      "onBeforeDestroy": new Slick.Event(),
-//      "onActiveCellChanged": new Slick.Event(),
-//      "onActiveCellPositionChanged": new Slick.Event(),
-//      "onDragInit": new Slick.Event(),
-//      "onDragStart": new Slick.Event(),
-//      "onDrag": new Slick.Event(),
-//      "onDragEnd": new Slick.Event(),
-//      "onSelectedRowsChanged": new Slick.Event(),
-//      "onCellCssStylesChanged": new Slick.Event(),
+  async.Stream<core.AddNewRow> get onBwuAddNewRow =>
+      _eventBus.onEvent(core.Events.ADD_NEW_ROW);
 
+  async.Stream<core.BeforeDestroy> get onBwuDestroy =>
+      _eventBus.onEvent(core.Events.BEFORE_DESTROY);
 
+  async.Stream<core.BeforeCellEditorDestroy> get onBwuBeforeEditorDestroy =>
+      _eventBus.onEvent(core.Events.BEFORE_CELL_EDITOR_DESTROY);
 
+  async.Stream<core.BeforeEditCell> get onBwuBeforeEditCell =>
+      _eventBus.onEvent(core.Events.BEFORE_EDIT_CELL);
 
-      async.Stream<core.Click> get onBwuClick =>
-          _eventBus.onEvent(core.Events.CLICK);
+  async.Stream<core.BeforeHeaderCellDestroy> get onBwuBeforeHeaderCellDestory =>
+      _eventBus.onEvent(core.Events.BEFORE_HEADER_CELL_DESTROY);
 
-      async.Stream<core.Click> get onBwuContextMenu =>
-          _eventBus.onEvent(core.Events.CONTEXT_MENU);
+  async.Stream<core.BeforeHeaderRowCellDestroy> get onBwuBeforeHeaderRowCellDestory =>
+      _eventBus.onEvent(core.Events.BEFORE_HEADER_ROW_CELL_DESTROY);
 
-      async.Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
-          _eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER);
+  async.Stream<core.CellChange> get onBwuCellChange =>
+      _eventBus.onEvent(core.Events.CELL_CHANGE);
 
-      async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
+  async.Stream<core.CellCssStylesChanged> get onBwuCellCssStylesChanged =>
+      _eventBus.onEvent(core.Events.CELL_CSS_STYLES_CHANGED);
+
+  async.Stream<core.Click> get onBwuClick =>
+      _eventBus.onEvent(core.Events.CLICK);
+
+  async.Stream<core.ColumnsReordered> get onBwuColumnsReordered =>
+      _eventBus.onEvent(core.Events.COLUMNS_REORDERED);
+
+  async.Stream<core.ColumnsResized> get onBwuColumnsResized =>
+      _eventBus.onEvent(core.Events.COLUMNS_RESIZED);
+
+  async.Stream<core.ContextMenu> get onBwuContextMenu =>
+      _eventBus.onEvent(core.Events.CONTEXT_MENU);
+
+  async.Stream<core.DoubleClick> get onBwuDoubleClick =>
+      _eventBus.onEvent(core.Events.DOUBLE_CLICK);
+
+  async.Stream<core.Drag> get onBwuDrag =>
+      _eventBus.onEvent(core.Events.DRAG);
+
+  async.Stream<core.DragEnd> get onBwuDragEnd =>
+      _eventBus.onEvent(core.Events.DRAG_END);
+
+      async.Stream<core.DragInit> get onBwuDragInit =>
+          _eventBus.onEvent(core.Events.DRAG_INIT);
+
+  async.Stream<core.DragStart> get onBwuDragStart =>
+      _eventBus.onEvent(core.Events.DRAG_START);
+
+  async.Stream<core.HeaderCellRendered> get onBwuHeaderCellRendered =>
+      _eventBus.onEvent(core.Events.HEADER_CELL_RENDERED);
+
+  async.Stream<core.HeaderClick> get onBwuHeaderClick =>
+      _eventBus.onEvent(core.Events.HEADER_CLICK);
+
+  async.Stream<core.HeaderContextMenu> get onBwuHeaderContextMenu =>
+      _eventBus.onEvent(core.Events.HEADER_CONTEX_MENU);
+
+  async.Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
+      _eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER);
+
+  async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
       _eventBus.onEvent(core.Events.HEADER_MOUSE_LEAVE);
 
-      async.Stream<core.MouseEnter> get onBwuMouseEnter =>
-          _eventBus.onEvent(core.Events.MOUSE_ENTER);
+  async.Stream<core.HeaderRowCellRendered> get onBwuHeaderRowCellRendered =>
+      _eventBus.onEvent(core.Events.HEADER_ROW_CELL_RENDERED);
 
+  async.Stream<core.KeyDown> get onBwuKeyDown =>
+      _eventBus.onEvent(core.Events.KEY_DOWN);
 
-      async.Stream<core.MouseLeave> get onBwuMouseLeave =>
-          _eventBus.onEvent(core.Events.MOUSE_LEAVE);
+  async.Stream<core.MouseEnter> get onBwuMouseEnter =>
+      _eventBus.onEvent(core.Events.MOUSE_ENTER);
+
+  async.Stream<core.MouseLeave> get onBwuMouseLeave =>
+      _eventBus.onEvent(core.Events.MOUSE_LEAVE);
+
+  async.Stream<core.SelectedRowsChanged> get onBwuSelectedRowsChanged =>
+      _eventBus.onEvent(core.Events.SELECTED_ROWS_CHANGED);
+
+  async.Stream<core.Scroll> get onBwuScroll =>
+      _eventBus.onEvent(core.Events.SCROLL);
+
+  async.Stream<core.Sort> get onBwuSort =>
+      _eventBus.onEvent(core.Events.SORT);
+
+  async.Stream<core.ValidationError> get onBwuValidationError =>
+      _eventBus.onEvent(core.Events.VALIDATION_ERROR);
+
+  async.Stream<core.ViewportChanged> get onBwuViewportChanged =>
+      _eventBus.onEvent(core.Events.VIEWPORT_CHANGED);
 
 }
-//  /**
-//   * on before--destory
-//   */
-//  static const ON_BEFORE_DESTROY = 'before-destory';
-//  async.Stream<dom.CustomEvent> get onBeforeDestory =>
-//      BwuDatagrid._onBeforeDestory.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onBeforeDestory =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_BEFORE_DESTROY);
-
-//  /**
-//   * on before-header-cell-destory
-//   */
-//  static const ON_BEFORE_HEADER_CELL_DESTROY = 'before-header-cell-destory';
-//  async.Stream<dom.CustomEvent> get onBeforeHeaderCellDestory =>
-//      BwuDatagrid._onBeforeHeaderCellDestory.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onBeforeHeaderCellDestory =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_BEFORE_HEADER_CELL_DESTROY);
-
-//  /**
-//   * on header-cell-rendered
-//   */
-//  static const ON_HEADER_CELL_RENDERED = 'header-cell-rendered';
-//  async.Stream<dom.CustomEvent> get onHeaderCellRendered =>
-//      BwuDatagrid._onHeaderCellRendered.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onHeaderCellRendered =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_HEADER_CELL_RENDERED);
-
-//  /**
-//   * on header-row-cell-rendered
-//   */
-//  static const ON_HEADER_ROW_CELL_RENDERED = 'header-row-cell-rendered';
-//  async.Stream<dom.CustomEvent> get onHeaderRowCellRendered =>
-//      BwuDatagrid._onHeaderRowCellRendered.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onHeaderRowCellRendered =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_HEADER_ROW_CELL_RENDERED);
-
-//  /**
-//   * on sort
-//   */
-//  static const ON_SORT = 'sort';
-//  async.Stream<dom.CustomEvent> get onSort =>
-//      BwuDatagrid._onSort.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onSort =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_SORT);
-//
-//  /**
-//   * on columns-resized
-//   */
-//  static const ON_COLUMNS_RESIZED = 'columns-resized';
-//  async.Stream<dom.CustomEvent> get onColumnsResized =>
-//      BwuDatagrid._onColumnsResized.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onColumnsResized =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_COLUMNS_RESIZED);
-
-//  /**
-//   * on columns-reordered
-//   */
-//  static const ON_COLUMNS_REORDERED = 'columns-reordered';
-//  async.Stream<dom.CustomEvent> get onColumnsReordered =>
-//      BwuDatagrid._onColumnsReordered.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onColumnsReordered =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_COLUMNS_REORDERED);
-
-//  /**
-//   * on selected-rows-changed
-//   */
-//  static const ON_SELECTED_ROWS_CHANGED = 'selected-rows-changed';
-//  async.Stream<dom.CustomEvent> get onSelectedRowsChanged =>
-//      BwuDatagrid._onSelectedRowsChanged.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onSelectedRowsChanged =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_SELECTED_ROWS_CHANGED);
-
-//  /**
-//   * on viewport-changed
-//   */
-//  static const ON_VIEWPORT_CHANGED = 'viewport-changed';
-//  async.Stream<dom.CustomEvent> get onViewportChanged =>
-//      BwuDatagrid._onViewportChanged.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onViewportChanged =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_VIEWPORT_CHANGED);
-
-//  /**
-//   * on cell-css-styles-changed
-//   */
-//  static const ON_CELL_CSS_STYLES_CHANGED = 'cell-css-styles-changed';
-//  async.Stream<dom.CustomEvent> get onCellCssStylesChanged =>
-//      BwuDatagrid._onCellCssStylesChanged.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onCellCssStylesChanged =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_CELL_CSS_STYLES_CHANGED);
-
-
-//  /**
-//   * on header-mouse-leave
-//   */
-//  static const ON_HEADER_CONTEXT_MENU = 'header-context-menu';
-//  async.Stream<dom.CustomEvent> get onHeaderContextMenu =>
-//      BwuDatagrid._onHeaderContextMenu.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onHeaderContextMenu =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_HEADER_CONTEXT_MENU);
-
-//  /**
-//   * on header-click
-//   */
-//  static const ON_HEADER_CLICK = 'header-click';
-//  async.Stream<dom.CustomEvent> get onHeaderClick =>
-//      BwuDatagrid._onHeaderClick.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onHeaderClick =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_HEADER_CLICK);
-
-//  /**
-//   * on active-cell-changed
-//   */
-//  static const ON_ACTIVE_CELL_CHANGED = 'active-cell-changed';
-//  async.Stream<dom.CustomEvent> get onActiveCellChanged =>
-//      BwuDatagrid._onActiveCellChanged.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onActiveCellChanged =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_ACTIVE_CELL_CHANGED);
-
-//  /**
-//   * on before-cell-editor-destroy
-//   */
-//  static const ON_BEFORE_CELL_EDITOR_DESTROY = 'before-cell-editor-destroy';
-//  async.Stream<dom.CustomEvent> get onBeforeCellEditorDestroy =>
-//      BwuDatagrid._onBeforeCellEditorDestroy.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onBeforeCellEditorDestroy =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_BEFORE_CELL_EDITOR_DESTROY);
-
-//  /**
-//   * on before-edit-cell
-//   */
-//  static const ON_BEFORE_EDIT_CELL = 'before-edit-cell';
-//  async.Stream<dom.CustomEvent> get onBeforeEditCell =>
-//      BwuDatagrid._onBeforeEditCell.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvenHeaderMouseentert> _onBeforeEditCell =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_BEFORE_EDIT_CELL);
-
-//  /**
-//   * on active-cell-position-changed
-//   */
-//  static const ON_ACTIVE_CELL_POSITION_CHANGED = 'active-cell-position-changed';
-//  async.Stream<dom.CustomEvent> get onActiveCellPositionChanged =>
-//      BwuDatagrid._onActiveCellPositionChanged.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onActiveCellPositionChanged =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_ACTIVE_CELL_POSITION_CHANGED);
-
-//  /**
-//   * on cell-changed
-//   */
-//  static const ON_CELL_CHANGED = 'cell-changed';
-//  async.Stream<dom.CustomEvent> get onCellChanged =>
-//      BwuDatagrid._onCellChanged.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onCellChanged =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_CELL_CHANGED);
-
-//  /**
-//   * on add-new-row
-//   */
-//  static const ON_ADD_NEW_ROW = 'add-new-row';
-//  async.Stream<dom.CustomEvent> get onAddNewRow =>
-//      BwuDatagrid._onAddNewRow.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onAddNewRow =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_ADD_NEW_ROW);
-
-//  /**
-//   * on validation-error
-//   */
-//  static const ON_VALIDATION_ERROR = 'validation-error';
-//  async.Stream<dom.CustomEvent> get onValidationError =>
-//      BwuDatagrid._onValidationError.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onValidationError =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_VALIDATION_ERROR);
-
-//  /**
-//   * on drag-init
-//   */
-//  static const ON_DRAG_INIT = 'drag-init';
-//  async.Stream<dom.CustomEvent> get onDragInit =>
-//      BwuDatagrid._onDragInit.forTarget(this);
-//
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onDragInit =
-//      const dom.EventStreamProvider<dom.CustomEvent>(ON_DRAG_INIT);
