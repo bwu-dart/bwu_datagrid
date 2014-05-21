@@ -59,19 +59,19 @@ class BwuDatagrid extends PolymerElement {
   //dom.NodeValidator nodeValidator = new dom.NodeValidatorBuilder.common();
 
   // scroller
-  int th;   // virtual height
-  double h;    // real scrollable height
-  double ph;   // page height
-  int n;    // number of pages
-  double cj;   // "jumpiness" coefficient
+  int _th;   // virtual height
+  double _h;    // real scrollable height
+  double _ph;   // page height
+  int _n;    // number of pages
+  double _cj;   // "jumpiness" coefficient
 
-  int page = 0;       // current page
-  int pageOffset = 0;     // current page offset
-  int vScrollDir = 1;
+  int _page = 0;       // current page
+  int _pageOffset = 0;     // current page offset
+  int _vScrollDir = 1;
 
   // shared across all grids on the page
-  math.Point scrollbarDimensions;
-  int maxSupportedCssHeight;  // browser's breaking point
+  math.Point _scrollbarDimensions;
+  int _maxSupportedCssHeight;  // browser's breaking point
 
   // private
   bool _initialized = false;
@@ -183,8 +183,8 @@ class BwuDatagrid extends PolymerElement {
     _container = this.shadowRoot;
 
     // calculate these only once and share between grid instances
-    maxSupportedCssHeight = maxSupportedCssHeight != null ? maxSupportedCssHeight : _getMaxSupportedCssHeight();
-    scrollbarDimensions = scrollbarDimensions != null ? scrollbarDimensions : _measureScrollbar();
+    _maxSupportedCssHeight = _maxSupportedCssHeight != null ? _maxSupportedCssHeight : _getMaxSupportedCssHeight();
+    _scrollbarDimensions = _scrollbarDimensions != null ? _scrollbarDimensions : _measureScrollbar();
 
     //options = $.extend({}, defaults, options);
     _validateAndEnforceOptions();
@@ -272,7 +272,7 @@ class BwuDatagrid extends PolymerElement {
       ..style.position ='absolute'
       ..style.top ='0'
       ..style.left='0'
-        ..style.width = '${_getCanvasWidth() + scrollbarDimensions.x}px';
+        ..style.width = '${_getCanvasWidth() + _scrollbarDimensions.x}px';
     _headerRowScroller.append(_headerRowSpacer);
 
     _topPanelScroller = new dom.DivElement()
@@ -444,12 +444,12 @@ class BwuDatagrid extends PolymerElement {
       int width = columns[i].width;
       headersWidth += width;
     }
-    headersWidth += scrollbarDimensions.x;
+    headersWidth += _scrollbarDimensions.x;
     return math.max(headersWidth, _viewportW) + 1000;
   }
 
   int _getCanvasWidth() {
-    int availableWidth = _viewportHasVScroll ? _viewportW - scrollbarDimensions.x : _viewportW;
+    int availableWidth = _viewportHasVScroll ? _viewportW - _scrollbarDimensions.x : _viewportW;
     int rowWidth = 0;
     int i = columns != null ? columns.length : 0;
     while (i-- > 0) {
@@ -466,10 +466,10 @@ class BwuDatagrid extends PolymerElement {
       _canvas.style.width = "${_canvasWidth}px";
       _headerRow.style.width = "${_canvasWidth}px";
       _headers.style.width = "${_getHeadersWidth()}px";
-      _viewportHasHScroll = (_canvasWidth > _viewportW - scrollbarDimensions.x);
+      _viewportHasHScroll = (_canvasWidth > _viewportW - _scrollbarDimensions.x);
     }
 
-    _headerRowSpacer.style.width = "${(_canvasWidth + (_viewportHasVScroll ? scrollbarDimensions.x : 0))}px";
+    _headerRowSpacer.style.width = "${(_canvasWidth + (_viewportHasVScroll ? _scrollbarDimensions.x : 0))}px";
 
     if (_canvasWidth != oldCanvasWidth || forceColumnWidthsUpdate) {
       _applyColumnWidths();
@@ -1164,7 +1164,7 @@ class BwuDatagrid extends PolymerElement {
     int shrinkLeeway = 0;
     int total = 0;
     int prevTotal;
-    int availWidth = _viewportHasVScroll ? _viewportW - scrollbarDimensions.x : _viewportW;
+    int availWidth = _viewportHasVScroll ? _viewportW - _scrollbarDimensions.x : _viewportW;
 
     for (i = 0; i < columns.length; i++) {
       c = columns[i];
@@ -1479,33 +1479,33 @@ class BwuDatagrid extends PolymerElement {
   // Rendering / Scrolling
 
   int _getRowTop(int row) {
-    var x = _gridOptions.rowHeight * row - pageOffset;
+    var x = _gridOptions.rowHeight * row - _pageOffset;
     //print('rowTop - row: ${row}: ${x}');
     return x;
   }
 
   int _getRowFromPosition(int y) {
-    return ((y + pageOffset) / _gridOptions.rowHeight).floor();
+    return ((y + _pageOffset) / _gridOptions.rowHeight).floor();
   }
 
   void _scrollTo(int y) {
     y = math.max(y, 0);
-    y = math.min(y, th - _viewportH + (_viewportHasHScroll ? scrollbarDimensions.y : 0));
+    y = math.min(y, _th - _viewportH + (_viewportHasHScroll ? _scrollbarDimensions.y : 0));
 
-    var oldOffset = pageOffset;
+    var oldOffset = _pageOffset;
 
-    page = math.min(n - 1, (y / ph).floor());
-    pageOffset = (page * cj).round();
-    int newScrollTop = y - pageOffset;
+    _page = math.min(_n - 1, (y / _ph).floor());
+    _pageOffset = (_page * _cj).round();
+    int newScrollTop = y - _pageOffset;
 
-    if (pageOffset != oldOffset) {
+    if (_pageOffset != oldOffset) {
       var range = _getVisibleRange(newScrollTop);
       _cleanupRows(range);
       _updateRowPositions();
     }
 
     if (_prevScrollTop != newScrollTop) {
-      vScrollDir = (_prevScrollTop + oldOffset < newScrollTop + pageOffset) ? 1 : -1;
+      _vScrollDir = (_prevScrollTop + oldOffset < newScrollTop + _pageOffset) ? 1 : -1;
       _viewport.scrollTop = (_lastRenderedScrollTop = _scrollTop = _prevScrollTop = newScrollTop);
 
       _eventBus.fire(core.Events.VIEWPORT_CHANGED, new core.ViewportChanged(this));
@@ -1693,7 +1693,7 @@ class BwuDatagrid extends PolymerElement {
     if (rows == null || rows.length == 0) {
       return;
     }
-    vScrollDir = 0;
+    _vScrollDir = 0;
     for (i = 0; i < rows.length; i++) {
       if (_currentEditor != null && _activeRow == rows[i]) {
         _makeActiveCellNormal();
@@ -1821,39 +1821,39 @@ class BwuDatagrid extends PolymerElement {
       resetActiveCell();
     }
 
-    var oldH = h;
-    th = math.max(_gridOptions.rowHeight * numberOfRows, _viewportH - scrollbarDimensions.y);
-    if (th < maxSupportedCssHeight) {
+    var oldH = _h;
+    _th = math.max(_gridOptions.rowHeight * numberOfRows, _viewportH - _scrollbarDimensions.y);
+    if (_th < _maxSupportedCssHeight) {
       // just one page
-      h = ph = th.toDouble();
-      n = 1;
-      cj = 0.0;
+      _h = _ph = _th.toDouble();
+      _n = 1;
+      _cj = 0.0;
     } else {
       // break into pages
-      h = maxSupportedCssHeight.toDouble();
-      ph = h / 100;
-      n = (th / ph).floor();
-      cj = (th - h) / (n - 1);
+      _h = _maxSupportedCssHeight.toDouble();
+      _ph = _h / 100;
+      _n = (_th / _ph).floor();
+      _cj = (_th - _h) / (_n - 1);
     }
 
-    if (h != oldH) {
-      _canvas.style.height = "${h}px";
+    if (_h != oldH) {
+      _canvas.style.height = "${_h}px";
       _scrollTop = _viewport.scrollTop;
     }
 
-    var oldScrollTopInRange = (_scrollTop + pageOffset <= th - _viewportH);
+    var oldScrollTopInRange = (_scrollTop + _pageOffset <= _th - _viewportH);
 
-    if (th == 0 || _scrollTop == 0) {
-      page = pageOffset = 0;
+    if (_th == 0 || _scrollTop == 0) {
+      _page = _pageOffset = 0;
     } else if (oldScrollTopInRange) {
       // maintain virtual position
-      _scrollTo(_scrollTop + pageOffset);
+      _scrollTo(_scrollTop + _pageOffset);
     } else {
       // scroll to bottom
-      _scrollTo((th - _viewportH).round());
+      _scrollTo((_th - _viewportH).round());
     }
 
-    if (h != oldH && _gridOptions.autoHeight) {
+    if (_h != oldH && _gridOptions.autoHeight) {
       resizeCanvas();
     }
 
@@ -1886,10 +1886,10 @@ class BwuDatagrid extends PolymerElement {
     int buffer = (_viewportH / _gridOptions.rowHeight).round();
     int minBuffer = 3;
 
-    if (vScrollDir == -1) {
+    if (_vScrollDir == -1) {
       range.top -= buffer;
       range.bottom += minBuffer;
-    } else if (vScrollDir == 1) {
+    } else if (_vScrollDir == 1) {
       range.top -= minBuffer;
       range.bottom += buffer;
     } else {
@@ -2187,21 +2187,21 @@ class BwuDatagrid extends PolymerElement {
     }
 
     if (vScrollDist != 0) {
-      vScrollDir = _prevScrollTop < _scrollTop ? 1 : -1;
+      _vScrollDir = _prevScrollTop < _scrollTop ? 1 : -1;
       _prevScrollTop = _scrollTop;
 
       // switch virtual pages if needed
       if (vScrollDist < _viewportH) {
-        _scrollTo(_scrollTop + pageOffset);
+        _scrollTo(_scrollTop + _pageOffset);
       } else {
-        var oldOffset = pageOffset;
-        if (h == _viewportH) {
-          page = 0;
+        var oldOffset = _pageOffset;
+        if (_h == _viewportH) {
+          _page = 0;
         } else {
-          page = math.min(n - 1, (_scrollTop * ((th - _viewportH) / (h - _viewportH)) * (1 / ph)).floor());
+          _page = math.min(_n - 1, (_scrollTop * ((_th - _viewportH) / (_h - _viewportH)) * (1 / _ph)).floor());
         }
-        pageOffset = (page * cj).round();
-        if (oldOffset != pageOffset) {
+        _pageOffset = (_page * _cj).round();
+        if (oldOffset != _pageOffset) {
           invalidateAllRows();
         }
       }
@@ -2232,7 +2232,7 @@ class BwuDatagrid extends PolymerElement {
   void _asyncPostProcessRows() {
     var dataLength = getDataLength;
     while (_postProcessFromRow <= _postProcessToRow) {
-      var row = (vScrollDir >= 0) ? _postProcessFromRow++ : _postProcessToRow--;
+      var row = (_vScrollDir >= 0) ? _postProcessFromRow++ : _postProcessToRow--;
       var cacheEntry = _rowsCache[row];
       if (!cacheEntry || row >= dataLength) {
         continue;
@@ -2654,7 +2654,7 @@ class BwuDatagrid extends PolymerElement {
   void scrollCellIntoView(int row, int cell, bool doPaging) {
     scrollRowIntoView(row, doPaging);
 
-    var colspan = getColspan(row, cell);
+    var colspan = _getColspan(row, cell);
     int intColspan = tools.parseInt(colspan);
     var left = _columnPosLeft[cell],
       right = _columnPosRight[cell + (intColspan > 1 ? intColspan - 1 : 0)],
@@ -2961,15 +2961,15 @@ class BwuDatagrid extends PolymerElement {
 
   void scrollRowIntoView(int row, bool doPaging) {
     var rowAtTop = row * _gridOptions.rowHeight;
-    var rowAtBottom = (row + 1) * _gridOptions.rowHeight - _viewportH + (_viewportHasHScroll ? scrollbarDimensions.y : 0);
+    var rowAtBottom = (row + 1) * _gridOptions.rowHeight - _viewportH + (_viewportHasHScroll ? _scrollbarDimensions.y : 0);
 
     // need to page down?
-    if ((row + 1) * _gridOptions.rowHeight > _scrollTop + _viewportH + pageOffset) {
+    if ((row + 1) * _gridOptions.rowHeight > _scrollTop + _viewportH + _pageOffset) {
       _scrollTo(doPaging ? rowAtTop : rowAtBottom);
       render();
     }
     // or page up?
-    else if (row * _gridOptions.rowHeight < _scrollTop + pageOffset) {
+    else if (row * _gridOptions.rowHeight < _scrollTop + _pageOffset) {
       _scrollTo(doPaging ? rowAtBottom : rowAtTop);
       render();
     }
@@ -3001,7 +3001,7 @@ class BwuDatagrid extends PolymerElement {
         if (canCellBeActive(row, cell)) {
           prevCell = cell;
         }
-        cell += getColspan(row, cell);
+        cell += _getColspan(row, cell);
       }
 
       if (prevCell != null) {
@@ -3017,7 +3017,7 @@ class BwuDatagrid extends PolymerElement {
 
   void navigatePageUp() =>  _scrollPage(-1);
 
-  String getColspan(int row, int cell) {
+  String _getColspan(int row, int cell) {
     ItemMetadata metadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
     if (metadata == null || metadata.columns == null) {
       return '1';
@@ -3040,7 +3040,7 @@ class BwuDatagrid extends PolymerElement {
       if (canCellBeActive(row, cell)) {
         return cell;
       }
-      cell += getColspan(row, cell);
+      cell += _getColspan(row, cell);
     }
     return null;
   }
@@ -3052,7 +3052,7 @@ class BwuDatagrid extends PolymerElement {
       if (canCellBeActive(row, cell)) {
         lastFocusableCell = cell;
       }
-      cell += getColspan(row, cell);
+      cell += _getColspan(row, cell);
     }
     return lastFocusableCell;
   }
@@ -3063,7 +3063,7 @@ class BwuDatagrid extends PolymerElement {
     }
 
     do {
-      cell += tools.parseInt(getColspan(row, cell));
+      cell += tools.parseInt(_getColspan(row, cell));
     }
     while (cell < columns.length && !canCellBeActive(row, cell));
 
@@ -3108,7 +3108,7 @@ class BwuDatagrid extends PolymerElement {
       prevCell = cell = 0;
       while (cell <= posX) {
         prevCell = cell;
-        cell += tools.parseInt(getColspan(row, cell));
+        cell += tools.parseInt(_getColspan(row, cell));
       }
 
       if (canCellBeActive(row, prevCell)) {
@@ -3127,7 +3127,7 @@ class BwuDatagrid extends PolymerElement {
       prevCell = cell = 0;
       while (cell <= posX) {
         prevCell = cell;
-        cell += tools.parseInt(getColspan(row, cell));
+        cell += tools.parseInt(_getColspan(row, cell));
       }
 
       if (canCellBeActive(row, prevCell)) {
@@ -3484,11 +3484,11 @@ class BwuDatagrid extends PolymerElement {
     "counter_rows_removed:  ${_counter_rows_removed}"
     "renderedRows:  ${_renderedRows}"
     "numVisibleRows:  ${_numVisibleRows}"
-    "maxSupportedCssHeight:  ${maxSupportedCssHeight}"
-    "n(umber of pages):  ${n}"
-    "(current) page:  ${page}"
-    "page height (ph):  ${ph}";
-    "vScrollDir:  ${vScrollDir}";
+    "maxSupportedCssHeight:  ${_maxSupportedCssHeight}"
+    "n(umber of pages):  ${_n}"
+    "(current) page:  ${_page}"
+    "page height (ph):  ${_ph}";
+    "vScrollDir:  ${_vScrollDir}";
 
     dom.window.alert(s);
   }
