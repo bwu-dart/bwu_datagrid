@@ -44,6 +44,7 @@ abstract class Events {
   static const DRAG_INIT = const EventType<DragInit>(
       'drag-init');
   static const CLICK = const EventType<Click>('click');
+  static const CONTEXT_MENU = const EventType<ContextMenu>('context-menu');
   static const DOUBLE_CLICK = const EventType<DoubleClick>('double-click');
   static const KEY_DOWN = const EventType<KeyDown>('key-down');
   static const MOUSE_ENTER = const EventType<MouseEnter>('mouse-enter');
@@ -62,10 +63,12 @@ abstract class Events {
 
 class EventData {
   var sender;
+  dom.Event causedBy;
   Map detail;
 
   bool _isPropagationStopped = false;
   bool _isImmediatePropagationStopped = false;
+  bool _isDefaultPrevented = false;
 
   /***
    * Returns whether stopPropagation was called on this event object.
@@ -80,6 +83,20 @@ class EventData {
    */
   void stopPropagation() {
     _isPropagationStopped = true;
+    if(causedBy != null) {
+      causedBy.stopPropagation();
+    }
+  }
+
+  /***
+   * Stops event from propagating up the DOM tree.
+   * @method stopPropagation
+   */
+  void preventDefault() {
+    _isDefaultPrevented = true;
+    if(causedBy != null) {
+      causedBy.preventDefault();
+    }
   }
 
   /***
@@ -95,9 +112,12 @@ class EventData {
    */
   void stopImmediatePropagation() {
     _isImmediatePropagationStopped = true;
+    if(causedBy != null) {
+      causedBy.stopImmediatePropagation();
+    }
   }
 
-  EventData({this.sender, this.detail});
+  EventData({this.sender, this.detail, this.causedBy});
 }
 
 class BeforeHeaderCellDestroy extends EventData {
@@ -143,20 +163,17 @@ class Sort extends EventData {
   Column sortColumn;
   Map<Column,bool> sortColumns;
   bool sortAsc;
-  dom.Event causedBy;
 
   Sort(sender, bool multiColumnSort, Column sortColumn, Map<Column,bool> sortColumns, bool sortAsc, dom.Event
       causedBy)
-      : super(sender: sender, detail: {
+      : super(sender: sender, causedBy: causedBy, detail: {
         'multiColumnSort': multiColumnSort,
         'sortColumn': sortColumn,
         'sortAsc': sortAsc,
-        'causedBy': causedBy
       }) {
     this.multiColumnSort = multiColumnSort;
     this.sortColumn = sortColumn;
     this.sortAsc = sortAsc;
-    this.causedBy = causedBy;
   }
 }
 
@@ -172,11 +189,10 @@ class ColumnsReordered extends EventData {
 
 class SelectedRowsChanged extends EventData {
   List<int> rows;
-  dom.CustomEvent causedBy;
+  dom.CustomEvent get causedBy => super.causedBy;
 
-  SelectedRowsChanged(sender, rows, causedBy) : super(sender: sender, detail: {'rows': rows, 'causedBy': causedBy}) {
+  SelectedRowsChanged(sender, rows, causedBy) : super(sender: sender, causedBy: causedBy, detail: {'rows': rows}) {
     this.rows = rows;
-    this.causedBy = causedBy;
   }
 }
 
@@ -197,30 +213,36 @@ class CellCssStylesChanged extends EventData {
 
 class HeaderMouseEnter extends EventData {
   Column data;
-  dom.MouseEvent causedBy;
-  HeaderMouseEnter(sender, Column data, {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'data': data, 'causedBy': causedBy}) {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderMouseEnter(sender, Column data, {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'data': data}) {
     this.data = data;
-    this.causedBy = causedBy;
   }
 }
 
 class HeaderMouseLeave extends EventData {
   String data;
-  HeaderMouseLeave(sender, String data, {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'data': data, 'causedBy': causedBy}) {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderMouseLeave(sender, String data, {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'data': data}) {
     this.data = data;
   }
 }
 
 class HeaderContextMenu extends EventData {
   Column column;
-  HeaderContextMenu(sender, Column column, {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'column': column, 'causedBy': causedBy}) {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderContextMenu(sender, Column column, {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'column': column}) {
     this.column = column;
   }
 }
 
 class HeaderClick extends EventData {
   Column column;
-  HeaderClick(sender, Column column, {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'column': column, 'causedBy': causedBy}) {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderClick(sender, Column column, {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'column': column}) {
     this.column = column;
   }
 }
@@ -305,59 +327,60 @@ class Scroll extends EventData {
 
 class DragInit extends EventData {
   int dd;
-  dom.MouseEvent causedBy;
+  dom.MouseEvent get causedBy => super.causedBy;
   bool retVal = false;
 
-  DragInit(sender, {int dd, dom.MouseEvent causedBy}) : super(sender: sender, detail: {'dd': dd, 'causedBy': causedBy}) {
+  DragInit(sender, {int dd, dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'dd': dd}) {
     this.dd = dd;
-    this.causedBy = causedBy;
   }
 }
 
 class Click extends EventData {
   Cell cell;
-  dom.MouseEvent causedBy;
+  dom.MouseEvent get causedBy => super.causedBy;
 
-  Click(sender, Cell cell,  {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'cell': cell, 'causedBy': causedBy}) {
+  Click(sender, Cell cell,  {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'cell': cell}) {
     this.cell = cell;
-    this.causedBy = causedBy;
+  }
+}
+
+class ContextMenu extends EventData {
+  Cell cell;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  ContextMenu(sender, Cell cell,  {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'cell': cell}) {
+    this.cell = cell;
   }
 }
 
 class DoubleClick extends EventData {
   Cell cell;
-  dom.MouseEvent causedBy;
+  dom.MouseEvent get causedBy => super.causedBy;
 
-  DoubleClick(sender, Cell cell,  {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'cell': cell, 'causedBy': causedBy}) {
+  DoubleClick(sender, Cell cell,  {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'cell': cell}) {
     this.cell = cell;
-    this.causedBy = causedBy;
   }
 }
 
 class KeyDown extends EventData {
   Cell cell;
-  dom.KeyboardEvent causedBy;
+  dom.KeyboardEvent get causedBy => super.causedBy;
 
-  KeyDown(sender, Cell cell, {dom.KeyboardEvent causedBy}) : super(sender: sender, detail: {'cell': cell, 'causedBy': causedBy}) {
+  KeyDown(sender, Cell cell, {dom.KeyboardEvent causedBy}) : super(sender: sender, causedBy: causedBy, detail: {'cell': cell}) {
     this.cell = cell;
-    this.causedBy = causedBy;
   }
 }
 
 class MouseEnter extends EventData {
-  dom.MouseEvent causedBy;
+  dom.MouseEvent get causedBy => super.causedBy;
 
-  MouseEnter(sender,  {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'causedBy': causedBy}) {
-    this.causedBy = causedBy;
-  }
+  MouseEnter(sender,  {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy);
 }
 
 class MouseLeave extends EventData {
-  dom.MouseEvent causedBy;
+  dom.MouseEvent get causedBy => super.causedBy;
 
-  MouseLeave(sender,  {dom.MouseEvent causedBy}) : super(sender: sender, detail: {'causedBy': causedBy}) {
-    this.causedBy = causedBy;
-  }
+  MouseLeave(sender,  {dom.MouseEvent causedBy}) : super(sender: sender, causedBy: causedBy );
 }
 
 

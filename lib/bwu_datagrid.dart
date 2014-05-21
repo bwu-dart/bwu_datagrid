@@ -2529,17 +2529,19 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void handleContextMenu(dom.MouseEvent e) {
-    var $cell = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-cell', context: $canvas);
-    if ($cell == null) {
+    var cell = getCellFromEvent(e);
+    //var $cell = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-cell', context: $canvas);
+    if (cell == null) {
       return;
     }
 
     // are we editing this cell?
-    if (activeCellNode == $cell && currentEditor != null) {
+    if (activeCellNode == cell && currentEditor != null) {
       return;
     }
 
-    fire('context-menu', detail: {'origin-event': e}); // TODO eventbus fire
+    eventBus.fire(core.Events.CONTEXT_MENU, new core.ContextMenu(this, cell, causedBy: e));
+    //fire('context-menu', detail: {'origin-event': e});
     //trigger(self.onContextMenu, {}, e);
   }
 
@@ -3691,46 +3693,25 @@ class BwuDatagrid extends PolymerElement {
 //  });
 //}
 
-  /**
-   * on header-mouse-enter
-   */
-  async.Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
-      eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER);
-      //BwuDatagrid._onBwuHeaderMouseEnter.forTarget(this);
 
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onBwuHeaderMouseEnter =
-//      const dom.EventStreamProvider<dom.CustomEvent>(core.Events.HEADER_MOUSE_ENTER);
+      async.Stream<core.Click> get onBwuClick =>
+          eventBus.onEvent(core.Events.CLICK);
 
-  /**
-   * on mouse-enter
-   */
-  async.Stream<core.MouseEnter> get onBwuMouseEnter =>
-      eventBus.onEvent(core.Events.MOUSE_ENTER);
-      //BwuDatagrid._onBwuMouseEnter.forTarget(this);
+      async.Stream<core.Click> get onBwuContextMenu =>
+          eventBus.onEvent(core.Events.CONTEXT_MENU);
 
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onBwuMouseEnter =
-//      const dom.EventStreamProvider<dom.CustomEvent>(core.Events.MOUSE_ENTER);
+      async.Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
+          eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER);
 
-
-  /**
-   * on header-mouse-leave
-   */
-  async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
+      async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
       eventBus.onEvent(core.Events.HEADER_MOUSE_LEAVE);
-      //BwuDatagrid._onBwuHeaderMouseLeave.forTarget(this);
 
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onBwuHeaderMouseLeave =
-//      const dom.EventStreamProvider<dom.CustomEvent>(core.Events.HEADER_MOUSE_LEAVE);
+      async.Stream<core.MouseEnter> get onBwuMouseEnter =>
+          eventBus.onEvent(core.Events.MOUSE_ENTER);
 
-  /**
-   * on mouse-enter
-   */
-  async.Stream<core.MouseLeave> get onBwuMouseLeave =>
-      eventBus.onEvent(core.Events.MOUSE_LEAVE);
-      //BwuDatagrid._onBwuMouseLeave.forTarget(this);
 
-//  static const dom.EventStreamProvider<dom.CustomEvent> _onBwuMouseLeave =
-//      const dom.EventStreamProvider<dom.CustomEvent>(core.Events.MOUSE_LEAVE);
+      async.Stream<core.MouseLeave> get onBwuMouseLeave =>
+          eventBus.onEvent(core.Events.MOUSE_LEAVE);
 
 }
 //  /**

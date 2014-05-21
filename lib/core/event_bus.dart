@@ -57,6 +57,7 @@ class EventBus {
     var controller = streamControllers.putIfAbsent(eventType, () {
       return new async.StreamController.broadcast(sync: isSync);
     });
+
     controller.add(data);
     return data;
   }

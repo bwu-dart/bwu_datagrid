@@ -26,8 +26,11 @@ class AppElement extends PolymerElement {
   );
 
   @override
-  void enteredView() {
-    super.enteredView();
+  void attached() {
+    super.attached();
+    querySelectorAll('');
+    String s;
+
     grid = $['myGrid'];
 
     try {
