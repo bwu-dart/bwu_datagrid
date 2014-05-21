@@ -65,6 +65,7 @@ class EventData {
   var sender;
   dom.Event causedBy;
   Map detail;
+  bool retVal = true;
 
   bool _isPropagationStopped = false;
   bool _isImmediatePropagationStopped = false;

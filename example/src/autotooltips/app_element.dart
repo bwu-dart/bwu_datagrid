@@ -27,11 +27,11 @@ class AppElement extends PolymerElement {
   );
 
   @override
-  void enteredView() {
-    super.enteredView();
-    grid = $['myGrid'];
+  void attached() {
+    super.attached();
 
     try {
+      grid = $['myGrid'];
       var data = new List<Map>(500);
       for (var i = 0; i < 500; i++) {
         data[i] = {
@@ -44,13 +44,9 @@ class AppElement extends PolymerElement {
         };
       }
 
-      //grid = new Slick.Grid("#myGrid", data, columns, options);
-      grid.data = data;
-      grid.columns = columns;
-      grid.gridOptions = gridOptions;
+      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
       grid.registerPlugin(new AutoTooltips(new AutoTooltipsOptions(enableForHeaderCells: true)));
-//      grid.init();
-//      grid.render();
+
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
     }  on RangeError catch (e) {
@@ -59,7 +55,6 @@ class AppElement extends PolymerElement {
       print('$e\n\n${e.stackTrace}');
     } catch(e) {
       print('$e');
-      //print(s);
     }
   }
 }

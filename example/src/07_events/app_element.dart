@@ -29,9 +29,9 @@ class AppElement extends PolymerElement {
   @override
   void attached() {
     super.attached();
-    grid = $['myGrid'];
 
     try {
+      grid = $['myGrid'];
       var data = new List<Map>(500);
       for (var i = 0; i < 500; i++) {
         data[i] = {
@@ -40,9 +40,7 @@ class AppElement extends PolymerElement {
         };
       }
 
-      grid.data = data;
-      grid.columns = columns;
-      grid.gridOptions = gridOptions;
+      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
 
       // setup context menu handler
       grid.onBwuContextMenu.listen((e) {
@@ -87,7 +85,6 @@ class AppElement extends PolymerElement {
       print('$e\n\n${e.stackTrace}');
     } catch(e) {
       print('$e');
-      //print(s);
     }
   }
 }

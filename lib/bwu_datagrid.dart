@@ -27,28 +27,36 @@ class BwuDatagrid extends PolymerElement {
   BwuDatagrid.created() : super.created();
 
   @override
-  void enteredView() {
+  void attached() {
     try {
-    super.enteredView();
-    new async.Future(() {
-      init();
-      render();
-    });
+      super.attached();
+      new async.Future(() {
+//        init();
+//        render();
+      });
     }catch(e) {
       print('BwuDataGrid.enteredView(): $e');
     }
   }
 
   // DataGrid(dom.HtmlElement container, String data, int columns, Options options);
-  @published List<Map> data;
-  @published DataView dataView;
-  @published List<Column> columns;
-  @published GridOptions gridOptions = new GridOptions();
+  List<Map> _dataMap;
+  @published List<Map> get dataMap => _dataMap;
+  set dataMap(List<Map> val) => setDataMap(val, true);
+
+  DataView _dataView;
+  @published DataView get dataView => _dataView;
+  set dataView(DataView val) => setDataView(val, true);
+
+  List<Column> _columns;
+  @published List<Column> get columns => _columns;
+
+  @published GridOptions _gridOptions = new GridOptions();
 
   // settings
-  Column columnOptions = new Column();
+  static final Column _columnDefaults = new Column();
 
-  dom.NodeValidator nodeValidator = new dom.NodeValidatorBuilder.common();
+  //dom.NodeValidator nodeValidator = new dom.NodeValidatorBuilder.common();
 
   // scroller
   int th;   // virtual height
@@ -66,84 +74,113 @@ class BwuDatagrid extends PolymerElement {
   int maxSupportedCssHeight;  // browser's breaking point
 
   // private
-  bool initialized = false;
-  dom.ShadowRoot $container;
+  bool _initialized = false;
+  dom.ShadowRoot _container;
   //String uid = "bwu_datagrid_${(1000000 * new math.Random().nextDouble()).round()}";
-  dom.HtmlElement $focusSink, $focusSink2;
-  dom.HtmlElement $headerScroller;
-  BwuDatagridHeaders $headers;
-  dom.HtmlElement $headerRow, $headerRowScroller, $headerRowSpacer;
-  dom.HtmlElement $topPanelScroller;
-  dom.HtmlElement $topPanel;
-  dom.HtmlElement $viewport;
-  dom.HtmlElement $canvas;
-  dom.StyleElement $style;
-  dom.HtmlElement $boundAncestors;
-  dom.CssStyleSheet stylesheet;
-  Map<int,dom.CssStyleRule> columnCssRulesL, columnCssRulesR;
-  int viewportH = 0;
-  int viewportW = 0;
-  int canvasWidth;
-  bool viewportHasHScroll = false, viewportHasVScroll = false;
-  int headerColumnWidthDiff = 0, headerColumnHeightDiff = 0, // border+padding
-      cellWidthDiff = 0, cellHeightDiff = 0;
-  int absoluteColumnMinWidth;
+  dom.HtmlElement _focusSink, _focusSink2;
+  dom.HtmlElement _headerScroller;
+  BwuDatagridHeaders _headers;
+  dom.HtmlElement _headerRow, _headerRowScroller, _headerRowSpacer;
+  dom.HtmlElement _topPanelScroller;
+  dom.HtmlElement _topPanel;
+  dom.HtmlElement _viewport;
+  dom.HtmlElement _canvas;
+  dom.StyleElement _style;
+  dom.HtmlElement _boundAncestors;
+  dom.CssStyleSheet _stylesheet;
+  Map<int,dom.CssStyleRule> _columnCssRulesL, _columnCssRulesR;
+  int _viewportH = 0;
+  int _viewportW = 0;
+  int _canvasWidth;
+  bool _viewportHasHScroll = false, _viewportHasVScroll = false;
+  int _headerColumnWidthDiff = 0, _headerColumnHeightDiff = 0, // border+padding
+      _cellWidthDiff = 0, _cellHeightDiff = 0;
+  int _absoluteColumnMinWidth;
 
-  int tabbingDirection = 1;
-  int activePosX;
-  int activeRow, activeCell;
-  dom.HtmlElement activeCellNode = null;
-  Editor currentEditor = null;
-  dynamic serializedEditorValue;
-  EditController editController;
+  int _tabbingDirection = 1;
+  int _activePosX;
+  int _activeRow, _activeCell;
+  dom.HtmlElement _activeCellNode = null;
+  Editor _currentEditor = null;
+  dynamic _serializedEditorValue;
+  EditController _editController;
 
-  Map<int,RowCache> rowsCache = {};
-  int renderedRows = 0;
-  int numVisibleRows;
-  int prevScrollTop = 0;
-  int scrollTop = 0;
-  int lastRenderedScrollTop = 0;
-  int lastRenderedScrollLeft = 0;
-  int prevScrollLeft = 0;
-  int scrollLeft = 0;
+  Map<int,RowCache> _rowsCache = {};
+  int _renderedRows = 0;
+  int _numVisibleRows;
+  int _prevScrollTop = 0;
+  // int scrollTop = 0;
 
-  SelectionModel selectionModel;
-  List<int> selectedRows = [];
+  int _lastRenderedScrollTop = 0;
+  int _lastRenderedScrollLeft = 0;
+  int _prevScrollLeft = 0;
+  //int scrollLeft = 0;
 
-  List<Plugin> plugins = [];
-  Map<String,Map<int,String>> cellCssClasses = {};
+  SelectionModel _selectionModel;
+  List<int> _selectedRows = [];
 
-  Map<String,int> columnsById = {};
-  List<SortColumn> sortColumns = [];
-  List<int> columnPosLeft = [];
-  List<int> columnPosRight = [];
+  List<Plugin> _plugins = [];
+  Map<String,Map<int,String>> _cellCssClasses = {};
+
+  Map<String,int> _columnsById = {};
+  List<SortColumn> _sortColumns = [];
+  List<int> _columnPosLeft = [];
+  List<int> _columnPosRight = [];
 
 
   // async call handles
-  async.Timer h_editorLoader = null;
-  async.Timer h_render = null;
-  async.Timer h_postrender = null;
-  List<List<int>> postProcessedRows = [];
-  int postProcessToRow = null;
-  int postProcessFromRow = null;
+  async.Timer _h_editorLoader = null;
+  async.Timer _h_render = null;
+  async.Timer _h_postrender = null;
+  List<List<int>> _postProcessedRows = [];
+  int _postProcessToRow = null;
+  int _postProcessFromRow = null;
 
   // perf counters
-  int counter_rows_rendered = 0;
-  int counter_rows_removed = 0;
+  int _counter_rows_rendered = 0;
+  int _counter_rows_removed = 0;
 
   // These two variables work around a bug with inertial scrolling in Webkit/Blink on Mac.
   // See http://crbug.com/312427.
-  dom.HtmlElement rowNodeFromLastMouseWheelEvent;  // this node must not be deleted while inertial scrolling
-  dom.HtmlElement zombieRowNodeFromLastMouseWheelEvent;  // node that was hidden instead of getting deleted
+  dom.HtmlElement _rowNodeFromLastMouseWheelEvent;  // this node must not be deleted while inertial scrolling
+  dom.HtmlElement _zombieRowNodeFromLastMouseWheelEvent;  // node that was hidden instead of getting deleted
 
-  final core.EventBus eventBus = new core.EventBus();
+  final core.EventBus _eventBus = new core.EventBus();
 
+
+  void setup({List<Map> dataMap, DataView dataView, List<Column> columns, GridOptions gridOptions}) {
+    if(dataMap != null && dataView != null) {
+      throw 'Only one of dataMap or dataView can be used at a time.';
+    }
+    if(_initialized) {
+      if(dataMap != null) {
+        this.dataMap = dataMap;
+      }
+      if(dataView != null) {
+        this.dataView = dataView;
+      }
+      if(columns != null) {
+        setColumns = columns;
+      }
+      if(gridOptions != null) {
+        setGridOptions = gridOptions;
+      }
+    } else {
+      _dataMap = dataMap;
+      _dataView = dataView;
+      _columns = columns;
+      _gridOptions = gridOptions;
+    }
+    init();
+    render();
+  }
 
   //////////////////////////////////////////////////////////////////////////////////////////////
   // Initialization
 
+
   void init() {
-    $container = this.shadowRoot;
+    _container = this.shadowRoot;
 
     // calculate these only once and share between grid instances
     maxSupportedCssHeight = maxSupportedCssHeight != null ? maxSupportedCssHeight : getMaxSupportedCssHeight();
@@ -151,14 +188,14 @@ class BwuDatagrid extends PolymerElement {
 
     //options = $.extend({}, defaults, options);
     validateAndEnforceOptions();
-    columnOptions.width = gridOptions.defaultColumnWidth;
+    _columnDefaults.width = _gridOptions.defaultColumnWidth;
 
-    columnsById = {};
+    _columnsById = {};
     if(columns != null) {
       for (int i = 0; i < columns.length; i++) {
-        Column m = new Column()..extend(columnOptions)..extend(columns[i]); // TODO extend
+        Column m = new Column()..extend(_columnDefaults)..extend(columns[i]); // TODO extend
         columns[i] = m;
-        columnsById[m.id] = i;
+        _columnsById[m.id] = i;
         if (m.minWidth != null && m.width < m.minWidth) {
           m.width = m.minWidth;
         }
@@ -175,7 +212,7 @@ class BwuDatagrid extends PolymerElement {
 //      throw "DataGrid's 'enableColumnReorder = true' option requires jquery-ui.sortable module to be loaded";
 //    }
 
-    editController = new EditController(commitCurrentEdit, cancelCurrentEdit);
+    _editController = new EditController(commitCurrentEdit, cancelCurrentEdit);
 
     //$container
         //..children.clear(); // TODO empty()
@@ -194,7 +231,7 @@ class BwuDatagrid extends PolymerElement {
       this.style.position = 'relative';
     }
 
-    $focusSink = new dom.DivElement()
+    _focusSink = new dom.DivElement()
       ..tabIndex=0
       //..hideFocus=true // IE
       ..style.position = 'fixed'
@@ -203,85 +240,86 @@ class BwuDatagrid extends PolymerElement {
       ..style.top='0'
       ..style.left='0'
       ..style.outline='0';
-    $container.append($focusSink);
+    _container.append(_focusSink);
 
-    $headerScroller = new dom.DivElement()
+    _headerScroller = new dom.DivElement()
       ..classes.add('bwu-datagrid-header')
       ..classes.add('ui-state-default')
       ..style.overflow ='hidden'
       ..style.position='relative';
-    $container.append($headerScroller);
+    _container.append(_headerScroller);
 
-    $headers = (new dom.Element.tag('bwu-datagrid-headers') as BwuDatagridHeaders)
+    _headers = (new dom.Element.tag('bwu-datagrid-headers') as BwuDatagridHeaders)
       ..classes.add('bwu-datagrid-header-columns')
       ..style.left = '-1000px';
-    $headerScroller.append($headers);
-    $headers.style.width = "${getHeadersWidth()}px";
+    _headerScroller.append(_headers);
+    _headers.style.width = "${getHeadersWidth()}px";
 
-    $headerRowScroller = new dom.DivElement()
+    _headerRowScroller = new dom.DivElement()
       ..classes.add('bwu-datagrid-headerrow')
       ..classes.add('ui-state-default')
       ..style.overflow = 'hidden'
       ..style.position='relative';
-    $container.append($headerRowScroller);
+    _container.append(_headerRowScroller);
 
-    $headerRow = new dom.DivElement()
+    _headerRow = new dom.DivElement()
       ..classes.add('bwu-datagrid-headerrow-columns');
-    $headerRowScroller.append($headerRow);
+    _headerRowScroller.append(_headerRow);
 
-    $headerRowSpacer = new dom.DivElement()
+    _headerRowSpacer = new dom.DivElement()
       ..style.display = 'block'
       ..style.height ='1px'
       ..style.position ='absolute'
       ..style.top ='0'
       ..style.left='0'
         ..style.width = '${getCanvasWidth() + scrollbarDimensions.x}px';
-    $headerRowScroller.append($headerRowSpacer);
+    _headerRowScroller.append(_headerRowSpacer);
 
-    $topPanelScroller = new dom.DivElement()
+    _topPanelScroller = new dom.DivElement()
       ..classes.add('bwu-datagrid-top-panel-scroller')
       ..classes.add('ui-state-default')
       ..style.overflow ='hidden'
       ..style.position='relative';
-    $container.append($topPanelScroller);
-    $topPanel = new dom.DivElement()
+    _container.append(_topPanelScroller);
+    _topPanel = new dom.DivElement()
       ..classes.add('bwu-datagrid-top-panel')
       ..style.width='10000px';
-    $topPanelScroller.append($topPanel);
+    _topPanelScroller.append(_topPanel);
 
-    if (!gridOptions.showTopPanel) {
-      $topPanelScroller.style.display = 'none'; //hide();
+    if (!_gridOptions.showTopPanel) {
+      _topPanelScroller.style.display = 'none'; //hide();
     }
 
-    if (!gridOptions.showHeaderRow) {
-      $headerRowScroller.style.display = 'none'; // hide();
+    if (!_gridOptions.showHeaderRow) {
+      _headerRowScroller.style.display = 'none'; // hide();
     }
 
-    $viewport = new dom.DivElement()
+    _viewport = new dom.DivElement()
       ..classes.add('bwu-datagrid-viewport')
       ..style.width='100%'
       ..style.overflow ='auto'
       ..style.outline='0'
       ..style.position='relative';
-    $container.append($viewport);
-    $viewport.style.overflowY = gridOptions.autoHeight ? "hidden" : "auto";
+    _container.append(_viewport);
+    _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
 
-    $canvas = new dom.DivElement()..classes.add('grid-canvas');
-    $viewport.append($canvas);
+    _canvas = new dom.DivElement()..classes.add('grid-canvas');
+    _viewport.append(_canvas);
 
-    $focusSink2 = $focusSink.clone(true);
-    $container.append($focusSink2);
+    _focusSink2 = _focusSink.clone(true);
+    _container.append(_focusSink2);
 
-    if (!gridOptions.explicitInitialization) {
+    if (!_gridOptions.explicitInitialization) {
       finishInitialization();
     }
   }
 
+//_
   void finishInitialization() {
-    if (!initialized) {
-      initialized = true;
+    if (!_initialized) {
+      _initialized = true;
 
-      viewportW = this.offsetWidth; //tools.parseInt(this.getComputedStyle().width);
+      _viewportW = this.offsetWidth; //tools.parseInt(this.getComputedStyle().width);
 
       // header columns and cells may have different padding/border skewing width calculations (box-sizing, hello?)
       // calculate the diff so we can set consistent sizes
@@ -292,12 +330,12 @@ class BwuDatagrid extends PolymerElement {
       // be enabled there so that editors work as expected); note that
       // selection in grid cells (grid body) is already unavailable in
       // all browsers except IE
-      disableSelection($headers); // disable all text selection in header (including input and textarea)
+      disableSelection(_headers); // disable all text selection in header (including input and textarea)
 
-      if (!gridOptions.enableTextSelectionOnCells) {
+      if (!_gridOptions.enableTextSelectionOnCells) {
         // disable text selection in grid cells except in input and textarea elements
         // (this is IE-specific, because selectstart event will only fire in IE)
-        $viewport.onSelectStart.listen((event) {  //  bind("selectstart.ui",
+        _viewport.onSelectStart.listen((event) {  //  bind("selectstart.ui",
           return event.target is dom.InputElement || event.target is dom.TextAreaElement;
         });
       }
@@ -309,23 +347,23 @@ class BwuDatagrid extends PolymerElement {
       resizeCanvas();
       bindAncestorScrollEvents();
 
-      $container.on["resize.bwu-datagrid"].listen(resizeCanvas); // TODO event name seems wrong
+      _container.on["resize.bwu-datagrid"].listen(resizeCanvas); // TODO event name seems wrong
       //$viewport
           //.bind("click", handleClick)
-      $viewport.onScroll.listen(handleScroll);
-      $headerScroller..onContextMenu.listen(handleHeaderContextMenu)
+      _viewport.onScroll.listen(handleScroll);
+      _headerScroller..onContextMenu.listen(handleHeaderContextMenu)
           ..onClick.listen(handleHeaderClick)
           ..querySelectorAll(".bwu-datagrid-header-column").forEach((e) {
             (e as dom.HtmlElement)
             ..onMouseEnter.listen(handleHeaderMouseEnter)
             ..onMouseLeave.listen(handleHeaderMouseLeave);
       });
-      $headerRowScroller
+      _headerRowScroller
           .onScroll.listen(handleHeaderRowScroll);
-      $focusSink
-          ..append($focusSink2)
+      _focusSink
+          ..append(_focusSink2)
           ..onKeyDown.listen(handleKeyDown);
-      $canvas
+      _canvas
           ..onKeyDown.listen(handleKeyDown)
           ..onClick.listen(handleClick)
           ..onDoubleClick.listen(handleDblClick)
@@ -344,48 +382,48 @@ class BwuDatagrid extends PolymerElement {
       // Work around http://crbug.com/312427.
       if (dom.window.navigator.userAgent.toLowerCase().contains('webkit') &&
           dom.window.navigator.userAgent.toLowerCase().contains('macintosh')) {
-        $canvas.onMouseWheel.listen(handleMouseWheel);
+        _canvas.onMouseWheel.listen(handleMouseWheel);
       }
     }
   }
 
   void registerPlugin(Plugin plugin) {
-    plugins.insert(0, plugin);
+    _plugins.insert(0, plugin);
     plugin.init(this);
   }
 
   void unregisterPlugin(Plugin plugin) {
-    for (var i = plugins.length; i >= 0; i--) {
-      if (plugins[i] == plugin) {
-        plugins[i].destroy();
-        plugins.removeAt(i);
+    for (var i = _plugins.length; i >= 0; i--) {
+      if (_plugins[i] == plugin) {
+        _plugins[i].destroy();
+        _plugins.removeAt(i);
         break;
       }
     }
   }
 
-  async.StreamSubscription onSelectedRangesChanged;
-  void setSelectionModel(SelectionModel model) {
-    if (selectionModel != null) {
-      if(onSelectedRangesChanged != null) {
-        onSelectedRangesChanged.cancel(); //selectionModel.onSelectedRangesChanged.unsubscribe(handleSelectedRangesChanged);
+  async.StreamSubscription _onSelectedRangesChanged;
+
+  set setSelectionModel(SelectionModel model) {
+    if (_selectionModel != null) {
+      if(_onSelectedRangesChanged != null) {
+        _onSelectedRangesChanged.cancel(); //selectionModel.onSelectedRangesChanged.unsubscribe(handleSelectedRangesChanged);
       }
-      selectionModel.destroy();
+      _selectionModel.destroy();
     }
 
-    selectionModel = model;
-    if (selectionModel != null) {
-      selectionModel.init(this);
-      onSelectedRangesChanged = selectionModel.onSelectedRangesChanged.listen(selectedRangesChangedHandler);
+    _selectionModel = model;
+    if (_selectionModel != null) {
+      _selectionModel.init(this);
+      _onSelectedRangesChanged = _selectionModel.onSelectedRangesChanged.listen(selectedRangesChangedHandler);
     }
   }
 
-  SelectionModel get getSelectionModel => selectionModel;
+  SelectionModel get getSelectionModel => _selectionModel;
 
-  dom.HtmlElement get getCanvasNode => $canvas;
+  dom.HtmlElement get getCanvasNode => _canvas;
 
-
-
+//_
   math.Point measureScrollbar() {
     dom.HtmlElement $c = new dom.DivElement()
       ..style.position = 'absolute'
@@ -401,6 +439,7 @@ class BwuDatagrid extends PolymerElement {
     return dim;
   }
 
+//_
   int getHeadersWidth() {
     var headersWidth = 0;
     int ii = columns != null ? columns.length : 0;
@@ -409,37 +448,40 @@ class BwuDatagrid extends PolymerElement {
       headersWidth += width;
     }
     headersWidth += scrollbarDimensions.x;
-    return math.max(headersWidth, viewportW) + 1000;
+    return math.max(headersWidth, _viewportW) + 1000;
   }
 
+//_
   int getCanvasWidth() {
-    int availableWidth = viewportHasVScroll ? viewportW - scrollbarDimensions.x : viewportW;
+    int availableWidth = _viewportHasVScroll ? _viewportW - scrollbarDimensions.x : _viewportW;
     int rowWidth = 0;
     int i = columns != null ? columns.length : 0;
     while (i-- > 0) {
       rowWidth += columns[i].width;
     }
-    return gridOptions.fullWidthRows ? math.max(rowWidth, availableWidth) : rowWidth;
+    return _gridOptions.fullWidthRows ? math.max(rowWidth, availableWidth) : rowWidth;
   }
 
+//_
   void updateCanvasWidth(forceColumnWidthsUpdate) {
-    int oldCanvasWidth = canvasWidth;
-    canvasWidth = getCanvasWidth();
+    int oldCanvasWidth = _canvasWidth;
+    _canvasWidth = getCanvasWidth();
 
-    if (canvasWidth != oldCanvasWidth) {
-      $canvas.style.width = "${canvasWidth}px";
-      $headerRow.style.width = "${canvasWidth}px";
-      $headers.style.width = "${getHeadersWidth()}px";
-      viewportHasHScroll = (canvasWidth > viewportW - scrollbarDimensions.x);
+    if (_canvasWidth != oldCanvasWidth) {
+      _canvas.style.width = "${_canvasWidth}px";
+      _headerRow.style.width = "${_canvasWidth}px";
+      _headers.style.width = "${getHeadersWidth()}px";
+      _viewportHasHScroll = (_canvasWidth > _viewportW - scrollbarDimensions.x);
     }
 
-    $headerRowSpacer.style.width = "${(canvasWidth + (viewportHasVScroll ? scrollbarDimensions.x : 0))}px";
+    _headerRowSpacer.style.width = "${(_canvasWidth + (_viewportHasVScroll ? scrollbarDimensions.x : 0))}px";
 
-    if (canvasWidth != oldCanvasWidth || forceColumnWidthsUpdate) {
+    if (_canvasWidth != oldCanvasWidth || forceColumnWidthsUpdate) {
       applyColumnWidths();
     }
   }
 
+//_
   void disableSelection(dom.HtmlElement $target) {
     if ($target != null) {
       $target
@@ -453,6 +495,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   int getMaxSupportedCssHeight() {
     int supportedHeight = 1000000;
     // FF reports the height back but still renders blank after ~6M px
@@ -474,11 +517,12 @@ class BwuDatagrid extends PolymerElement {
     return supportedHeight;
   }
 
-  List<async.StreamSubscription> scrollSubscription = [];
+  List<async.StreamSubscription> _scrollSubscription = [];
 
+//_
   // TODO:  this is static.  need to handle page mutation.
   void bindAncestorScrollEvents() {
-    var $elem = $canvas;
+    var $elem = _canvas;
 
     if($elem.parentNode is dom.ShadowRoot) {
       $elem = ($elem.parentNode as dom.ShadowRoot).host;
@@ -488,17 +532,17 @@ class BwuDatagrid extends PolymerElement {
 
     while ($elem != this && $elem != null) {
       // bind to scroll containers only
-      if ($elem == $viewport || $elem.scrollWidth != $elem.clientWidth || $elem.scrollHeight != $elem.clientHeight) {
-        if ($boundAncestors == null) {
-          $boundAncestors = $elem;
+      if ($elem == _viewport || $elem.scrollWidth != $elem.clientWidth || $elem.scrollHeight != $elem.clientHeight) {
+        if (_boundAncestors == null) {
+          _boundAncestors = $elem;
         } else {
           try {
-            $boundAncestors.append($elem);
+            _boundAncestors.append($elem);
           } catch (e) {
             print(e);
           }
         }
-        scrollSubscription.add($elem.onScroll.listen(handleActiveCellPositionChange));
+        _scrollSubscription.add($elem.onScroll.listen(handleActiveCellPositionChange));
       }
       if($elem.parentNode is dom.ShadowRoot) {
         $elem = ($elem.parentNode as dom.ShadowRoot).host;
@@ -508,25 +552,26 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   void unbindAncestorScrollEvents() {
-    if ($boundAncestors == null) {
+    if (_boundAncestors == null) {
       return;
     }
-    scrollSubscription.forEach((e) => e.cancel());
-    scrollSubscription.clear();
+    _scrollSubscription.forEach((e) => e.cancel());
+    _scrollSubscription.clear();
     //$boundAncestors.unbind("scroll." + uid);
-    $boundAncestors = null;
+    _boundAncestors = null;
   }
 
   void updateColumnHeader(String columnId, String title, String toolTip) {
-    if (!initialized) { return; }
+    if (!_initialized) { return; }
     var idx = getColumnIndex(columnId);
     if (idx == null) {
       return;
     }
 
     Column columnDef = columns[idx];
-    dom.HtmlElement $header = $headers.children.firstWhere((e) => e.id == idx); //().eq(idx); // TODO check
+    dom.HtmlElement $header = _headers.children.firstWhere((e) => e.id == idx); //().eq(idx); // TODO check
     if ($header != null) {
       if (title != null) {
         columns[idx].name = title;
@@ -535,39 +580,30 @@ class BwuDatagrid extends PolymerElement {
         columns[idx].toolTip = toolTip;
       }
 
-      eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY, new core.BeforeHeaderCellDestroy(this, $header, columnDef));
-
-//      fire(ON_BEFORE_HEADER_CELL_DESTROY, detail: {
-//        "node": $header.children[0],
-//        "column": columnDef
-//      });
+      _eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY, new core.BeforeHeaderCellDestroy(this, $header, columnDef));
 
       $header
           ..attributes["title"] = toolTip != null ? toolTip : ""
           ..children.where((e) => e.id == 0).forEach((e) => e.innerHtml = title); //().eq(0).html(title); // TODO check
 
-      eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, $header, columnDef));
-
-//      fire(ON_HEADER_CELL_RENDERED, detail: {
-//        "node": $header.children[0],
-//        "column": columnDef
-//      });
+      _eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, $header, columnDef));
     }
   }
 
   dom.HtmlElement getHeaderRow() {
-    return $headerRow;
+    return _headerRow;
   }
 
   dom.HtmlElement getHeaderRowColumn(columnId) {
     var idx = getColumnIndex(columnId);
-    dom.HtmlElement $header = $headerRow.children.firstWhere((e) => e == idx); //.eq(idx); // TODO check
+    dom.HtmlElement $header = _headerRow.children.firstWhere((e) => e == idx); //.eq(idx); // TODO check
     if($header != null && $header.children.length > 0) {
       return $header;
     }
     return null;
   }
 
+//_
   void createColumnHeaders() {
     var onMouseEnter = (dom.MouseEvent e) {
       (e.target as dom.HtmlElement).classes.add("ui-state-hover");
@@ -577,32 +613,24 @@ class BwuDatagrid extends PolymerElement {
       (e.target as dom.HtmlElement).classes.remove("ui-state-hover");
     };
 
-    $headers.querySelectorAll(".bwu-datagrid-header-column")
+    _headers.querySelectorAll(".bwu-datagrid-header-column")
       .forEach((BwuDatagridHeaderColumn e) { // TODO check self/this
         Column columnDef = e.column;
         if (columnDef != null) {
-          eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY, new core.BeforeHeaderCellDestroy(this, e, columnDef));
-//          fire(ON_BEFORE_HEADER_CELL_DESTROY, detail: {
-//            "node": e,
-//            "column": columnDef
-//          });
+          _eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY, new core.BeforeHeaderCellDestroy(this, e, columnDef));
         }
       });
-    $headers.children.clear();
-    $headers.style.width = "${getHeadersWidth()}px";
+    _headers.children.clear();
+    _headers.style.width = "${getHeadersWidth()}px";
 
-    $headerRow.querySelectorAll(".bwu-datagrid-headerrow-column")
+    _headerRow.querySelectorAll(".bwu-datagrid-headerrow-column")
       .forEach((BwuDatagridHeaderrowColumn e) { // TODO check self/this
         Column columnDef = e.column;
         if (columnDef != null) {
-          eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY, new core.BeforeHeaderCellDestroy(this, e, columnDef));
-//          fire(ON_BEFORE_HEADER_CELL_DESTROY, detail: {
-//            "node": e,
-//            "column": columnDef
-//          });
+          _eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY, new core.BeforeHeaderCellDestroy(this, e, columnDef));
         }
       });
-    $headerRow.children.clear();
+    _headerRow.children.clear();
 
     if(columns != null) {
       for (int i = 0; i < columns.length; i++) {
@@ -611,16 +639,16 @@ class BwuDatagrid extends PolymerElement {
         var header = (new dom.Element.tag('bwu-datagrid-header-column') as BwuDatagridHeaderColumn)
             ..classes.add('ui-state-default')
             ..classes.add('bwu-datagrid-header-column')
-            ..append(new dom.Element.html("<span class='bwu-datagrid-column-name'>" + m.name + "</span>", validator: nodeValidator))
-            ..style.width = "${m.width - headerColumnWidthDiff}px"
+            ..append(new dom.SpanElement()..classes.add('bwu-datagrid-column-name')..text = m.name)
+            ..style.width = "${m.width - _headerColumnWidthDiff}px"
             //..attributes["id"] ='${uid}${m.id}'
             ..attributes["id"] ='${m.id}'
             ..attributes["title"] = m.toolTip != null ? m.toolTip : ""
             ..column = m
             ..classes.add(m.headerCssClass != null ? m.headerCssClass : "");
-        $headers.append(header);
+        _headers.append(header);
 
-        if (gridOptions.enableColumnReorder || m.sortable) {
+        if (_gridOptions.enableColumnReorder || m.sortable) {
           header
             ..onMouseEnter.listen(onMouseEnter)
             ..onMouseLeave.listen(onMouseLeave);
@@ -628,44 +656,35 @@ class BwuDatagrid extends PolymerElement {
 
         if (m.sortable) {
           header.classes.add("bwu-datagrid-header-sortable");
-          header.append(new dom.Element.html("<span class='bwu-datagrid-sort-indicator' />", validator: nodeValidator));
+          header.append(new dom.SpanElement()..classes.add('bwu-datagrid-sort-indicator'));
         }
 
-        eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, header, m));
+        _eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, header, m));
 
-  //      fire(ON_HEADER_CELL_RENDERED, detail: {
-  //        "node": header.children[0],
-  //        "column": m
-  //      });
-
-        if (gridOptions.showHeaderRow) {
+        if (_gridOptions.showHeaderRow) {
           var headerRowCell = (new dom.Element.tag('bwu-datagrid-headerrow-column') as BwuDatagridHeaderrowColumn)
               ..classes.add('ui-state-default')
               ..classes.add('bwu-datagrid-headerrow-column')
               ..classes.add('l${i}')
               ..classes.add('r${i}')
               ..column =  m;
-              $headerRow.append(headerRowCell);
+              _headerRow.append(headerRowCell);
 
-              eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, headerRowCell, m));
-
-  //        fire(ON_HEADER_ROW_CELL_RENDERED, detail: {
-  //          "node": headerRowCell.children[0],
-  //          "column": m
-  //        });
+              _eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, headerRowCell, m));
         }
       }
     }
 
-    setSortColumns(sortColumns);
+    setSortColumns(_sortColumns);
     setupColumnResize();
-    if (gridOptions.enableColumnReorder) {
+    if (_gridOptions.enableColumnReorder) {
       setupColumnReorder();
     }
   }
 
+//_
   void setupColumnSort() {
-    $headers.onClick.listen((e) {
+    _headers.onClick.listen((e) {
       // temporary workaround for a bug in jQuery 1.7.1 (http://bugs.jquery.com/ticket/11328)
       // e.metaKey = e.metaKey || e.ctrlKey; // TODO process Ctrl-key
 
@@ -686,59 +705,48 @@ class BwuDatagrid extends PolymerElement {
 
         SortColumn sortOpts = null;
         var i = 0;
-        for (; i < sortColumns.length; i++) {
-          if (sortColumns[i].columnId == column.id) {
-            sortOpts = sortColumns[i];
+        for (; i < _sortColumns.length; i++) {
+          if (_sortColumns[i].columnId == column.id) {
+            sortOpts = _sortColumns[i];
             sortOpts.sortAsc = !sortOpts.sortAsc;
             break;
           }
         }
 
-        if (e.metaKey && gridOptions.multiColumnSort) {
+        if (e.metaKey && _gridOptions.multiColumnSort) {
           if (sortOpts != null) {
-            sortColumns.removeAt(i);
+            _sortColumns.removeAt(i);
           }
         }
         else {
-          if ((!e.shiftKey && !e.metaKey) || !gridOptions.multiColumnSort) {
-            sortColumns = [];
+          if ((!e.shiftKey && !e.metaKey) || !_gridOptions.multiColumnSort) {
+            _sortColumns = [];
           }
 
           if (sortOpts == null) {
             sortOpts = new SortColumn(column.id,column.defaultSortAsc);
-            sortColumns.add(sortOpts);
-          } else if (sortColumns.length == 0) {
-            sortColumns.add(sortOpts);
+            _sortColumns.add(sortOpts);
+          } else if (_sortColumns.length == 0) {
+            _sortColumns.add(sortOpts);
           }
         }
 
-        setSortColumns(sortColumns);
+        setSortColumns(_sortColumns);
 
-        if (!gridOptions.multiColumnSort) {
-          eventBus.fire(core.Events.SORT, new core.Sort(this, false, column, null, sortOpts.sortAsc, e));
-
-//          fire(ON_SORT, detail: {
-//            'multiColumnSort': false,
-//            'sortCol': column,
-//            'sortAsc': sortOpts.sortAsc,
-//            'caused_by': e});
+        if (!_gridOptions.multiColumnSort) {
+          _eventBus.fire(core.Events.SORT, new core.Sort(this, false, column, null, sortOpts.sortAsc, e));
         } else {
-          var sortCols = new Map.fromIterable(sortColumns, key: (k) => columns[getColumnIndex(k.columnId)], value: (k) => k.sortAsc);
-          eventBus.fire(core.Events.SORT, new core.Sort(this, true, null, sortCols, null, e));
-//          fire(ON_SORT, detail: {
-//            'multiColumnSort': true,
-//            'sortCols': $.map(sortColumns, (col) { // TODO map
-//              return {'sortCol': columns[getColumnIndex(col.columnId)], 'sortAsc': col.sortAsc };
-//            }),
-//            'caused_by': e});
+          var sortCols = new Map.fromIterable(_sortColumns, key: (k) => columns[getColumnIndex(k.columnId)], value: (k) => k.sortAsc);
+          _eventBus.fire(core.Events.SORT, new core.Sort(this, true, null, sortCols, null, e));
         }
       }
     });
   }
 
+//_
   void setupColumnReorder() {
-    $headers.filter = new Filter(":ui-sortable")..sortable.destroy(); //("destroy");
-    $headers.sortable = new Sortable(
+    _headers.filter = new Filter(":ui-sortable")..sortable.destroy(); //("destroy");
+    _headers.sortable = new Sortable(
       containment: 'parent',
       distance: 3,
       axis: 'x',
@@ -747,41 +755,41 @@ class BwuDatagrid extends PolymerElement {
       helper: 'clone',
       placeholder: 'bwu-datagrid-sortable-placeholder ui-state-default bwu-datagrid-header-column',
       start: (e, ui) {
-        ui.placeholder.width(tools.outerWidth(ui) - headerColumnWidthDiff);
+        ui.placeholder.width(tools.outerWidth(ui) - _headerColumnWidthDiff);
         (ui.helper as dom.HtmlElement).classes.add('bwu-datagrid-header-column-active');
       },
       beforeStop: (e, ui) {
         (ui.helper as dom.HtmlElement).classes.remove('bwu-datagrid-header-column-active');
       });
-    $headers.sortable.stop =
+    _headers.sortable.stop =
       (e) {
         if (!getEditorLock.commitCurrentEdit()) {
-          $headers.sortable.cancel(); //('cancel'); // TODO
+          _headers.sortable.cancel(); //('cancel'); // TODO
           return;
         }
 
-        var reorderedIds = $headers.sortable.toArray(); //("toArray");
+        var reorderedIds = _headers.sortable.toArray(); //("toArray");
         var reorderedColumns = [];
         for (var i = 0; i < reorderedIds.length; i++) {
           reorderedColumns.add(columns[getColumnIndex(reorderedIds[i].replace(uid, ""))]); // TODO what is uid for here?
         }
         setColumns = reorderedColumns;
 
-        eventBus.fire(core.Events.COLUMNS_REORDERED, new core.ColumnsReordered(this));
-        //fire(ON_COLUMNS_REORDERED, detail: {});
+        _eventBus.fire(core.Events.COLUMNS_REORDERED, new core.ColumnsReordered(this));
         e.stopPropagation();
         setupColumnResize();
       };
   }
 
+//_
   void setupColumnResize() {
     Column c;
     int pageX;
     List<BwuDatagridHeaderColumn> columnElements;
     int minPageX, maxPageX;
     int firstResizable, lastResizable;
-    columnElements = new List<BwuDatagridHeaderColumn>.from($headers.children);
-    $headers.querySelectorAll(".bwu-datagrid-resizable-handle").forEach((dom.HtmlElement e) {
+    columnElements = new List<BwuDatagridHeaderColumn>.from(_headers.children);
+    _headers.querySelectorAll(".bwu-datagrid-resizable-handle").forEach((dom.HtmlElement e) {
       e.remove();
     });
     for(int i = 0; i < columnElements.length; i++) {
@@ -797,7 +805,7 @@ class BwuDatagrid extends PolymerElement {
     }
     for(int i = 0; i < columnElements.length; i++) {
       var header_col = columnElements[i];
-      if (i < firstResizable || (gridOptions.forceFitColumns && i >= lastResizable)) {
+      if (i < firstResizable || (_gridOptions.forceFitColumns && i >= lastResizable)) {
         return;
       }
 
@@ -818,7 +826,7 @@ class BwuDatagrid extends PolymerElement {
             for(int i = 0; i < columnElements.length; i++) {
               columns[i].previousWidth = tools.outerWidth(columnElements[i]);
             }
-            if (gridOptions.forceFitColumns) {
+            if (_gridOptions.forceFitColumns) {
               shrinkLeewayOnRight = 0;
               stretchLeewayOnRight = 0;
               // colums on right affect maxPageX/minPageX
@@ -832,7 +840,7 @@ class BwuDatagrid extends PolymerElement {
                       stretchLeewayOnRight = null;
                     }
                   }
-                  shrinkLeewayOnRight += c.previousWidth - math.max(c.minWidth != null ? c.minWidth : 0, absoluteColumnMinWidth);
+                  shrinkLeewayOnRight += c.previousWidth - math.max(c.minWidth != null ? c.minWidth : 0, _absoluteColumnMinWidth);
                 }
               }
             }
@@ -848,7 +856,7 @@ class BwuDatagrid extends PolymerElement {
                     stretchLeewayOnLeft = null;
                   }
                 }
-                shrinkLeewayOnLeft += c.previousWidth - math.max(c.minWidth != null ? c.minWidth : 0, absoluteColumnMinWidth);
+                shrinkLeewayOnLeft += c.previousWidth - math.max(c.minWidth != null ? c.minWidth : 0, _absoluteColumnMinWidth);
               }
             }
             if (shrinkLeewayOnRight == null) {
@@ -879,7 +887,7 @@ class BwuDatagrid extends PolymerElement {
               for (int j = i; j >= 0; j--) {
                 c = columns[j];
                 if (c.resizable) {
-                  actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, absoluteColumnMinWidth);
+                  actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, _absoluteColumnMinWidth);
                   if (x != null && c.previousWidth + x < actualMinWidth) {
                     x += c.previousWidth - actualMinWidth;
                     c.width = actualMinWidth;
@@ -890,7 +898,7 @@ class BwuDatagrid extends PolymerElement {
                 }
               }
 
-              if (gridOptions.forceFitColumns) {
+              if (_gridOptions.forceFitColumns) {
                 x = -d;
                 for (int j = i + 1; j < columnElements.length; j++) {
                   c = columns[j];
@@ -920,12 +928,12 @@ class BwuDatagrid extends PolymerElement {
                 }
               }
 
-              if (gridOptions.forceFitColumns) {
+              if (_gridOptions.forceFitColumns) {
                 x = -d;
                 for (int j = i + 1; j < columnElements.length; j++) {
                   c = columns[j];
                   if (c.resizable) {
-                    actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, absoluteColumnMinWidth);
+                    actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, _absoluteColumnMinWidth);
                     if (x > 0 && c.previousWidth + x < actualMinWidth) {
                       x += c.previousWidth - actualMinWidth;
                       c.width = actualMinWidth;
@@ -938,7 +946,7 @@ class BwuDatagrid extends PolymerElement {
               }
             }
             applyColumnHeaderWidths();
-            if (gridOptions.syncColumnCellResize) {
+            if (_gridOptions.syncColumnCellResize) {
               applyColumnWidths();
             }
           })
@@ -956,12 +964,12 @@ class BwuDatagrid extends PolymerElement {
             }
             updateCanvasWidth(true);
             render();
-            eventBus.fire(core.Events.COLUMNS_RESIZED, new core.ColumnsResized(this));
-            //fire(ON_COLUMNS_RESIZED, detail: {});
+            _eventBus.fire(core.Events.COLUMNS_RESIZED, new core.ColumnsResized(this));
           });
     }
   }
 
+//_
   int getVBoxDelta(dom.HtmlElement $el) {
     var p = ["borderTopWidth", "borderBottomWidth", "paddingTop", "paddingBottom"];
     var delta = 0;
@@ -977,6 +985,7 @@ class BwuDatagrid extends PolymerElement {
     return delta;
   }
 
+//_
   void measureCellPaddingAndBorder() {
     var el;
     // changed to direct property access due to https://code.google.com/p/dart/issues/detail?id=18765
@@ -987,12 +996,12 @@ class BwuDatagrid extends PolymerElement {
       ..classes.add('ui-state-default')
       ..classes.add('bwu-datagrid-header-column')
       ..style.visibility = 'hidden';
-    $headers.append(el);
-    headerColumnWidthDiff = headerColumnHeightDiff = 0;
+    _headers.append(el);
+    _headerColumnWidthDiff = _headerColumnHeightDiff = 0;
     var gcs = el.getComputedStyle();
     if (el.style.boxSizing != "border-box") {
       //h.forEach((prop) {
-        headerColumnWidthDiff = tools.parseInt(gcs.borderLeftWidth)
+        _headerColumnWidthDiff = tools.parseInt(gcs.borderLeftWidth)
         + tools.parseInt(gcs.borderRightWidth)
         + tools.parseInt(gcs.paddingLeft)
         + tools.parseInt(gcs.paddingRight);
@@ -1001,15 +1010,15 @@ class BwuDatagrid extends PolymerElement {
       //v.forEach((prop) {
       //  headerColumnHeightDiff += tools.parseInt(gcs.getPropertyValue(prop)); //; || 0; // TODO
       //});
-        headerColumnHeightDiff = tools.parseInt(gcs.borderTopWidth)
+        _headerColumnHeightDiff = tools.parseInt(gcs.borderTopWidth)
             + tools.parseInt(gcs.borderBottomWidth)
             + tools.parseInt(gcs.paddingTop)
             + tools.parseInt(gcs.paddingBottom);
     }
     el.remove();
 
-    var r = new dom.Element.html("<div class='bwu-datagrid-row' />", validator: nodeValidator);
-    $canvas.append(r);
+    var r = new dom.DivElement()..classes.add('bwu-datagrid-row');
+    _canvas.append(r);
     el = new dom.DivElement()
       ..id=''
       ..classes.add('bwu-datagrid-cell')
@@ -1018,13 +1027,13 @@ class BwuDatagrid extends PolymerElement {
 
     r.append(el);
     gcs = el.getComputedStyle();
-    cellWidthDiff = cellHeightDiff = 0;
+    _cellWidthDiff = _cellHeightDiff = 0;
     if (el.style.boxSizing != "border-box") {
 //      h.forEach((prop) {
 //        var val = tools.parseInt(el.getComputedStyle().getPropertyValue(prop));
 //        cellWidthDiff += val != null ? val : 0; // TODO
 //      });
-      cellWidthDiff = tools.parseInt(gcs.borderLeftWidth)
+      _cellWidthDiff = tools.parseInt(gcs.borderLeftWidth)
               + tools.parseInt(gcs.borderRightWidth)
               + tools.parseInt(gcs.paddingLeft)
               + tools.parseInt(gcs.paddingRight);
@@ -1032,7 +1041,7 @@ class BwuDatagrid extends PolymerElement {
 //        var val = tools.parseInt(el.getComputedStyle().getPropertyValue(prop));
 //        cellHeightDiff += val != null ? val : 0; // TODO
 //      });
-      cellHeightDiff = tools.parseInt(gcs.borderTopWidth)
+      _cellHeightDiff = tools.parseInt(gcs.borderTopWidth)
           + tools.parseInt(gcs.borderBottomWidth)
           + tools.parseInt(gcs.paddingTop)
           + tools.parseInt(gcs.paddingBottom);
@@ -1041,20 +1050,21 @@ class BwuDatagrid extends PolymerElement {
     //var x = r.getComputedStyle();
     r.remove();
 
-    absoluteColumnMinWidth = math.max(headerColumnWidthDiff, cellWidthDiff);
+    _absoluteColumnMinWidth = math.max(_headerColumnWidthDiff, _cellWidthDiff);
   }
 
+//_
   void createCssRules() {
-    $style = new dom.StyleElement();//.html("<style type='text/css' rel='stylesheet' />", validator: nodeValidator);
+    _style = new dom.StyleElement();//.html("<style type='text/css' rel='stylesheet' />", validator: nodeValidator);
     //dom.document.head.append($style);
-    this.shadowRoot.append($style);
-    var rowHeight = (gridOptions.rowHeight - cellHeightDiff);
+    this.shadowRoot.append(_style);
+    var rowHeight = (_gridOptions.rowHeight - _cellHeightDiff);
     var rules = [
       ".bwu-datagrid-header-column { left: 1000px; }",
-      ".bwu-datagrid-top-panel { height:${gridOptions.topPanelHeight}px; }",
-      ".bwu-datagrid-headerrow-columns { height:${gridOptions.headerRowHeight}px; }",
+      ".bwu-datagrid-top-panel { height:${_gridOptions.topPanelHeight}px; }",
+      ".bwu-datagrid-headerrow-columns { height:${_gridOptions.headerRowHeight}px; }",
       ".bwu-datagrid-cell { height:${rowHeight}px; }",
-      ".bwu-datagrid-row { height:${gridOptions.rowHeight}px; }"
+      ".bwu-datagrid-row { height:${_gridOptions.rowHeight}px; }"
     ];
 
     if(columns != null) {
@@ -1067,12 +1077,13 @@ class BwuDatagrid extends PolymerElement {
 //    for(int i = 0; i < rules.length; i++) {
 //      ($style.sheet as dom.CssStyleSheet).insertRule(rules[i], i);
 //    }
-    $style.appendText(rules.join(" "));
+    _style.appendText(rules.join(" "));
   }
 
+//_
   // TODO keep the rules in a collection to avoid parsing them
   Map<String,dom.CssStyleRule> getColumnCssRules(int idx) {
-    if (stylesheet == null) {
+    if (_stylesheet == null) {
 //      var sheets = this.shadowRoot.styleSheets;
 //      for (int i = 0; i < sheets.length; i++) {
 //        if (sheets[i].ownerNode != null && sheets[i].ownerNode == $style) {
@@ -1085,12 +1096,12 @@ class BwuDatagrid extends PolymerElement {
 //        throw "Cannot find stylesheet.";
 //      }
 
-      stylesheet = $style.sheet;
+      _stylesheet = _style.sheet;
 
       // find and cache column CSS rules
-      columnCssRulesL = {};
-      columnCssRulesR = {};
-      var cssRules = stylesheet.cssRules;
+      _columnCssRulesL = {};
+      _columnCssRulesR = {};
+      var cssRules = _stylesheet.cssRules;
       Match matches;
       int columnIdx;
       for (var i = 0; i < cssRules.length; i++) {
@@ -1098,41 +1109,41 @@ class BwuDatagrid extends PolymerElement {
         matches = new RegExp(r'(?:\.l)(\d+)').firstMatch(selector);
         if (matches != null) {
           columnIdx = tools.parseInt(matches.group(1)); // first.substr(2, matches.first.length - 2));
-          columnCssRulesL[columnIdx] = cssRules[i];
+          _columnCssRulesL[columnIdx] = cssRules[i];
         } else {
           matches = new RegExp(r'(?:\.r)(\d+)').firstMatch(selector);
           if (matches != null) {
             columnIdx = tools.parseInt(matches.group(1)); //first.substr(2, matches.first.length - 2));
-            columnCssRulesR[columnIdx] = cssRules[i];
+            _columnCssRulesR[columnIdx] = cssRules[i];
           }
         }
       }
     }
 
     return {
-      "left": columnCssRulesL[idx],
-      "right": columnCssRulesR[idx]
+      "left": _columnCssRulesL[idx],
+      "right": _columnCssRulesR[idx]
     };
   }
 
+//_
   void removeCssRules() {
-    $style.remove();
-    stylesheet = null;
+    _style.remove();
+    _stylesheet = null;
   }
 
   void destroy() {
     getEditorLock.cancelCurrentEdit();
 
-    eventBus.fire(core.Events.BEFORE_DESTROY, new core.BeforeDestroy(this));
-    //fire(ON_BEFORE_DESTROY, detail: {});
+    _eventBus.fire(core.Events.BEFORE_DESTROY, new core.BeforeDestroy(this));
 
-    var i = plugins.length;
+    var i = _plugins.length;
     while(i--) {
-      unregisterPlugin(plugins[i]);
+      unregisterPlugin(_plugins[i]);
     }
 
-    if (gridOptions.enableColumnReorder) {
-        $headers.filter = new Filter(":ui-sortable")..sortable.destroy(); //("destroy"); // TODO
+    if (_gridOptions.enableColumnReorder) {
+        _headers.filter = new Filter(":ui-sortable")..sortable.destroy(); //("destroy"); // TODO
     }
 
     unbindAncestorScrollEvents();
@@ -1156,11 +1167,13 @@ class BwuDatagrid extends PolymerElement {
 //    return evt.notify(args, e, self);
 //  }
 
-  core.EditorLock get getEditorLock => gridOptions.editorLock;
+  // TODO IEditor interface
+  core.EditorLock get getEditorLock => _gridOptions.editorLock;
 
-  EditController get getEditController => editController;
+  // TODO IEditor interface
+  EditController get getEditController => _editController;
 
-  int getColumnIndex(id) => columnsById[id];
+  int getColumnIndex(id) => _columnsById[id];
 
   void autosizeColumns() {
     int i;
@@ -1169,14 +1182,14 @@ class BwuDatagrid extends PolymerElement {
     int shrinkLeeway = 0;
     int total = 0;
     int prevTotal;
-    int availWidth = viewportHasVScroll ? viewportW - scrollbarDimensions.x : viewportW;
+    int availWidth = _viewportHasVScroll ? _viewportW - scrollbarDimensions.x : _viewportW;
 
     for (i = 0; i < columns.length; i++) {
       c = columns[i];
       widths.add(c.width);
       total += c.width;
       if (c.resizable) {
-        shrinkLeeway += c.width - math.max(c.minWidth, absoluteColumnMinWidth);
+        shrinkLeeway += c.width - math.max(c.minWidth, _absoluteColumnMinWidth);
       }
     }
 
@@ -1187,10 +1200,10 @@ class BwuDatagrid extends PolymerElement {
       for (i = 0; i < columns.length && total > availWidth; i++) {
         c = columns[i];
         var width = widths[i];
-        if (!c.resizable || width <= c.minWidth || width <= absoluteColumnMinWidth) {
+        if (!c.resizable || width <= c.minWidth || width <= _absoluteColumnMinWidth) {
           continue;
         }
-        var absMinWidth = math.max(c.minWidth, absoluteColumnMinWidth);
+        var absMinWidth = math.max(c.minWidth, _absoluteColumnMinWidth);
         var shrinkSize = (shrinkProportion * (width - absMinWidth)).floor();
         if(shrinkSize == 0) {
           shrinkSize = 1;
@@ -1249,19 +1262,21 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   void applyColumnHeaderWidths() {
-    if (!initialized) { return; }
+    if (!_initialized) { return; }
     var h;
-    for (int i = 0; i < $headers.children.length; i++) {
-      h = $headers.children[i];
-      if (h.style.width != columns[i].width - headerColumnWidthDiff) { // TODO comparsion
-        h.style.width = '${columns[i].width - headerColumnWidthDiff}px';
+    for (int i = 0; i < _headers.children.length; i++) {
+      h = _headers.children[i];
+      if (h.style.width != columns[i].width - _headerColumnWidthDiff) { // TODO comparsion
+        h.style.width = '${columns[i].width - _headerColumnWidthDiff}px';
       }
     }
 
     updateColumnCaches();
   }
 
+//_
   void applyColumnWidths() {
     int x = 0;
     int w;
@@ -1272,7 +1287,7 @@ class BwuDatagrid extends PolymerElement {
 
         rule = getColumnCssRules(i);
         rule['left'].style.left = '${x}px';
-        rule['right'].style.right = '${(canvasWidth - x - w)}px';
+        rule['right'].style.right = '${(_canvasWidth - x - w)}px';
 
         x += columns[i].width;
       }
@@ -1291,9 +1306,9 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void setSortColumns(List<SortColumn> cols) {
-    sortColumns = cols;
+    _sortColumns = cols;
 
-    List<BwuDatagridHeaderColumn> headerColumnEls = new List<BwuDatagridHeaderColumn>.from($headers.children);
+    List<BwuDatagridHeaderColumn> headerColumnEls = new List<BwuDatagridHeaderColumn>.from(_headers.children);
     headerColumnEls.forEach((hc) {
         hc..classes.remove("bwu-datagrid-header-column-sorted")
         ..querySelectorAll(".bwu-datagrid-sort-indicator").forEach((dom.HtmlElement e) =>
@@ -1302,7 +1317,7 @@ class BwuDatagrid extends PolymerElement {
             ..remove('bwu-datagrid-sort-indicator-desc'));
     });
 
-    sortColumns.forEach((col) {
+    _sortColumns.forEach((col) {
       if (col.sortAsc == null) {
         col.sortAsc = true;
       }
@@ -1316,54 +1331,56 @@ class BwuDatagrid extends PolymerElement {
     });
   }
 
-  List<SortColumn> get getSortColumns => sortColumns;
+  List<SortColumn> get getSortColumns => _sortColumns;
 
+//_
   void selectedRangesChangedHandler(dom.CustomEvent e, [List<Range> ranges]) {
-    selectedRows = [];
+    _selectedRows = [];
     List<Map<String,String>> hash = [];
     for (var i = 0; i < ranges.length; i++) {
       for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
         if (hash[j] == null) {  // prevent duplicates
-          selectedRows.add(j);
+          _selectedRows.add(j);
           hash[j] = {};
         }
         for (var k = ranges[i].fromCell; k <= ranges[i].toCell; k++) {
           if (canCellBeSelected(j, k)) {
-            hash[j][columns[k].id] = gridOptions.selectedCellCssClass;
+            hash[j][columns[k].id] = _gridOptions.selectedCellCssClass;
           }
         }
       }
     }
 
-    setCellCssStyles(gridOptions.selectedCellCssClass, hash);
+    setCellCssStyles(_gridOptions.selectedCellCssClass, hash);
 
-    eventBus.fire(core.Events.SELECTED_ROWS_CHANGED, new core.SelectedRowsChanged(this, getSelectedRows, e));
-    //fire(ON_SELECTED_ROWS_CHANGED , detail:{'rows': getSelectedRows(), 'caused_by': e});
+    _eventBus.fire(core.Events.SELECTED_ROWS_CHANGED, new core.SelectedRowsChanged(this, getSelectedRows, e));
   }
 
+//_
   List<Column> get getColumns => columns;
 
+//_
   void updateColumnCaches() {
     // Pre-calculate cell boundaries.
-    columnPosLeft = new List(columns != null ? columns.length : 0);
-    columnPosRight = new List(columns != null ? columns.length : 0);
+    _columnPosLeft = new List(columns != null ? columns.length : 0);
+    _columnPosRight = new List(columns != null ? columns.length : 0);
     var x = 0;
     if(columns != null) {
       for (var i = 0; i < columns.length; i++) {
-        columnPosLeft[i] = x;
-        columnPosRight[i] = x + columns[i].width;
+        _columnPosLeft[i] = x;
+        _columnPosRight[i] = x + columns[i].width;
         x += columns[i].width;
       }
     }
   }
 
   void set setColumns(List<Column> columnDefinitions) {
-    columns = columnDefinitions;
+    _columns = columnDefinitions;
 
-    columnsById = {};
+    _columnsById = {};
     for (var i = 0; i < columns.length; i++) {
       Column m = columns[i] = new Column()..extend(columnDefinitions[i])..extend(columns[i]);
-      columnsById[m.id] = i;
+      _columnsById[m.id] = i;
       if (m.minWidth != null && (m.width == null || m.width < m.minWidth)) {
         m.width = m.minWidth;
       }
@@ -1374,7 +1391,7 @@ class BwuDatagrid extends PolymerElement {
 
     updateColumnCaches();
 
-    if (initialized) {
+    if (_initialized) {
       invalidateAllRows();
       createColumnHeaders();
       removeCssRules();
@@ -1382,12 +1399,12 @@ class BwuDatagrid extends PolymerElement {
       resizeCanvas();
       applyColumnWidths();
 
-      this.shadowRoot.append($style);
+      this.shadowRoot.append(_style);
       handleScroll();
     }
   }
 
-  GridOptions get getGridOptions => gridOptions;
+  GridOptions get getGridOptions => _gridOptions;
 
   void set setGridOptions(GridOptions newGridOptions) {
     if (!getEditorLock.commitCurrentEdit()) {
@@ -1396,31 +1413,33 @@ class BwuDatagrid extends PolymerElement {
 
     makeActiveCellNormal();
 
-    if (gridOptions.enableAddRow != newGridOptions.enableAddRow) {
+    if (_gridOptions.enableAddRow != newGridOptions.enableAddRow) {
       invalidateRow(getDataLength);
     }
 
-    gridOptions.extend(newGridOptions); // TODO verify
+    _gridOptions.extend(newGridOptions); // TODO verify
     validateAndEnforceOptions();
 
-    $viewport.style.overflowY = gridOptions.autoHeight ? "hidden" : "auto";
+    _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
     render();
   }
 
+//_
   void validateAndEnforceOptions() {
-    if (gridOptions.autoHeight) {
-      gridOptions.leaveSpaceForNewRows = false;
+    if (_gridOptions.autoHeight) {
+      _gridOptions.leaveSpaceForNewRows = false;
     }
   }
 
-  void setDataView(DataView newData, bool scrollToTop) {
-    dataView = newData;
-    data = null;
+  void setDataView(DataView newData, [bool scrollToTop = false]) {
+    _dataView = newData;
+    _dataMap = null;
     _setData(scrollToTop);
   }
-  void setDataMap(List<Map> newData, bool scrollToTop) {
-    data = newData;
-    dataView = null;
+
+  void setDataMap(List<Map> newData, [bool scrollToTop = false]) {
+    _dataMap = newData;
+    _dataView = null;
   }
 
   void _setData(bool scrollToTop) {
@@ -1431,12 +1450,9 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  List<Map> get getDataMap => data;
-  DataView get getDataView => dataView;
-
   int get getDataLength {
-    if (data != null) {
-      return data.length;
+    if (_dataMap != null) {
+      return _dataMap.length;
     } else if(dataView != null){
       return dataView.getLength;
     } else {
@@ -1444,61 +1460,65 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   int getDataLengthIncludingAddNew() {
-    return getDataLength + (gridOptions.enableAddRow ? 1 : 0);
+    return getDataLength + (_gridOptions.enableAddRow ? 1 : 0);
   }
 
-  Map getDataItem(int i) {
-    if(i >= data.length) {
+  Map getDataMapItem(int i) {
+    if(i >= _dataMap.length) {
       return null;
     }
-    return data[i];
+    return _dataMap[i];
   }
 
   Item getDataViewItem(int i) => dataView.items[i];
 
-  dom.HtmlElement get getTopPanel => $topPanel;
+  dom.HtmlElement get getTopPanel => _topPanel;
 
   void set setTopPanelVisibility(visible) {
-    if (gridOptions.showTopPanel != visible) {
-      gridOptions.showTopPanel = visible;
+    if (_gridOptions.showTopPanel != visible) {
+      _gridOptions.showTopPanel = visible;
       if (visible) {
-        $topPanelScroller.slideDown("fast", resizeCanvas);
+        _topPanelScroller.slideDown("fast", resizeCanvas);
       } else {
-        $topPanelScroller.slideUp("fast", resizeCanvas);
+        _topPanelScroller.slideUp("fast", resizeCanvas);
       }
     }
   }
 
   void set setHeaderRowVisibility(bool visible) {
-    if (gridOptions.showHeaderRow != visible) {
-      gridOptions.showHeaderRow = visible;
+    if (_gridOptions.showHeaderRow != visible) {
+      _gridOptions.showHeaderRow = visible;
       if (visible) {
-        $headerRowScroller.slideDown("fast", resizeCanvas);
+        _headerRowScroller.slideDown("fast", resizeCanvas);
       } else {
-        $headerRowScroller.slideUp("fast", resizeCanvas);
+        _headerRowScroller.slideUp("fast", resizeCanvas);
       }
     }
   }
 
-  dom.ShadowRoot get getContainerNode => $container;
+  dom.ShadowRoot get getContainerNode => _container;
 
   //////////////////////////////////////////////////////////////////////////////////////////////
   // Rendering / Scrolling
 
+//_
   int getRowTop(int row) {
-    var x = gridOptions.rowHeight * row - pageOffset;
+    var x = _gridOptions.rowHeight * row - pageOffset;
     //print('rowTop - row: ${row}: ${x}');
     return x;
   }
 
+//_
   int getRowFromPosition(int y) {
-    return ((y + pageOffset) / gridOptions.rowHeight).floor();
+    return ((y + pageOffset) / _gridOptions.rowHeight).floor();
   }
 
+//_
   void scrollTo(int y) {
     y = math.max(y, 0);
-    y = math.min(y, th - viewportH + (viewportHasHScroll ? scrollbarDimensions.y : 0));
+    y = math.min(y, th - _viewportH + (_viewportHasHScroll ? scrollbarDimensions.y : 0));
 
     var oldOffset = pageOffset;
 
@@ -1512,16 +1532,15 @@ class BwuDatagrid extends PolymerElement {
       updateRowPositions();
     }
 
-    if (prevScrollTop != newScrollTop) {
-      vScrollDir = (prevScrollTop + oldOffset < newScrollTop + pageOffset) ? 1 : -1;
-      $viewport.scrollTop = (lastRenderedScrollTop = scrollTop = prevScrollTop = newScrollTop);
+    if (_prevScrollTop != newScrollTop) {
+      vScrollDir = (_prevScrollTop + oldOffset < newScrollTop + pageOffset) ? 1 : -1;
+      _viewport.scrollTop = (_lastRenderedScrollTop = scrollTop = _prevScrollTop = newScrollTop);
 
-      eventBus.fire(core.Events.VIEWPORT_CHANGED, new core.ViewportChanged(this));
-      //this.fire(BwuDatagrid.ON_VIEWPORT_CHANGED, detail: {});
-      //trigger(self.onViewportChanged, {});
+      _eventBus.fire(core.Events.VIEWPORT_CHANGED, new core.ViewportChanged(this));
     }
   }
 
+//_
   Formatter getFormatter(int row, Column column) {
     var rowMetadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
 
@@ -1533,16 +1552,17 @@ class BwuDatagrid extends PolymerElement {
         (rowMetadata != null && rowMetadata.formatter != null ? rowMetadata.formatter :
         column.formatter); // TODO check
     if(result == null) {
-      if(gridOptions.formatterFactory != null) {
-        result = gridOptions.formatterFactory.getFormatter(column);
+      if(_gridOptions.formatterFactory != null) {
+        result = _gridOptions.formatterFactory.getFormatter(column);
       }
     }
     if(result == null) {
-        result = gridOptions.defaultFormatter;
+        result = _gridOptions.defaultFormatter;
     }
     return result;
   }
 
+//_
   Editor getEditor(int row, int cell) {
     var column = columns[cell];
     var rowMetadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
@@ -1555,23 +1575,25 @@ class BwuDatagrid extends PolymerElement {
       return columnMetadata[cell].editor;
     }
 
-    return column.editor != null ? column.editor : (gridOptions.editorFactory != null ? gridOptions.editorFactory.getEditor(column): null);
+    return column.editor != null ? column.editor : (_gridOptions.editorFactory != null ? _gridOptions.editorFactory.getEditor(column): null);
   }
 
+//_
   dynamic getDataItemValueForColumn(/*Item/Map*/ item, Column columnDef) {
-    if (gridOptions.dataItemColumnValueExtractor != null) {
-      return gridOptions.dataItemColumnValueExtractor(item, columnDef);
+    if (_gridOptions.dataItemColumnValueExtractor != null) {
+      return _gridOptions.dataItemColumnValueExtractor(item, columnDef);
     }
     return item[columnDef.field];
   }
 
+//_
   dom.HtmlElement appendRowHtml(/*dom.HtmlElement stringArray,*/ int row, Range range, int dataLength) {
-    var d = getDataItem(row);
+    var d = getDataMapItem(row);
     var dataLoading = row < dataLength && d == null;
-    var rowCss = 'bwu-datagrid-row ${dataLoading ? " loading" : ""} ${row == activeRow ? " active" : ""} ${row % 2 == 1 ? " odd" : " even"}';
+    var rowCss = 'bwu-datagrid-row ${dataLoading ? " loading" : ""} ${row == _activeRow ? " active" : ""} ${row % 2 == 1 ? " odd" : " even"}';
 
     if (d == null) {
-      "${rowCss} ${gridOptions.addNewRowCssClass}";
+      "${rowCss} ${_gridOptions.addNewRowCssClass}";
     }
 
     ItemMetadata metadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
@@ -1603,8 +1625,8 @@ class BwuDatagrid extends PolymerElement {
         }
 
         // Do not render cells outside of the viewport.
-        if (columnPosRight[math.min(ii - 1, i + tools.parseInt(colspan) - 1)] > range.leftPx) {
-          if (columnPosLeft[i] > range.rightPx) {
+        if (_columnPosRight[math.min(ii - 1, i + tools.parseInt(colspan) - 1)] > range.leftPx) {
+          if (_columnPosLeft[i] > range.rightPx) {
             // All columns to the right are outside the range.
             break;
           }
@@ -1623,20 +1645,21 @@ class BwuDatagrid extends PolymerElement {
     return rowElement;
   }
 
+//_
   void appendCellHtml(dom.HtmlElement rowElement, int row, int cell, String colspan, /*Item/Map*/ item) {
     assert(item is Item || item is Map || item == null);
 
     var m = columns[cell];
     var cellCss = "bwu-datagrid-cell l${cell} r${math.min(columns.length - 1, cell + tools.parseInt(colspan) - 1)} ${
       (m.cssClass != null ? m.cssClass : '')}";
-    if (row == activeRow && cell == activeCell) {
+    if (row == _activeRow && cell == _activeCell) {
       cellCss = "${cellCss} active";
     }
 
     // TODO:  merge them together in the setter
-    for (var key in cellCssClasses.keys) {
-      if (cellCssClasses[key][row] && cellCssClasses[key][row][m.id]) {
-        cellCss += (" " + cellCssClasses[key][row][m.id]);
+    for (var key in _cellCssClasses.keys) {
+      if (_cellCssClasses[key][row] && _cellCssClasses[key][row][m.id]) {
+        cellCss += (" " + _cellCssClasses[key][row][m.id]);
       }
     }
 
@@ -1651,14 +1674,14 @@ class BwuDatagrid extends PolymerElement {
 
     //stringArray.add("</div>");
 
-    rowsCache[row].cellRenderQueue.add(cell);
-    rowsCache[row].cellColSpans[cell] = colspan;
+    _rowsCache[row].cellRenderQueue.add(cell);
+    _rowsCache[row].cellColSpans[cell] = colspan;
   }
 
-
+//_
   void cleanupRows(Range rangeToKeep) {
-    for (var i = 0; i < rowsCache.length; i++) { // TODO was probably associative
-      if ((i != activeRow) && (i < rangeToKeep.top || i > rangeToKeep.bottom)) {
+    for (var i = 0; i < _rowsCache.length; i++) { // TODO was probably associative
+      if ((i != _activeRow) && (i < rangeToKeep.top || i > rangeToKeep.bottom)) {
         removeRowFromCache(i);
       }
     }
@@ -1671,32 +1694,33 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void invalidateAllRows() {
-    if (currentEditor != null) {
+    if (_currentEditor != null) {
       makeActiveCellNormal();
     }
-    for (var i = 0; i < rowsCache.length; i++) { // TODO was probably an associative array
+    for (var i = 0; i < _rowsCache.length; i++) { // TODO was probably an associative array
       removeRowFromCache(i);
     }
   }
 
+//_
   void removeRowFromCache(int row) {
-    var cacheEntry = rowsCache[row];
+    var cacheEntry = _rowsCache[row];
     if (cacheEntry == null) {
       return;
     }
 
-    if (rowNodeFromLastMouseWheelEvent == cacheEntry.rowNode) {
+    if (_rowNodeFromLastMouseWheelEvent == cacheEntry.rowNode) {
       cacheEntry.rowNode.style.display = 'none';
-      zombieRowNodeFromLastMouseWheelEvent = rowNodeFromLastMouseWheelEvent;
+      _zombieRowNodeFromLastMouseWheelEvent = _rowNodeFromLastMouseWheelEvent;
     } else {
       //$canvas.children[0].remove(cacheEntry.rowNode);
       cacheEntry.rowNode.remove(); // TODO remove/add event handlers
     }
 
-    rowsCache.remove(row);
-    postProcessedRows.remove(row);
-    renderedRows--;
-    counter_rows_removed++;
+    _rowsCache.remove(row);
+    _postProcessedRows.remove(row);
+    _renderedRows--;
+    _counter_rows_removed++;
   }
 
   void invalidateRows(List<int> rows) {
@@ -1706,10 +1730,10 @@ class BwuDatagrid extends PolymerElement {
     }
     vScrollDir = 0;
     for (i = 0; i < rows.length; i++) {
-      if (currentEditor != null && activeRow == rows[i]) {
+      if (_currentEditor != null && _activeRow == rows[i]) {
         makeActiveCellNormal();
       }
-      if (rowsCache[rows[i]] != null) {
+      if (_rowsCache[rows[i]] != null) {
         removeRowFromCache(rows[i]);
       }
     }
@@ -1725,9 +1749,9 @@ class BwuDatagrid extends PolymerElement {
       return;
     }
 
-    var m = columns[cell], d = getDataItem(row);
-    if (currentEditor && activeRow == row && activeCell == cell) {
-      currentEditor.loadValue(d);
+    var m = columns[cell], d = getDataMapItem(row);
+    if (_currentEditor && _activeRow == row && _activeCell == cell) {
+      _currentEditor.loadValue(d);
     } else {
       cellNode.innerHtml = d ? getFormatter(row, m)(row, cell, getDataItemValueForColumn(d, m), m, d) : "";
       invalidatePostProcessingResults(row);
@@ -1735,14 +1759,14 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void updateRow(int row) {
-    var cacheEntry = rowsCache[row];
+    var cacheEntry = _rowsCache[row];
     if (cacheEntry == null) {
       return;
     }
 
     ensureCellNodesInRowsCache(row);
 
-    var d = getDataItem(row);
+    var d = getDataMapItem(row);
 
     for (var columnIdx in cacheEntry.cellNodesByColumnIdx.keys) {
       if (!cacheEntry.cellNodesByColumnIdx.containsKey(columnIdx)) {
@@ -1753,8 +1777,8 @@ class BwuDatagrid extends PolymerElement {
       var m = columns[columnIdx],
           node = cacheEntry.cellNodesByColumnIdx[columnIdx];
 
-      if (row == activeRow && columnIdx == activeCell && currentEditor != null) {
-        currentEditor.loadValue(d);
+      if (row == _activeRow && columnIdx == _activeCell && _currentEditor != null) {
+        _currentEditor.loadValue(d);
       } else if (d != null) {
         /*node.innerHtml =*/ getFormatter(row, m)(node, row, columnIdx, getDataItemValueForColumn(d, m), m, d);
       } else {
@@ -1765,56 +1789,57 @@ class BwuDatagrid extends PolymerElement {
     invalidatePostProcessingResults(row);
   }
 
+//_
   int getViewportHeight() {
-    var containerCs = $container.host.getComputedStyle();
-    var headerScrollerCs = $headerScroller.getComputedStyle();
+    var containerCs = _container.host.getComputedStyle();
+    var headerScrollerCs = _headerScroller.getComputedStyle();
 
     var x =
      tools.parseInt(containerCs.height) -
         tools.parseInt(containerCs.paddingTop) -
         tools.parseInt(containerCs.paddingBottom) -
-        tools.parseInt(headerScrollerCs.height) - getVBoxDelta($headerScroller) -
-        (gridOptions.showTopPanel ? gridOptions.topPanelHeight + getVBoxDelta($topPanelScroller) : 0) -
-        (gridOptions.showHeaderRow ? gridOptions.headerRowHeight + getVBoxDelta($headerRowScroller) : 0);
+        tools.parseInt(headerScrollerCs.height) - getVBoxDelta(_headerScroller) -
+        (_gridOptions.showTopPanel ? _gridOptions.topPanelHeight + getVBoxDelta(_topPanelScroller) : 0) -
+        (_gridOptions.showHeaderRow ? _gridOptions.headerRowHeight + getVBoxDelta(_headerRowScroller) : 0);
     //print('viewportHeight: ${x}');
     return x;
   }
 
   void resizeCanvas([int e]) {
-    if (!initialized) { return; }
-    if (gridOptions.autoHeight) {
-      viewportH = gridOptions.rowHeight * getDataLengthIncludingAddNew();
+    if (!_initialized) { return; }
+    if (_gridOptions.autoHeight) {
+      _viewportH = _gridOptions.rowHeight * getDataLengthIncludingAddNew();
     } else {
-      viewportH = getViewportHeight();
+      _viewportH = getViewportHeight();
     }
 
-    numVisibleRows = (viewportH / gridOptions.rowHeight).ceil();
-    viewportW = this.offsetWidth; //tools.parseInt(this.getComputedStyle().width);
-    if (!gridOptions.autoHeight) {
-      $viewport.style.height = "${viewportH}px";
+    _numVisibleRows = (_viewportH / _gridOptions.rowHeight).ceil();
+    _viewportW = this.offsetWidth; //tools.parseInt(this.getComputedStyle().width);
+    if (!_gridOptions.autoHeight) {
+      _viewport.style.height = "${_viewportH}px";
     }
 
-    if (gridOptions.forceFitColumns) {
+    if (_gridOptions.forceFitColumns) {
       autosizeColumns();
     }
 
     updateRowCount();
     handleScroll();
     // Since the width has changed, force the render() to reevaluate virtually rendered cells.
-    lastRenderedScrollLeft = -1;
+    _lastRenderedScrollLeft = -1;
     render();
   }
 
   void updateRowCount() {
-    if (!initialized) { return; }
+    if (!_initialized) { return; }
 
     var dataLengthIncludingAddNew = getDataLengthIncludingAddNew();
     var numberOfRows = dataLengthIncludingAddNew +
-        (gridOptions.leaveSpaceForNewRows ? numVisibleRows - 1 : 0);
+        (_gridOptions.leaveSpaceForNewRows ? _numVisibleRows - 1 : 0);
 
-    var oldViewportHasVScroll = viewportHasVScroll;
+    var oldViewportHasVScroll = _viewportHasVScroll;
     // with autoHeight, we do not need to accommodate the vertical scroll bar
-    viewportHasVScroll = !gridOptions.autoHeight && (numberOfRows * gridOptions.rowHeight > viewportH);
+    _viewportHasVScroll = !_gridOptions.autoHeight && (numberOfRows * _gridOptions.rowHeight > _viewportH);
 
     makeActiveCellNormal();
 
@@ -1822,18 +1847,18 @@ class BwuDatagrid extends PolymerElement {
     // this helps avoid redundant calls to .removeRow() when the size of the data decreased by thousands of rows
     var l = dataLengthIncludingAddNew - 1;
 
-    for (int i = 0; i < rowsCache.length; i++) {
+    for (int i = 0; i < _rowsCache.length; i++) {
       if (i >= l) {
         removeRowFromCache(i);
       }
     }
 
-    if (activeCellNode != null && activeRow > l) {
+    if (_activeCellNode != null && _activeRow > l) {
       resetActiveCell();
     }
 
     var oldH = h;
-    th = math.max(gridOptions.rowHeight * numberOfRows, viewportH - scrollbarDimensions.y);
+    th = math.max(_gridOptions.rowHeight * numberOfRows, _viewportH - scrollbarDimensions.y);
     if (th < maxSupportedCssHeight) {
       // just one page
       h = ph = th.toDouble();
@@ -1848,11 +1873,11 @@ class BwuDatagrid extends PolymerElement {
     }
 
     if (h != oldH) {
-      $canvas.style.height = "${h}px";
-      scrollTop = $viewport.scrollTop;
+      _canvas.style.height = "${h}px";
+      scrollTop = _viewport.scrollTop;
     }
 
-    var oldScrollTopInRange = (scrollTop + pageOffset <= th - viewportH);
+    var oldScrollTopInRange = (scrollTop + pageOffset <= th - _viewportH);
 
     if (th == 0 || scrollTop == 0) {
       page = pageOffset = 0;
@@ -1861,19 +1886,22 @@ class BwuDatagrid extends PolymerElement {
       scrollTo(scrollTop + pageOffset);
     } else {
       // scroll to bottom
-      scrollTo((th - viewportH).round());
+      scrollTo((th - _viewportH).round());
     }
 
-    if (h != oldH && gridOptions.autoHeight) {
+    if (h != oldH && _gridOptions.autoHeight) {
       resizeCanvas();
     }
 
-    if (gridOptions.forceFitColumns && oldViewportHasVScroll != viewportHasVScroll) {
+    if (_gridOptions.forceFitColumns && oldViewportHasVScroll != _viewportHasVScroll) {
       autosizeColumns();
     }
     updateCanvasWidth(false);
   }
 
+  Range getViewport([int viewportTop, int viewportLeft]) => getVisibleRange(viewportTop, viewportLeft);
+
+//_
   Range getVisibleRange([int viewportTop, int viewportLeft]) {
     if (viewportTop == null) {
       viewportTop = scrollTop;
@@ -1884,15 +1912,15 @@ class BwuDatagrid extends PolymerElement {
 
     return new Range(
       top: getRowFromPosition(viewportTop),
-      bottom: getRowFromPosition(viewportTop + viewportH) + 1,
+      bottom: getRowFromPosition(viewportTop + _viewportH) + 1,
       leftPx: viewportLeft,
-      rightPx: viewportLeft + viewportW
+      rightPx: viewportLeft + _viewportW
     );
   }
 
   Range getRenderedRange([int viewportTop, int viewportLeft]) {
     var range = getVisibleRange(viewportTop, viewportLeft);
-    int buffer = (viewportH / gridOptions.rowHeight).round();
+    int buffer = (_viewportH / _gridOptions.rowHeight).round();
     int minBuffer = 3;
 
     if (vScrollDir == -1) {
@@ -1909,17 +1937,18 @@ class BwuDatagrid extends PolymerElement {
     range.top = math.max(0, range.top);
     range.bottom = math.min(getDataLengthIncludingAddNew() - 1, range.bottom);
 
-    range.leftPx -= viewportW;
-    range.rightPx += viewportW;
+    range.leftPx -= _viewportW;
+    range.rightPx += _viewportW;
 
     range.leftPx = math.max(0, range.leftPx);
-    range.rightPx = math.min(canvasWidth, range.rightPx);
+    range.rightPx = math.min(_canvasWidth, range.rightPx);
 
     return range;
   }
 
+//_
   void ensureCellNodesInRowsCache(int row) {
-    var cacheEntry = rowsCache[row];
+    var cacheEntry = _rowsCache[row];
     if (cacheEntry != null) {
       if (cacheEntry.cellRenderQueue.length > 0) {
         var lastChild = cacheEntry.rowNode.lastChild;
@@ -1932,9 +1961,10 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   void cleanUpCells(Range range, int row) {
     var totalCellsRemoved = 0;
-    var cacheEntry = rowsCache[row];
+    var cacheEntry = _rowsCache[row];
 
     // Remove cells outside the range.
     var cellsToRemove = [];
@@ -1949,9 +1979,9 @@ class BwuDatagrid extends PolymerElement {
 
       var colspan = cacheEntry.cellColSpans[i];
       int intColspan = tools.parseInt(colspan);
-      if (columnPosLeft[i] > range.rightPx ||
-        columnPosRight[math.min(columns.length - 1, i + intColspan - 1)] < range.leftPx) {
-        if (!(row == activeRow && i == activeCell)) {
+      if (_columnPosLeft[i] > range.rightPx ||
+        _columnPosRight[math.min(columns.length - 1, i + intColspan - 1)] < range.leftPx) {
+        if (!(row == _activeRow && i == _activeCell)) {
           cellsToRemove.add(i);
         }
       }
@@ -1963,13 +1993,14 @@ class BwuDatagrid extends PolymerElement {
       cacheEntry.cellNodesByColumnIdx[cellToRemove].remove();
       cacheEntry.cellColSpans.remove(cellToRemove);
       cacheEntry.cellNodesByColumnIdx.remove(cellToRemove);
-      if (postProcessedRows.contains(row)) {
-        postProcessedRows[row].remove(cellToRemove);
+      if (_postProcessedRows.contains(row)) {
+        _postProcessedRows[row].remove(cellToRemove);
       }
       totalCellsRemoved++;
     }
   }
 
+//_
   void cleanUpAndRenderCells(Range range) {
     RowCache cacheEntry;
     //var stringArray = [];
@@ -1980,7 +2011,7 @@ class BwuDatagrid extends PolymerElement {
     String colspan;
 
     for (var row = range.top; row <= range.bottom; row++) {
-      cacheEntry = rowsCache[row];
+      cacheEntry = _rowsCache[row];
       if (cacheEntry == null) {
         continue;
       }
@@ -1999,12 +2030,12 @@ class BwuDatagrid extends PolymerElement {
       }
       List<ColumnMetadata>metadata = itemMetadata != null ? itemMetadata.columns : null;
 
-      var d = getDataItem(row);
+      var d = getDataMapItem(row);
 
       // TODO:  shorten this loop (index? heuristics? binary search?)
       for (var i = 0, ii = columns.length; i < ii; i++) {
         // Cells to the right are outside the range.
-        if (columnPosLeft[i] > range.rightPx) {
+        if (_columnPosLeft[i] > range.rightPx) {
           break;
         }
 
@@ -2026,7 +2057,7 @@ class BwuDatagrid extends PolymerElement {
         }
 
         intColspan = tools.parseInt(colspan);
-        if (columnPosRight[math.min(ii - 1, i + intColspan - 1)] > range.leftPx) {
+        if (_columnPosRight[math.min(ii - 1, i + intColspan - 1)] > range.leftPx) {
           appendCellHtml(rowElement, row, i, colspan, d);
           cellsAdded++;
         }
@@ -2052,7 +2083,7 @@ class BwuDatagrid extends PolymerElement {
     var processedRow;
     var node;
     while (processedRows.length > 0 && (processedRow = processedRows.removeLast()) != null) {
-      cacheEntry = rowsCache[processedRow];
+      cacheEntry = _rowsCache[processedRow];
       var columnIdx;
       while (cacheEntry.cellRenderQueue.length > 0) {
         columnIdx = cacheEntry.cellRenderQueue.removeLast();
@@ -2063,8 +2094,9 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   void renderRows(Range range) {
-    var parentNode = $canvas;
+    var parentNode = _canvas;
 
     //stringArray = [],
     //dom.HtmlElement rowElement;
@@ -2077,15 +2109,15 @@ class BwuDatagrid extends PolymerElement {
     var x = new dom.DivElement();
 
     for (var i = range.top; i <= range.bottom; i++) {
-      if (rowsCache[i] != null) {
+      if (_rowsCache[i] != null) {
         continue;
       }
-      renderedRows++;
+      _renderedRows++;
       rows.add(i);
 
       // Create an entry right away so that appendRowHtml() can
       // start populatating it.
-      rowsCache[i] = new RowCache();
+      _rowsCache[i] = new RowCache();
 //        rowNode: null,
 //
 //        // ColSpans of rendered cells (by column idx).
@@ -2102,10 +2134,10 @@ class BwuDatagrid extends PolymerElement {
 //      );
 
       x.append(appendRowHtml(/*stringArray,*/ i, range, dataLength));
-      if (activeCellNode != null && activeRow == i) {
+      if (_activeCellNode != null && _activeRow == i) {
         needToReselectCell = true;
       }
-      counter_rows_rendered++;
+      _counter_rows_rendered++;
     }
 
     if (rows.length == 0) { return; }
@@ -2113,8 +2145,8 @@ class BwuDatagrid extends PolymerElement {
     //x.append(rowElement); //stringArray.join(""), validator: nodeValidator);
 
     for (var i = 0; i < rows.length; i++) {
-      rowsCache[rows[i]].rowNode = parentNode.append(x.firstChild);
-      rowsCache[rows[i]].rowNode.querySelectorAll(".bwu-datagrid-cell").forEach((e) {
+      _rowsCache[rows[i]].rowNode = parentNode.append(x.firstChild);
+      _rowsCache[rows[i]].rowNode.querySelectorAll(".bwu-datagrid-cell").forEach((e) {
         (e as dom.HtmlElement)
           ..onMouseEnter.listen(handleMouseEnter)
           ..onMouseLeave.listen(handleMouseLeave);
@@ -2122,36 +2154,39 @@ class BwuDatagrid extends PolymerElement {
     }
 
     if (needToReselectCell) {
-      activeCellNode = getCellNode(activeRow, activeCell);
+      _activeCellNode = getCellNode(_activeRow, _activeCell);
     }
   }
 
+//_
   void startPostProcessing() {
-    if (!gridOptions.enableAsyncPostRender) {
+    if (!_gridOptions.enableAsyncPostRender) {
       return;
     }
-    if(h_postrender != null) {
-      h_postrender.cancel() ;
-      h_postrender = null;
+    if(_h_postrender != null) {
+      _h_postrender.cancel() ;
+      _h_postrender = null;
     }
-    h_postrender = new async.Timer(gridOptions.asyncPostRenderDelay, asyncPostProcessRows);
+    _h_postrender = new async.Timer(_gridOptions.asyncPostRenderDelay, asyncPostProcessRows);
   }
 
+//_
   void invalidatePostProcessingResults(int row) {
-    postProcessedRows.remove(row);
-    postProcessFromRow = math.min(postProcessFromRow, row);
-    postProcessToRow = math.max(postProcessToRow, row);
+    _postProcessedRows.remove(row);
+    _postProcessFromRow = math.min(_postProcessFromRow, row);
+    _postProcessToRow = math.max(_postProcessToRow, row);
     startPostProcessing();
   }
 
+//_
   void updateRowPositions() {
-    for (final int row in rowsCache) {
-      rowsCache[row].rowNode.style.top = "${getRowTop(row)}px";
+    for (final int row in _rowsCache) {
+      _rowsCache[row].rowNode.style.top = "${getRowTop(row)}px";
     }
   }
 
   void render() {
-    if (!initialized) { return; }
+    if (!_initialized) { return; }
     var visible = getVisibleRange();
     var rendered = getRenderedRange();
 
@@ -2159,55 +2194,57 @@ class BwuDatagrid extends PolymerElement {
     cleanupRows(rendered);
 
     // add new rows & missing cells in existing rows
-    if (lastRenderedScrollLeft != scrollLeft) {
+    if (_lastRenderedScrollLeft != scrollLeft) {
       cleanUpAndRenderCells(rendered);
     }
 
     // render missing rows
     renderRows(rendered);
 
-    postProcessFromRow = visible.top;
-    postProcessToRow = math.min(getDataLengthIncludingAddNew() - 1, visible.bottom);
+    _postProcessFromRow = visible.top;
+    _postProcessToRow = math.min(getDataLengthIncludingAddNew() - 1, visible.bottom);
     startPostProcessing();
 
-    lastRenderedScrollTop = scrollTop;
-    lastRenderedScrollLeft = scrollLeft;
-    h_render = null;
+    _lastRenderedScrollTop = scrollTop;
+    _lastRenderedScrollLeft = scrollLeft;
+    _h_render = null;
   }
 
+//_
   void handleHeaderRowScroll([dom.Event e]) {
-    var scrollLeft = $headerRowScroller.scrollLeft;
-    if (scrollLeft != $viewport.scrollLeft) {
-      $viewport.scrollLeft = scrollLeft;
+    var scrollLeft = _headerRowScroller.scrollLeft;
+    if (scrollLeft != _viewport.scrollLeft) {
+      _viewport.scrollLeft = scrollLeft;
     }
   }
 
+//_
   void handleScroll([dom.Event e]) {
-    scrollTop = $viewport.scrollTop;
-    scrollLeft = $viewport.scrollLeft;
-    int vScrollDist = (scrollTop - prevScrollTop).abs();
-    int hScrollDist = (scrollLeft - prevScrollLeft).abs();
+    scrollTop = _viewport.scrollTop;
+    scrollLeft = _viewport.scrollLeft;
+    int vScrollDist = (scrollTop - _prevScrollTop).abs();
+    int hScrollDist = (scrollLeft - _prevScrollLeft).abs();
 
     if (hScrollDist != 0) {
-      prevScrollLeft = scrollLeft;
-      $headerScroller.scrollLeft = scrollLeft;
-      $topPanelScroller.scrollLeft = scrollLeft;
-      $headerRowScroller.scrollLeft = scrollLeft;
+      _prevScrollLeft = scrollLeft;
+      _headerScroller.scrollLeft = scrollLeft;
+      _topPanelScroller.scrollLeft = scrollLeft;
+      _headerRowScroller.scrollLeft = scrollLeft;
     }
 
     if (vScrollDist != 0) {
-      vScrollDir = prevScrollTop < scrollTop ? 1 : -1;
-      prevScrollTop = scrollTop;
+      vScrollDir = _prevScrollTop < scrollTop ? 1 : -1;
+      _prevScrollTop = scrollTop;
 
       // switch virtual pages if needed
-      if (vScrollDist < viewportH) {
+      if (vScrollDist < _viewportH) {
         scrollTo(scrollTop + pageOffset);
       } else {
         var oldOffset = pageOffset;
-        if (h == viewportH) {
+        if (h == _viewportH) {
           page = 0;
         } else {
-          page = math.min(n - 1, (scrollTop * ((th - viewportH) / (h - viewportH)) * (1 / ph)).floor());
+          page = math.min(n - 1, (scrollTop * ((th - _viewportH) / (h - _viewportH)) * (1 / ph)).floor());
         }
         pageOffset = (page * cj).round();
         if (oldOffset != pageOffset) {
@@ -2217,40 +2254,39 @@ class BwuDatagrid extends PolymerElement {
     }
 
     if (hScrollDist != null || vScrollDist != null) {
-      if (h_render != null) {
-        h_render.cancel();
+      if (_h_render != null) {
+        _h_render.cancel();
       }
 
-      if ((lastRenderedScrollTop - scrollTop).abs() > 20 ||
-          (lastRenderedScrollLeft - scrollLeft).abs() > 20) {
-        if (gridOptions.forceSyncScrolling || (
-            (lastRenderedScrollTop - scrollTop).abs() < viewportH &&
-            (lastRenderedScrollLeft - scrollLeft).abs() < viewportW)) {
+      if ((_lastRenderedScrollTop - scrollTop).abs() > 20 ||
+          (_lastRenderedScrollLeft - scrollLeft).abs() > 20) {
+        if (_gridOptions.forceSyncScrolling || (
+            (_lastRenderedScrollTop - scrollTop).abs() < _viewportH &&
+            (_lastRenderedScrollLeft - scrollLeft).abs() < _viewportW)) {
           render();
         } else {
-          h_render = new async.Timer(new Duration(milliseconds: 50), render);
+          _h_render = new async.Timer(new Duration(milliseconds: 50), render);
         }
 
-        eventBus.fire(core.Events.VIEWPORT_CHANGED, new core.ViewportChanged(this));
-        //trigger(self.onViewportChanged, {});
+        _eventBus.fire(core.Events.VIEWPORT_CHANGED, new core.ViewportChanged(this));
       }
     }
 
-    eventBus.fire(core.Events.SCROLL, new core.Scroll(this, scrollLeft: scrollLeft, scrollTop: scrollTop));
-    //trigger(self.onScroll, {scrollLeft: scrollLeft, scrollTop: scrollTop});
+    _eventBus.fire(core.Events.SCROLL, new core.Scroll(this, scrollLeft: scrollLeft, scrollTop: scrollTop));
   }
 
+//_
   void asyncPostProcessRows() {
     var dataLength = getDataLength;
-    while (postProcessFromRow <= postProcessToRow) {
-      var row = (vScrollDir >= 0) ? postProcessFromRow++ : postProcessToRow--;
-      var cacheEntry = rowsCache[row];
+    while (_postProcessFromRow <= _postProcessToRow) {
+      var row = (vScrollDir >= 0) ? _postProcessFromRow++ : _postProcessToRow--;
+      var cacheEntry = _rowsCache[row];
       if (!cacheEntry || row >= dataLength) {
         continue;
       }
 
-      if (postProcessedRows[row] == null) {
-        postProcessedRows[row] = []; // TODO {}
+      if (_postProcessedRows[row] == null) {
+        _postProcessedRows[row] = []; // TODO {}
       }
 
       ensureCellNodesInRowsCache(row);
@@ -2262,26 +2298,27 @@ class BwuDatagrid extends PolymerElement {
         columnIdx = columnIdx | 0; // TODO
 
         var m = columns[columnIdx];
-        if (m.asyncPostRender && postProcessedRows[row][columnIdx] == null) {
+        if (m.asyncPostRender && _postProcessedRows[row][columnIdx] == null) {
           var node = cacheEntry.cellNodesByColumnIdx[columnIdx];
           if (node) {
-            m.asyncPostRender(node, row, getDataItem(row), m);
+            m.asyncPostRender(node, row, getDataMapItem(row), m);
           }
-          postProcessedRows[row][columnIdx] = true;
+          _postProcessedRows[row][columnIdx] = true;
         }
       }
 
-      h_postrender = new async.Timer(gridOptions.asyncPostRenderDelay, asyncPostProcessRows);
+      _h_postrender = new async.Timer(_gridOptions.asyncPostRenderDelay, asyncPostProcessRows);
       return;
     }
   }
 
+//_
   void updateCellCssStylesOnRenderedRows(String addedHash, List<int> removedHash) {
     dom.HtmlElement node;
     int columnId;
     bool addedRowHash;
     bool removedRowHash;
-    for (var row = 0; row < rowsCache.length; row++) { // TODO check was probably associative array
+    for (var row = 0; row < _rowsCache.length; row++) { // TODO check was probably associative array
       removedRowHash = removedHash != null && removedHash[row] != null;
       addedRowHash = addedHash != null && addedHash[row] != null;
 
@@ -2310,46 +2347,43 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void addCellCssStyles(key, hash) {
-    if (cellCssClasses[key] != null) {
+    if (_cellCssClasses[key] != null) {
       throw "addCellCssStyles: cell CSS hash with key '" + key + "' already exists.";
     }
 
-    cellCssClasses[key] = hash;
+    _cellCssClasses[key] = hash;
     updateCellCssStylesOnRenderedRows(hash, null);
 
     fire('cell-css-style-changed', detail: { "key": key, "hash": hash }); // TODO eventbus.fire
-    //trigger(self.onCellCssStylesChanged, { "key": key, "hash": hash });
   }
 
   void removeCellCssStyles(String key) {
-    if (cellCssClasses[key] == null) {
+    if (_cellCssClasses[key] == null) {
       return;
     }
 
-    updateCellCssStylesOnRenderedRows(null, cellCssClasses[key]);
-    cellCssClasses.remove(key);
+    updateCellCssStylesOnRenderedRows(null, _cellCssClasses[key]);
+    _cellCssClasses.remove(key);
 
-    eventBus.fire(core.Events.CELL_CSS_STYLES_CHANGED, new core.CellCssStylesChanged(this, key));
-    //trigger(self.onCellCssStylesChanged, { "key": key, "hash": null });
+    _eventBus.fire(core.Events.CELL_CSS_STYLES_CHANGED, new core.CellCssStylesChanged(this, key));
   }
 
   void setCellCssStyles(String key, List<Map<String,String>> hash) {
-    var prevHash = cellCssClasses[key];
+    var prevHash = _cellCssClasses[key];
 
-    cellCssClasses[key] = hash;
+    _cellCssClasses[key] = hash;
     updateCellCssStylesOnRenderedRows(hash, prevHash);
 
-    eventBus.fire(core.Events.CELL_CSS_STYLES_CHANGED, new core.CellCssStylesChanged(this, key, hash: hash));
-    //trigger(self.onCellCssStylesChanged, { "key": key, "hash": hash });
+    _eventBus.fire(core.Events.CELL_CSS_STYLES_CHANGED, new core.CellCssStylesChanged(this, key, hash: hash));
   }
 
   Map<int,String> getCellCssStyles(int key) {
-    return cellCssClasses[key];
+    return _cellCssClasses[key];
   }
 
   void flashCell(int row, int cell, int speed) {
     speed = speed != null ? speed : 100;
-    if (rowsCache[row] != null) {
+    if (_rowsCache[row] != null) {
       var $cell = getCellNode(row, cell);
 
       Function toggleCellClass;
@@ -2359,7 +2393,7 @@ class BwuDatagrid extends PolymerElement {
         }
         new async.Future.delayed(new Duration(milliseconds: speed),() {
               $cell.queue(() {
-                $cell.classes.toggle(gridOptions.cellFlashingCssClass).dequeue();
+                $cell.classes.toggle(_gridOptions.cellFlashingCssClass).dequeue();
                 toggleCellClass(times - 1);
               });
             });
@@ -2372,28 +2406,29 @@ class BwuDatagrid extends PolymerElement {
   //////////////////////////////////////////////////////////////////////////////////////////////
   // Interactivity
 
+//_
   void handleMouseWheel(dom.MouseEvent e) {
     var rowNode = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-row');
-    if (rowNode != rowNodeFromLastMouseWheelEvent) {
-      if (zombieRowNodeFromLastMouseWheelEvent && zombieRowNodeFromLastMouseWheelEvent != rowNode) {
+    if (rowNode != _rowNodeFromLastMouseWheelEvent) {
+      if (_zombieRowNodeFromLastMouseWheelEvent && _zombieRowNodeFromLastMouseWheelEvent != rowNode) {
         //$canvas.children[0].remove(zombieRowNodeFromLastMouseWheelEvent);
-        if(zombieRowNodeFromLastMouseWheelEvent != null) { // TODO check
-          zombieRowNodeFromLastMouseWheelEvent.remove();
+        if(_zombieRowNodeFromLastMouseWheelEvent != null) { // TODO check
+          _zombieRowNodeFromLastMouseWheelEvent.remove();
         }
-        zombieRowNodeFromLastMouseWheelEvent = null;
+        _zombieRowNodeFromLastMouseWheelEvent = null;
       }
-      rowNodeFromLastMouseWheelEvent = rowNode;
+      _rowNodeFromLastMouseWheelEvent = rowNode;
     }
   }
 
+//_
   bool handleDrag(dom.MouseEvent e, [int dd]) {
     Cell cell = getCellFromEvent(e);
     if (cell == null || !cellExists(cell.row, cell.cell)) {
       return false;
     }
 
-    var data = eventBus.fire(core.Events.DRAG_INIT, new core.DragInit(this, dd: dd, causedBy: e));
-    //var retval = trigger(self.onDragInit, dd, e);
+    var data = _eventBus.fire(core.Events.DRAG_INIT, new core.DragInit(this, dd: dd, causedBy: e));
     if (e.currentTarget == null && e.eventPhase == 0) { // .isImmediatePropagationStopped()) {
       return data.retVal;
     }
@@ -2403,6 +2438,7 @@ class BwuDatagrid extends PolymerElement {
     return false;
   }
 
+//_
   bool handleDragStart(dom.MouseEvent e, Map dd) {
     var cell = getCellFromEvent(e);
     if (cell != null|| !cellExists(cell.row, cell.cell)) {
@@ -2421,23 +2457,24 @@ class BwuDatagrid extends PolymerElement {
     return false;
   }
 
+//_
   void handleDragOver(dom.MouseEvent e, [Map dd]) {
     dd['origin-event'] = e;
      fire('drag', detail: dd) as dom.HtmlElement; // TODO eventbus fire
     //return trigger(self.onDrag, dd, e);
   }
 
+//_
   void handleDragEnd(dom.MouseEvent e, [Map dd]) {
     dd['origin-event'] = e;
     fire('drag-end', detail: dd);  // TODO eventbus fire
     //trigger(self.onDragEnd, dd, e);
   }
 
+//_
   void handleKeyDown(dom.KeyboardEvent e) {
-    eventBus.fire(core.Events.KEY_DOWN, new  core.KeyDown(this, new Cell(activeRow, activeCell), causedBy: e));
-    //trigger(self.onKeyDown, {'row': activeRow, 'cell': activeCell}, e);
-    //var handled = e.isImmediatePropagationStopped();
-    var handled = e.defaultPrevented;
+    var data = _eventBus.fire(core.Events.KEY_DOWN, new  core.KeyDown(this, new Cell(_activeRow, _activeCell), causedBy: e));
+    var handled = data.isImmediatePropagationStopped;
 
     if (!handled) {
       if (!e.shiftKey && !e.altKey && !e.ctrlKey) {
@@ -2463,10 +2500,10 @@ class BwuDatagrid extends PolymerElement {
         } else if (e.which == dom.KeyCode.TAB) {
           handled = navigateNext();
         } else if (e.which == dom.KeyCode.ENTER) {
-          if (gridOptions.editable) {
-            if (currentEditor != null) {
+          if (_gridOptions.editable) {
+            if (_currentEditor != null) {
               // adding new row
-              if (activeRow == getDataLength) {
+              if (_activeRow == getDataLength) {
                 navigateDown();
               } else {
                 commitEditAndSetFocus();
@@ -2498,8 +2535,9 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   void handleClick(dom.MouseEvent e) {
-    if (currentEditor == null) {
+    if (_currentEditor == null) {
       // if this click resulted in some cell child node getting focus,
       // don't steal it back - keyboard events will still bubble up
       // IE9+ seems to default DIVs to tabIndex=0 instead of -1, so check for cell clicks directly.
@@ -2509,18 +2547,16 @@ class BwuDatagrid extends PolymerElement {
     }
 
     var cell = getCellFromEvent(e);
-    if (cell == null || (currentEditor != null && activeRow == cell.row && activeCell == cell.cell)) {
+    if (cell == null || (_currentEditor != null && _activeRow == cell.row && _activeCell == cell.cell)) {
       return;
     }
 
-    eventBus.fire(core.Events.CLICK, new core.Click(this, cell, causedBy: e));
-    //trigger(self.onClick, {'row': cell['row'], 'cell': cell['cell']}, e);
-    //if (e.isImmediatePropagationStopped()) {
-    if(e.defaultPrevented) {
+    var data = _eventBus.fire(core.Events.CLICK, new core.Click(this, cell, causedBy: e));
+    if (data.isImmediatePropagationStopped) {
       return;
     }
 
-    if ((activeCell != cell.cell || activeRow != cell.row) && canCellBeActive(cell.row, cell.cell)) {
+    if ((_activeCell != cell.cell || _activeRow != cell.row) && canCellBeActive(cell.row, cell.cell)) {
       if (!getEditorLock.isActive || getEditorLock.commitCurrentEdit()) {
         scrollRowIntoView(cell.row, false);
         setActiveCellInternal(getCellNode(cell.row, cell.cell));
@@ -2528,6 +2564,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   void handleContextMenu(dom.MouseEvent e) {
     var cell = getCellFromEvent(e);
     //var $cell = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-cell', context: $canvas);
@@ -2536,76 +2573,67 @@ class BwuDatagrid extends PolymerElement {
     }
 
     // are we editing this cell?
-    if (activeCellNode == cell && currentEditor != null) {
+    if (_activeCellNode == cell && _currentEditor != null) {
       return;
     }
 
-    eventBus.fire(core.Events.CONTEXT_MENU, new core.ContextMenu(this, cell, causedBy: e));
-    //fire('context-menu', detail: {'origin-event': e});
-    //trigger(self.onContextMenu, {}, e);
+    _eventBus.fire(core.Events.CONTEXT_MENU, new core.ContextMenu(this, cell, causedBy: e));
   }
 
+//_
   void handleDblClick(dom.MouseEvent e) {
     Cell cell = getCellFromEvent(e);
-    if (cell == null|| (currentEditor != null && activeRow == cell.row && activeCell == cell.cell)) {
+    if (cell == null|| (_currentEditor != null && _activeRow == cell.row && _activeCell == cell.cell)) {
       return;
     }
 
-    eventBus.fire(core.Events.DOUBLE_CLICK, new core.DoubleClick(this, cell, causedBy: e));
-    //trigger(self.onDblClick, {'row': cell['row'], 'cell': cell['cell']}, e);
-    //if (e.isImmediatePropagationStopped()) {
-    if(e.defaultPrevented) {
+    var data = _eventBus.fire(core.Events.DOUBLE_CLICK, new core.DoubleClick(this, cell, causedBy: e));
+    if (data.isImmediatePropagationStopped) {
       return;
     }
 
-    if (gridOptions.editable) {
+    if (_gridOptions.editable) {
       gotoCell(cell.row, cell.cell, true);
     }
   }
 
+//_
   void handleHeaderMouseEnter(dom.MouseEvent e) {
-    eventBus.fire(core.Events.HEADER_MOUSE_ENTER, new core.HeaderMouseEnter(this, (e.target as BwuDatagridHeaderColumn).column, causedBy: e));
-    //fire(core.Events.HEADER_MOUSE_ENTER, detail: new core.HeaderMouseEnter(this, (e.target as BwuDatagridHeaderColumn).column, causedBy: e));
-    //trigger(self.onHeaderMouseEnter, {
-//      "column": dataset["column"],
-//      'origin-event': e
-//    });
+    _eventBus.fire(core.Events.HEADER_MOUSE_ENTER, new core.HeaderMouseEnter(this, (e.target as BwuDatagridHeaderColumn).column, causedBy: e));
   }
 
+//_
   void handleHeaderMouseLeave(dom.MouseEvent e) {
-    eventBus.fire(core.Events.HEADER_MOUSE_LEAVE, new core.HeaderMouseLeave(this, dataset['column'], causedBy: e));
-    //trigger(self.onHeaderMouseLeave, {
-//      "column": dataset["column"],
-//      'origin-event': e
-//    });
+    _eventBus.fire(core.Events.HEADER_MOUSE_LEAVE, new core.HeaderMouseLeave(this, dataset['column'], causedBy: e));
   }
 
+//_
   void handleHeaderContextMenu(dom.MouseEvent e) {
     var $header = tools.closest((e.target as dom.HtmlElement), ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/) as BwuDatagridHeaderColumn;
     var column = $header != null ? $header.column : null;
-    eventBus.fire(core.Events.HEADER_CONTEX_MENU, new core.HeaderContextMenu(this, column, causedBy: e));
-    //trigger(self.onHeaderContextMenu, {column: column}, e);
+    _eventBus.fire(core.Events.HEADER_CONTEX_MENU, new core.HeaderContextMenu(this, column, causedBy: e));
   }
 
+//_
   void handleHeaderClick(dom.MouseEvent e) {
     var $header = tools.closest((e.target as dom.HtmlElement),'.bwu-datagrid-header-column' /*, ".bwu-datagrid-header-columns"*/) as BwuDatagridHeaderColumn;
     var column = $header != null ? $header.column : null;
     if (column != null) {
-      eventBus.fire(core.Events.HEADER_CLICK, new core.HeaderClick(this, column, causedBy: e));
-      // trigger(self.onHeaderClick, {column: column}, e);
+      _eventBus.fire(core.Events.HEADER_CLICK, new core.HeaderClick(this, column, causedBy: e));
     }
   }
 
+//_
   void handleMouseEnter(dom.MouseEvent e) {
-    eventBus.fire(core.Events.MOUSE_ENTER, new core.MouseEnter(this, causedBy: e));
-    //trigger(self.onMouseEnter, {}, e);
+    _eventBus.fire(core.Events.MOUSE_ENTER, new core.MouseEnter(this, causedBy: e));
   }
 
+//_
   void handleMouseLeave(dom.MouseEvent e) {
-    eventBus.fire(core.Events.MOUSE_LEAVE, new core.MouseLeave(this, causedBy: e));
-    //trigger(self.onMouseLeave, {}, e);
+    _eventBus.fire(core.Events.MOUSE_LEAVE, new core.MouseLeave(this, causedBy: e));
   }
 
+//_
   bool cellExists(int row, int cell) {
     return !(row < 0 || row >= getDataLength || cell < 0 || cell >= columns.length);
   }
@@ -2627,6 +2655,7 @@ class BwuDatagrid extends PolymerElement {
     return new Cell(row, cell - 1);
   }
 
+//_
   int getCellFromNode(dom.HtmlElement cellNode) {
     // read column number from .l<columnNumber> CSS class
     var matches = new RegExp(r'(?:\l)(\d+)').firstMatch(cellNode.className);
@@ -2637,9 +2666,10 @@ class BwuDatagrid extends PolymerElement {
     return tools.parseInt(matches.group(1));
   }
 
+//_
   int getRowFromNode(dom.HtmlElement rowNode) {
-    for (final row in rowsCache.keys) { // TODO in rowsCache) {
-      if (rowsCache[row] != null && rowsCache[row].rowNode == rowNode) {
+    for (final row in _rowsCache.keys) { // TODO in rowsCache) {
+      if (_rowsCache[row] != null && _rowsCache[row].rowNode == rowNode) {
         return row;
       }
     }
@@ -2648,7 +2678,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   Cell getCellFromEvent(dom.Event e) {
-    var $cell = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-cell', context: $canvas);
+    var $cell = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-cell', context: _canvas);
     if ($cell == null) {
       return null;
     }
@@ -2669,7 +2699,7 @@ class BwuDatagrid extends PolymerElement {
     }
 
     var y1 = getRowTop(row);
-    var y2 = y1 + gridOptions.rowHeight - 1;
+    var y2 = y1 + _gridOptions.rowHeight - 1;
     var x1 = 0;
     for (var i = 0; i < cell; i++) {
       x1 += columns[i].width;
@@ -2688,10 +2718,10 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void setFocus() {
-    if (tabbingDirection == -1) {
-      $focusSink.focus();
+    if (_tabbingDirection == -1) {
+      _focusSink.focus();
     } else {
-      $focusSink2.focus();
+      _focusSink2.focus();
     }
   }
 
@@ -2700,50 +2730,51 @@ class BwuDatagrid extends PolymerElement {
 
     var colspan = getColspan(row, cell);
     int intColspan = tools.parseInt(colspan);
-    var left = columnPosLeft[cell],
-      right = columnPosRight[cell + (intColspan > 1 ? intColspan - 1 : 0)],
-      scrollRight = scrollLeft + viewportW;
+    var left = _columnPosLeft[cell],
+      right = _columnPosRight[cell + (intColspan > 1 ? intColspan - 1 : 0)],
+      scrollRight = scrollLeft + _viewportW;
 
     if (left < scrollLeft) {
-      $viewport.scrollLeft = left;
+      _viewport.scrollLeft = left;
       handleScroll();
       render();
     } else if (right > scrollRight) {
-      $viewport.scrollLeft = math.min(left, right - $viewport.clientWidth);
+      _viewport.scrollLeft = math.min(left, right - _viewport.clientWidth);
       handleScroll();
       render();
     }
   }
 
+//_
   void setActiveCellInternal(dom.HtmlElement newCell, [bool opt_editMode]) {
-    if (activeCellNode != null) {
+    if (_activeCellNode != null) {
       makeActiveCellNormal();
-      activeCellNode.classes.remove("active");
-      if (rowsCache[activeRow] != null) {
-        rowsCache[activeRow].rowNode.classes.remove("active");
+      _activeCellNode.classes.remove("active");
+      if (_rowsCache[_activeRow] != null) {
+        _rowsCache[_activeRow].rowNode.classes.remove("active");
       }
     }
 
-    var activeCellChanged = (activeCellNode != newCell);
-    activeCellNode = newCell;
+    var activeCellChanged = (_activeCellNode != newCell);
+    _activeCellNode = newCell;
 
-    if (activeCellNode != null) {
-      activeRow = getRowFromNode(activeCellNode.parentNode);
-      activeCell = activePosX = getCellFromNode(activeCellNode);
+    if (_activeCellNode != null) {
+      _activeRow = getRowFromNode(_activeCellNode.parentNode);
+      _activeCell = _activePosX = getCellFromNode(_activeCellNode);
 
       if (opt_editMode == null) {
-        opt_editMode = (activeRow == getDataLength) || gridOptions.autoEdit;
+        opt_editMode = (_activeRow == getDataLength) || _gridOptions.autoEdit;
       }
 
-      activeCellNode.classes.add("active");
-      rowsCache[activeRow].rowNode.classes.add("active");
+      _activeCellNode.classes.add("active");
+      _rowsCache[_activeRow].rowNode.classes.add("active");
 
-      if (gridOptions.editable && opt_editMode && isCellPotentiallyEditable(activeRow, activeCell)) {
-        if(h_editorLoader != null) {
-          h_editorLoader.cancel();
+      if (_gridOptions.editable && opt_editMode && isCellPotentiallyEditable(_activeRow, _activeCell)) {
+        if(_h_editorLoader != null) {
+          _h_editorLoader.cancel();
         }
-        if (gridOptions.asyncEditorLoading) {
-          h_editorLoader = new async.Timer(gridOptions.asyncEditorLoadDelay, () {
+        if (_gridOptions.asyncEditorLoading) {
+          _h_editorLoader = new async.Timer(_gridOptions.asyncEditorLoadDelay, () {
             makeActiveCellEditable();
           });
         } else {
@@ -2751,15 +2782,15 @@ class BwuDatagrid extends PolymerElement {
         }
       }
     } else {
-      activeRow = activeCell = null;
+      _activeRow = _activeCell = null;
     }
 
     if (activeCellChanged) {
-      eventBus.fire(core.Events.ACTIVE_CELL_CHANGED, new core.ActiveCellChanged(this, getActiveCell()));
-      //trigger(self.onActiveCellChanged, getActiveCell());
+      _eventBus.fire(core.Events.ACTIVE_CELL_CHANGED, new core.ActiveCellChanged(this, getActiveCell()));
     }
   }
 
+//_
   void clearTextSelection() {
 //    if (dom.document.selection && dom.document.selection.empty) {
 //      try {
@@ -2775,10 +2806,11 @@ class BwuDatagrid extends PolymerElement {
 //    }
   }
 
+//_
   bool isCellPotentiallyEditable(int row, int cell) {
     var dataLength = getDataLength;
     // is the data for this row loaded?
-    if (row < dataLength && getDataItem(row) == null) {
+    if (row < dataLength && getDataMapItem(row) == null) {
       return false;
     }
 
@@ -2795,23 +2827,23 @@ class BwuDatagrid extends PolymerElement {
     return true;
   }
 
+//_
   void makeActiveCellNormal() {
-    if (currentEditor == null) {
+    if (_currentEditor == null) {
       return;
     }
-    eventBus.fire(core.Events.BEFORE_CELL_EDITOR_DESTROY, new core.BeforeCellEditorDestroy(this, currentEditor));
-    //trigger(self.onBeforeCellEditorDestroy, {'editor': currentEditor});
-    currentEditor.destroy();
-    currentEditor = null;
+    _eventBus.fire(core.Events.BEFORE_CELL_EDITOR_DESTROY, new core.BeforeCellEditorDestroy(this, _currentEditor));
+    _currentEditor.destroy();
+    _currentEditor = null;
 
-    if (activeCellNode != null) {
-      var d = getDataItem(activeRow);
-      activeCellNode.classes..remove("editable")..remove("invalid");
+    if (_activeCellNode != null) {
+      var d = getDataMapItem(_activeRow);
+      _activeCellNode.classes..remove("editable")..remove("invalid");
       if (d != null) {
-        var column = columns[activeCell];
-        Formatter formatter = getFormatter(activeRow, column);
-        /*activeCellNode.innerHtml =*/ formatter(activeCellNode, activeRow, activeCell, getDataItemValueForColumn(d, column), column, d);
-        invalidatePostProcessingResults(activeRow);
+        var column = columns[_activeCell];
+        Formatter formatter = getFormatter(_activeRow, column);
+        /*activeCellNode.innerHtml =*/ formatter(_activeCellNode, _activeRow, _activeCell, getDataItemValueForColumn(d, column), column, d);
+        invalidatePostProcessingResults(_activeRow);
       }
     }
 
@@ -2821,53 +2853,52 @@ class BwuDatagrid extends PolymerElement {
       clearTextSelection();
     }
 
-    getEditorLock.deactivate(editController);
+    getEditorLock.deactivate(_editController);
   }
 
   void makeActiveCellEditable([Editor editor]) {
-    if (activeCellNode == null) {
+    if (_activeCellNode == null) {
       return;
     }
-    if (!gridOptions.editable) {
+    if (!_gridOptions.editable) {
       throw "Grid : makeActiveCellEditable : should never get called when options.editable is false";
     }
 
     // cancel pending async call if there is one
-    if(h_editorLoader != null) {
-      h_editorLoader.cancel();
+    if(_h_editorLoader != null) {
+      _h_editorLoader.cancel();
     }
 
-    if (!isCellPotentiallyEditable(activeRow, activeCell)) {
+    if (!isCellPotentiallyEditable(_activeRow, _activeCell)) {
       return;
     }
 
-    var columnDef = columns[activeCell];
-    var item = getDataItem(activeRow);
+    var columnDef = columns[_activeCell];
+    var item = getDataMapItem(_activeRow);
 
-    /*if(*/eventBus.fire(core.Events.BEFORE_EDIT_CELL, new core.BeforeEditCell(this, cell: new Cell(activeRow, activeCell), item: item, column: columnDef));/*) { */
-//    if (trigger(self.onBeforeEditCell, {'row': activeRow, 'cell': activeCell, 'item': item, 'column': columnDef}) == false) { // TODO == false
+    if(!_eventBus.fire(core.Events.BEFORE_EDIT_CELL, new core.BeforeEditCell(this, cell: new Cell(_activeRow, _activeCell), item: item, column: columnDef)).retVal) {
       setFocus();
-//      return;
-    //}
+      return;
+    }
 
-    getEditorLock.activate(editController);
-    activeCellNode.classes.add("editable");
+    getEditorLock.activate(_editController);
+    _activeCellNode.classes.add("editable");
 
     // don't clear the cell if a custom editor is passed through
     if (editor == null) {
-      activeCellNode.innerHtml = "";
+      _activeCellNode.innerHtml = "";
     }
 
     if(editor != null) {
-      currentEditor = editor;
+      _currentEditor = editor;
     } else {
-      currentEditor = getEditor(activeRow, activeCell);
+      _currentEditor = getEditor(_activeRow, _activeCell);
     }
-    currentEditor = currentEditor.newInstance(new EditorArgs(
+    _currentEditor = _currentEditor.newInstance(new EditorArgs(
       grid: this,
-      gridPosition: absBox($container.host),
-      position: (absBox(activeCellNode)),
-      container: activeCellNode,
+      gridPosition: absBox(_container.host),
+      position: (absBox(_activeCellNode)),
+      container: _activeCellNode,
       column: columnDef,
       item :  item != null ? item : new Item(),
       commitChanges : commitEditAndSetFocus,
@@ -2885,33 +2916,36 @@ class BwuDatagrid extends PolymerElement {
 //    });
 
     if (item != null) {
-      currentEditor.loadValue(item);
+      _currentEditor.loadValue(item);
     }
 
-    serializedEditorValue = currentEditor.serializeValue();
+    _serializedEditorValue = _currentEditor.serializeValue();
 
-    if (currentEditor.position != null) {
+    if (_currentEditor.position != null) {
       handleActiveCellPositionChange(null);
     }
   }
 
+//_
   void commitEditAndSetFocus() {
     // if the commit fails, it would do so due to a validation error
     // if so, do not steal the focus from the editor
     if (getEditorLock.commitCurrentEdit()) {
       setFocus();
-      if (gridOptions.autoEdit) {
+      if (_gridOptions.autoEdit) {
         navigateDown();
       }
     }
   }
 
+//_
   void cancelEditAndSetFocus() {
     if (getEditorLock.cancelCurrentEdit()) {
       setFocus();
     }
   }
 
+//_
   NodeBox absBox(dom.HtmlElement elem) {
     var bcr = elem.getBoundingClientRect();
     var box = new NodeBox(
@@ -2962,79 +2996,80 @@ class BwuDatagrid extends PolymerElement {
   }
 
   NodeBox getActiveCellPosition() {
-    return absBox(activeCellNode);
+    return absBox(_activeCellNode);
   }
 
   NodeBox getGridPosition() {
-    return absBox($container.host);
+    return absBox(_container.host);
   }
 
+//_
   void handleActiveCellPositionChange(dom.Event e) {
-    if (activeCellNode == null) {
+    if (_activeCellNode == null) {
       return;
     }
 
-    eventBus.fire(core.Events.ACTIVE_CELL_POSITION_CHANGED, new core.ActiveCellPositionChanged(this));
-    //trigger(self.onActiveCellPositionChanged, {});
+    _eventBus.fire(core.Events.ACTIVE_CELL_POSITION_CHANGED, new core.ActiveCellPositionChanged(this));
 
-    if (currentEditor != null) {
+    if (_currentEditor != null) {
       var cellBox = getActiveCellPosition();
       //if (currentEditor.show && currentEditor.hide) {
         if (!cellBox.visible) {
-          currentEditor.hide(); // TODO show/hide
+          _currentEditor.hide(); // TODO show/hide
         } else {
-          currentEditor.show();
+          _currentEditor.show();
         }
       //}
 
-      currentEditor.position(cellBox);
+      _currentEditor.position(cellBox);
     }
   }
 
   Editor getCellEditor() {
-    return currentEditor;
+    return _currentEditor;
   }
 
   Cell getActiveCell() {
-    if (activeCellNode == null) {
+    if (_activeCellNode == null) {
       return null;
     } else {
-      return new Cell(activeRow, activeCell);
+      return new Cell(_activeRow, _activeCell);
     }
   }
 
   dom.HtmlElement getActiveCellNode() {
-    return activeCellNode;
+    return _activeCellNode;
   }
 
   void scrollRowIntoView(int row, bool doPaging) {
-    var rowAtTop = row * gridOptions.rowHeight;
-    var rowAtBottom = (row + 1) * gridOptions.rowHeight - viewportH + (viewportHasHScroll ? scrollbarDimensions.y : 0);
+    var rowAtTop = row * _gridOptions.rowHeight;
+    var rowAtBottom = (row + 1) * _gridOptions.rowHeight - _viewportH + (_viewportHasHScroll ? scrollbarDimensions.y : 0);
 
     // need to page down?
-    if ((row + 1) * gridOptions.rowHeight > scrollTop + viewportH + pageOffset) {
+    if ((row + 1) * _gridOptions.rowHeight > scrollTop + _viewportH + pageOffset) {
       scrollTo(doPaging ? rowAtTop : rowAtBottom);
       render();
     }
     // or page up?
-    else if (row * gridOptions.rowHeight < scrollTop + pageOffset) {
+    else if (row * _gridOptions.rowHeight < scrollTop + pageOffset) {
       scrollTo(doPaging ? rowAtBottom : rowAtTop);
       render();
     }
   }
 
   void scrollRowToTop(int row) {
-    scrollTo(row * gridOptions.rowHeight);
+    scrollTo(row * _gridOptions.rowHeight);
     render();
   }
 
+//_
   void scrollPage(int dir) {
-    var deltaRows = dir * numVisibleRows;
-    scrollTo((getRowFromPosition(scrollTop) + deltaRows) * gridOptions.rowHeight);
+    var deltaRows = dir * _numVisibleRows;
+    scrollTo((getRowFromPosition(scrollTop) + deltaRows) * _gridOptions.rowHeight);
     render();
 
-    if (gridOptions.enableCellNavigation && activeRow != null) {
-      var row = activeRow + deltaRows;
+    if (_gridOptions.enableCellNavigation && _activeRow != null) {
+      var row = _activeRow + deltaRows;
       var dataLengthIncludingAddNew = getDataLengthIncludingAddNew();
       if (row >= dataLengthIncludingAddNew) {
         row = dataLengthIncludingAddNew - 1;
@@ -3044,8 +3079,8 @@ class BwuDatagrid extends PolymerElement {
       }
 
       var cell = 0, prevCell = null;
-      var prevActivePosX = activePosX;
-      while (cell <= activePosX) {
+      var prevActivePosX = _activePosX;
+      while (cell <= _activePosX) {
         if (canCellBeActive(row, cell)) {
           prevCell = cell;
         }
@@ -3054,7 +3089,7 @@ class BwuDatagrid extends PolymerElement {
 
       if (prevCell != null) {
         setActiveCellInternal(getCellNode(row, prevCell));
-        activePosX = prevActivePosX;
+        _activePosX = prevActivePosX;
       } else {
         resetActiveCell();
       }
@@ -3063,9 +3098,7 @@ class BwuDatagrid extends PolymerElement {
 
   void navigatePageDown() => scrollPage(1);
 
-  void navigatePageUp() {
-    scrollPage(-1);
-  }
+  void navigatePageUp() =>  scrollPage(-1);
 
   String getColspan(int row, int cell) {
     ItemMetadata metadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
@@ -3084,6 +3117,7 @@ class BwuDatagrid extends PolymerElement {
     return colspan;
   }
 
+//_
   int findFirstFocusableCell(int row) {
     var cell = 0;
     while (cell < columns.length) {
@@ -3095,6 +3129,7 @@ class BwuDatagrid extends PolymerElement {
     return null;
   }
 
+//_
   int findLastFocusableCell(int row) {
     var cell = 0;
     var lastFocusableCell = null;
@@ -3107,6 +3142,7 @@ class BwuDatagrid extends PolymerElement {
     return lastFocusableCell;
   }
 
+//_
   CellPos gotoRight(int row, int cell, int posX) {
     if (cell >= columns.length) {
       return null;
@@ -3123,6 +3159,7 @@ class BwuDatagrid extends PolymerElement {
     return null;
   }
 
+//_
   CellPos gotoLeft(int row, int cell, int posX) {
     if (cell <= 0) {
       return null;
@@ -3147,6 +3184,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   CellPos gotoDown(int row, int cell, int posX) {
     var prevCell;
     var dataLengthIncludingAddNew = getDataLengthIncludingAddNew();
@@ -3167,6 +3205,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   CellPos gotoUp(int row, int cell, int posX) {
     var prevCell;
     while (true) {
@@ -3190,6 +3229,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+//_
   CellPos gotoNext(int row, int cell, int posX) {
     if (row == null && cell == null) {
       row = cell = posX = 0;
@@ -3222,6 +3262,7 @@ class BwuDatagrid extends PolymerElement {
     return null;
   }
 
+//_
   CellPos gotoPrev(int row, int cell, int posX) {
     if (row == null && cell == null) {
       row = getDataLengthIncludingAddNew() - 1;
@@ -3287,12 +3328,13 @@ class BwuDatagrid extends PolymerElement {
    * @param {string} dir Navigation direction.
    * @return {boolean} Whether navigation resulted in a change of active cell.
    */
+//_
   bool navigate(String dir) {
-    if (!gridOptions.enableCellNavigation) {
+    if (!_gridOptions.enableCellNavigation) {
       return false;
     }
 
-    if (activeCellNode == null&& dir != "prev" && dir != "next") {
+    if (_activeCellNode == null&& dir != "prev" && dir != "next") {
       return false;
     }
 
@@ -3309,7 +3351,7 @@ class BwuDatagrid extends PolymerElement {
       "prev": -1,
       "next": 1
     };
-    tabbingDirection = tabbingDirections[dir];
+    _tabbingDirection = tabbingDirections[dir];
 
     var stepFunctions = {
       "up": gotoUp,
@@ -3320,35 +3362,35 @@ class BwuDatagrid extends PolymerElement {
       "next": gotoNext
     };
     var stepFn = stepFunctions[dir];
-    var pos = stepFn(activeRow, activeCell, activePosX);
+    var pos = stepFn(_activeRow, _activeCell, _activePosX);
     if (pos != null) {
       var isAddNewRow = (pos.row == getDataLength);
       scrollCellIntoView(pos.row, pos.cell, !isAddNewRow);
       setActiveCellInternal(getCellNode(pos.row, pos.cell));
-      activePosX = pos.posX;
+      _activePosX = pos.posX;
       return true;
     } else {
-      setActiveCellInternal(getCellNode(activeRow, activeCell));
+      setActiveCellInternal(getCellNode(_activeRow, _activeCell));
       return false;
     }
   }
 
   dom.HtmlElement getCellNode(int row, int cell) {
-    if (rowsCache[row] != null) {
+    if (_rowsCache[row] != null) {
       ensureCellNodesInRowsCache(row);
-      var c = rowsCache[row].cellNodesByColumnIdx[cell];
+      var c = _rowsCache[row].cellNodesByColumnIdx[cell];
       return c;
     }
     return null;
   }
 
   void setActiveCell(int row, int cell) {
-    if (!initialized) { return; }
+    if (!_initialized) { return; }
     if (row > getDataLength || row < 0 || cell >= columns.length || cell < 0) {
       return;
     }
 
-    if (!gridOptions.enableCellNavigation) {
+    if (!_gridOptions.enableCellNavigation) {
       return;
     }
 
@@ -3357,7 +3399,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   bool canCellBeActive(int row, int cell) {
-    if (!gridOptions.enableCellNavigation || row >= getDataLengthIncludingAddNew() ||
+    if (!_gridOptions.enableCellNavigation || row >= getDataLengthIncludingAddNew() ||
         row < 0 || cell >= columns.length || cell < 0) {
       return false;
     }
@@ -3402,7 +3444,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void gotoCell(int row, int cell, bool forceEdit) {
-    if (!initialized) { return; }
+    if (!_initialized) { return; }
     if (!canCellBeActive(row, cell)) {
       return;
     }
@@ -3416,10 +3458,10 @@ class BwuDatagrid extends PolymerElement {
     var newCell = getCellNode(row, cell);
 
     // if selecting the 'add new' row, start editing right away
-    setActiveCellInternal(newCell, forceEdit || (row == getDataLength) || gridOptions.autoEdit);
+    setActiveCellInternal(newCell, forceEdit || (row == getDataLength) || _gridOptions.autoEdit);
 
     // if no editor was created, set the focus back on the grid
-    if (currentEditor == null) {
+    if (_currentEditor == null) {
       setFocus();
     }
   }
@@ -3427,50 +3469,40 @@ class BwuDatagrid extends PolymerElement {
 
   //////////////////////////////////////////////////////////////////////////////////////////////
   // IEditor implementation for the editor lock
-
+//_
   bool commitCurrentEdit() {
-    var item = getDataItem(activeRow);
-    var column = columns[activeCell];
+    var item = getDataMapItem(_activeRow);
+    var column = columns[_activeCell];
 
-    if (currentEditor != null) {
-      if (currentEditor.isValueChanged) {
-        var validationResults = currentEditor.validate();
+    if (_currentEditor != null) {
+      if (_currentEditor.isValueChanged) {
+        var validationResults = _currentEditor.validate();
 
         if (validationResults.isValid) {
-          if (activeRow < getDataLength) {
+          if (_activeRow < getDataLength) {
             EditCommand editCommand;
             editCommand = new EditCommand(
-              row: activeRow,
-              cell: activeCell,
-              editor: currentEditor,
-              serializedValue: currentEditor.serializeValue(),
-              prevSerializedValue: serializedEditorValue,
+              row: _activeRow,
+              cell: _activeCell,
+              editor: _currentEditor,
+              serializedValue: _currentEditor.serializeValue(),
+              prevSerializedValue: _serializedEditorValue,
               execute: () {
                 EditCommand cmd = editCommand;
                 cmd.editor.applyValue(item, cmd.serializedValue);
                 updateRow(cmd.row);
-                eventBus.fire(core.Events.CELL_CHANGED, new core.CellChanged(this, new Cell(activeRow, activeCell), item));
-                //trigger(self.onCellChange, {
-//                  'row': activeRow,
-//                  'cell': activeCell,
-//                  'item': item
-//                });
+                _eventBus.fire(core.Events.CELL_CHANGED, new core.CellChanged(this, new Cell(_activeRow, _activeCell), item));
               },
               undo: () {
                 EditCommand cmd = editCommand;
                 cmd.editor.applyValue(item, cmd.prevSerializedValue);
                 updateRow(cmd.row);
-                eventBus.fire(core.Events.CELL_CHANGED, new core.CellChanged(this, new Cell(activeRow, activeCell), item));
-                //trigger(self.onCellChange, {
-//                  'row': activeRow,
-//                  'cell': activeCell,
-//                  'item': item
-//                });
+                _eventBus.fire(core.Events.CELL_CHANGED, new core.CellChanged(this, new Cell(_activeRow, _activeCell), item));
               });
 
-            if (gridOptions.editCommandHandler != null) {
+            if (_gridOptions.editCommandHandler != null) {
               makeActiveCellNormal();
-              gridOptions.editCommandHandler(item, column, editCommand);
+              _gridOptions.editCommandHandler(item, column, editCommand);
             } else {
               editCommand.execute();
               makeActiveCellNormal();
@@ -3478,36 +3510,27 @@ class BwuDatagrid extends PolymerElement {
 
           } else {
             var newItem = new Item();
-            currentEditor.applyValue(newItem, currentEditor.serializeValue());
+            _currentEditor.applyValue(newItem, _currentEditor.serializeValue());
             makeActiveCellNormal();
-            eventBus.fire(core.Events.ADD_NEW_ROW, new core.AddNewRow(this, item, column));
-            //trigger(self.onAddNewRow, {item: newItem, column: column});
+            _eventBus.fire(core.Events.ADD_NEW_ROW, new core.AddNewRow(this, item, column));
           }
 
           // check whether the lock has been re-acquired by event handlers
           return !getEditorLock.isActive;
         } else {
           // Re-add the CSS class to trigger transitions, if any.
-          activeCellNode.classes.remove("invalid");
-          activeCellNode.style.width;  // force layout // TODO ob das in Dart so funktioniert
-          activeCellNode.classes.add("invalid");
+          _activeCellNode.classes.remove("invalid");
+          _activeCellNode.style.width;  // force layout // TODO ob das in Dart so funktioniert
+          _activeCellNode.classes.add("invalid");
 
-          eventBus.fire(core.Events.VALIDATION_ERROR, new core.ValidationError(this,
-              editor: currentEditor,
-              cellNode: activeCellNode,
+          _eventBus.fire(core.Events.VALIDATION_ERROR, new core.ValidationError(this,
+              editor: _currentEditor,
+              cellNode: _activeCellNode,
               validationResults: validationResults,
-              cell: new Cell(activeRow, activeCell),
+              cell: new Cell(_activeRow, _activeCell),
               column: column));
-          //trigger(self.onValidationError, {
-//            'editor': currentEditor,
-//            'cellNode': activeCellNode,
-//            'validationResults': validationResults,
-//            'row': activeRow,
-//            'cell': activeCell,
-//            'column': column
-//          });
 
-          currentEditor.focus();
+          _currentEditor.focus();
           return false;
         }
       }
@@ -3517,11 +3540,13 @@ class BwuDatagrid extends PolymerElement {
     return true;
   }
 
+//_
   bool cancelCurrentEdit() {
     makeActiveCellNormal();
     return true;
   }
 
+//_
   List<int> rowsToRanges(List<int> rows) {
     var ranges = [];
     var lastCell = columns.length - 1;
@@ -3532,29 +3557,29 @@ class BwuDatagrid extends PolymerElement {
   }
 
   List<int> getSelectedRows() {
-    if (selectionModel == null) {
+    if (_selectionModel == null) {
       throw "Selection model is not set";
     }
-    return selectedRows;
+    return _selectedRows;
   }
 
   void setSelectedRows(List<int> rows) {
-    if (selectionModel == null) {
+    if (_selectionModel == null) {
       throw "Selection model is not set";
     }
-    selectionModel.setSelectedRanges(rowsToRanges(rows));
+    _selectionModel.setSelectedRanges(rowsToRanges(rows));
   }
 
 
   //////////////////////////////////////////////////////////////////////////////////////////////
   // Debug
-
+//_
   void debug () {
     var s =
-    "counter_rows_rendered:  ${counter_rows_rendered}"
-    "counter_rows_removed:  ${counter_rows_removed}"
-    "renderedRows:  ${renderedRows}"
-    "numVisibleRows:  ${numVisibleRows}"
+    "counter_rows_rendered:  ${_counter_rows_rendered}"
+    "counter_rows_removed:  ${_counter_rows_removed}"
+    "renderedRows:  ${_renderedRows}"
+    "numVisibleRows:  ${_numVisibleRows}"
     "maxSupportedCssHeight:  ${maxSupportedCssHeight}"
     "n(umber of pages):  ${n}"
     "(current) page:  ${page}"
@@ -3695,23 +3720,23 @@ class BwuDatagrid extends PolymerElement {
 
 
       async.Stream<core.Click> get onBwuClick =>
-          eventBus.onEvent(core.Events.CLICK);
+          _eventBus.onEvent(core.Events.CLICK);
 
       async.Stream<core.Click> get onBwuContextMenu =>
-          eventBus.onEvent(core.Events.CONTEXT_MENU);
+          _eventBus.onEvent(core.Events.CONTEXT_MENU);
 
       async.Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
-          eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER);
+          _eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER);
 
       async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
-      eventBus.onEvent(core.Events.HEADER_MOUSE_LEAVE);
+      _eventBus.onEvent(core.Events.HEADER_MOUSE_LEAVE);
 
       async.Stream<core.MouseEnter> get onBwuMouseEnter =>
-          eventBus.onEvent(core.Events.MOUSE_ENTER);
+          _eventBus.onEvent(core.Events.MOUSE_ENTER);
 
 
       async.Stream<core.MouseLeave> get onBwuMouseLeave =>
-          eventBus.onEvent(core.Events.MOUSE_LEAVE);
+          _eventBus.onEvent(core.Events.MOUSE_LEAVE);
 
 }
 //  /**

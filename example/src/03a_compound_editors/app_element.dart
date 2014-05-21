@@ -52,9 +52,7 @@ class AppElement extends PolymerElement {
         };
       }
 
-      grid.data = data;
-      grid.columns = columns;
-      grid.gridOptions = gridOptions;
+      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
@@ -64,7 +62,6 @@ class AppElement extends PolymerElement {
       print('$e\n\n${e.stackTrace}');
     } catch(e) {
       print('$e');
-      //print(s);
     }
   }
 }
