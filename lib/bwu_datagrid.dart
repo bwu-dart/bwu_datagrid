@@ -51,7 +51,9 @@ class BwuDatagrid extends PolymerElement {
   List<Column> _columns;
   @published List<Column> get columns => _columns;
 
-  @published GridOptions _gridOptions = new GridOptions();
+  GridOptions _gridOptions = new GridOptions();
+  @published GridOptions get gridOptions => _gridOptions;
+  set gridOptions(GridOptions options) => setGridOptions = options;
 
   // settings
   static final Column _columnDefaults = new Column();
