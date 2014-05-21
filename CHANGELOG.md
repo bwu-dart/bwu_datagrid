@@ -2,6 +2,8 @@
 
 * example 03a_compound_editors added
 * example 03b_editing_with_undo added
+* example 07_events
+* example 14_highlighting
 
 ## 0.0.3
 * basic editing support
