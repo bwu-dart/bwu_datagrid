@@ -1,3 +1,7 @@
+## 0.0.5
+
+* example composite_editor_item_details added
+
 ## 0.0.4
 
 * example 03a_compound_editors added

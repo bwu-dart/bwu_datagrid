@@ -58,8 +58,18 @@ abstract class Editor {
 class ValidationResult {
   bool isValid = false;
   String message;
+  List<ValidationErrorSource> errors;
 
-  ValidationResult(this.isValid, [this.message]);
+  ValidationResult(this.isValid, [this.message, this.errors]);
+}
+
+class ValidationErrorSource {
+  int index;
+  Editor editor;
+  dom.HtmlElement container;
+  String message;
+
+  ValidationErrorSource({this.index, this.editor, this.container, this.message});
 }
 
 abstract class Validator  {
@@ -80,6 +90,17 @@ class EditorArgs {
   CancelChangesFn cancelChanges;
 
   EditorArgs({this.grid, this.gridPosition, this.position, this.container, this.column, this.item, this.commitChanges, this.cancelChanges});
+
+//  void extend(EditorArgs c) {
+//      if(c.grid != null) grid = c.grid;
+//      if(c.gridPosition != null) gridPosition = c.gridPosition;
+//      if(c.position != null) position = c.position;
+//      if(c.container != null) container = c.container;
+//      if(c.column != null) column = c.column;
+//      if(c.item != null) item = c.item;
+//      if(c.commitChanges != null) commitChanges = c.commitChanges;
+//      if(c.cancelChanges != null) cancelChanges = c.cancelChanges;
+//  }
 }
 
 class TextEditor extends Editor {

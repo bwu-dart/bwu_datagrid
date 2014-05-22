@@ -2448,7 +2448,7 @@ class BwuDatagrid extends PolymerElement {
               }
             } else {
               if (getEditorLock.commitCurrentEdit()) {
-                makeActiveCellEditable();
+                _makeActiveCellEditable();
               }
             }
           }
@@ -2700,10 +2700,10 @@ class BwuDatagrid extends PolymerElement {
         }
         if (_gridOptions.asyncEditorLoading) {
           _h_editorLoader = new async.Timer(_gridOptions.asyncEditorLoadDelay, () {
-            makeActiveCellEditable();
+            _makeActiveCellEditable();
           });
         } else {
-          makeActiveCellEditable();
+          _makeActiveCellEditable();
         }
       }
     } else {
@@ -2778,7 +2778,9 @@ class BwuDatagrid extends PolymerElement {
     getEditorLock.deactivate(_editController);
   }
 
-  void makeActiveCellEditable([Editor editor]) {
+  void editActiveCell([Editor editor]) => _makeActiveCellEditable(editor);
+
+  void _makeActiveCellEditable([Editor editor]) {
     if (_activeCellNode == null) {
       return;
     }
@@ -3416,7 +3418,7 @@ class BwuDatagrid extends PolymerElement {
             }
 
           } else {
-            var newItem = new Item();
+            var newItem = new Map();// new Item();
             _currentEditor.applyValue(newItem, _currentEditor.serializeValue());
             _makeActiveCellNormal();
             _eventBus.fire(core.Events.ADD_NEW_ROW, new core.AddNewRow(this, item, column));
