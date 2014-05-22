@@ -1,7 +1,7 @@
 name: bwu_datagrid
 version: 0.0.5
 author: Günter Zöchbauer <guenter@gzoechbauer.com>
-description: BWU Datagrid is A grid/spreadsheet Dart Polymer element inspired by SlickGrid.
+description: BWU Datagrid is A Polymer.dart grid/spreadsheet element inspired by SlickGrid.
 homepage: https://github.com/bwu-dart/bwu_datagrid
 documentation: http://bwu-dart.github.io/core_elements/dartdoc/
 environment:
