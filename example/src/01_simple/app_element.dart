@@ -31,19 +31,20 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      var data = new List<Map>(500);
+
+      var data = new MapDataItemProvider(); //List<Map>(500);
       for (var i = 0; i < 500; i++) {
-        data[i] = {
+        data.items.add(new MapDataItem({
           'title': "Task ${i}",
           'duration': "5 days",
           'percentComplete': new math.Random().nextInt(100).round(),
           'start': "01/01/2009",
           'finish': "01/05/2009",
           'effortDriven': (i % 5 == 0)
-        };
+        }));
       }
 
-      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');

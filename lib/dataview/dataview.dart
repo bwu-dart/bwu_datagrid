@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/core/core.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
-import 'package:bwu_datagrid/datagrid/helpers.dart';
+import 'package:bwu_datagrid/formatters/formatters.dart';
 
 part 'aggregators.dart';
 part 'helpers.dart';
@@ -372,7 +372,7 @@ class DataView {
       return item;
     }
 
-    MetaData getItemMetadata(int i) {
+    RowMetadata getItemMetadata(int i) {
       var item = rows[i];
       if (item == null) {
         return null;
@@ -604,7 +604,7 @@ class DataView {
     FunctionInfo getFunctionInfo(Function fn) {
       var fnRegex = new RegExp(r'^function[^(]*\(([^)]*)\)\s*{([\s\S]*)}$');
       List<Match> matches = fn.toString().match(fnRegex);
-      return new FunctionInfo(        matches[1].split(","),        matches[2]      );
+      return new FunctionInfo(matches[1].split(","), matches[2]);
     }
 
     Function compileAccumulatorLoop(Aggregator aggregator) {

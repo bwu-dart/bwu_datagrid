@@ -36,7 +36,7 @@ li {
   border: 1px solid gray;
 }
 
-bwu-datagrid ^^ .grid-header {
+bwu-datagrid /deep/ .grid-header {
   border: 1px solid gray;
   border-bottom: 0;
   border-top: 0;
@@ -46,23 +46,23 @@ bwu-datagrid ^^ .grid-header {
   line-height: 24px;
 }
 
-bwu-datagrid ^^ .grid-header label {
+bwu-datagrid /deep/ .grid-header label {
   display: inline-block;
   font-weight: bold;
   margin: auto auto auto 6px;
 }
 
-bwu-datagrid ^^ .grid-header .ui-icon {
+bwu-datagrid /deep/ .grid-header .ui-icon {
   margin: 4px 4px auto 6px;
   background-color: transparent;
   border-color: transparent;
 }
 
-bwu-datagrid ^^ .grid-header .ui-icon.ui-state-hover {
+bwu-datagrid /deep/ .grid-header .ui-icon.ui-state-hover {
   background-color: white;
 }
 
-bwu-datagrid ^^ .grid-header #txtSearch {
+bwu-datagrid /deep/ .grid-header #txtSearch {
   margin: 0 4px 0 4px;
   padding: 2px 2px;
   -moz-border-radius: 2px;
@@ -84,16 +84,16 @@ bwu-datagrid ^^ .grid-header #txtSearch {
 }
 
 /* Individual cell styles */
-bwu-datagrid ^^ .bwu-datagrid-cell.task-name {
+bwu-datagrid /deep/ .bwu-datagrid-cell.task-name {
   font-weight: bold;
   text-align: right;
 }
 
-bwu-datagrid ^^ .bwu-datagrid-cell.task-percent {
+bwu-datagrid /deep/ .bwu-datagrid-cell.task-percent {
   text-align: right;
 }
 
-bwu-datagrid ^^ .bwu-datagrid-cell.cell-move-handle {
+bwu-datagrid /deep/ .bwu-datagrid-cell.cell-move-handle {
   font-weight: bold;
   text-align: right;
   border-right: solid gray;
@@ -102,24 +102,24 @@ bwu-datagrid ^^ .bwu-datagrid-cell.cell-move-handle {
   cursor: move;
 }
 
-bwu-datagrid ^^ .cell-move-handle:hover {
+bwu-datagrid /deep/ .cell-move-handle:hover {
   background: #b6b9bd;
 }
 
-bwu-datagrid ^^ .bwu-datagrid-row.selected .cell-move-handle {
+bwu-datagrid /deep/ .bwu-datagrid-row.selected .cell-move-handle {
   background: #D5DC8D;
 }
 
-bwu-datagrid ^^ .bwu-datagrid-row .cell-actions {
+bwu-datagrid /deep/ .bwu-datagrid-row .cell-actions {
   text-align: left;
 }
 
-bwu-datagrid ^^ .bwu-datagrid-row.complete {
+bwu-datagrid /deep/ .bwu-datagrid-row.complete {
   background-color: #DFD;
   color: #555;
 }
 
-bwu-datagrid ^^ .percent-complete-bar,
+bwu-datagrid /deep/ .percent-complete-bar,
 .percent-complete-bar  {
   display: inline-block;
   height: 6px;
@@ -128,7 +128,7 @@ bwu-datagrid ^^ .percent-complete-bar,
 }
 
 /* Editors.Text, Editors.Date */
-bwu-datagrid ^^ input.editor-text,
+bwu-datagrid /deep/ input.editor-text,
 input.editor-text {
   width: 100%;
   height: 100%;
@@ -140,7 +140,7 @@ input.editor-text {
 
 }
 
-bwu-datagrid ^^ .ui-datepicker-trigger,
+bwu-datagrid /deep/ .ui-datepicker-trigger,
 .ui-datepicker-trigger {
   margin-top: 2px;
   padding: 0;
@@ -148,7 +148,7 @@ bwu-datagrid ^^ .ui-datepicker-trigger,
 }
 
 /* Editors.PercentComplete */
-bwu-datagrid ^^ input.editor-percentcomplete,
+bwu-datagrid /deep/ input.editor-percentcomplete,
 input.editor-percentcomplete {
   width: 100%;
   height: 100%;
@@ -161,7 +161,7 @@ input.editor-percentcomplete {
   float: left;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-picker,
+bwu-datagrid /deep/ .editor-percentcomplete-picker,
 .editor-percentcomplete-picker {
   position: relative;
   display: inline-block;
@@ -173,7 +173,7 @@ bwu-datagrid ^^ .editor-percentcomplete-picker,
   float: right;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-helper,
+bwu-datagrid /deep/ .editor-percentcomplete-helper,
 .editor-percentcomplete-helper {
   border: 0 solid gray;
   position: absolute;
@@ -188,7 +188,7 @@ bwu-datagrid ^^ .editor-percentcomplete-helper,
   overflow: visible;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-wrapper,
+bwu-datagrid /deep/ .editor-percentcomplete-wrapper,
 .editor-percentcomplete-wrapper {
   background: beige;
   padding: 20px 8px;
@@ -199,33 +199,33 @@ bwu-datagrid ^^ .editor-percentcomplete-wrapper,
   border-left: 0;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-buttons,
+bwu-datagrid /deep/ .editor-percentcomplete-buttons,
 .editor-percentcomplete-buttons {
   float: right;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-buttons button,
+bwu-datagrid /deep/ .editor-percentcomplete-buttons button,
 .editor-percentcomplete-buttons button {
   width: 80px;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-slider,
+bwu-datagrid /deep/ .editor-percentcomplete-slider,
 .editor-percentcomplete-slider {
   float: left;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-picker:hover .editor-percentcomplete-helper,
+bwu-datagrid /deep/ .editor-percentcomplete-picker:hover .editor-percentcomplete-helper,
 .editor-percentcomplete-picker:hover .editor-percentcomplete-helper {
   display: block;
 }
 
-bwu-datagrid ^^ .editor-percentcomplete-helper:hover,
+bwu-datagrid /deep/ .editor-percentcomplete-helper:hover,
 .editor-percentcomplete-helper:hover {
   display: block;
 }
 
 /* Editors.YesNoSelect */
-bwu-datagrid ^^ select.editor-yesno,
+bwu-datagrid /deep/ select.editor-yesno,
 select.editor-yesno {
   width: 100%;
   margin: 0;
@@ -233,7 +233,7 @@ select.editor-yesno {
 }
 
 /* Editors.Checkbox */
-bwu-datagrid ^^ input.editor-checkbox,
+bwu-datagrid /deep/ input.editor-checkbox,
 input.editor-checkbox {
   margin: 0;
   height: 100%;

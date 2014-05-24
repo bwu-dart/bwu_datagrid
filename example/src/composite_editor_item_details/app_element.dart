@@ -41,7 +41,7 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  List<Map> data;
+  MapDataItemProvider data;
 
   @override
   void attached() {
@@ -50,9 +50,9 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      data = new List<Map>();
+      data = new MapDataItemProvider();
       for (var i = 0; i < 500; i++) {
-        data.add( {
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'description': 'This is a sample task description.\n  It can be multiline',
           'duration': '5 days',
@@ -60,13 +60,13 @@ class AppElement extends PolymerElement {
           'start': '2009-01-01',
           'finish': '2009-01-05',
           'effortDriven': (i % 5 == 0)
-        });
+        }));
       }
 
       grid.onBwuAddNewRow.listen(addNewRowHandler);
       grid.onBwuValidationError.listen(validationErrorHandler);
 
-      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
 
       grid.setActiveCell(0, 0);
 
@@ -113,7 +113,7 @@ class AppElement extends PolymerElement {
     var item = e.item;
     var column = e.column;
     grid.invalidateRow(data.length);
-    data.add(item);
+    data.items.add(item);
     grid.updateRowCount();
     grid.render();
   }

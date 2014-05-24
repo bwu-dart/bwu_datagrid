@@ -64,9 +64,9 @@ class AppElement extends PolymerElement {
       gridOptions.editCommandHandler = queueAndExecuteCommand;
 
       grid = $['myGrid'];
-      var data = new List<Map>(500);
+      var data = new MapDataItemProvider();
       for (var i = 0; i < 500; i++) {
-        data[i] = {
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           "description": 'This is a sample task description.\n  It can be multiline',
           'duration': '5 days',
@@ -74,10 +74,10 @@ class AppElement extends PolymerElement {
           'start': '2009-01-01',
           'finish': '2009-01-05',
           'effortDriven': (i % 5 == 0)
-        };
+        }));
       }
 
-      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');

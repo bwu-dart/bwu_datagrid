@@ -13,6 +13,9 @@ abstract class Events {
   static const BEFORE_CELL_EDITOR_DESTROY =
       const EventType<BeforeCellEditorDestroy>('bwu-before-cell-editor-destroy');
 
+  static const BEFORE_CELL_RANGE_SELECTED =
+      const EventType<BeforeCellRangeSelected>('bwu-before-cell-range-selected');
+
   static const BEFORE_DESTROY = const EventType<BeforeDestroy>(
       'bwu-before-destroy');
 
@@ -27,6 +30,9 @@ abstract class Events {
       );
 
   static const CELL_CHANGE = const EventType<CellChange>('bwu-cell-changed');
+
+  static const CELL_RANGE_SELECTED = const EventType<CellRangeSelected>(
+      'bwu-cell-range-selected');
 
   static const CELL_CSS_STYLES_CHANGED = const EventType<CellCssStylesChanged>(
       'bwu-cell-css-styles-changed');
@@ -83,6 +89,9 @@ abstract class Events {
       'bwu-row-count-changed');
 
   static const SCROLL = const EventType<Scroll>('bwu-scroll');
+
+  static const SELECTED_RANGES_CHANGED = const EventType<SelectedRangesChanged>(
+      'bwu-selected-ranges-changed');
 
   static const SELECTED_ROWS_CHANGED = const EventType<SelectedRowsChanged>(
       'bwu-selected-rows-changed');
@@ -248,11 +257,20 @@ class ColumnsReordered extends EventData {
   ColumnsReordered(sender) : super(sender: sender, detail: {});
 }
 
+class SelectedRangesChanged extends EventData {
+  List<Range> ranges;
+  SelectedRangesChanged(sender, List<Range> ranges) : super(sender: sender, detail: {
+        'ranges': ranges
+      }) {
+    this.ranges = ranges;
+  }
+}
+
 class SelectedRowsChanged extends EventData {
   List<int> rows;
   dom.CustomEvent get causedBy => super.causedBy;
 
-  SelectedRowsChanged(sender, rows, causedBy) : super(sender: sender, causedBy:
+  SelectedRowsChanged(sender, List<int>rows, dom.CustomEvent causedBy) : super(sender: sender, causedBy:
       causedBy, detail: {
         'rows': rows
       }) {
@@ -263,6 +281,16 @@ class SelectedRowsChanged extends EventData {
 class ViewportChanged extends EventData {
 
   ViewportChanged(sender) : super(sender: sender, detail: {});
+}
+
+class CellRangeSelected extends EventData {
+  Range range;
+  CellRangeSelected(sender, Range range) : super(sender:
+      sender, detail: {
+        'range': range
+      }) {
+    this.range = range;
+  }
 }
 
 class CellCssStylesChanged extends EventData {
@@ -347,11 +375,21 @@ class BeforeCellEditorDestroy extends EventData {
   }
 }
 
+class BeforeCellRangeSelected extends EventData {
+  Cell cell;
+  BeforeCellRangeSelected(sender, Cell cell) : super(sender: sender, detail:
+      {
+        'cell': cell
+      }) {
+    this.cell = cell;
+  }
+}
+
 class BeforeEditCell extends EventData {
   Cell cell;
-  /*Map/Item*/ dynamic item;
+  DataItem item;
   Column column;
-  BeforeEditCell(sender, {Cell cell,  /*Map/Item*/ dynamic item, Column column})
+  BeforeEditCell(sender, {Cell cell,  DataItem item, Column column})
       : super(sender: sender, detail: {
         'cell': cell,
         'item': item,
@@ -370,8 +408,8 @@ class ActiveCellPositionChanged extends EventData {
 
 class CellChange extends EventData {
   Cell cell;
-  /*Map/Item*/ dynamic item;
-  CellChange(sender, Cell cell,  /*Map/Item*/ dynamic item) : super(sender:
+  DataItem item;
+  CellChange(sender, Cell cell, DataItem item) : super(sender:
       sender, detail: {
         'cell': cell,
         'item': item
@@ -382,9 +420,9 @@ class CellChange extends EventData {
 }
 
 class AddNewRow extends EventData {
-  /*Map/Item*/ dynamic item;
+  DataItem item;
   Column column;
-  AddNewRow(sender,  /*Map/Item*/ dynamic item, Column column) : super(sender:
+  AddNewRow(sender, DataItem item, Column column) : super(sender:
       sender, detail: {
         'item': item,
         'column': column

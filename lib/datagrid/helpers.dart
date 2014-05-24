@@ -6,12 +6,37 @@ import 'dart:collection' as coll;
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/core/core.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart';
-//import 'package:bwu_datagrid/bwu_datagrid.dart';
-
+import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
+import 'package:collection/wrappers.dart';
 
 typedef void SortableStartFn(dom.HtmlElement e, dom.HtmlElement ui);
 typedef void SortableBeforeStopFn(dom.HtmlElement e, dom.HtmlElement ui);
 typedef void SortableStopFn(dom.HtmlElement e);
+
+abstract class DataProvider {
+  final List<DataItem> items;
+  int get length;
+  DataItem getItem(int index);
+  RowMetadata getItemMetadata (int index);
+
+  DataProvider(List<DataItem> items) : this.items = (items == null ? <DataItem>[] : items);
+}
+
+class MapDataItemProvider extends DataProvider {
+  MapDataItemProvider([List<DataItem> items]) : super(items);
+
+  @override
+  int get length {
+    return items.length + 1;
+  }
+
+  @override
+  DataItem getItem (int index) => items[index];
+
+  @override
+  RowMetadata getItemMetadata (int index) => null;
+}
+
 
 class Sortable {
   String containment;
@@ -97,32 +122,30 @@ abstract class FormatterFactory {
   Formatter getFormatter(Column column);
 }
 
-class ColumnMetadata {
-  String colspan;
-  bool selectable;
-  bool focusable;
+//class ItemMetadata {
+//  String cssClasses;
+//  bool focusable;
+//  bool selectable;
+//  final columns = <ColumnMetadata>[];
+//}
+//
+//class RowMetadata {
+//  final Map<String,Column> columns = {};
+//
+//}
+
+abstract class DataItem extends ItemBase {
+  dynamic operator[](String key);
+  void operator[]=(String key, value);
 }
 
-class ItemMetadata {
-  String cssClasses;
-  bool focusable;
-  bool selectable;
-  final columns = <ColumnMetadata>[];
-}
+class MapDataItem<K, V> extends DelegatingMap implements DataItem {
+//  String title;
+//  int level;
+//  bool collapsed;
+  //Map operator [](String idx) => data[idx];
+  MapDataItem([Map<K, V> base]) : super(base != null ? base : new Map<K,V>());
 
-class RowMetadata {
-  final Map<String,Column> columns = {};
-
-}
-
-
-class Item {
-  String title;
-  int level;
-  bool collapsed;
-  String operator [](int idx) {
-    print('Item [] accessor is not yet implemented');
-  }
 }
 
 /* temp */
@@ -171,15 +194,17 @@ class Column {
   String toolTip;
   String cssClass;
   bool cannotTriggerInsert;
+  String colspan;
 
   Editor editor;
   Formatter formatter;
+  Formatter groupTotalsFormatter;
   Validator validator;
 
   int previousWidth;
 
   Column({this.id, this.field, this.minWidth : 30, this.maxWidth, this.cssClass, this.formatter, this.editor, this.validator,
-    this.name: '' , this.width, this.resizable : true, this.sortable : false, this.focusable : true, this.selectable : true, this.defaultSortAsc : true, this.rerenderOnResize : false, this.cannotTriggerInsert: false}) {
+    this.name: '' , this.width, this.resizable : true, this.sortable : false, this.focusable : true, this.selectable : true, this.defaultSortAsc : true, this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan}) {
   }
 
   Column.unititialized();

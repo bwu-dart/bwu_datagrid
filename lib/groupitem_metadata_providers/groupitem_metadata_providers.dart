@@ -5,25 +5,61 @@ import 'dart:async' as async;
 
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
-//(function ($) {
-//  $.extend(true, window, {
-//    Slick: {
-//      Data: {
-//        GroupItemMetadataProvider: GroupItemMetadataProvider
-//      }
-//    }
-//  });
+import 'package:bwu_datagrid/formatters/formatters.dart';
+import 'package:bwu_datagrid/editors/editors.dart';
+import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/dataview/dataview.dart';
 
 
-  /***
-   * Provides item metadata for group (Group) and totals (Totals) rows produced by the DataView.
-   * This metadata overrides the default behavior and formatting of those rows so that they appear and function
-   * correctly when processed by the grid.
-   *
-   * This class also acts as a grid plugin providing event handlers to expand & collapse groups.
-   * If "grid.registerPlugin(...)" is not called, expand & collapse will not work.
-   *
-   */
+class DefaultGroupCellFormatter extends Formatter {
+
+  GroupItemMetadataProvider giMetadataProvider;
+
+  DefaultGroupCellFormatter(this.giMetadataProvider);
+
+   @override
+   void call(dom.HtmlElement target, int row, int cell, String value, Column columnDef, /*Item/Map*/ item) {
+    if (!giMetadataProvider.enableExpandCollapse) {
+      return item['title'];
+    }
+
+    var indentation = '${item.level * 15}px';
+
+    target.innerHtml = '';
+    target
+        ..append(
+            new dom.SpanElement()
+                ..classes.add('${giMetadataProvider.toggleCssClass}')
+                ..classes.add('${item['collapsed'] ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
+                ..style.marginLeft = '${indentation}px')
+        ..append(new dom.SpanElement()
+                ..classes.add('${giMetadataProvider.groupTitleCssClass}')
+                ..attributes['level']='${item.level}'
+                ..text = item.title);
+  }
+}
+
+class DefaultTotalsCellFormatter extends Formatter {
+  GroupItemMetadataProvider giMetadataProvider;
+
+  @override
+  void call(dom.HtmlElement target, int row, int cell, String value, Column columnDef, /*Item/Map*/ item) {
+    if(columnDef.groupTotalsFormatter != null) {
+      columnDef.groupTotalsFormatter(target, row, cell, null, columnDef, item);
+    }
+    target.innerHtml = '';
+  }
+}
+
+/***
+ * Provides item metadata for group (Group) and totals (Totals) rows produced by the DataView.
+ * This metadata overrides the default behavior and formatting of those rows so that they appear and function
+ * correctly when processed by the grid.
+ *
+ * This class also acts as a grid plugin providing event handlers to expand & collapse groups.
+ * If "grid.registerPlugin(...)" is not called, expand & collapse will not work.
+ *
+ */
 class GroupItemMetadataProvider {
   BwuDatagrid _grid;
 
@@ -36,108 +72,89 @@ class GroupItemMetadataProvider {
   String toggleExpandedCssClass= "expanded";
   String toggleCollapsedCssClass= "collapsed";
   bool enableExpandCollapse= true;
-  Function _groupFormatter;
-  Function _totalsFormatter;
+  Formatter _groupFormatter;
+  Formatter _totalsFormatter;
 
   GroupItemMetadataProvider(this.groupCssClass, this.groupTitleCssClass, this.totalsCssClass,
       this.groupFocusable, this.totalsFocusable, this.toggleCssClass, this.toggleExpandedCssClass,
       this.toggleCollapsedCssClass, this.enableExpandCollapse, this._groupFormatter, this._totalsFormatter) {
-    gridClickSubscription = _grid.onClick.listen(handleGridClick);
-    gridKeyDownSubscription = _grid.onKeyDown.listen(handleGridKeyDown);
+    _gridClickSubscription = _grid.onBwuClick.listen(_handleGridClick);
+    _gridKeyDownSubscription = _grid.onBwuKeyDown.listen(_handleGridKeyDown);
   }
 
-  Function get groupFormatter {
+  Formatter _getGroupFormatter() {
     if(_groupFormatter != null) {
       return _groupFormatter;
     }
-    return defaultGroupCellFormatter;
+    return new DefaultGroupCellFormatter(this);
   }
 
-  Function get totalsFormatter {
+  Formatter _getTotalsFormatter() {
     if(_totalsFormatter != null) {
       return _totalsFormatter;
     }
-    return defaultTotalsCellFormatter;
+    return new DefaultTotalsCellFormatter();
   }
 
-
-  String defaultGroupCellFormatter(int row, int cell, String value, Column columnDef, Item item) {
-    if (!enableExpandCollapse) {
-      return item.title;
-    }
-
-    var indentation = '${item.level * 15}px';
-
-    return "<span class='${toggleCssClass} ${
-        (item.collapsed ? toggleCollapsedCssClass : toggleExpandedCssClass)
-        }' style='margin-left:${indentation }'>"
-        "</span>"
-        "<span class='${groupTitleCssClass}' level='${item.level}'>${
-        (item.collapsed ? toggleCollapsedCssClass : toggleExpandedCssClass)
-        }' style='margin-left:${indentation }'>"
-        "</span>"
-        "<span class='${groupTitleCssClass}' level='${item.level}'>${
-          item.title
-        }</span>";
-  }
-
-  String defaultTotalsCellFormatter(int row, int cell, String value, Column columnDef, Item item) {
-    return (columnDef.groupTotalsFormatter && columnDef.groupTotalsFormatter(item, columnDef)) || "";
-  }
-
-
-  async.StreamSubscription gridClickSubscription;
-  async.StreamSubscription gridKeyDownSubscription;
+  async.StreamSubscription _gridClickSubscription;
+  async.StreamSubscription _gridKeyDownSubscription;
 
   void destroy() {
-    if(gridClickSubscription != null) {
-      gridClickSubscription.cancel();
+    if(_gridClickSubscription != null) {
+      _gridClickSubscription.cancel();
     }
-    if(gridKeyDownSubscription != null) {
-      gridKeyDownSubscription.cancel();
+    if(_gridKeyDownSubscription != null) {
+      _gridKeyDownSubscription.cancel();
     }
   }
 
-
-  void handleGridClick(dom.MouseEvent e) {
-    var args = e.detail as Map;
-    var item = getDataItem(args['row']);
-    if (item && item is Group && (e.target as dom.HtmlElement).classes.contains(toggleCssClass)) {
+  void _handleGridClick(Click e) {
+    BwuDatagrid grid = e.sender;
+    ItemBase item = grid.getDataItem(e.cell.row);
+    if (item != null && item is Group && (e.causedBy.target as dom.HtmlElement).classes.contains(toggleCssClass)) {
       var range = _grid.getRenderedRange();
-      getData().setRefreshHints({
-        'ignoreDiffsBefore': range.top,
-        'ignoreDiffsAfter': range.bottom
-      });
+      if(grid.dataProvider is DataView) {
+        var dp = grid.dataProvider as DataView;
+        dp.setRefreshHints({
+          'ignoreDiffsBefore': range.top,
+          'ignoreDiffsAfter': range.bottom
+        });
 
-      if (item.collapsed) {
-        getData().expandGroup(item.groupingKey);
-      } else {
-        getData().collapseGroup(item.groupingKey);
+
+        if (item.isCollapsed) {
+          dp.expandGroup(item.groupingKey);
+        } else {
+          dp.collapseGroup(item.groupingKey);
+        }
       }
-
       e.stopImmediatePropagation();
       e.preventDefault();
     }
   }
 
   // TODO:  add -/+ handling
-  void handleGridKeyDown(dom.KeyboardEvent e) {
-    Map args = e.detail as Map;
-    if (enableExpandCollapse && (e.which == dom.KeyCode.SPACE)) {
-      var activeCell = getActiveCell();
+  void _handleGridKeyDown(KeyDown e) {
+    BwuDatagrid grid = e.sender;
+    if (enableExpandCollapse && (e.causedBy.which == dom.KeyCode.SPACE)) {
+      var activeCell = grid.getActiveCell();
       if (activeCell != null) {
-        var item = getDataItem(activeCell.row);
-        if (item && item is Group) {
+        ItemBase item = grid.getDataItem(activeCell.row);
+        if (item != null && item is Group) {
           var range = _grid.getRenderedRange();
-          getData().setRefreshHints({
-            'ignoreDiffsBefore': range.top,
-            'ignoreDiffsAfter': range.bottom
-          });
 
-          if (item.collapsed) {
-            getData().expandGroup(item.groupingKey);
-          } else {
-            getData().collapseGroup(item.groupingKey);
+          if(grid.dataProvider is DataView) {
+            var dp = grid.dataProvider as DataView;
+
+            (grid.dataProvider as DataView).setRefreshHints({
+              'ignoreDiffsBefore': range.top,
+              'ignoreDiffsAfter': range.bottom
+            });
+
+            if (item.isCollapsed) {
+              dp.expandGroup(item.groupingKey);
+            } else {
+              dp.collapseGroup(item.groupingKey);
+            }
           }
 
           e.stopImmediatePropagation();
@@ -147,36 +164,38 @@ class GroupItemMetadataProvider {
     }
   }
 
-  Map getGroupRowMetadata(Item item) {
-    return {
-      'selectable': false,
-      'focusable': groupFocusable,
-      'cssClasses': groupCssClass,
-      'columns': {
-        0: {
-          'colspan': "*",
-          'formatter': groupFormatter,
-          'editor': null
-        }
+  RowMetadata getGroupRowMetadata(DataItem item) {
+    return new RowMetadata(
+      selectable: false,
+      focusable: groupFocusable,
+      cssClasses: groupCssClass,
+      columns: {
+        '0': new Column(
+            colspan: "*",
+            formatter: _getGroupFormatter(),
+            editor: null
+          )
+        });
       }
-    };
+
+  RowMetadata getTotalsRowMetadata(DataItem item) {
+    return new RowMetadata(
+      selectable: false,
+      focusable: totalsFocusable,
+      cssClasses: totalsCssClass,
+      formatter: _getTotalsFormatter(),
+      editor: null
+    );
   }
+}
 
-  Map getTotalsRowMetadata(Item item) {
-    return {
-      'selectable': false,
-      'focusable': totalsFocusable,
-      'cssClasses': totalsCssClass,
-      'formatter': totalsFormatter,
-      'editor': null
-    };
-  }
+class RowMetadata {
+  bool selectable;
+  bool focusable;
+  String cssClasses;
+  Map<String,Column> columns = <String,Column>{};
+  Formatter formatter;
+  Editor editor;
 
-
-//    return {
-//      "init": init,
-//      "destroy": destroy,
-//      "getGroupRowMetadata": getGroupRowMetadata,
-//      "getTotalsRowMetadata": getTotalsRowMetadata
-//    };
+  RowMetadata({this.selectable, this.focusable, this.cssClasses, this.columns, this.formatter, this.editor});
 }

@@ -1,7 +1,7 @@
 part of bwu_dart.bwu_datagrid.dataview;
 
 class Options {
-  GroupitemMetadataProvider groupItemMetadataProvider; // TODO type
+  GroupItemMetadataProvider groupItemMetadataProvider; // TODO type
   bool inlineFilters;
 
   Options({this.groupItemMetadataProvider : null, this.inlineFilters: false});
@@ -9,7 +9,7 @@ class Options {
 
 class GroupingInfo {
   bool getter = null;
-  FormatterFunc formatter = null;
+  Formatter formatter = null;
   SortComparerFunc comparer = (a, b) => a.value - b.value;
   List predefinedValues = [];
   List<Aggregator> aggregators = [];

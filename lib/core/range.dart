@@ -64,10 +64,14 @@ class Range {
   }
 }
 
+abstract class ItemBase {
+
+}
+
 /***
  * A base class that all special / non-data rows (like Group and GroupTotals) derive from.
  */
-abstract class NonDataItem {}
+abstract class NonDataItem extends ItemBase {}
 
 /***
  * Information about a group of rows.

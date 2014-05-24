@@ -32,15 +32,15 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      var data = new List<Map>(500);
+      var data = new MapDataItemProvider();
       for (var i = 0; i < 500; i++) {
-        data[i] = {
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'priority': 'Medium'
-        };
+        }));
       }
 
-      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
 
       // setup context menu handler
       grid.onBwuContextMenu.listen((e) {
@@ -58,7 +58,7 @@ class AppElement extends PolymerElement {
           return;
         }
         var cell = ($['contextMenu'] as ContextMenu).cell;
-        data[cell.row]['priority'] = e.detail;
+        data.items[cell.row]['priority'] = e.detail;
         grid.updateRow(cell.row);
         ($['contextMenu'] as ContextMenu).hide();
       });
@@ -71,7 +71,7 @@ class AppElement extends PolymerElement {
           }
 
           var states = { 'Low': 'Medium', 'Medium': 'High', 'High': 'Low' };
-          data[e.cell.row]['priority'] = states[data[e.cell.row]['priority']];
+          data.items[e.cell.row]['priority'] = states[data.items[e.cell.row]['priority']];
           grid.updateRow(e.cell.row);
           e.stopPropagation();
         }

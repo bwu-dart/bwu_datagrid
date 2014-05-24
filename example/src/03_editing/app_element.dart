@@ -9,6 +9,8 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 import '../required_field_validator.dart';
+import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
@@ -33,15 +35,17 @@ class AppElement extends PolymerElement {
       autoEdit: false
   );
 
+  MapDataItemProvider data = new MapDataItemProvider();
+
   @override
   void attached() {
     super.attached();
 
     try {
       grid = $['myGrid'];
-      var data = new List<Map>(500);
+
       for (var i = 0; i < 500; i++) {
-        data[i] = {
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'description': 'This is a sample task description.\n  It can be multiline',
           'duration': '5 days',
@@ -49,10 +53,13 @@ class AppElement extends PolymerElement {
           'start': '2009-01-01',
           'finish': '2009-01-05',
           'effortDriven': (i % 5 == 0)
-        };
+        }));
       }
 
-      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
+
+      grid.setSelectionModel = new CellSelectionModel();
+      grid.onBwuAddNewRow.listen(addnewRowHandler);
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
@@ -70,5 +77,13 @@ class AppElement extends PolymerElement {
   }
   void disableAutoEdit(dom.MouseEvent e, dynamic details, dom.HtmlElement target) {
     grid.setGridOptions = new GridOptions.unitialized()..autoEdit = false;
+  }
+
+  void addnewRowHandler(AddNewRow e) {
+    var item = e.item;
+    grid.invalidateRow(data.items.length);
+    data.items.add(item);
+    grid.updateRowCount();
+    grid.render();
   }
 }

@@ -13,24 +13,8 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
  * @namespace Slick
  */
 
-//(function ($) {
-//  // register namespace
-//  $.extend(true, window, {
-//    "Slick": {
-//      "Formatters": {
-//        "PercentComplete": PercentCompleteFormatter,
-//        "PercentCompleteBar": PercentCompleteBarFormatter,
-//        "YesNo": YesNoFormatter,
-//        "Checkmark": CheckmarkFormatter
-//      }
-//    }
-//  });
-
-
-//typedef String FormatterFn(dom.HtmlElement target, int row, int cell, dynamic value, Column m, dataContext);
-
 class DefaultFormatter extends Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
     target.children.clear();
     if (value != null) {
       //return "";
@@ -42,12 +26,12 @@ class DefaultFormatter extends Formatter {
 
 
 abstract class Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext);
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext);
 }
 
 class PercentCompleteFormatter extends Formatter {
 
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/ dynamic dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
     target.children.clear();
     if (value == null || value == "") {
       target.text = '-';
@@ -65,9 +49,10 @@ class PercentCompleteFormatter extends Formatter {
 
 class PercentCompleteBarFormatter extends Formatter {
 
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
     if (value == null || value == "") {
-      target.text = '';
+      //target.text = '';
+      value = 0;
     }
 
     var color;
@@ -90,13 +75,13 @@ class PercentCompleteBarFormatter extends Formatter {
 }
 
 class YesNoFormatter extends Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic  dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem  dataContext) {
     target.text =  value ? 'Yes' : 'No';
   }
 }
 
 class CheckmarkFormatter extends Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Map/Item*/dynamic  dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
     target.children.clear();
     if(value != null && value is bool && value) {
       target.append(new dom.ImageElement(src:'packages/bwu_datagrid/asset/images/tick.png'));

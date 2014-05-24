@@ -11,7 +11,7 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
 class CpuUtilizationFormatter extends fm.Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, /*Item/Map*/ dynamic dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
     if (value != null && value > 90) {
       target.children.clear();
       target.append(
@@ -52,7 +52,7 @@ class AppElement extends PolymerElement {
       cellFlashingCssClass: 'current-server'
   );
 
-  List<Map> data;
+  MapDataItemProvider data;
   math.Random rnd = new math.Random();
 
   @override
@@ -72,17 +72,19 @@ class AppElement extends PolymerElement {
         ));
       }
 
-      data = new List<Map>(500);
+      data = new MapDataItemProvider();
       for (var i = 0; i < 500; i++) {
-        data[i] = {
+        var item = new MapDataItem({
           'server': 'Server ${i}',
-        };
+        });
+        data.items.add(item);
+
         for(var j = 0; j < 4; j++) {
-          data[i]['cpu${j}'] = rnd.nextInt(100);
+          item['cpu${j}'] = rnd.nextInt(100);
         }
       }
 
-      grid.setup(dataMap: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
 
       currentServer = (rnd.nextDouble() * (data.length - 1)).round();
 
@@ -109,11 +111,11 @@ class AppElement extends PolymerElement {
         var delta = rnd.nextInt(50) - 25;
         //var col = grid.getColumnIndex('cpu${cpu}');
         //print('col: ${col}');
-        var val = data[server]['cpu${cpu}'] + delta ;
+        var val = data.items[server]['cpu${cpu}'] + delta ;
         val = math.max(0, val);
         val = math.min(100, val);
 
-        data[server]['cpu${cpu}'] = val;
+        data.items[server]['cpu${cpu}'] = val;
 
         if (!changes.containsKey(server)) {
           changes[server] = {};

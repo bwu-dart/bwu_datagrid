@@ -7,7 +7,6 @@ import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 
 import 'package:bwu_datagrid/core/core.dart' as core;
-//import 'dataview/dataview.dart';
 import 'package:bwu_datagrid/plugins/plugin.dart';
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
@@ -15,9 +14,9 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_headerrow_column.dart';
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_header_column.dart';
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_headers.dart';
-import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/tools/html.dart' as tools;
 import 'package:bwu_datagrid/formatters/formatters.dart';
+import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 
 
 
@@ -40,13 +39,9 @@ class BwuDatagrid extends PolymerElement {
   }
 
   // DataGrid(dom.HtmlElement container, String data, int columns, Options options);
-  List<Map> _dataMap;
-  @published List<Map> get dataMap => _dataMap;
-  set dataMap(List<Map> val) => setDataMap(val, true);
-
-  DataView _dataView;
-  @published DataView get dataView => _dataView;
-  set dataView(DataView val) => setDataView(val, true);
+  DataProvider _dataProvider;
+  @published DataProvider get dataProvider => _dataProvider;
+  set data(DataProvider data) => setData(data, true);
 
   List<Column> _columns;
   @published List<Column> get columns => _columns;
@@ -147,20 +142,12 @@ class BwuDatagrid extends PolymerElement {
   dom.HtmlElement _rowNodeFromLastMouseWheelEvent;  // this node must not be deleted while inertial scrolling
   dom.HtmlElement _zombieRowNodeFromLastMouseWheelEvent;  // node that was hidden instead of getting deleted
 
+  core.EventBus get eventBus => _eventBus;
   final core.EventBus _eventBus = new core.EventBus();
 
 
-  void setup({List<Map> dataMap, DataView dataView, List<Column> columns, GridOptions gridOptions}) {
-    if(dataMap != null && dataView != null) {
-      throw 'Only one of dataMap or dataView can be used at a time.';
-    }
+  void setup({DataProvider dataProvider, List<Column> columns, GridOptions gridOptions}) {
     if(_initialized) {
-      if(dataMap != null) {
-        this.dataMap = dataMap;
-      }
-      if(dataView != null) {
-        this.dataView = dataView;
-      }
       if(columns != null) {
         setColumns = columns;
       }
@@ -168,8 +155,7 @@ class BwuDatagrid extends PolymerElement {
         setGridOptions = gridOptions;
       }
     } else {
-      _dataMap = dataMap;
-      _dataView = dataView;
+      _dataProvider = dataProvider;
       _columns = columns;
       _gridOptions = gridOptions;
     }
@@ -348,7 +334,7 @@ class BwuDatagrid extends PolymerElement {
       resizeCanvas();
       _bindAncestorScrollEvents();
 
-      _container.on["resize.bwu-datagrid"].listen(resizeCanvas); // TODO event name seems wrong
+      _container.on['resize'].listen(resizeCanvas); // TODO resize isn't thrown by default
       //$viewport
           //.bind("click", handleClick)
       _viewport.onScroll.listen(_handleScroll);
@@ -892,7 +878,7 @@ class BwuDatagrid extends PolymerElement {
                 for (int j = i + 1; j < columnElements.length; j++) {
                   c = columns[j];
                   if (c.resizable) {
-                    if (x && c.maxWidth != null && (c.maxWidth - c.previousWidth < x)) {
+                    if (x != 0 && c.maxWidth != null && (c.maxWidth - c.previousWidth < x)) {
                       x -= c.maxWidth - c.previousWidth;
                       c.width = c.maxWidth;
                     } else {
@@ -1179,7 +1165,7 @@ class BwuDatagrid extends PolymerElement {
 
     // shrink
     prevTotal = total;
-    while (total > availWidth && shrinkLeeway) {
+    while (total > availWidth && shrinkLeeway != 0) {
       double shrinkProportion = (total - availWidth) / shrinkLeeway;
       for (i = 0; i < columns.length && total > availWidth; i++) {
         c = columns[i];
@@ -1409,30 +1395,19 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void setDataView(DataView newData, [bool scrollToTop = false]) {
-    _dataView = newData;
-    _dataMap = null;
-    _setData(scrollToTop);
-  }
-
-  void setDataMap(List<Map> newData, [bool scrollToTop = false]) {
-    _dataMap = newData;
-    _dataView = null;
-  }
-
-  void _setData(bool scrollToTop) {
+  void setData(DataProvider newData, [bool scrollToTop = false]) {
+    _dataProvider = newData;
     invalidateAllRows();
     updateRowCount();
     if (scrollToTop) {
       _scrollTo(0);
     }
+
   }
 
   int get getDataLength {
-    if (_dataMap != null) {
-      return _dataMap.length;
-    } else if(dataView != null){
-      return dataView.getLength;
+    if (_dataProvider != null) {
+      return _dataProvider.items.length;
     } else {
       return 0;
     }
@@ -1442,14 +1417,12 @@ class BwuDatagrid extends PolymerElement {
     return getDataLength + (_gridOptions.enableAddRow ? 1 : 0);
   }
 
-  Map getDataMapItem(int i) {
-    if(i >= _dataMap.length) {
+  DataItem getDataItem(int i) {
+    if(i >= _dataProvider.items.length) {
       return null;
     }
-    return _dataMap[i];
+    return _dataProvider.items[i];
   }
-
-  Item getDataViewItem(int i) => dataView.items[i];
 
   dom.HtmlElement get getTopPanel => _topPanel;
 
@@ -1515,7 +1488,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   Formatter _getFormatter(int row, Column column) {
-    var rowMetadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
+    var rowMetadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
 
     // look up by id, then index
     var columnOverrides = rowMetadata != null ?
@@ -1537,7 +1510,7 @@ class BwuDatagrid extends PolymerElement {
 
   Editor _getEditor(int row, int cell) {
     var column = columns[cell];
-    var rowMetadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
+    var rowMetadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
     var columnMetadata = rowMetadata != null ? rowMetadata.columns : null;
 
     if (columnMetadata != null && columnMetadata[column.id] != null && columnMetadata[column.id].editor != null) {
@@ -1550,15 +1523,15 @@ class BwuDatagrid extends PolymerElement {
     return column.editor != null ? column.editor : (_gridOptions.editorFactory != null ? _gridOptions.editorFactory.getEditor(column): null);
   }
 
-  dynamic _getDataItemValueForColumn(/*Item/Map*/ item, Column columnDef) {
+  dynamic _getDataItemValueForColumn(DataItem item, Column columnDef) {
     if (_gridOptions.dataItemColumnValueExtractor != null) {
       return _gridOptions.dataItemColumnValueExtractor(item, columnDef);
     }
     return item[columnDef.field];
   }
 
-  dom.HtmlElement _appendRowHtml(/*dom.HtmlElement stringArray,*/ int row, Range range, int dataLength) {
-    var d = getDataMapItem(row);
+  dom.HtmlElement _appendRowHtml( int row, Range range, int dataLength) {
+    var d = getDataItem(row);
     var dataLoading = row < dataLength && d == null;
     var rowCss = 'bwu-datagrid-row ${dataLoading ? " loading" : ""} ${row == _activeRow ? " active" : ""} ${row % 2 == 1 ? " odd" : " even"}';
 
@@ -1566,7 +1539,7 @@ class BwuDatagrid extends PolymerElement {
       "${rowCss} ${_gridOptions.addNewRowCssClass}";
     }
 
-    ItemMetadata metadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
+    RowMetadata metadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
 
     if (metadata != null && metadata.cssClasses != null) {
       "${rowCss} ${metadata.cssClasses}";
@@ -1615,9 +1588,7 @@ class BwuDatagrid extends PolymerElement {
     return rowElement;
   }
 
-  void _appendCellHtml(dom.HtmlElement rowElement, int row, int cell, String colspan, /*Item/Map*/ item) {
-    assert(item is Item || item is Map || item == null);
-
+  void _appendCellHtml(dom.HtmlElement rowElement, int row, int cell, String colspan, DataItem item) {
     var m = columns[cell];
     var cellCss = "bwu-datagrid-cell l${cell} r${math.min(columns.length - 1, cell + tools.parseInt(colspan) - 1)} ${
       (m.cssClass != null ? m.cssClass : '')}";
@@ -1716,8 +1687,8 @@ class BwuDatagrid extends PolymerElement {
       return;
     }
 
-    var m = columns[cell], d = getDataMapItem(row);
-    if (_currentEditor && _activeRow == row && _activeCell == cell) {
+    var m = columns[cell], d = getDataItem(row);
+    if (_currentEditor != null && _activeRow == row && _activeCell == cell) {
       _currentEditor.loadValue(d);
     } else {
       cellNode.innerHtml = d ? _getFormatter(row, m)(row, cell, _getDataItemValueForColumn(d, m), m, d) : "";
@@ -1733,7 +1704,7 @@ class BwuDatagrid extends PolymerElement {
 
     _ensureCellNodesInRowsCache(row);
 
-    var d = getDataMapItem(row);
+    var d = getDataItem(row);
 
     for (var columnIdx in cacheEntry.cellNodesByColumnIdx.keys) {
       if (!cacheEntry.cellNodesByColumnIdx.containsKey(columnIdx)) {
@@ -1771,7 +1742,7 @@ class BwuDatagrid extends PolymerElement {
     return x;
   }
 
-  void resizeCanvas([int e]) {
+  void resizeCanvas([dom.Event e]) {
     if (!_initialized) { return; }
     if (_gridOptions.autoHeight) {
       _viewportH = _gridOptions.rowHeight * _getDataLengthIncludingAddNew();
@@ -1986,13 +1957,13 @@ class BwuDatagrid extends PolymerElement {
       // Render missing cells.
       cellsAdded = 0;
 
-      ItemMetadata itemMetadata;
-      if(dataView != null) {
-        itemMetadata = dataView.getItemMetadata(row);
+      RowMetadata itemMetadata;
+      if(dataProvider != null) {
+        itemMetadata = dataProvider.getItemMetadata(row);
       }
-      Map<String,ColumnMetadata>metadata = itemMetadata != null ? itemMetadata.columns : null;
+      Map<String,Column>metadata = itemMetadata != null ? itemMetadata.columns : null;
 
-      var d = getDataMapItem(row);
+      var d = getDataItem(row);
 
       // TODO:  shorten this loop (index? heuristics? binary search?)
       for (var i = 0, ii = columns.length; i < ii; i++) {
@@ -2094,7 +2065,7 @@ class BwuDatagrid extends PolymerElement {
 //        cellRenderQueue: []
 //      );
 
-      x.append(_appendRowHtml(/*stringArray,*/ i, range, dataLength));
+      x.append(_appendRowHtml(i, range, dataLength));
       if (_activeCellNode != null && _activeRow == i) {
         needToReselectCell = true;
       }
@@ -2102,8 +2073,6 @@ class BwuDatagrid extends PolymerElement {
     }
 
     if (rows.length == 0) { return; }
-
-    //x.append(rowElement); //stringArray.join(""), validator: nodeValidator);
 
     for (var i = 0; i < rows.length; i++) {
       _rowsCache[rows[i]].rowNode = parentNode.append(x.firstChild);
@@ -2256,7 +2225,7 @@ class BwuDatagrid extends PolymerElement {
         if (m.asyncPostRender && _postProcessedRows[row][columnIdx] == null) {
           var node = cacheEntry.cellNodesByColumnIdx[columnIdx];
           if (node) {
-            m.asyncPostRender(node, row, getDataMapItem(row), m);
+            m.asyncPostRender(node, row, getDataItem(row), m);
           }
           _postProcessedRows[row][columnIdx] = true;
         }
@@ -2361,7 +2330,7 @@ class BwuDatagrid extends PolymerElement {
   void _handleMouseWheel(dom.MouseEvent e) {
     var rowNode = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-row');
     if (rowNode != _rowNodeFromLastMouseWheelEvent) {
-      if (_zombieRowNodeFromLastMouseWheelEvent && _zombieRowNodeFromLastMouseWheelEvent != rowNode) {
+      if (_zombieRowNodeFromLastMouseWheelEvent != null && _zombieRowNodeFromLastMouseWheelEvent != rowNode) {
         //$canvas.children[0].remove(zombieRowNodeFromLastMouseWheelEvent);
         if(_zombieRowNodeFromLastMouseWheelEvent != null) { // TODO check
           _zombieRowNodeFromLastMouseWheelEvent.remove();
@@ -2651,7 +2620,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void scrollCellIntoView(int row, int cell, bool doPaging) {
+  void scrollCellIntoView(int row, int cell, [bool doPaging = false]) {
     scrollRowIntoView(row, doPaging);
 
     var colspan = _getColspan(row, cell);
@@ -2733,7 +2702,7 @@ class BwuDatagrid extends PolymerElement {
   bool _isCellPotentiallyEditable(int row, int cell) {
     var dataLength = getDataLength;
     // is the data for this row loaded?
-    if (row < dataLength && getDataMapItem(row) == null) {
+    if (row < dataLength && getDataItem(row) == null) {
       return false;
     }
 
@@ -2759,7 +2728,7 @@ class BwuDatagrid extends PolymerElement {
     _currentEditor = null;
 
     if (_activeCellNode != null) {
-      var d = getDataMapItem(_activeRow);
+      var d = getDataItem(_activeRow);
       _activeCellNode.classes..remove("editable")..remove("invalid");
       if (d != null) {
         var column = columns[_activeCell];
@@ -2798,7 +2767,7 @@ class BwuDatagrid extends PolymerElement {
     }
 
     var columnDef = columns[_activeCell];
-    var item = getDataMapItem(_activeRow);
+    var item = getDataItem(_activeRow);
 
     if(!_eventBus.fire(core.Events.BEFORE_EDIT_CELL, new core.BeforeEditCell(this, cell: new Cell(_activeRow, _activeCell), item: item, column: columnDef)).retVal) {
       setFocus();
@@ -2824,7 +2793,7 @@ class BwuDatagrid extends PolymerElement {
       position: (_absBox(_activeCellNode)),
       container: _activeCellNode,
       column: columnDef,
-      item :  item != null ? item : new Item(),
+      item :  item != null ? item : new MapDataItem(),
       commitChanges : _commitEditAndSetFocus,
       cancelChanges : _cancelEditAndSetFocus));
 
@@ -3020,12 +2989,12 @@ class BwuDatagrid extends PolymerElement {
   void navigatePageUp() =>  _scrollPage(-1);
 
   String _getColspan(int row, int cell) {
-    ItemMetadata metadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
+    RowMetadata metadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
     if (metadata == null || metadata.columns == null) {
       return '1';
     }
 
-    ColumnMetadata columnData = metadata.columns[columns[cell].id] != null ? metadata.columns[columns[cell].id] : metadata.columns[cell];
+    Column columnData = metadata.columns[columns[cell].id] != null ? metadata.columns[columns[cell].id] : metadata.columns[cell];
     String colspan = columnData != null ? columnData.colspan : null;
     if (colspan == "*") {
       colspan = '${columns.length - cell}';
@@ -3314,12 +3283,12 @@ class BwuDatagrid extends PolymerElement {
       return false;
     }
 
-    ItemMetadata rowMetadata = dataView != null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
+    RowMetadata rowMetadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
     if (rowMetadata != null && rowMetadata.focusable == true) {
       return rowMetadata.focusable;
     }
 
-    Map<String,ColumnMetadata> columnMetadata = rowMetadata != null ? rowMetadata.columns : null;
+    Map<String,Column> columnMetadata = rowMetadata != null ? rowMetadata.columns : null;
     if (columnMetadata != null && columnMetadata[columns[cell].id] != null && columnMetadata[columns[cell].id].focusable is bool) {
       return columnMetadata[columns[cell].id].focusable;
     }
@@ -3335,16 +3304,18 @@ class BwuDatagrid extends PolymerElement {
       return false;
     }
 
-    ItemMetadata rowMetadata = dataView!= null && dataView.getItemMetadata != null ? dataView.getItemMetadata(row) : null;
-    if (rowMetadata && rowMetadata.selectable is bool) {
+    RowMetadata rowMetadata = dataProvider!= null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
+    if (rowMetadata != null && rowMetadata.selectable is bool) {
       return rowMetadata.selectable;
     }
 
-    ColumnMetadata columnMetadata;
+    Column columnMetadata;
     if(rowMetadata != null && rowMetadata.columns != null) {
-      columnMetadata =rowMetadata.columns[columns[cell].id];
-    } else {
-      columnMetadata = rowMetadata.columns[cell];
+      if(rowMetadata.columns[columns[cell].id] != null) {
+        columnMetadata =rowMetadata.columns[columns[cell].id];
+      } else {
+        columnMetadata = rowMetadata.columns[cell];
+      }
     }
     if (columnMetadata != null && columnMetadata.selectable is bool) {
       return columnMetadata.selectable;
@@ -3380,7 +3351,7 @@ class BwuDatagrid extends PolymerElement {
   //////////////////////////////////////////////////////////////////////////////////////////////
   // IEditor implementation for the editor lock
   bool _commitCurrentEdit() {
-    var item = getDataMapItem(_activeRow);
+    var item = getDataItem(_activeRow);
     var column = columns[_activeCell];
 
     if (_currentEditor != null) {
@@ -3418,10 +3389,10 @@ class BwuDatagrid extends PolymerElement {
             }
 
           } else {
-            var newItem = new Map();// new Item();
+            var newItem = new MapDataItem(); // TODO should be the same as the type used by provided data?
             _currentEditor.applyValue(newItem, _currentEditor.serializeValue());
             _makeActiveCellNormal();
-            _eventBus.fire(core.Events.ADD_NEW_ROW, new core.AddNewRow(this, item, column));
+            _eventBus.fire(core.Events.ADD_NEW_ROW, new core.AddNewRow(this, newItem, column));
           }
 
           // check whether the lock has been re-acquired by event handlers
@@ -3496,20 +3467,23 @@ class BwuDatagrid extends PolymerElement {
   }
 
 
-  async.Stream<core.ActiveCellChanged> get onActiveCellChanged =>
+  async.Stream<core.ActiveCellChanged> get onBwuActiveCellChanged =>
       _eventBus.onEvent(core.Events.ACTIVE_CELL_CHANGED);
 
-  async.Stream<core.ActiveCellPositionChanged> get onActiveCellPositionChanged =>
+  async.Stream<core.ActiveCellPositionChanged> get onBwuActiveCellPositionChanged =>
       _eventBus.onEvent(core.Events.ACTIVE_CELL_POSITION_CHANGED);
 
   async.Stream<core.AddNewRow> get onBwuAddNewRow =>
       _eventBus.onEvent(core.Events.ADD_NEW_ROW);
 
+  async.Stream<core.BeforeCellEditorDestroy> get onBwuBeforeCellEditorDestroy =>
+      _eventBus.onEvent(core.Events.BEFORE_CELL_EDITOR_DESTROY);
+
+  async.Stream<core.BeforeCellRangeSelected> get onBwuBeforeCellRangeSelected =>
+      _eventBus.onEvent(core.Events.BEFORE_CELL_RANGE_SELECTED);
+
   async.Stream<core.BeforeDestroy> get onBwuDestroy =>
       _eventBus.onEvent(core.Events.BEFORE_DESTROY);
-
-  async.Stream<core.BeforeCellEditorDestroy> get onBwuBeforeEditorDestroy =>
-      _eventBus.onEvent(core.Events.BEFORE_CELL_EDITOR_DESTROY);
 
   async.Stream<core.BeforeEditCell> get onBwuBeforeEditCell =>
       _eventBus.onEvent(core.Events.BEFORE_EDIT_CELL);
@@ -3525,6 +3499,9 @@ class BwuDatagrid extends PolymerElement {
 
   async.Stream<core.CellCssStylesChanged> get onBwuCellCssStylesChanged =>
       _eventBus.onEvent(core.Events.CELL_CSS_STYLES_CHANGED);
+
+  async.Stream<core.CellRangeSelected> get onBwuCellRangeSelected =>
+      _eventBus.onEvent(core.Events.CELL_RANGE_SELECTED);
 
   async.Stream<core.Click> get onBwuClick =>
       _eventBus.onEvent(core.Events.CLICK);

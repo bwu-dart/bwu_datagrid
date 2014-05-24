@@ -24,4 +24,6 @@ transformers:
     - example/03_editing.html
     - example/03a_compound_editors.html
     - example/03b_editing_with_undo.html
+    - example/composite_editor_item_details.html
+    - example/totals_via_data_provider.html
     - example/autotooltips.html

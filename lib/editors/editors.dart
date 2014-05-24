@@ -18,19 +18,19 @@ abstract class Editor {
   NodeBox gridPosition;
   dom.HtmlElement container;
   Column column;
-  /*Map/Item*/ dynamic item;
+  DataItem item;
   Function commitChanges;
   Function cancelChanges;
 
   void destroy();
-  void loadValue(/*Map/Item*/ dynamic item);
+  void loadValue(DataItem item);
   /**
    * Normally returns [String] but for example for
    * compound editors it may return [Map]
    */
   dynamic serializeValue();
   bool get isValueChanged;
-  void applyValue(/*Map/Item*/ dynamic item, dynamic value);
+  void applyValue(DataItem item, dynamic value);
   void focus();
   void show() {}
   void hide() {}
@@ -38,22 +38,6 @@ abstract class Editor {
 
   ValidationResult validate();
 }
-
-//(function ($) {
-//  // register namespace
-//  $.extend(true, window, {
-//    "Slick": {
-//      "Editors": {
-//        "Text": TextEditor,
-//        "Integer": IntegerEditor,
-//        "Date": DateEditor,
-//        "YesNoSelect": YesNoSelectEditor,
-//        "Checkbox": CheckboxEditor,
-//        "PercentComplete": PercentCompleteEditor,
-//        "LongText": LongTextEditor
-//      }
-//    }
-//  });
 
 class ValidationResult {
   bool isValid = false;
@@ -77,14 +61,16 @@ abstract class Validator  {
 }
 
 typedef void CommitChangesFn();
+
 typedef void CancelChangesFn();
+
 class EditorArgs {
   BwuDatagrid grid;
   NodeBox gridPosition;
   NodeBox position;
   dom.HtmlElement container;
   Column column;
-  dynamic item;
+  DataItem item;
 
   CommitChangesFn commitChanges;
   CancelChangesFn cancelChanges;
@@ -117,7 +103,6 @@ class TextEditor extends Editor {
     args.container.append($input);
     $input
         ..onKeyDown.listen((dom.KeyboardEvent e) {
-        //.bind("keydown.nav", function (e) {
           if (e.keyCode == dom.KeyCode.LEFT || e.keyCode == dom.KeyCode.RIGHT) {
             e.stopImmediatePropagation();
           }
@@ -146,7 +131,7 @@ class TextEditor extends Editor {
   void  set value(val) => $input.value = val;
 
   @override
-  void loadValue(/*Map/Item*/ dynamic item) {
+  void loadValue(DataItem item) {
     defaultValue = item[args.column.field] != null ? item[args.column.field] : "";
     $input.value =  defaultValue;
     $input.defaultValue = defaultValue;
@@ -157,7 +142,7 @@ class TextEditor extends Editor {
   String serializeValue () => $input.value;
 
   @override
-  void applyValue(/*Map/Item*/ dynamic item, String state) {
+  void applyValue(DataItem item, String state) {
     item[args.column.field] = state;
   }
 
@@ -214,7 +199,7 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  void loadValue (/*Map/Item*/ dynamic item) {
+  void loadValue (DataItem item) {
     defaultValue = item[args.column.field];
     $input.value = defaultValue;
     $input.defaultValue = defaultValue;
@@ -227,7 +212,7 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  void applyValue (/*Map/Item*/ dynamic item, int state) {
+  void applyValue (DataItem item, int state) {
     item[args.column.field] = state;
   }
 
@@ -316,8 +301,8 @@ class DateEditor extends Editor  {
   }
 
   @override
-  void loadValue (/*Map/Item*/ dynamic item) {
-    defaultValue = item[args.column.field];
+  void loadValue (DataItem item) {
+    defaultValue = item[args.column.field] != null ? item[args.column.field].toString() : '';
     $input.value = defaultValue;
     $input.defaultValue = defaultValue;
     $input.select();
@@ -329,7 +314,7 @@ class DateEditor extends Editor  {
   }
 
   @override
-  void applyValue (/*Map/Item*/ dynamic item, String state) {
+  void applyValue (DataItem item, String state) {
     item[args.column.field] = state;
   }
 
@@ -380,8 +365,9 @@ class YesNoSelectEditor extends Editor{
   }
 
   @override
-  void loadValue (/*Map/Item*/ dynamic item) {
-    $select.value = (defaultValue = item[args.column.field]) ? "yes" : "no";
+  void loadValue (DataItem item) {
+    defaultValue = item[args.column.field];
+    $select.value = defaultValue != null ? "yes" : "no";
     //$select.select();
   }
 
@@ -437,7 +423,7 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void loadValue (/*Map/Item*/ dynamic item) {
+  void loadValue (DataItem item) {
     var val = item[args.column.field];
     defaultValue =  (val is bool && val) || (val is String && (val.toLowerCase() == 'true' || val.toLowerCase() == 'yes')) || (val is int && val != 0) ;
     if (defaultValue) {
@@ -453,8 +439,8 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void applyValue (/*Map/Item*/ dynamic item, String state) {
-    item[args.column.field] = state.toLowerCase() =='true' ? true : false;
+  void applyValue (DataItem item, String state) {
+    item[args.column.field] = state.toLowerCase() == 'true' ? true : false;
   }
 
   @override
@@ -560,15 +546,13 @@ class PercentCompleteEditor extends Editor {
   }
 
   @override
-  void loadValue (/*Map/Item*/ dynamic item) {
-    $input.value = (defaultValue = item[args.column.field]).toString();
+  void loadValue (DataItem item) {
+    var val = item[args.column.field];
+    if(val == null) val = 0;
+    $input.value = (defaultValue = val).toString();
     $slider.value = _invertedRangeValueInt(defaultValue);
     $input.select();
   }
-
-//  String _toInvertedRangeValue(int val) {
-//    return '${-100 + (defaultValue != null ? val : 0)}';
-//  }
 
   String _invertedRangeValue(String val) {
     return '${100-tools.parseInt(val)}';
@@ -583,11 +567,11 @@ class PercentCompleteEditor extends Editor {
 
   @override
   String serializeValue () {
-    return int.parse($input.value).toString(); // || 0; // todo default 0
+    return tools.parseIntSafe($input.value).toString(); // || 0; // todo default 0
   }
 
   @override
-  void applyValue (/*Map/Item*/ dynamic item, String state) {
+  void applyValue (DataItem item, String state) {
     item[args.column.field] = tools.parseInt(state);
   }
 
@@ -717,7 +701,7 @@ class LongTextEditor extends Editor {
   }
 
   @override
-  void loadValue (/*Map/Item*/ dynamic item) {
+  void loadValue (DataItem item) {
     $input.value = (defaultValue = item[args.column.field]);
     $input.select();
   }
@@ -728,7 +712,7 @@ class LongTextEditor extends Editor {
   }
 
   @override
-  void applyValue (/*Map/Item*/ dynamic item, String state) {
+  void applyValue (DataItem item, String state) {
     item[args.column.field] = state;
   }
 

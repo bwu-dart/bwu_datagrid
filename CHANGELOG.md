@@ -1,6 +1,7 @@
 ## 0.0.5
 
 * example composite_editor_item_details added
+* example totals_via_data_provider added
 
 ## 0.0.4
 
