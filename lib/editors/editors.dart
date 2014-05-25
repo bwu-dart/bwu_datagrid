@@ -200,7 +200,7 @@ class IntegerEditor extends Editor {
 
   @override
   void loadValue (DataItem item) {
-    defaultValue = item[args.column.field];
+    defaultValue = item[args.column.field].toString();
     $input.value = defaultValue;
     $input.defaultValue = defaultValue;
     $input.select();
@@ -212,7 +212,17 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  void applyValue (DataItem item, int state) {
+  void applyValue (DataItem item, dynamic state) {
+    int val;
+    if(state is int) {
+      val = state;
+    } else if (state is String) {
+      val = tools.parseIntSafe(state);
+    } else if (state == null){
+      val = 0;
+    } else {
+      throw 'not supported data type for "state" (${state})';
+    }
     item[args.column.field] = state;
   }
 

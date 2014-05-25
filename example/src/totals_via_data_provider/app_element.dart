@@ -6,53 +6,9 @@ import 'package:polymer/polymer.dart';
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
-import 'package:bwu_datagrid/tools/html.dart' as tools;
-
-import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 import 'package:bwu_datagrid/editors/editors.dart';
 
-class TotalsDataProvider extends MapDataItemProvider {
-  Map<int,String> _totals = {};
-  List<Column> _columns;
-
-  var totalsMetadata = new RowMetadata(
-    // Style the totals row differently.
-    cssClasses: "totals",
-    columns: new Map<String,Column>()
-  );
-
-  TotalsDataProvider(List<MapDataItem> data, this._columns) : super(data){
-    // Make the totals not editable.
-    for (var i = 0; i < _columns.length; i++) {
-      totalsMetadata._columns['${i}'] = new Column( editor: null );
-    }
-
-    updateTotals();
-  }
-
-  @override
-  DataItem getItem (int index) {
-    return (index < items.length) ? items[index] : _totals;
-  }
-
-  void updateTotals () {
-    var columnIdx = _columns.length;
-    while (columnIdx-- > 0) {
-      var columnId = _columns[columnIdx].id;
-      var total = 0;
-      var i = items.length;
-      while (i-- > 0) {
-        total += (tools.parseIntSafe(items[i][columnId], onErrorDefault: 0));
-      }
-      _totals[columnId] = 'Sum:  ${total}';
-    }
-  }
-
-  @override
-  RowMetadata getItemMetadata (int index) {
-    return (index != items.length) ? null : totalsMetadata;
-  }
-}
+import 'totals_data_provider.dart';
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
@@ -92,11 +48,12 @@ class AppElement extends PolymerElement {
       data = new TotalsDataProvider(<MapDataItem>[], columns);
       for (var i = 0; i < 10; i++) {
         var d = new MapDataItem({'id': i});
-
+        data.items.add(d);
         for(int j = 0; j < columns.length; j++) {
           d['${j}'] = rnd.nextInt(10);
         }
       }
+      data.updateTotals();
 
       grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
 

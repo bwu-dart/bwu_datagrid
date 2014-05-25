@@ -125,7 +125,7 @@ class AppElement extends PolymerElement {
       var idx = e.validationResults.errors.length;
       while (idx-- > 0) {
         err = e.validationResults.errors[idx];
-        err.container.stop(true, true).effect('highlight', {'color': 'red'});
+        // TODO err.container.stop(true, true).effect('highlight', {'color': 'red'});
       }
     }
   }

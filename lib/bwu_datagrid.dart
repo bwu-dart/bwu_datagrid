@@ -1407,7 +1407,7 @@ class BwuDatagrid extends PolymerElement {
 
   int get getDataLength {
     if (_dataProvider != null) {
-      return _dataProvider.items.length;
+      return _dataProvider.length;
     } else {
       return 0;
     }
@@ -1418,10 +1418,10 @@ class BwuDatagrid extends PolymerElement {
   }
 
   DataItem getDataItem(int i) {
-    if(i >= _dataProvider.items.length) {
+    if(i >= _dataProvider.length) {
       return null;
     }
-    return _dataProvider.items[i];
+    return _dataProvider.getItem(i);
   }
 
   dom.HtmlElement get getTopPanel => _topPanel;
@@ -1536,22 +1536,21 @@ class BwuDatagrid extends PolymerElement {
     var rowCss = 'bwu-datagrid-row ${dataLoading ? " loading" : ""} ${row == _activeRow ? " active" : ""} ${row % 2 == 1 ? " odd" : " even"}';
 
     if (d == null) {
-      "${rowCss} ${_gridOptions.addNewRowCssClass}";
+      rowCss = '${rowCss} ${_gridOptions.addNewRowCssClass}';
     }
 
     RowMetadata metadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
 
     if (metadata != null && metadata.cssClasses != null) {
-      "${rowCss} ${metadata.cssClasses}";
+      rowCss = '${rowCss} ${metadata.cssClasses}';
     }
 
-    dom.HtmlElement rowElement =
-
-        new dom.DivElement()
+    dom.HtmlElement rowElement = new dom.DivElement()
           ..classes.add('ui-widget-content')
           ..classes.add(rowCss)
           ..style.top = '${_getRowTop(row)}px';
     //stringArray.add(rowElement);
+          print(rowElement.classes);
 
     String colspan;
     Column m;

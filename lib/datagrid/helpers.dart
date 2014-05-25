@@ -26,9 +26,7 @@ class MapDataItemProvider extends DataProvider {
   MapDataItemProvider([List<DataItem> items]) : super(items);
 
   @override
-  int get length {
-    return items.length + 1;
-  }
+  int get length => items.length;
 
   @override
   DataItem getItem (int index) => items[index];
