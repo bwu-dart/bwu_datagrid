@@ -1,4 +1,4 @@
-library numeric_range_editor;
+library bwu_datagrid.example.e03a_compund_editors.numeric_range_editor;
 
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/editors/editors.dart';

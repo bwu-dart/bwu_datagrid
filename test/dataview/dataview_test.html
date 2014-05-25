@@ -13,10 +13,11 @@ http://www.polymer-project.org/.
     <title>polymer-ajax</title>
     <link rel="import" href="packages/polymer/polymer.html">
 
-    <script type='application/dart;component=1' src='dataview_test.dart'></script>
-    <script src='packages/browser/dart.js'></script>
+    <!--<script src='packages/browser/dart.js'></script>-->
     <script src='packages/unittest/test_controller.js'></script>
   </head>
   <body>
+    <script type='application/dart' src='dataview_test.dart'></script>
+    <script type='application/dart'>export 'package:polymer/init.dart';</script>
   </body>
 </html>

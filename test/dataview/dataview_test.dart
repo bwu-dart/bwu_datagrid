@@ -42,63 +42,64 @@ void assertConsistency(DataView dv, [String idProperty]) {
   expect(items.length-dv.getLength, equals(filteredOut), reason: "filtered rows");
 }
 
-@initMethod
-void init() {
-  useHtmlEnhancedConfiguration();
+void main() {
+  initPolymer().run(() {
+    useHtmlEnhancedConfiguration();
 
-  group('basic', () {
-    test("initial setup", () {
-      var dv = new DataView();
-      assertEmpty(dv);
-    });
-
-    test("initial setup, refresh", () {
+    group('basic', () {
+      test("initial setup", () {
         var dv = new DataView();
-        dv.refresh();
         assertEmpty(dv);
-    });
-  });
+      });
 
-  group('setItems', () {
-    test("empty", () {
-        var dv = new DataView();
-        dv.setItems([]);
-        assertEmpty(dv);
-    });
-
-    test("basic", () {
-        var dv = new DataView();
-        dv.setItems([{'id':0},{'id':1}]);
-        expect(dv.getLength, equals(2), reason: "rows.length");
-        expect(dv.getItems().length, equals(2), reason: "getItems().length");
-        assertConsistency(dv);
+      test("initial setup, refresh", () {
+          var dv = new DataView();
+          dv.refresh();
+          assertEmpty(dv);
+      });
     });
 
-    test("alternative idProperty", () {
-        var dv = new DataView();
-        dv.setItems([{'uid':0},{'uid':1}], "uid");
-        assertConsistency(dv,"uid");
-    });
+    group('setItems', () {
+      test("empty", () {
+          var dv = new DataView();
+          dv.setItems([]);
+          assertEmpty(dv);
+      });
 
-    test("requires an id on objects", () {
-        var dv = new DataView();
-        //try {
-        expect(dv.setItems([1,2,3]), throws, reason:  "exception expected");
-//            ok(false, "exception expected")
-//        }
-//        catch (ex) {}
-    });
+      test("basic", () {
+          var dv = new DataView();
+          dv.setItems([{'id':0},{'id':1}]);
+          expect(dv.getLength, equals(2), reason: "rows.length");
+          expect(dv.getItems().length, equals(2), reason: "getItems().length");
+          assertConsistency(dv);
+      });
 
-    test("requires a unique id on objects", () {
-        var dv = new DataView();
-//        try {
-            expect(dv.setItems([{'id':0},{'id':0}]), throws, reason: "exception expected");
-//            ok(false, "exception expected")
-//        }
-//        catch (ex) {}
-    });
+      test("alternative idProperty", () {
+          var dv = new DataView();
+          dv.setItems([{'uid':0},{'uid':1}], "uid");
+          assertConsistency(dv,"uid");
+      });
 
-  });
+      test("requires an id on objects", () {
+          var dv = new DataView();
+          //try {
+          expect(dv.setItems([1,2,3]), throws, reason:  "exception expected");
+  //            ok(false, "exception expected")
+  //        }
+  //        catch (ex) {}
+      });
+
+      test("requires a unique id on objects", () {
+          var dv = new DataView();
+  //        try {
+              expect(dv.setItems([{'id':0},{'id':0}]), throws, reason: "exception expected");
+  //            ok(false, "exception expected")
+  //        }
+  //        catch (ex) {}
+      });
+
+    });
+  }
 }
 
 

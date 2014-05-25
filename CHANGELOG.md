@@ -2,6 +2,7 @@
 
 * example composite_editor_item_details added
 * example totals_via_data_provider added
+* upgrade to Polymer 0.10.0-pre.13
 
 ## 0.0.4
 

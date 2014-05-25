@@ -3021,7 +3021,7 @@ class BwuDatagrid extends PolymerElement {
       if (canCellBeActive(row, cell)) {
         lastFocusableCell = cell;
       }
-      cell += _getColspan(row, cell);
+      cell += tools.parseInt(_getColspan(row, cell));
     }
     return lastFocusableCell;
   }
