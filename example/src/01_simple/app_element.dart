@@ -12,12 +12,12 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title"),
-    new Column(id: "duration", name: "Duration", field: "duration"),
-    new Column(id: "%", name: "% Complete", field: "percentComplete"),
-    new Column(id: "start", name: "Start", field: "start"),
-    new Column(id: "finish", name: "Finish", field: "finish"),
-    new Column(id: "effort-driven", name: "Effort Driven", field: "effortDriven")
+    new Column(id: 'title', name: 'Title', field: 'title'),
+    new Column(id: 'duration', name: 'Duration', field: 'duration'),
+    new Column(id: '%', name: '% Complete', field: 'percentComplete'),
+    new Column(id: 'start', name: 'Start', field: 'start'),
+    new Column(id: 'finish', name: 'Finish', field: 'finish'),
+    new Column(id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven')
   ];
 
   var gridOptions = new GridOptions(
@@ -35,11 +35,11 @@ class AppElement extends PolymerElement {
       var data = new MapDataItemProvider(); //List<Map>(500);
       for (var i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
-          'title': "Task ${i}",
-          'duration': "5 days",
+          'title': 'Task ${i}',
+          'duration': '5 days',
           'percentComplete': new math.Random().nextInt(100).round(),
-          'start': "01/01/2009",
-          'finish': "01/05/2009",
+          'start': '01/01/2009',
+          'finish': '01/05/2009',
           'effortDriven': (i % 5 == 0)
         }));
       }

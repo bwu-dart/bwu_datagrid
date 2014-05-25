@@ -52,9 +52,6 @@ class TotalsDataProvider extends MapDataItemProvider {
 
   @override
   RowMetadata getItemMetadata (int index) {
-    if(index == 10) {
-      print(index);
-    }
     return (index != items.length) ? null : totalsMetadata;
   }
 

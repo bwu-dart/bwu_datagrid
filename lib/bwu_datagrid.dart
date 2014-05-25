@@ -1550,7 +1550,6 @@ class BwuDatagrid extends PolymerElement {
           ..classes.add(rowCss)
           ..style.top = '${_getRowTop(row)}px';
     //stringArray.add(rowElement);
-          print(rowElement.classes);
 
     String colspan;
     Column m;
