@@ -482,7 +482,10 @@ class PercentCompleteEditor extends Editor {
     $input.style.width = '${tools.innerWidth(args.container) - 25}px';
     args.container.append($input);
 
-    $picker = new dom.DivElement()..classes.add('editor-percentcomplete-picker');
+    $picker = new dom.DivElement()
+        ..classes.add('editor-percentcomplete-picker');
+        // TODO ..style.zIndex = '10000'; it seems it needs to be added to the body to make it display above the elements border
+        // workaround would be to show it above the field when it is near the border
     args.container.append($picker);
     $picker.append(new dom.DivElement()
         ..classes.add('editor-percentcomplete-helper')
