@@ -2,14 +2,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid plugin example: AutoTooltips</title>
+    <title>BWU Datagrid example 07: Events</title>
 
     
     
-    <!--<link rel="import" href="packages/core_elements/core_tooltip/core_tooltip.html">-->
 
     
   </head>
+
   <body>
 
 <!--
@@ -66,6 +66,7 @@ You can replace platform.js and polymer.html with different versions if desired.
   </script>
 
 </polymer-element><script src="packages/web_components/dart_support.js"></script>
+
 
 
 
@@ -858,7 +859,39 @@ classes should alter those!
     <content></content>
   </template>
   
-</polymer-element><polymer-element name="app-element">
+</polymer-element><polymer-element name="context-menu">
+  <template>
+    <style>
+      :host {
+        background: #e1efc7;
+        border: 1px solid gray;
+        padding: 2px;
+        display: none;
+        min-width: 100px;
+        -moz-box-shadow: 2px 2px 2px silver;
+        -webkit-box-shadow: 2px 2px 2px silver;
+        z-index: 99999;
+        position: 'absolute';
+      }
+
+      li {
+        padding: 4px 4px 4px 14px;
+        list-style: none;
+        cursor: pointer;
+        background: url(packages/bwu_datagrid/asset/images/arrow_right_peppermint.png) no-repeat center left;
+      }
+
+      li:hover {
+        background-color: white;
+      }
+
+    </style>
+    <content></content>
+  </template>
+  
+</polymer-element>
+
+<polymer-element name="app-element">
   <template>
     <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
     <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
@@ -1117,45 +1150,48 @@ input.editor-checkbox {
         width: 100%;
       }
     </style>
+    <style>
+      bwu-datagrid /deep/ .cell-title {
+        font-weight: bold;
+      }
+
+    </style>
 
     <table>
       <tbody><tr>
         <td valign="top" width="50%">
-          <bwu-datagrid id="myGrid" style="width:600px;height:300px;"></bwu-datagrid>
-          <!--<div id="myGrid" style="width:600px;height:300px;"></div>-->
+          <bwu-datagrid id="myGrid" style="width:600px;height:500px;">
+            <context-menu id="contextMenu">
+              <ul> <!--  id="contextMenu" style="display:none; position:absolute" -->
+                <b>Set priority:</b>
+                <li value="Low">Low</li>
+                <li value="Medium">Medium</li>
+                <li value="High">High</li>
+              </ul>
+            </context-menu>
+
+          </bwu-datagrid>
         </td>
         <td valign="top">
           <h2>Demonstrates:</h2>
           <ul>
-            <li>AutoTooltips plugin</li>
+            <li>handling events from the grid:</li>
+            <li>Right-click the row to open the context menu</li>
+            <li>Click the priority cell to toggle values</li>
           </ul>
-          <h2>Instructions:</h2>
-          <p>Resize the columns until see ellipsis in column or header.  Hover over cell to see tooltip.</p>
-          <h2>Usage:</h2>
-          <pre style="background-color: white; font-size: 110%; border-radius: 5px; padding: 20px; ">plugin = new AutoTooltips(pluginOptions);
-    grid.registerPlugin(plugin);
-    grid.render();</pre>
-
             <h2>View Source:</h2>
             <ul>
-              <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/autotooltips/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+                <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e07_events/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
             </ul>
         </td>
       </tr>
     </tbody></table>
+
+
   </template>
   
 </polymer-element>
-
-
-<!--
-    <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
-    <link rel="stylesheet" href="examples.css" type="text/css"/>
-
-<script src="../lib/jquery-1.7.min.js"></script>
-<script src="../lib/jquery.event.drag-2.2.js"></script>
-
---><style>/* x@ import url(slick-default-theme.css); */
+<style>/* x@ import url(slick-default-theme.css); */
 
 * {
   font-family: arial;
@@ -1404,4 +1440,4 @@ input.editor-checkbox {
     
   
 
-<script src="autotooltips.html_bootstrap.dart.js"></script></body></html>
+<script src="e07_events.html_bootstrap.dart.js"></script></body></html>

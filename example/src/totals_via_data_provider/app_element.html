@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
-<link rel='import' href='composite_editor_view.html'>
 
 <polymer-element name='app-element'>
   <template>
@@ -14,13 +13,12 @@
         display: block;
         width: 100%;
       }
-      table {
-        width: 100%;
-      }
     </style>
     <style>
-     .cell-effort-driven {
-        text-align: center;
+      bwu-datagrid /deep/ .totals {
+        font-weight: bold;
+        color: gray;
+        font-style: italic;
       }
     </style>
 
@@ -32,17 +30,14 @@
       <div class="options-panel">
         <h2>Demonstrates:</h2>
         <ul>
-          <li>using a CompositeEditor to implement detached item edit form</li>
-        </ul>
-
-        <h2>Options:</h2>
-        <button on-click="{{openDetails}}">Open Item Edit for active row</button>
-
-        <h2>View Source:</h2>
-        <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/composite_editor_item_details/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+          <li>Implementing a data provider to create a totals row at the end of the grid.</li>
+          <li>This is a simplification of what the DataView does. </li>
         </ul>
       </div>
+        <h2>View Source:</h2>
+        <ul>
+            <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/example_totals_via_data_provider/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+        </ul>
     </div>
 
   </template>

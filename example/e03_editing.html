@@ -2,14 +2,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid plugin example: AutoTooltips</title>
+    <title>BWU Datagrid example 03: Editing</title>
 
     
     
-    <!--<link rel="import" href="packages/core_elements/core_tooltip/core_tooltip.html">-->
 
     
   </head>
+
   <body>
 
 <!--
@@ -1117,45 +1117,42 @@ input.editor-checkbox {
         width: 100%;
       }
     </style>
+    <style>
+      bwu-datagrid /deep/ .cell-title {
+        font-weight: bold;
+      }
 
-    <table>
-      <tbody><tr>
-        <td valign="top" width="50%">
-          <bwu-datagrid id="myGrid" style="width:600px;height:300px;"></bwu-datagrid>
-          <!--<div id="myGrid" style="width:600px;height:300px;"></div>-->
-        </td>
-        <td valign="top">
-          <h2>Demonstrates:</h2>
+      bwu-datagrid /deep/ .cell-effort-driven {
+        text-align: center;
+      }
+    </style>
+    <div style="position:relative">
+      <div style="width:600px;">
+        <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
+      </div>
+
+      <div class="options-panel">
+        <h2>Demonstrates:</h2>
+        <ul>
+          <li>adding basic keyboard navigation and editing</li>
+          <li>custom editors and validators</li>
+          <li>auto-edit settings</li>
+        </ul>
+
+        <h2>Options:</h2>
+        <button on-click="{{enableAutoEdit}}">Auto-edit ON</button>
+        &nbsp;
+        <button on-click="{{disableAutoEdit}}">Auto-edit OFF</button>
+          <h2>View Source:</h2>
           <ul>
-            <li>AutoTooltips plugin</li>
+              <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e03_editing/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
           </ul>
-          <h2>Instructions:</h2>
-          <p>Resize the columns until see ellipsis in column or header.  Hover over cell to see tooltip.</p>
-          <h2>Usage:</h2>
-          <pre style="background-color: white; font-size: 110%; border-radius: 5px; padding: 20px; ">plugin = new AutoTooltips(pluginOptions);
-    grid.registerPlugin(plugin);
-    grid.render();</pre>
-
-            <h2>View Source:</h2>
-            <ul>
-              <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/autotooltips/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-            </ul>
-        </td>
-      </tr>
-    </tbody></table>
+      </div>
+    </div>
   </template>
   
 </polymer-element>
-
-
-<!--
-    <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
-    <link rel="stylesheet" href="examples.css" type="text/css"/>
-
-<script src="../lib/jquery-1.7.min.js"></script>
-<script src="../lib/jquery.event.drag-2.2.js"></script>
-
---><style>/* x@ import url(slick-default-theme.css); */
+<style>/* x@ import url(slick-default-theme.css); */
 
 * {
   font-family: arial;
@@ -1404,4 +1401,4 @@ input.editor-checkbox {
     
   
 
-<script src="autotooltips.html_bootstrap.dart.js"></script></body></html>
+<script src="e03_editing.html_bootstrap.dart.js"></script></body></html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
+
+<polymer-element name='app-element'>
+  <template>
+    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
+    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
+    <link rel='stylesheet' href='../../asset/examples.css'>
+
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+      }
+      table {
+        width: 100%;
+      }
+    </style>
+
+    <table>
+      <tr>
+        <td valign='top' width='50%'>
+          <bwu-datagrid id='myGrid' style='width:600px;height:500px;'></bwu-datagrid>
+        </td>
+        <td valign='top'>
+          <h2>Demonstrates:</h2>
+          <ul>
+            <li>basic grid with minimal configuration</li>
+          </ul>
+            <h2>View Source:</h2>
+            <ul>
+              <li><A href='https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e01_simple/app_element.dart' target='_sourcewindow'> View the source for this example on Github</a></li>
+            </ul>
+        </td>
+      </tr>
+    </table>
+  </template>
+  <script type='application/dart' src='app_element.dart'></script>
+</polymer-element>

@@ -2,14 +2,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid plugin example: AutoTooltips</title>
+    <title>BWU Datagrid example: Composite Editor</title>
 
     
     
-    <!--<link rel="import" href="packages/core_elements/core_tooltip/core_tooltip.html">-->
 
     
   </head>
+
   <body>
 
 <!--
@@ -1113,49 +1113,37 @@ input.editor-checkbox {
         display: block;
         width: 100%;
       }
-      table {
-        width: 100%;
+    </style>
+    <style>
+      bwu-datagrid /deep/ .totals {
+        font-weight: bold;
+        color: gray;
+        font-style: italic;
       }
     </style>
 
-    <table>
-      <tbody><tr>
-        <td valign="top" width="50%">
-          <bwu-datagrid id="myGrid" style="width:600px;height:300px;"></bwu-datagrid>
-          <!--<div id="myGrid" style="width:600px;height:300px;"></div>-->
-        </td>
-        <td valign="top">
-          <h2>Demonstrates:</h2>
-          <ul>
-            <li>AutoTooltips plugin</li>
-          </ul>
-          <h2>Instructions:</h2>
-          <p>Resize the columns until see ellipsis in column or header.  Hover over cell to see tooltip.</p>
-          <h2>Usage:</h2>
-          <pre style="background-color: white; font-size: 110%; border-radius: 5px; padding: 20px; ">plugin = new AutoTooltips(pluginOptions);
-    grid.registerPlugin(plugin);
-    grid.render();</pre>
+    <div style="position:relative">
+      <div style="width:600px;">
+        <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
+      </div>
 
-            <h2>View Source:</h2>
-            <ul>
-              <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/autotooltips/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-            </ul>
-        </td>
-      </tr>
-    </tbody></table>
+      <div class="options-panel">
+        <h2>Demonstrates:</h2>
+        <ul>
+          <li>Implementing a data provider to create a totals row at the end of the grid.</li>
+          <li>This is a simplification of what the DataView does. </li>
+        </ul>
+      </div>
+        <h2>View Source:</h2>
+        <ul>
+            <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/example_totals_via_data_provider/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+        </ul>
+    </div>
+
   </template>
   
 </polymer-element>
-
-
-<!--
-    <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
-    <link rel="stylesheet" href="examples.css" type="text/css"/>
-
-<script src="../lib/jquery-1.7.min.js"></script>
-<script src="../lib/jquery.event.drag-2.2.js"></script>
-
---><style>/* x@ import url(slick-default-theme.css); */
+<style>/* x@ import url(slick-default-theme.css); */
 
 * {
   font-family: arial;
@@ -1404,4 +1392,4 @@ input.editor-checkbox {
     
   
 
-<script src="autotooltips.html_bootstrap.dart.js"></script></body></html>
+<script src="totals_via_data_provider.html_bootstrap.dart.js"></script></body></html>

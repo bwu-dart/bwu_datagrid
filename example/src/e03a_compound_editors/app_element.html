@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
-<link rel='import' href='composite_editor_view.html'>
 
 <polymer-element name='app-element'>
   <template>
@@ -19,9 +18,13 @@
       }
     </style>
     <style>
-     .cell-effort-driven {
-        text-align: center;
+      bwu-datagrid /deep/ .cell-title {
+        font-weight: bold;
       }
+
+/*      bwu-datagrid /deep/ .cell-effort-driven {
+        text-align: center;
+      }*/
     </style>
 
     <div style="position:relative">
@@ -32,18 +35,17 @@
       <div class="options-panel">
         <h2>Demonstrates:</h2>
         <ul>
-          <li>using a CompositeEditor to implement detached item edit form</li>
+          <li>compound cell editors driving multiple fields from one cell</li>
+          <li>providing validation from the editor</li>
+          <li>hooking into validation events</li>
         </ul>
-
-        <h2>Options:</h2>
-        <button on-click="{{openDetails}}">Open Item Edit for active row</button>
-
-        <h2>View Source:</h2>
-        <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/composite_editor_item_details/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-        </ul>
+          <h2>View Source:</h2>
+          <ul>
+            <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e03a_compound_editors/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+          </ul>
       </div>
     </div>
+
 
   </template>
   <script type="application/dart" src="app_element.dart"></script>

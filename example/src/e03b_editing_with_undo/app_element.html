@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
-<link rel='import' href='composite_editor_view.html'>
 
 <polymer-element name='app-element'>
   <template>
@@ -14,12 +13,12 @@
         display: block;
         width: 100%;
       }
+
       table {
         width: 100%;
       }
-    </style>
-    <style>
-     .cell-effort-driven {
+
+      bwu-datagrid /deep/ .cell-effort-driven {
         text-align: center;
       }
     </style>
@@ -32,16 +31,15 @@
       <div class="options-panel">
         <h2>Demonstrates:</h2>
         <ul>
-          <li>using a CompositeEditor to implement detached item edit form</li>
+          <li>Using "editCommandHandler" option to intercept edit commands and implement undo support</li>
         </ul>
 
-        <h2>Options:</h2>
-        <button on-click="{{openDetails}}">Open Item Edit for active row</button>
-
-        <h2>View Source:</h2>
-        <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/composite_editor_item_details/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-        </ul>
+        <h2>Controls:</h2>
+        <button on-click="{{undo}}" disabled?="{{!isUndoItem}}"><img src="packages/bwu_datagrid/asset/images/arrow_undo.png" align="absmiddle"> Undo</button>
+          <h2>View Source:</h2>
+          <ul>
+            <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e03b_editing_with_undo/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+          </ul>
       </div>
     </div>
 
