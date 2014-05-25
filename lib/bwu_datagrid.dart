@@ -260,7 +260,7 @@ class BwuDatagrid extends PolymerElement {
       ..style.position ='absolute'
       ..style.top ='0'
       ..style.left='0'
-        ..style.width = '${_getCanvasWidth() + _scrollbarDimensions.x}px';
+      ..style.width = '${_getCanvasWidth() + _scrollbarDimensions.x}px';
     _headerRowScroller.append(_headerRowSpacer);
 
     _topPanelScroller = new dom.DivElement()
@@ -419,8 +419,7 @@ class BwuDatagrid extends PolymerElement {
       ..style.height ='100px'
       ..style.overflow = 'scroll';
     dom.document.body.append($c);
-    var cCs = $c.getComputedStyle();
-    var dim = new math.Point(tools.parseInt(cCs.width) - $c.clientWidth, tools.parseInt(cCs.height) - $c.clientHeight);
+    var dim = new math.Point($c.offsetWidth - $c.clientWidth, $c.offsetHeight - $c.clientHeight);
     $c.remove();
     return dim;
   }
@@ -1841,7 +1840,7 @@ class BwuDatagrid extends PolymerElement {
       viewportTop = _scrollTop;
     }
     if (viewportLeft == null) {
-      viewportLeft = scrollLeft;
+      viewportLeft = _scrollLeft;
     }
 
     return new Range(
@@ -2119,7 +2118,7 @@ class BwuDatagrid extends PolymerElement {
     _cleanupRows(rendered);
 
     // add new rows & missing cells in existing rows
-    if (_lastRenderedScrollLeft != scrollLeft) {
+    if (_lastRenderedScrollLeft != _scrollLeft) {
       _cleanUpAndRenderCells(rendered);
     }
 
@@ -2131,31 +2130,31 @@ class BwuDatagrid extends PolymerElement {
     _startPostProcessing();
 
     _lastRenderedScrollTop = _scrollTop;
-    _lastRenderedScrollLeft = scrollLeft;
+    _lastRenderedScrollLeft = _scrollLeft;
     _h_render = null;
   }
 
   void _handleHeaderRowScroll([dom.Event e]) {
     var scrollLeft = _headerRowScroller.scrollLeft;
     if (scrollLeft != _viewport.scrollLeft) {
-      _viewport.scrollLeft = scrollLeft;
+      _viewport.scrollLeft = _scrollLeft;
     }
   }
 
   void _handleScroll([dom.Event e]) {
     _scrollTop = _viewport.scrollTop;
-    scrollLeft = _viewport.scrollLeft;
+    _scrollLeft = _viewport.scrollLeft;
     int vScrollDist = (_scrollTop - _prevScrollTop).abs();
-    int hScrollDist = (scrollLeft - _prevScrollLeft).abs();
+    int hScrollDist = (_scrollLeft - _prevScrollLeft).abs();
 
-    if (hScrollDist != 0) {
-      _prevScrollLeft = scrollLeft;
-      _headerScroller.scrollLeft = scrollLeft;
-      _topPanelScroller.scrollLeft = scrollLeft;
-      _headerRowScroller.scrollLeft = scrollLeft;
+    if (hScrollDist != null && hScrollDist != 0) {
+      _prevScrollLeft = _scrollLeft;
+      _headerScroller.scrollLeft = _scrollLeft;
+      _topPanelScroller.scrollLeft = _scrollLeft;
+      _headerRowScroller.scrollLeft = _scrollLeft;
     }
 
-    if (vScrollDist != 0) {
+    if (vScrollDist != null && vScrollDist != 0) {
       _vScrollDir = _prevScrollTop < _scrollTop ? 1 : -1;
       _prevScrollTop = _scrollTop;
 
@@ -2176,7 +2175,7 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    if (hScrollDist != null || vScrollDist != null) {
+    if ((hScrollDist != null && hScrollDist != 0) || (vScrollDist != null && vScrollDist != 0)) {
       if (_h_render != null) {
         _h_render.cancel();
       }
