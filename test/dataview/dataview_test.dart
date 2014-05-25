@@ -4,7 +4,7 @@ import 'package:polymer/polymer.dart';
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
-import 'package:bwu_datagrid/datagrid/helpers.dart';
+//import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 void assertEmpty(DataView dv) {
   expect(0, equals(dv.getLength), reason: ".rows is initialized to an empty array");
@@ -99,7 +99,7 @@ void main() {
       });
 
     });
-  }
+  });
 }
 
 
