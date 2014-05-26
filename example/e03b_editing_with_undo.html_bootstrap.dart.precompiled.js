@@ -4589,7 +4589,6 @@ J.vP(z,H.d(J.xH(J.WB(J.WB(V.Ib(J.YE(w).gR(w)),V.Ib(C.rj.gvF(w))),V.Ib(C.rj.gjC(w
 x.jx(y,this.qt)
 z=document.createElement("div",null)
 J.JZ(z).h(0,"editor-percentcomplete-picker")
-J.Vn(z.style,"10000")
 this.dW=z
 x.jx(y,z)
 z=this.dW
