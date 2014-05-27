@@ -17,7 +17,7 @@ class CellSelectionModelOptions {
   CellSelectionModelOptions({this.selectActiveCell : true});
 }
 
-class CellSelectionModel extends SelectionModel{
+class CellSelectionModel extends SelectionModel {
   BwuDatagrid _grid;
   dom.HtmlElement _canvas;
   List<core.Range> _ranges = <core.Range>[];

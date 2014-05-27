@@ -5,6 +5,13 @@ import 'package:unittest/unittest.dart';
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 //import 'package:bwu_datagrid/datagrid/helpers.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/datagrid/helpers.dart';
+
+import 'package:logging/logging.dart';
+import 'package:quiver_log/log.dart';
+
+var _log = new Logger('bwu_datagrid.dataview_test');
 
 void assertEmpty(DataView dv) {
   expect(0, equals(dv.getLength), reason: ".rows is initialized to an empty array");
@@ -20,12 +27,13 @@ void assertConsistency(DataView dv, [String idProperty]) {
   if(idProperty == null || idProperty.isEmpty) {
     idProperty = "id";
   }
-  List<Item> items = dv.getItems();
+  List<core.ItemBase> items = dv.getItems();
       int filteredOut = 0;
       int row;
       String id;
 
-  for (var i=0; i<items.length; i++) {
+  for (var i=0; i < items.length; i++) {
+    _log.fine(items[i][idProperty]);
       id = items[i][idProperty];
       expect(dv.getItemByIdx(i), equals(items[i]), reason: "getItemByIdx");
       expect(dv.getItemById(id), equals([i]), reason: "getItemById");
@@ -43,8 +51,11 @@ void assertConsistency(DataView dv, [String idProperty]) {
 }
 
 void main() {
-  initPolymer().run(() {
-    useHtmlEnhancedConfiguration();
+  Logger.root.level = Level.ALL;
+  new PrintAppender(BASIC_LOG_FORMATTER).attachLogger(_log);
+
+  //useHtmlEnhancedConfiguration();
+  //initPolymer().run(() {
 
     group('basic', () {
       test("initial setup", () {
@@ -59,6 +70,7 @@ void main() {
       });
     });
 
+
     group('setItems', () {
       test("empty", () {
           var dv = new DataView();
@@ -68,7 +80,7 @@ void main() {
 
       test("basic", () {
           var dv = new DataView();
-          dv.setItems([{'id':0},{'id':1}]);
+          dv.setItems([new MapDataItem({'id':0}), new MapDataItem({'id':1})]);
           expect(dv.getLength, equals(2), reason: "rows.length");
           expect(dv.getItems().length, equals(2), reason: "getItems().length");
           assertConsistency(dv);
@@ -99,7 +111,7 @@ void main() {
       });
 
     });
-  });
+  //});
 }
 
 

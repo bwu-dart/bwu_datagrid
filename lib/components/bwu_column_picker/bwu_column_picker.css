@@ -1,4 +1,8 @@
-.bwu-columnpicker {
+:host {
+  display: none;
+  position: absolute;
+  z-index: 20;
+
   border: 1px solid #718BB7;
   background: #f0f0f0;
   padding: 6px;
@@ -7,25 +11,32 @@
   box-shadow: 2px 2px 2px silver;
   min-width: 100px;
   cursor: default;
+  opacity: 0;
 }
 
-.bwu-columnpicker li {
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+li {
   list-style: none;
   margin: 0;
   padding: 0;
   background: none;
 }
 
-.bwu-columnpicker input {
+input {
   margin: 4px;
 }
 
-.bwu-columnpicker li a {
+li a {
   display: block;
   padding: 4px;
   font-weight: bold;
 }
 
-.bwu-columnpicker li a:hover {
+li a:hover {
   background: white;
 }

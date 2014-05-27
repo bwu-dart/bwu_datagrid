@@ -33,6 +33,10 @@ class MapDataItemProvider extends DataProvider {
 
   @override
   RowMetadata getItemMetadata (int index) => null;
+
+  void set items(List<DataItem> items) {
+    this.items = items;
+  }
 }
 
 
@@ -133,17 +137,18 @@ abstract class FormatterFactory {
 //}
 
 abstract class DataItem extends ItemBase {
-  dynamic operator[](String key);
-  void operator[]=(String key, value);
 }
 
-class MapDataItem<K, V> extends DelegatingMap implements DataItem {
+class MapDataItem extends DelegatingMap implements DataItem {
 //  String title;
 //  int level;
 //  bool collapsed;
   //Map operator [](String idx) => data[idx];
-  MapDataItem([Map<K, V> base]) : super(base != null ? base : new Map<K,V>());
+  MapDataItem([Map base]) : super(base != null ? base : new Map());
 
+  void extend(MapDataItem update) {
+    update.keys.forEach((e) => this[e] = update[e]);
+  }
 }
 
 /* temp */
@@ -193,6 +198,7 @@ class Column {
   String cssClass;
   bool cannotTriggerInsert;
   String colspan;
+  String behavior;
 
   Editor editor;
   Formatter formatter;
@@ -201,8 +207,12 @@ class Column {
 
   int previousWidth;
 
-  Column({this.id, this.field, this.minWidth : 30, this.maxWidth, this.cssClass, this.formatter, this.editor, this.validator,
-    this.name: '' , this.width, this.resizable : true, this.sortable : false, this.focusable : true, this.selectable : true, this.defaultSortAsc : true, this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan}) {
+  Column({this.id, this.field, this.minWidth : 30, this.maxWidth, this.cssClass,
+    this.formatter, this.editor, this.validator, this.name: '' , this.width,
+    this.resizable : true, this.sortable : false, this.focusable : true,
+    this.selectable : true, this.defaultSortAsc : true,
+    this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan,
+    this.behavior}) {
   }
 
   Column.unititialized();
@@ -228,9 +238,10 @@ class Column {
     if(c.formatter != null) formatter = c.formatter;
     if(c.validator != null) validator = c.validator;
     if(c.previousWidth != null) previousWidth = c.previousWidth;
+    if(c.behavior != null) behavior = c.behavior;
   }
 
-  void asyncPostRender(dom.HtmlElement node, int row, /*Map/Item*/ rowData, Column m) {
+  void asyncPostRender(dom.HtmlElement node, int row, MapDataItem rowData, Column m) {
     print('Column.asyncPostRender not yet implemented');
   }
 }

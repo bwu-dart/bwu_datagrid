@@ -75,9 +75,11 @@ class GroupItemMetadataProvider {
   Formatter _groupFormatter;
   Formatter _totalsFormatter;
 
-  GroupItemMetadataProvider(this.groupCssClass, this.groupTitleCssClass, this.totalsCssClass,
+  GroupItemMetadataProvider({this.groupCssClass, this.groupTitleCssClass, this.totalsCssClass,
       this.groupFocusable, this.totalsFocusable, this.toggleCssClass, this.toggleExpandedCssClass,
-      this.toggleCollapsedCssClass, this.enableExpandCollapse, this._groupFormatter, this._totalsFormatter) {
+      this.toggleCollapsedCssClass, this.enableExpandCollapse, Formatter groupFormatter, Formatter totalsFormatter}) {
+    _groupFormatter = groupFormatter;
+    _totalsFormatter = totalsFormatter;
     _gridClickSubscription = _grid.onBwuClick.listen(_handleGridClick);
     _gridKeyDownSubscription = _grid.onBwuKeyDown.listen(_handleGridKeyDown);
   }

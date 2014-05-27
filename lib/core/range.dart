@@ -65,7 +65,8 @@ class Range {
 }
 
 abstract class ItemBase {
-
+  dynamic operator[](String key);
+  void operator[]=(String key, value);
 }
 
 /***
@@ -135,6 +136,16 @@ class Group extends NonDataItem {
 
   @override
   int get hashCode => quc.hash3(count, isCollapsed, title);
+
+  @override
+  operator [](String key) {
+    throw 'not yet implemented'; // TODO
+  }
+
+  @override
+  void operator []=(String key, value) {
+    throw 'not yet implemented'; // TODO
+  }
 }
 
 /**
@@ -154,6 +165,16 @@ class GroupTotals extends NonDataItem {
    * Will be set to false for lazy-calculated group totals.
    */
   bool isInitialized = false;
+
+  @override
+  operator [](key) {
+    throw 'not yet implemented'; // TODO
+  }
+
+  @override
+  void operator []=(key, value) {
+    throw 'not yet implemented'; // TODO
+  }
 }
 
 /***

@@ -1,3 +1,8 @@
+## 0.0.6
+
+* columnpicker
+* example 04_model
+
 ## 0.0.5
 
 * example composite_editor_item_details added

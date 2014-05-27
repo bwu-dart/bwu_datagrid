@@ -1,11 +1,13 @@
 part of bwu_dart.bwu_datagrid.dataview;
 
-class Options {
+class DataViewOptions {
   GroupItemMetadataProvider groupItemMetadataProvider; // TODO type
   bool inlineFilters;
 
-  Options({this.groupItemMetadataProvider : null, this.inlineFilters: false});
+  DataViewOptions({this.groupItemMetadataProvider : null, this.inlineFilters: false});
 }
+
+typedef int SortComparerFunc(a, b);
 
 class GroupingInfo {
   bool getter = null;

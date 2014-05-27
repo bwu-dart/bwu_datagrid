@@ -270,7 +270,7 @@ class SelectedRowsChanged extends EventData {
   List<int> rows;
   dom.CustomEvent get causedBy => super.causedBy;
 
-  SelectedRowsChanged(sender, List<int>rows, dom.CustomEvent causedBy) : super(sender: sender, causedBy:
+  SelectedRowsChanged(sender, List<int> rows, dom.CustomEvent causedBy) : super(sender: sender, causedBy:
       causedBy, detail: {
         'rows': rows
       }) {

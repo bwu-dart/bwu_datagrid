@@ -143,7 +143,7 @@ class BwuDatagrid extends PolymerElement {
   dom.HtmlElement _zombieRowNodeFromLastMouseWheelEvent;  // node that was hidden instead of getting deleted
 
   core.EventBus get eventBus => _eventBus;
-  final core.EventBus _eventBus = new core.EventBus();
+  core.EventBus _eventBus = new core.EventBus();
 
 
   void setup({DataProvider dataProvider, List<Column> columns, GridOptions gridOptions}) {
@@ -780,7 +780,7 @@ class BwuDatagrid extends PolymerElement {
     for(int i = 0; i < columnElements.length; i++) {
       var header_col = columnElements[i];
       if (i < firstResizable || (_gridOptions.forceFitColumns && i >= lastResizable)) {
-        return;
+        continue;
       }
 
       var div = new dom.DivElement()
@@ -808,7 +808,7 @@ class BwuDatagrid extends PolymerElement {
                 c = columns[j];
                 if (c.resizable) {
                   if (stretchLeewayOnRight != null) {
-                    if (c.maxWidth > 0) {
+                    if (c.maxWidth != null && c.maxWidth > 0) {
                       stretchLeewayOnRight += c.maxWidth - c.previousWidth;
                     } else {
                       stretchLeewayOnRight = null;
@@ -1197,7 +1197,7 @@ class BwuDatagrid extends PolymerElement {
         var currentWidth = widths[i];
         var growSize;
 
-        if (!c.resizable || c.maxWidth <= currentWidth) {
+        if (!c.resizable || (c.maxWidth == null || c.maxWidth <= currentWidth)) {
           growSize = 0;
         } else {
           var tmp = (c.maxWidth - currentWidth > 0 ? c.maxWidth - currentWidth : 1000000);
@@ -1319,7 +1319,7 @@ class BwuDatagrid extends PolymerElement {
 
     setCellCssStyles(_gridOptions.selectedCellCssClass, hash);
 
-    _eventBus.fire(core.Events.SELECTED_ROWS_CHANGED, new core.SelectedRowsChanged(this, getSelectedRows, e));
+    _eventBus.fire(core.Events.SELECTED_ROWS_CHANGED, new core.SelectedRowsChanged(this, getSelectedRows(), e));
   }
 
   List<Column> get getColumns => columns;
@@ -1633,9 +1633,7 @@ class BwuDatagrid extends PolymerElement {
     if (_currentEditor != null) {
       _makeActiveCellNormal();
     }
-    for (var i = 0; i < _rowsCache.length; i++) { // TODO was probably an associative array
-      _removeRowFromCache(i);
-    }
+    _rowsCache.keys.toList().forEach((e) => _removeRowFromCache(e));
   }
 
   void _removeRowFromCache(int row) {
@@ -1649,7 +1647,7 @@ class BwuDatagrid extends PolymerElement {
       _zombieRowNodeFromLastMouseWheelEvent = _rowNodeFromLastMouseWheelEvent;
     } else {
       //$canvas.children[0].remove(cacheEntry.rowNode);
-      cacheEntry.rowNode.remove(); // TODO remove/add event handlers
+      cacheEntry.rowNode.remove(); // TODO remove/add event handlers?
     }
 
     _rowsCache.remove(row);
@@ -1901,9 +1899,9 @@ class BwuDatagrid extends PolymerElement {
     var cellsToRemove = [];
     for (var i in cacheEntry.cellNodesByColumnIdx.keys) {
       // I really hate it when people mess with Array.prototype.
-//      if (!cacheEntry.cellNodesByColumnIdx.containsKey(i)) { // TODO check
-//        continue;
-//      }
+      if (!cacheEntry.cellNodesByColumnIdx.containsKey(i)) { // TODO check
+        continue;
+      }
 
       // This is a string, so it needs to be cast back to a number.
       //i = i | 0;
@@ -2001,7 +1999,7 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    if (rowElement.children.length == 0) {
+    if (rowElement.children.length != 0) {
       return;
     }
 

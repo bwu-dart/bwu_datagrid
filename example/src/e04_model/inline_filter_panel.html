@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<polymer-element name='inline-filter-panel'>
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #inlineFilterPanel {
+        display: none;
+        background: #dddddd;
+        padding: 3px;
+        color: black;
+      }
+
+      #slider {
+        width: 100px;
+        display: inline-block;"
+      }
+    </style>
+    <div id="inlineFilterPanel">
+      Show tasks with title including <input type="text" id="txtSearch2"> and % at least &nbsp;
+      <div id="pcSlider2"></div>
+    </div>
+  </template>
+  <script type='application/dart' src='inline_filter_panel.dart'></script>
+</polymer-element>
