@@ -21,15 +21,15 @@
       }
     </style>
     <style>
-      .cell-title {
+      bwu-datagrid /deep/ .cell-title {
         font-weight: bold;
       }
 
-      .cell-effort-driven {
+      bwu-datagrid /deep/ .cell-effort-driven {
         text-align: center;
       }
 
-      .cell-selection {
+      bwu-datagrid /deep/ .cell-selection {
         border-right-color: silver;
         border-right-style: solid;
         background: #f5f5f5;
@@ -38,7 +38,7 @@
         font-size: 10px;
       }
 
-      .slick-row.selected .cell-selection {
+      bwu-datagrid /depp/ .bwu-datagrid-row.selected .cell-selection {
         background-color: transparent; /* show default selected row background */
       }
     </style>
@@ -46,7 +46,7 @@
     <div style='position:relative'>
       <div style='width:600px;'>
         <div class='grid-header' style='width:100%'>
-          <label>SlickGrid</label>
+          <label>BWU Datagrid</label>
           <span style='float:right' class='ui-icon ui-icon-search' title='Toggle search panel'
                 on-click='{{toggleFilterRow}}'></span>
         </div>

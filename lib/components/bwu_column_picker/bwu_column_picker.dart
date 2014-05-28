@@ -53,6 +53,7 @@ class BwuColumnPicker extends PolymerElement {
     isAutoResize = _grid.getGridOptions.forceFitColumns;
   }
 
+// TODO binding to 'checked' of the checkboxes didn't work
 //  void isSyncResizeChanged(old) {
 //    _grid.setGridOptions = new GridOptions(syncColumnCellResize: isSyncResize);
 //  }
@@ -66,7 +67,11 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   void autoResizeChangedHandler(dom.Event e, detail, dom.HtmlElement target) {
-    _grid.setGridOptions = new GridOptions(forceFitColumns: (target as dom.CheckboxInputElement).checked);
+    var checked = (target as dom.CheckboxInputElement).checked;
+    _grid.setGridOptions = new GridOptions(forceFitColumns: checked);
+    if(checked) {
+      _grid.autosizeColumns();
+    }
   }
 
 
@@ -82,7 +87,6 @@ class BwuColumnPicker extends PolymerElement {
 
     _subscriptions.add(_grid.onBwuHeaderContextMenu.listen(handleHeaderContextMenu));
     _subscriptions.add(_grid.onBwuColumnsReordered.listen(updateColumnOrder));
-    //_subscriptions.add(onMouseLeave.listen((e) => fadeOut(_options.fadeSpeed)));
     _subscriptions.add(onClick.listen(updateColumn));
 
     isInitialized = true;

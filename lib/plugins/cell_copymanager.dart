@@ -42,7 +42,7 @@ class CellCopyManager extends Plugin {
         if (_copiedRanges) {
           e.preventDefault();
           clearCopySelection();
-          grid.fire(core.Events.COPY_CANCELLED, new core.CopyCancelled(this, _copiedRanges));
+          grid.eventBus.fire(core.Events.COPY_CANCELLED, new core.CopyCancelled(this, _copiedRanges));
 //          onCopyCancelled.notify({
 //            ranges: _copiedRanges
 //          });
@@ -56,7 +56,7 @@ class CellCopyManager extends Plugin {
           e.preventDefault();
           _copiedRanges = ranges;
           markCopySelection(ranges);
-          grid.fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
+          grid.eventBus.fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
 //          onCopyCells.notify({
 //            'ranges': ranges
 //          });
@@ -68,7 +68,7 @@ class CellCopyManager extends Plugin {
           e.preventDefault();
           clearCopySelection();
           ranges = grid.getSelectionModel.getSelectedRanges();
-          grid.fire(core.Events.PASTE_CELLS, new core.PasteCells(this, from: copiedRanges, to: ranges));
+          grid.eventBus.fire(core.Events.PASTE_CELLS, new core.PasteCells(this, _copiedRanges, ranges));
 //          onPasteCells.notify({
 //            'from': _copiedRanges,
 //            'to': ranges

@@ -4,11 +4,9 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 import 'dart:math' as math;
 
-import 'package:bwu_datagrid/plugins/cell_range_selector.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart';
 import 'package:bwu_datagrid/plugins/plugin.dart';
-import 'package:bwu_datagrid/plugins/cell_range_decorator.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
@@ -38,9 +36,9 @@ class RowSelectionModel extends SelectionModel {
   void init(BwuDatagrid grid) {
     //_options = $.extend(true, {}, _defaults, options);
     _grid = grid;
-    _subscriptions.add(_grid.onBwuActiveCellChanged.listen(handleActiveCellChange));
-    _subscriptions.add(_grid.onBwuKeyDown.listen(handleKeyDown));
-    _subscriptions.add(_grid.onBwuClick.listen(handleClick));
+    _subscriptions.add(_grid.onBwuActiveCellChanged.listen(_handleActiveCellChange));
+    _subscriptions.add(_grid.onBwuKeyDown.listen(_handleKeyDown));
+    _subscriptions.add(_grid.onBwuClick.listen(_handleClick));
   }
 
   void destroy() {
@@ -57,7 +55,7 @@ class RowSelectionModel extends SelectionModel {
 //    };
 //  }
 
-  List<int> rangesToRows(List<core.Range> ranges) {
+  List<int> _rangesToRows(List<core.Range> ranges) {
     List<int> rows = [];
     for (var i = 0; i < ranges.length; i++) {
       for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
@@ -67,7 +65,7 @@ class RowSelectionModel extends SelectionModel {
     return rows;
   }
 
-  List<core.Range> rowsToRanges(List<int> rows) {
+  List<core.Range> _rowsToRanges(List<int> rows) {
     List<core.Range> ranges = [];
     var lastCell = _grid.getColumns.length - 1;
     for (var i = 0; i < rows.length; i++) {
@@ -76,7 +74,7 @@ class RowSelectionModel extends SelectionModel {
     return ranges;
   }
 
-  List<int> getRowsRange(int from, int to) {
+  List<int> _getRowsRange(int from, int to) {
     var i, rows = [];
     for (i = from; i <= to; i++) {
       rows.add(i);
@@ -88,11 +86,11 @@ class RowSelectionModel extends SelectionModel {
   }
 
   List<int> getSelectedRows() {
-    return rangesToRows(_ranges);
+    return _rangesToRows(_ranges);
   }
 
   void setSelectedRows(List<int> rows) {
-    setSelectedRanges(rowsToRanges(rows));
+    setSelectedRanges(_rowsToRanges(rows));
   }
 
   void setSelectedRanges(List<core.Range> ranges) {
@@ -105,13 +103,13 @@ class RowSelectionModel extends SelectionModel {
     return _ranges;
   }
 
-  void handleActiveCellChange(ActiveCellChanged e) {
+  void _handleActiveCellChange(ActiveCellChanged e) {
     if (_options.selectActiveRow && e.cell.row != null) {
       setSelectedRanges([new core.Range(e.cell.row, 0, toRow: e.cell.row, toCell: _grid.getColumns.length - 1)]);
     }
   }
 
-  void handleKeyDown(core.KeyDown e) {
+  void _handleKeyDown(core.KeyDown e) {
     Cell activeRow = _grid.getActiveCell();
     if (activeRow != null && e.causedBy.shiftKey && !e.causedBy.ctrlKey && !e.causedBy.altKey && !e.causedBy.metaKey && (e.causedBy.which == dom.KeyCode.UP || e.causedBy.which == dom.KeyCode.DOWN)) {
       List<int> selectedRows = getSelectedRows();
@@ -135,7 +133,7 @@ class RowSelectionModel extends SelectionModel {
 
       if (active >= 0 && active < _grid.getDataLength) {
         _grid.scrollRowIntoView(active);
-        _ranges = rowsToRanges(getRowsRange(top, bottom));
+        _ranges = _rowsToRanges(_getRowsRange(top, bottom));
         setSelectedRanges(_ranges);
       }
 
@@ -144,7 +142,7 @@ class RowSelectionModel extends SelectionModel {
     }
   }
 
-  void handleClick(Click e) {
+  void _handleClick(Click e) {
     Cell cell = _grid.getCellFromEvent(e.causedBy);
     if (cell == null || !_grid.canCellBeActive(cell.row, cell.cell)) {
       return; // TODO is this needed? false;
@@ -155,7 +153,7 @@ class RowSelectionModel extends SelectionModel {
       return; // TODO is this needed? false;
     }
 
-    List<int> selection = rangesToRows(_ranges);
+    List<int> selection = _rangesToRows(_ranges);
     var idx = selection.indexOf(cell.row); //$.inArray(cell.row, selection);
 
     if (idx == -1 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
@@ -178,23 +176,10 @@ class RowSelectionModel extends SelectionModel {
       _grid.setActiveCell(cell.row, cell.cell);
     }
 
-    _ranges = rowsToRanges(selection);
+    _ranges = _rowsToRanges(selection);
     setSelectedRanges(_ranges);
     e.stopImmediatePropagation();
 
     return; // TODO is this needed? true;
   }
-
-//  $.extend(this, {
-//    "getSelectedRows": getSelectedRows,
-//    "setSelectedRows": setSelectedRows,
-//
-//    "getSelectedRanges": getSelectedRanges,
-//    "setSelectedRanges": setSelectedRanges,
-//
-//    "init": init,
-//    "destroy": destroy,
-//
-//    "onSelectedRangesChanged": new Slick.Event()
-//  });
 }

@@ -9,6 +9,8 @@ import 'package:quiver/core.dart' as quc;
 import 'package:logging/logging.dart' as logging;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/editors/editors.dart';
+import 'package:bwu_datagrid/dataview/dataview.dart';
+import 'package:bwu_datagrid/bwu_datagrid.dart';
 
 part 'event_data.dart';
 part 'event_bus.dart';

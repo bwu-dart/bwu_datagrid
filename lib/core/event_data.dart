@@ -100,6 +100,9 @@ abstract class Events {
   static const SELECTED_RANGES_CHANGED = const EventType<SelectedRangesChanged>(
       'bwu-selected-ranges-changed');
 
+  static const SELECTED_ROW_IDS_CHANGED = const EventType<SelectedRowIdsChanged>(
+      'selected-row-ids-changed');
+
   static const SELECTED_ROWS_CHANGED = const EventType<SelectedRowsChanged>(
       'bwu-selected-rows-changed');
 
@@ -405,7 +408,9 @@ class MouseLeave extends EventData {
 }
 
 class PagingInfoChanged extends EventData {
-  PagingInfoChanged(sender) : super(sender: sender);
+  final PagingInfo pagingInfo;
+
+  PagingInfoChanged(sender, {this.pagingInfo}) : super(sender: sender);
 }
 
 class PasteCells extends EventData {
@@ -429,6 +434,13 @@ class SelectedRangesChanged extends EventData {
   SelectedRangesChanged(sender, this.ranges) : super(sender: sender);
 }
 
+class SelectedRowIdsChanged extends EventData {
+  final BwuDatagrid grid; // TODO isn't this the sender (probably not when sent from DataView)
+  final List<String> ids;
+
+  SelectedRowIdsChanged(sender, this.grid, this.ids) : super(sender: sender);
+}
+
 class SelectedRowsChanged extends EventData {
   final List<int> rows;
   dom.CustomEvent get causedBy => super.causedBy;
@@ -449,11 +461,15 @@ class Sort extends EventData {
 }
 
 class RowCountChanged extends EventData {
-  RowCountChanged(sender) : super(sender: sender);
+  final int oldCount;
+  final int newCount;
+  RowCountChanged(sender, {this.oldCount, this.newCount}) : super(sender: sender);
 }
 
 class RowsChanged extends EventData {
-  RowsChanged(sender) : super(sender: sender);
+  final List<int> changedRows;
+
+  RowsChanged(sender, {this.changedRows}) : super(sender: sender);
 }
 
 class ValidationError extends EventData {

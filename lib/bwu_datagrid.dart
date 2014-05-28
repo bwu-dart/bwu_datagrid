@@ -67,7 +67,7 @@ class BwuDatagrid extends PolymerElement {
   int _vScrollDir = 1;
 
   // shared across all grids on the page
-  math.Point _scrollbarDimensions;
+  math.Point<int> _scrollbarDimensions;
   int _maxSupportedCssHeight;  // browser's breaking point
 
   // private
@@ -306,7 +306,7 @@ class BwuDatagrid extends PolymerElement {
     if (!_initialized) {
       _initialized = true;
 
-      _viewportW = this.offsetWidth; //tools.parseInt(this.getComputedStyle().width);
+      _viewportW = this.offsetWidth.round(); //tools.parseInt(this.getComputedStyle().width);
 
       // header columns and cells may have different padding/border skewing width calculations (box-sizing, hello?)
       // calculate the diff so we can set consistent sizes
@@ -402,7 +402,7 @@ class BwuDatagrid extends PolymerElement {
     _selectionModel = model;
     if (_selectionModel != null) {
       _selectionModel.init(this);
-      _onSelectedRangesChanged = _selectionModel.onSelectedRangesChanged.listen(_selectedRangesChangedHandler);
+      _onSelectedRangesChanged = onBwuSelectedRangesChanged.listen(_selectedRangesChangedHandler);
     }
   }
 
@@ -432,11 +432,11 @@ class BwuDatagrid extends PolymerElement {
       headersWidth += width;
     }
     headersWidth += _scrollbarDimensions.x;
-    return math.max(headersWidth, _viewportW) + 1000;
+    return math.max(headersWidth, _viewportW).round() + 1000;
   }
 
   int _getCanvasWidth() {
-    int availableWidth = _viewportHasVScroll ? _viewportW - _scrollbarDimensions.x : _viewportW;
+    int availableWidth = _viewportHasVScroll ? _viewportW - _scrollbarDimensions.x.round() : _viewportW;
     int rowWidth = 0;
     int i = columns != null ? columns.length : 0;
     while (i-- > 0) {
@@ -855,6 +855,7 @@ class BwuDatagrid extends PolymerElement {
               return;
             }
             int d = math.min(maxPageX, math.max(minPageX, e.page.x)) - pageX;
+
             int x;
             if (d < 0) { // shrink column
               x = d;
@@ -1151,7 +1152,7 @@ class BwuDatagrid extends PolymerElement {
     int shrinkLeeway = 0;
     int total = 0;
     int prevTotal;
-    int availWidth = _viewportHasVScroll ? _viewportW - _scrollbarDimensions.x : _viewportW;
+    int availWidth = _viewportHasVScroll ? _viewportW - _scrollbarDimensions.x.round() : _viewportW;
 
     for (i = 0; i < columns.length; i++) {
       c = columns[i];
@@ -1200,7 +1201,7 @@ class BwuDatagrid extends PolymerElement {
         if (!c.resizable || (c.maxWidth == null || c.maxWidth <= currentWidth)) {
           growSize = 0;
         } else {
-          var tmp = (c.maxWidth - currentWidth > 0 ? c.maxWidth - currentWidth : 1000000);
+          var tmp = (c.maxWidth - currentWidth != 0 ? c.maxWidth - currentWidth : 1000000);
           growSize = math.min((growProportion * currentWidth).floor() - currentWidth, tmp);
           if(growSize == 0) {
             growSize = 1;
@@ -1236,7 +1237,7 @@ class BwuDatagrid extends PolymerElement {
     var h;
     for (int i = 0; i < _headers.children.length; i++) {
       h = _headers.children[i];
-      if (h.style.width != columns[i].width - _headerColumnWidthDiff) { // TODO comparsion
+      if (h.offsetWidth != columns[i].width - _headerColumnWidthDiff) { // TODO comparsion
         h.style.width = '${columns[i].width - _headerColumnWidthDiff}px';
       }
     }
@@ -1300,16 +1301,16 @@ class BwuDatagrid extends PolymerElement {
 
   List<SortColumn> get getSortColumns => _sortColumns;
 
-  void _selectedRangesChangedHandler(dom.CustomEvent e, [List<Range> ranges]) {
+  void _selectedRangesChangedHandler(core.SelectedRangesChanged e) { //dom.CustomEvent e, [List<Range> ranges]) {
     _selectedRows = [];
     Map<int,Map<String,String>> hash = {};
-    for (var i = 0; i < ranges.length; i++) {
-      for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
+    for (var i = 0; i < e.ranges.length; i++) {
+      for (var j = e.ranges[i].fromRow; j <= e.ranges[i].toRow; j++) {
         if (hash[j] == null) {  // prevent duplicates
           _selectedRows.add(j);
           hash[j] = {};
         }
-        for (var k = ranges[i].fromCell; k <= ranges[i].toCell; k++) {
+        for (var k = e.ranges[i].fromCell; k <= e.ranges[i].toCell; k++) {
           if (canCellBeSelected(j, k)) {
             hash[j][columns[k].id] = _gridOptions.selectedCellCssClass;
           }
@@ -1319,7 +1320,7 @@ class BwuDatagrid extends PolymerElement {
 
     setCellCssStyles(_gridOptions.selectedCellCssClass, hash);
 
-    _eventBus.fire(core.Events.SELECTED_ROWS_CHANGED, new core.SelectedRowsChanged(this, getSelectedRows(), e));
+    _eventBus.fire(core.Events.SELECTED_ROWS_CHANGED, new core.SelectedRowsChanged(this, getSelectedRows(), e.causedBy));
   }
 
   List<Column> get getColumns => columns;
@@ -1746,7 +1747,7 @@ class BwuDatagrid extends PolymerElement {
     }
 
     _numVisibleRows = (_viewportH / _gridOptions.rowHeight).ceil();
-    _viewportW = this.offsetWidth; //tools.parseInt(this.getComputedStyle().width);
+    _viewportW = this.offsetWidth.round(); //tools.parseInt(this.getComputedStyle().width);
     if (!_gridOptions.autoHeight) {
       _viewport.style.height = "${_viewportH}px";
     }
@@ -1806,7 +1807,7 @@ class BwuDatagrid extends PolymerElement {
 
     if (_h != oldH) {
       _canvas.style.height = "${_h}px";
-      _scrollTop = _viewport.scrollTop;
+      _scrollTop = _viewport.scrollTop.round();
     }
 
     var oldScrollTopInRange = (_scrollTop + _pageOffset <= _th - _viewportH);
@@ -2140,8 +2141,8 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _handleScroll([dom.Event e]) {
-    _scrollTop = _viewport.scrollTop;
-    _scrollLeft = _viewport.scrollLeft;
+    _scrollTop = _viewport.scrollTop.round();
+    _scrollLeft = _viewport.scrollLeft.round();
     int vScrollDist = (_scrollTop - _prevScrollTop).abs();
     int hScrollDist = (_scrollLeft - _prevScrollLeft).abs();
 
@@ -3420,7 +3421,7 @@ class BwuDatagrid extends PolymerElement {
     return true;
   }
 
-  List<int> _rowsToRanges(List<int> rows) {
+  List<core.Range> _rowsToRanges(List<int> rows) {
     var ranges = [];
     var lastCell = columns.length - 1;
     for (var i = 0; i < rows.length; i++) {
@@ -3551,6 +3552,9 @@ class BwuDatagrid extends PolymerElement {
 
   async.Stream<core.MouseLeave> get onBwuMouseLeave =>
       _eventBus.onEvent(core.Events.MOUSE_LEAVE);
+
+  async.Stream<core.SelectedRangesChanged> get onBwuSelectedRangesChanged =>
+      _eventBus.onEvent(core.Events.SELECTED_RANGES_CHANGED);
 
   async.Stream<core.SelectedRowsChanged> get onBwuSelectedRowsChanged =>
       _eventBus.onEvent(core.Events.SELECTED_ROWS_CHANGED);

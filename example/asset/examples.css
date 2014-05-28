@@ -36,7 +36,7 @@ li {
   border: 1px solid gray;
 }
 
-bwu-datagrid /deep/ .grid-header {
+.grid-header {
   border: 1px solid gray;
   border-bottom: 0;
   border-top: 0;
@@ -46,23 +46,23 @@ bwu-datagrid /deep/ .grid-header {
   line-height: 24px;
 }
 
-bwu-datagrid /deep/ .grid-header label {
+.grid-header label {
   display: inline-block;
   font-weight: bold;
   margin: auto auto auto 6px;
 }
 
-bwu-datagrid /deep/ .grid-header .ui-icon {
+.grid-header .ui-icon {
   margin: 4px 4px auto 6px;
   background-color: transparent;
   border-color: transparent;
 }
 
-bwu-datagrid /deep/ .grid-header .ui-icon.ui-state-hover {
+.grid-header .ui-icon.ui-state-hover {
   background-color: white;
 }
 
-bwu-datagrid /deep/ .grid-header #txtSearch {
+.grid-header #txtSearch {
   margin: 0 4px 0 4px;
   padding: 2px 2px;
   -moz-border-radius: 2px;

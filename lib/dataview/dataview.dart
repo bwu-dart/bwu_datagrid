@@ -6,8 +6,7 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'events.dart';
-import 'package:bwu_datagrid/bwu_datagrid.dart';
+import 'package:bwu_datagrid/bwu_datagrid.dart' as grid;
 
 
 part 'aggregators.dart';
@@ -81,17 +80,17 @@ class DataView {
   core.EventBus get eventBus => _eventBus;
   core.EventBus _eventBus = new core.EventBus();
 
-  async.Stream<PagingInfoChanged> get onBwuPagingInfoChanged =>
-      _eventBus.onEvent(Events.PAGING_INFO_CHANGED);
+  async.Stream<core.PagingInfoChanged> get onBwuPagingInfoChanged =>
+      _eventBus.onEvent(core.Events.PAGING_INFO_CHANGED);
 
-  async.Stream<RowCountChanged> get onBwuRowCountChanged =>
-      _eventBus.onEvent(Events.ROW_COUNT_CHANGED);
+  async.Stream<core.RowCountChanged> get onBwuRowCountChanged =>
+      _eventBus.onEvent(core.Events.ROW_COUNT_CHANGED);
 
-  async.Stream<RowsChanged> get onBwuRowsChanged =>
-      _eventBus.onEvent(Events.ROWS_CHANGED);
+  async.Stream<core.RowsChanged> get onBwuRowsChanged =>
+      _eventBus.onEvent(core.Events.ROWS_CHANGED);
 
-  async.Stream<SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
-      _eventBus.onEvent(Events.SELECTED_ROW_IDS_CHANGED);
+  async.Stream<core.SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
+      _eventBus.onEvent(core.Events.SELECTED_ROW_IDS_CHANGED);
 
 
   void beginUpdate() {
@@ -158,7 +157,7 @@ class DataView {
       pagenum = math.min(args.pageNum, math.max(0, (totalRows / pagesize).ceil() - 1));
     }
 
-    eventBus.fire(Events.PAGING_INFO_CHANGED, new PagingInfoChanged(this));
+    eventBus.fire(core.Events.PAGING_INFO_CHANGED, new core.PagingInfoChanged(this));
     refresh();
   }
 
@@ -320,7 +319,7 @@ class DataView {
     return items[idx];
   }
 
-  List<int> mapIdsToRows(List<int> idArray) {
+  List<int> mapIdsToRows(List<String> idArray) {
     List<int> rows = [];
     ensureRowsByIdCache();
     for (int i = 0; i < idArray.length; i++) {
@@ -483,12 +482,12 @@ class DataView {
 
   List<core.Group> get getGroups => groups;
 
-  List<core.Group> extractGroups(List<core.ItemBase> rows, [core.Group parentGroup]) {
+  List<core.Group> extractGroups(List<int> rows, [core.Group parentGroup]) {
     core.Group group;
     int val;
     List<core.Group> groups = [];
     Map<int, core.Group> groupsByVal = {};
-    core.ItemBase r;
+    int r;
     int level = parentGroup != null ? parentGroup.level + 1 : 0;
     GroupingInfo gi = groupingInfos[level];
 
@@ -602,11 +601,11 @@ class DataView {
     }
   }
 
-  List<core.Group> flattenGroupedRows(List<core.Group>groups, [int level]) {
+  List<int> flattenGroupedRows(List<core.Group>groups, [int level]) {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
-    List<core.ItemBase> groupedRows = [];
-    List<core.Group>rows;
+    List<int> groupedRows = [];
+    List<int>rows;
     int gl = 0;
     core.Group g;
     for (int i = 0; i < groups.length; i++) {
@@ -762,7 +761,7 @@ class DataView {
       // special case:  if not filtering and not paging, the resulting
       // rows collection needs to be a copy so that changes due to sort
       // can be caught
-      filteredItems = pagesize != null ? items : items.concat();
+      filteredItems = pagesize != null ? items : new List<core.ItemBase>.from(items);
     }
 
     // get the current page
@@ -779,7 +778,7 @@ class DataView {
     return {'totalRows': filteredItems.length, 'rows': paged};
   }
 
-  List<int> getRowDiffs(List<core.ItemBase> rows, List<core.ItemBase> newRows) {
+  List<int> getRowDiffs(List<int> rows, List<int> newRows) {
     core.ItemBase item;
     core.ItemBase r;
     bool eitherIsNonData;
@@ -831,9 +830,9 @@ class DataView {
       filterCache = [];
     }
 
-    var filteredItems = getFilteredAndPagedItems(items);
+    Map filteredItems = getFilteredAndPagedItems(items);
     totalRows = filteredItems['totalRows'];
-    List<core.ItemBase> newRows = filteredItems['rows'];
+    List<int> newRows = filteredItems['rows'];
 
     groups = [];
     if (groupingInfos.length > 0) {
@@ -873,15 +872,15 @@ class DataView {
     refreshHints = {};
 
     if (totalRowsBefore != totalRows) {
-      eventBus.fire(Events.PAGING_INFO_CHANGED, new PagingInfoChanged(this, pagingInfo: getPagingInfo()));
+      eventBus.fire(core.Events.PAGING_INFO_CHANGED, new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
       //onPagingInfoChanged.notify(getPagingInfo(), null, self);
     }
     if (countBefore != rows.length) {
-      eventBus.fire(Events.ROW_COUNT_CHANGED, new RowCountChanged(this, oldCount: countBefore, newCount: rows.length));
+      eventBus.fire(core.Events.ROW_COUNT_CHANGED, new core.RowCountChanged(this, oldCount: countBefore, newCount: rows.length));
       //onRowCountChanged.notify({previous: countBefore, current: rows.length}, null, self);
     }
     if (diff.length > 0) {
-      eventBus.fire(Events.ROWS_CHANGED, new RowsChanged(this, changedRows: diff));
+      eventBus.fire(core.Events.ROWS_CHANGED, new core.RowsChanged(this, changedRows: diff));
       //onRowsChanged.notify({rows: diff}, null, self);
     }
   }
@@ -905,10 +904,9 @@ class DataView {
    *     access to the full list selected row ids, and not just the ones visible to the grid.
    * @method syncGridSelection
    */
-  async.Stream syncGridSelection(BwuDatagrid grid, bool preserveHidden, {bool preserveHiddenOnSelectionChange}) {
-    var self = this;
-    var inHandler;
-    var selectedRowIds = self.mapRowsToIds(grid.getSelectedRows());
+  async.Stream syncGridSelection(grid.BwuDatagrid grid, bool preserveHidden, {bool preserveHiddenOnSelectionChange: false}) {
+    bool inHandler = false;
+    List<String> selectedRowIds = mapRowsToIds(grid.getSelectedRows());
     //var onSelectedRowIdsChanged = new Event();
 
     void setSelectedRowIds(rowIds) {
@@ -918,16 +916,16 @@ class DataView {
 
       selectedRowIds = rowIds;
 
-      eventBus.fire(Events.SELECTED_ROW_IDS_CHANGED, new SelectedRowIdsChanged(
+      eventBus.fire(core.Events.SELECTED_ROW_IDS_CHANGED, new core.SelectedRowIdsChanged(
         this, grid, selectedRowIds));
     }
 
     void update(e) {
       if (selectedRowIds.length > 0) {
         inHandler = true;
-        var selectedRows = self.mapIdsToRows(selectedRowIds);
+        var selectedRows = mapIdsToRows(selectedRowIds);
         if (!preserveHidden) {
-          setSelectedRowIds(self.mapRowsToIds(selectedRows));
+          setSelectedRowIds(mapRowsToIds(selectedRows));
         }
         grid.setSelectedRows(selectedRows);
         inHandler = false;
@@ -936,14 +934,14 @@ class DataView {
 
     grid.onBwuSelectedRowsChanged.listen((e) {
       if (inHandler) { return; }
-      var newSelectedRowIds = self.mapRowsToIds(grid.getSelectedRows());
+      var newSelectedRowIds = mapRowsToIds(grid.getSelectedRows());
       if (!preserveHiddenOnSelectionChange || !grid.getGridOptions.multiSelect) {
         setSelectedRowIds(newSelectedRowIds);
       } else {
         // keep the ones that are hidden
-        var existing = $.grep(selectedRowIds, (id) { return self.getRowById(id) == null; });
+        List<String> existing = selectedRowIds.where((id) => getRowById(id) == null).toList();
         // add the newly selected ones
-        setSelectedRowIds(existing.concat(newSelectedRowIds));
+        setSelectedRowIds(existing.addAll(newSelectedRowIds));
       }
     });
 
