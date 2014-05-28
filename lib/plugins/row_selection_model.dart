@@ -156,15 +156,13 @@ class RowSelectionModel extends SelectionModel {
     }
 
     List<int> selection = rangesToRows(_ranges);
-    var idx = $.inArray(cell.row, selection);
+    var idx = selection.indexOf(cell.row); //$.inArray(cell.row, selection);
 
     if (idx == -1 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
       selection.add(cell.row);
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (idx != -1 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
-      selection = $.grep(selection, (o, i) {
-        return (o != cell.row);
-      });
+      selection = selection.where((o) => o != cell.row);
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (selection.length > 0 && e.causedBy.shiftKey) {
       var last = selection.removeLast();

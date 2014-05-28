@@ -47,6 +47,11 @@ abstract class Events {
 
   static const CONTEXT_MENU = const EventType<ContextMenu>('bwu-context-menu');
 
+  static const COPY_CANCELLED = const EventType<CopyCancelled>(
+      'bwu-copy-cancelled');
+
+  static const COPY_CELLS = const EventType<CopyCells>('bwu-copy-cells');
+
   static const DOUBLE_CLICK = const EventType<DoubleClick>('bwu-double-click');
 
   static const DRAG = const EventType<Drag>('bwu-drag');
@@ -83,6 +88,8 @@ abstract class Events {
   static const PAGING_INFO_CHANGED = const EventType<PagingInfoChanged>(
       'bwu-paging-info-changed');
 
+  static const PASTE_CELLS = const EventType<PasteCells>('bwu-paste-cells');
+
   static const ROWS_CHANGED = const EventType<RowsChanged>('bwu-rows-changed');
 
   static const ROW_COUNT_CHANGED = const EventType<RowCountChanged>(
@@ -113,9 +120,9 @@ abstract class Events {
  */
 
 class EventData {
-  var sender;
-  dom.Event causedBy;
-  Map detail;
+  final sender;
+  final dom.Event causedBy;
+  Map detail = {};
   bool retVal = true;
 
   bool _isPropagationStopped = false;
@@ -171,396 +178,216 @@ class EventData {
     }
   }
 
-  EventData({this.sender, this.detail, this.causedBy});
+  EventData({this.sender, this.causedBy});
 }
 
-
-class BeforeHeaderCellDestroy extends EventData {
-  dom.HtmlElement node;
-  Column columnDef;
-
-  BeforeHeaderCellDestroy(sender, dom.HtmlElement node, Column columnDef) :
-      super(sender: sender, detail: {
-        'node': node,
-        'column': columnDef
-      }) {
-    this.node = node;
-    this.columnDef = columnDef;
-  }
-}
-
-// TODO which properties are really needed for this event
-class BeforeHeaderRowCellDestroy extends EventData {
-  dom.HtmlElement node;
-  Column columnDef;
-
-  BeforeHeaderRowCellDestroy(sender, dom.HtmlElement node, Column columnDef) :
-      super(sender: sender, detail: {
-        'node': node,
-        'column': columnDef
-      }) {
-    this.node = node;
-    this.columnDef = columnDef;
-  }
-}
-
-class BeforeDestroy extends EventData {
-
-  BeforeDestroy(sender) : super(sender: sender, detail: {});
-}
-
-class HeaderCellRendered extends EventData {
-  dom.HtmlElement node;
-  Column columnDef;
-
-  HeaderCellRendered(sender, dom.HtmlElement node, Column columnDef) : super(
-      sender: sender, detail: {
-        'node': node,
-        'column': columnDef
-      }) {
-    this.node = node;
-    this.columnDef = columnDef;
-  }
-}
-
-class HeaderRowCellRendered extends EventData {
-
-  HeaderRowCellRendered(sender) : super(sender: sender, detail: {});
-}
-
-class Sort extends EventData {
-  bool multiColumnSort;
-  Column sortColumn;
-  Map<Column, bool> sortColumns;
-  bool sortAsc;
-
-  Sort(sender, bool multiColumnSort, Column sortColumn, Map<Column, bool>
-      sortColumns, bool sortAsc, dom.Event causedBy)
-      : super(sender: sender, causedBy: causedBy, detail: {
-        'multiColumnSort': multiColumnSort,
-        'sortColumn': sortColumn,
-        'sortAsc': sortAsc,
-      }) {
-    this.multiColumnSort = multiColumnSort;
-    this.sortColumn = sortColumn;
-    this.sortAsc = sortAsc;
-  }
-}
-
-class ColumnsResized extends EventData {
-
-  ColumnsResized(sender) : super(sender: sender, detail: {});
-}
-
-class ColumnsReordered extends EventData {
-
-  ColumnsReordered(sender) : super(sender: sender, detail: {});
-}
-
-class SelectedRangesChanged extends EventData {
-  List<Range> ranges;
-  SelectedRangesChanged(sender, List<Range> ranges) : super(sender: sender, detail: {
-        'ranges': ranges
-      }) {
-    this.ranges = ranges;
-  }
-}
-
-class SelectedRowsChanged extends EventData {
-  List<int> rows;
-  dom.CustomEvent get causedBy => super.causedBy;
-
-  SelectedRowsChanged(sender, List<int> rows, dom.CustomEvent causedBy) : super(sender: sender, causedBy:
-      causedBy, detail: {
-        'rows': rows
-      }) {
-    this.rows = rows;
-  }
-}
-
-class ViewportChanged extends EventData {
-
-  ViewportChanged(sender) : super(sender: sender, detail: {});
-}
-
-class CellRangeSelected extends EventData {
-  Range range;
-  CellRangeSelected(sender, Range range) : super(sender:
-      sender, detail: {
-        'range': range
-      }) {
-    this.range = range;
-  }
-}
-
-class CellCssStylesChanged extends EventData {
-  String key;
-  Map<int,Map<String,String>> hash;
-
-  CellCssStylesChanged(sender, String key, {Map<int,Map<String,String>> hash}) : super(sender:
-      sender, detail: {
-        'key': key,
-        'hash': hash
-      }) {
-    this.key = key;
-    this.hash = hash;
-  }
-}
-
-class HeaderMouseEnter extends EventData {
-  Column data;
-  dom.MouseEvent get causedBy => super.causedBy;
-
-  HeaderMouseEnter(sender, Column data, {dom.MouseEvent causedBy}) : super(
-      sender: sender, causedBy: causedBy, detail: {
-        'data': data
-      }) {
-    this.data = data;
-  }
-}
-
-class HeaderMouseLeave extends EventData {
-  String data;
-  dom.MouseEvent get causedBy => super.causedBy;
-
-  HeaderMouseLeave(sender, String data, {dom.MouseEvent causedBy}) : super(
-      sender: sender, causedBy: causedBy, detail: {
-        'data': data
-      }) {
-    this.data = data;
-  }
-}
-
-class HeaderContextMenu extends EventData {
-  Column column;
-  dom.MouseEvent get causedBy => super.causedBy;
-
-  HeaderContextMenu(sender, Column column, {dom.MouseEvent causedBy}) : super(
-      sender: sender, causedBy: causedBy, detail: {
-        'column': column
-      }) {
-    this.column = column;
-  }
-}
-
-class HeaderClick extends EventData {
-  Column column;
-  dom.MouseEvent get causedBy => super.causedBy;
-
-  HeaderClick(sender, Column column, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy, detail: {
-        'column': column
-      }) {
-    this.column = column;
-  }
-}
 
 class ActiveCellChanged extends EventData {
-  Cell cell; // these members should all be final and the constructor const;
+  final Cell cell;
 
-  ActiveCellChanged(sender, Cell cell) : super(sender: sender, detail: {
-        'cell': cell
-      }) {
-    this.cell = cell;
-  }
-}
-
-class BeforeCellEditorDestroy extends EventData {
-  Editor editor;
-  BeforeCellEditorDestroy(sender, Editor editor) : super(sender: sender, detail:
-      {
-        'editor': editor
-      }) {
-    this.editor = editor;
-  }
-}
-
-class BeforeCellRangeSelected extends EventData {
-  Cell cell;
-  BeforeCellRangeSelected(sender, Cell cell) : super(sender: sender, detail:
-      {
-        'cell': cell
-      }) {
-    this.cell = cell;
-  }
-}
-
-class BeforeEditCell extends EventData {
-  Cell cell;
-  DataItem item;
-  Column column;
-  BeforeEditCell(sender, {Cell cell,  DataItem item, Column column})
-      : super(sender: sender, detail: {
-        'cell': cell,
-        'item': item,
-        'column': column
-      }) {
-    this.cell = cell;
-    this.item = item;
-    this.column = column;
-  }
+  ActiveCellChanged(sender, this.cell) : super(sender: sender);
 }
 
 class ActiveCellPositionChanged extends EventData {
 
-  ActiveCellPositionChanged(sender) : super(sender: sender, detail: {});
-}
-
-class CellChange extends EventData {
-  Cell cell;
-  DataItem item;
-  CellChange(sender, Cell cell, DataItem item) : super(sender:
-      sender, detail: {
-        'cell': cell,
-        'item': item
-      }) {
-    this.cell = cell;
-    this.item = item;
-  }
+  ActiveCellPositionChanged(sender) : super(sender: sender);
 }
 
 class AddNewRow extends EventData {
-  DataItem item;
-  Column column;
-  AddNewRow(sender, DataItem item, Column column) : super(sender:
-      sender, detail: {
-        'item': item,
-        'column': column
-      }) {
-    this.item = item;
-    this.column = column;
-  }
+  final DataItem item;
+  final Column column;
+
+  AddNewRow(sender, this.item, this.column) : super(sender: sender);
 }
 
-class ValidationError extends EventData {
-  Editor editor;
-  dom.HtmlElement cellNode;
-  ValidationResult validationResults;
-  Cell cell;
-  Column column;
-  ValidationError(sender, {Editor editor, dom.HtmlElement
-      cellNode, ValidationResult validationResults, Cell cell, Column column}) :
-      super(sender: sender, detail: {
-        'editor': editor,
-        'cellNode': cellNode,
-        'validatoinResults': validationResults,
-        'cell': cell,
-        'column': column
-      });
+class BeforeCellEditorDestroy extends EventData {
+  final Editor editor;
+
+  BeforeCellEditorDestroy(sender, this.editor) : super(sender: sender);
 }
 
-class Scroll extends EventData {
-  int scrollLeft;
-  int scrollTop;
+class BeforeCellRangeSelected extends EventData {
+  final Cell cell;
 
-  Scroll(sender, {int scrollLeft, int scrollTop}) : super(sender: sender,
-      detail: {
-        'scrollLeft': scrollLeft,
-        'scrollTop': scrollTop
-      }) {
-    this.scrollLeft = scrollLeft;
-    this.scrollTop = scrollTop;
-  }
+  BeforeCellRangeSelected(sender, this.cell) : super(sender: sender);
 }
 
-class Drag extends EventData {
-  Map dd;
-  dom.MouseEvent get causedBy => super.causedBy;
-  bool retVal = false;
-
-  Drag(sender, {Map dd, dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy, detail: {
-        'dd': dd
-      }) {
-    this.dd = dd;
-  }
+class BeforeDestroy extends EventData {
+  BeforeDestroy(sender) : super(sender: sender);
 }
 
-class DragEnd extends EventData {
-  Map dd;
-  dom.MouseEvent get causedBy => super.causedBy;
-  bool retVal = false;
+class BeforeEditCell extends EventData {
+  final Cell cell;
+  final DataItem item;
+  final Column column;
 
-  DragEnd(sender, {Map dd, dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy, detail: {
-        'dd': dd
-      }) {
-    this.dd = dd;
-  }
+  BeforeEditCell(sender, {this.cell, this.item, this.column})
+      : super(sender: sender);
 }
 
-class DragInit extends EventData {
-  int dd;
-  dom.MouseEvent get causedBy => super.causedBy;
-  bool retVal = false;
+class CellChange extends EventData {
+  final Cell cell;
+  final DataItem item;
 
-  DragInit(sender, {int dd, dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy, detail: {
-        'dd': dd
-      }) {
-    this.dd = dd;
-  }
+  CellChange(sender, this.cell, this.item) : super(sender: sender);
 }
 
-class DragStart extends EventData {
-  Map dd;
-  dom.MouseEvent get causedBy => super.causedBy;
-  bool retVal = false;
+class BeforeHeaderCellDestroy extends EventData {
+  final dom.HtmlElement node;
+  final Column columnDef;
 
-  DragStart(sender, {Map dd, dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy, detail: {
-        'dd': dd
-      }) {
-    this.dd = dd;
-  }
+  BeforeHeaderCellDestroy(sender, this.node, this.columnDef) : super(sender:
+      sender);
+}
+
+// TODO which properties are really needed for this event
+class BeforeHeaderRowCellDestroy extends EventData {
+  final dom.HtmlElement node;
+  final Column columnDef;
+
+  BeforeHeaderRowCellDestroy(sender, this.node, this.columnDef) : super(sender:
+      sender);
+}
+
+class CellCssStylesChanged extends EventData {
+  final String key;
+  final Map<int, Map<String, String>> hash;
+
+  CellCssStylesChanged(sender, this.key, {this.hash: null}) : super(sender:
+      sender);
+}
+
+class CellRangeSelected extends EventData {
+  final Range range;
+
+  CellRangeSelected(sender, this.range) : super(sender: sender);
 }
 
 class Click extends EventData {
-  Cell cell;
+  final Cell cell;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  Click(sender, Cell cell, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy, detail: {
-        'cell': cell
-      }) {
-    this.cell = cell;
-  }
+  Click(sender, this.cell, {dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class ColumnsResized extends EventData {
+  ColumnsResized(sender) : super(sender: sender);
+}
+
+class ColumnsReordered extends EventData {
+  ColumnsReordered(sender) : super(sender: sender);
 }
 
 class ContextMenu extends EventData {
-  Cell cell;
+  final Cell cell;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  ContextMenu(sender, Cell cell, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy, detail: {
-        'cell': cell
-      }) {
-    this.cell = cell;
-  }
+  ContextMenu(sender, this.cell, {dom.MouseEvent causedBy}) : super(sender:
+      sender, causedBy: causedBy);
+}
+
+class CopyCancelled extends EventData {
+  final List<Range> copiedRanges;
+
+  CopyCancelled(sender, this.copiedRanges) : super(sender: sender);
+}
+
+class CopyCells extends EventData {
+  final List<Range> ranges;
+
+  CopyCells(sender, this.ranges) : super(sender: sender);
 }
 
 class DoubleClick extends EventData {
-  Cell cell;
+  final Cell cell;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  DoubleClick(sender, Cell cell, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy, detail: {
-        'cell': cell
-      }) {
-    this.cell = cell;
-  }
+  DoubleClick(sender, this.cell, {dom.MouseEvent causedBy}) : super(sender:
+      sender, causedBy: causedBy);
+}
+
+class Drag extends EventData {
+  final Map dd;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  Drag(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class DragEnd extends EventData {
+  final Map dd;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  DragEnd(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class DragInit extends EventData {
+  final int dd;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  DragInit(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class DragStart extends EventData {
+  final Map dd;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  DragStart(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class HeaderCellRendered extends EventData {
+  final dom.HtmlElement node;
+  final Column columnDef;
+
+  HeaderCellRendered(sender, this.node, this.columnDef) : super(sender: sender);
+}
+
+class HeaderClick extends EventData {
+  final Column column;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderClick(sender, this.column, {dom.MouseEvent causedBy}) : super(sender:
+      sender, causedBy: causedBy);
+}
+
+class HeaderContextMenu extends EventData {
+  final Column column;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderContextMenu(sender, this.column, {dom.MouseEvent causedBy}) : super(
+      sender: sender, causedBy: causedBy);
+}
+
+class HeaderMouseEnter extends EventData {
+  final Column data;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderMouseEnter(sender, this.data, {dom.MouseEvent causedBy}) : super(sender:
+      sender, causedBy: causedBy);
+}
+
+class HeaderMouseLeave extends EventData {
+  final String data;
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  HeaderMouseLeave(sender, this.data, {dom.MouseEvent causedBy}) : super(sender:
+      sender, causedBy: causedBy);
+}
+
+class HeaderRowCellRendered extends EventData {
+  HeaderRowCellRendered(sender) : super(sender: sender);
 }
 
 class KeyDown extends EventData {
-  Cell cell;
+  final Cell cell;
   dom.KeyboardEvent get causedBy => super.causedBy;
 
-  KeyDown(sender, Cell cell, {dom.KeyboardEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy, detail: {
-        'cell': cell
-      }) {
-    this.cell = cell;
-  }
+  KeyDown(sender, this.cell, {dom.KeyboardEvent causedBy}) : super(sender:
+      sender, causedBy: causedBy);
 }
 
 class MouseEnter extends EventData {
@@ -577,9 +404,70 @@ class MouseLeave extends EventData {
       causedBy: causedBy);
 }
 
+class PagingInfoChanged extends EventData {
+  PagingInfoChanged(sender) : super(sender: sender);
+}
 
-class RowCountChanged extends EventData {}
+class PasteCells extends EventData {
+  final List<Range> from;
+  final List<Range> to;
 
-class RowsChanged extends EventData {}
+  PasteCells(sender, this.from, this.to) : super(sender: sender);
+}
 
-class PagingInfoChanged extends EventData {}
+class Scroll extends EventData {
+  final int scrollLeft;
+  final int scrollTop;
+
+  Scroll(sender, {this.scrollLeft: 0, this.scrollTop: 0}) : super(sender: sender
+      );
+}
+
+class SelectedRangesChanged extends EventData {
+  final List<Range> ranges;
+
+  SelectedRangesChanged(sender, this.ranges) : super(sender: sender);
+}
+
+class SelectedRowsChanged extends EventData {
+  final List<int> rows;
+  dom.CustomEvent get causedBy => super.causedBy;
+
+  SelectedRowsChanged(sender, this.rows, dom.CustomEvent causedBy) : super(
+      sender: sender, causedBy: causedBy);
+}
+
+class Sort extends EventData {
+  final bool multiColumnSort;
+  final Column sortColumn;
+  final Map<Column, bool> sortColumns;
+  final bool sortAsc;
+
+  Sort(sender, this.multiColumnSort, this.sortColumn, this.sortColumns,
+      this.sortAsc, dom.Event causedBy) : super(sender: sender,
+          causedBy: causedBy);
+}
+
+class RowCountChanged extends EventData {
+  RowCountChanged(sender) : super(sender: sender);
+}
+
+class RowsChanged extends EventData {
+  RowsChanged(sender) : super(sender: sender);
+}
+
+class ValidationError extends EventData {
+  final Editor editor;
+  final dom.HtmlElement cellNode;
+  final ValidationResult validationResults;
+  final Cell cell;
+  final Column column;
+
+
+  ValidationError(sender, {this.editor, this.cellNode, this.validationResults, this.cell, this.column})
+      : super(sender: sender);
+}
+
+class ViewportChanged extends EventData {
+  ViewportChanged(sender) : super(sender: sender);
+}

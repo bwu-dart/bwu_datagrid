@@ -3,7 +3,7 @@ build
 out
 deploy
 _from_packages
-pubspec.lock
+#pubspec.lock
 .project
 .buildlog
 .settings

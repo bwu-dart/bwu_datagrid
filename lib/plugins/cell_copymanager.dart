@@ -5,7 +5,7 @@ import 'dart:async' as async;
 
 import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
-import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 
 //  // register namespace
 //  $.extend(true, window, {
@@ -42,9 +42,10 @@ class CellCopyManager extends Plugin {
         if (_copiedRanges) {
           e.preventDefault();
           clearCopySelection();
-          onCopyCancelled.notify({
-            ranges: _copiedRanges
-          });
+          grid.fire(core.Events.COPY_CANCELLED, new core.CopyCancelled(this, _copiedRanges));
+//          onCopyCancelled.notify({
+//            ranges: _copiedRanges
+//          });
           _copiedRanges = null;
         }
       }
@@ -55,9 +56,10 @@ class CellCopyManager extends Plugin {
           e.preventDefault();
           _copiedRanges = ranges;
           markCopySelection(ranges);
-          onCopyCells.notify({
-            'ranges': ranges
-          });
+          grid.fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
+//          onCopyCells.notify({
+//            'ranges': ranges
+//          });
         }
       }
 
@@ -66,17 +68,18 @@ class CellCopyManager extends Plugin {
           e.preventDefault();
           clearCopySelection();
           ranges = grid.getSelectionModel.getSelectedRanges();
-          onPasteCells.notify({
-            'from': _copiedRanges,
-            'to': ranges
-          });
+          grid.fire(core.Events.PASTE_CELLS, new core.PasteCells(this, from: copiedRanges, to: ranges));
+//          onPasteCells.notify({
+//            'from': _copiedRanges,
+//            'to': ranges
+//          });
           _copiedRanges = null;
         }
       }
     }
   }
 
-  void markCopySelection(List<Range> ranges) {
+  void markCopySelection(List<core.Range> ranges) {
     var columns = grid.getColumns;
     var hash = {};
     for (var i = 0; i < ranges.length; i++) {
