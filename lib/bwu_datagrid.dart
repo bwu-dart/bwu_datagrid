@@ -410,7 +410,7 @@ class BwuDatagrid extends PolymerElement {
 
   dom.HtmlElement get getCanvasNode => _canvas;
 
-  math.Point _measureScrollbar() {
+  math.Point<int> _measureScrollbar() {
     dom.HtmlElement $c = new dom.DivElement()
       ..style.position = 'absolute'
       ..style.top ='-10000px'
@@ -419,7 +419,7 @@ class BwuDatagrid extends PolymerElement {
       ..style.height ='100px'
       ..style.overflow = 'scroll';
     dom.document.body.append($c);
-    var dim = new math.Point($c.offsetWidth - $c.clientWidth, $c.offsetHeight - $c.clientHeight);
+    var dim = new math.Point<int>($c.offsetWidth.round() - $c.clientWidth.round(), $c.offsetHeight.round() - $c.clientHeight.round());
     $c.remove();
     return dim;
   }
@@ -1430,20 +1430,68 @@ class BwuDatagrid extends PolymerElement {
     if (_gridOptions.showTopPanel != visible) {
       _gridOptions.showTopPanel = visible;
       if (visible) {
-        _topPanelScroller.slideDown("fast", resizeCanvas);
+        slideDown(_topPanelScroller, resizeCanvas); //.slideDown("fast", resizeCanvas);
       } else {
-        _topPanelScroller.slideUp("fast", resizeCanvas);
+        slideUp(_topPanelScroller, resizeCanvas); //.slideUp("fast", resizeCanvas);
       }
     }
+  }
+
+
+
+  math.Rectangle<int> getCurrentSize(dom.HtmlElement e) {
+    var oldPos = e.style.position;
+    var oldDisplay = e.style.display;
+    var oldLeft = e.offsetLeft;
+    e.style.left = '-10000px';
+    e.style.display = 'block';
+    math.Rectangle<int> size = new math.Rectangle<int>(0, 0, e.clientWidth.round(), e.clientHeight.round());
+    e.style.display = oldDisplay;
+    e.style.left = '${oldLeft}px';
+    e.style.position = oldPos;
+    return size;
+  }
+
+
+  void slideDown(dom.HtmlElement element, Function fn) {
+    var size = getCurrentSize(element);
+    element.style.height = '0';
+    element.style.display = 'block';
+
+    element.onTransitionEnd.first.then((e) {
+      fn();
+      element.classes.remove('slide-down');
+    });
+
+    new async.Future(() {
+      element.classes.add('slide-down');
+      element.style.height = '${size.height}px';
+    });
+  }
+
+  void slideUp(dom.HtmlElement element, Function fn) {
+    var oldHeight = element.clientHeight.round();
+    fn();
+    element.classes.add('slide-up');
+
+    element.onTransitionEnd.first.then((e) {
+      element.classes.remove('slide-up');
+      element.style.display = 'none';
+      element.style.height = '${oldHeight}px';
+    });
+
+    new async.Future(() {
+      element.style.height = '0';
+    });
   }
 
   void set setHeaderRowVisibility(bool visible) {
     if (_gridOptions.showHeaderRow != visible) {
       _gridOptions.showHeaderRow = visible;
       if (visible) {
-        _headerRowScroller.slideDown("fast", resizeCanvas);
+        //_headerRowScroller.slideDown("fast", resizeCanvas);
       } else {
-        _headerRowScroller.slideUp("fast", resizeCanvas);
+        //_headerRowScroller.slideUp("fast", resizeCanvas);
       }
     }
   }

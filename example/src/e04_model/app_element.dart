@@ -43,7 +43,7 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  MapDataItemProvider data;
+  List<DataItem> data;
   DataView dataView;
 
   String sortcol = "title";
@@ -59,9 +59,9 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      data = new MapDataItemProvider();
+      data = new List<DataItem>(); //MapDataItemProvider();
       for (var i = 0; i < 50000; i++) {
-        data.items.add(new MapDataItem({
+        data.add(new MapDataItem({
           "id" : "id_${i}",
           "num" : i,
           "title" : 'Task ${i}',
@@ -73,8 +73,8 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      dataView = new DataView(new DataViewOptions(inlineFilters: true));
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
+      dataView = new DataView(options: new DataViewOptions(inlineFilters: true));
+      grid.setup(dataProvider: dataView, columns: columns, gridOptions: gridOptions);
       grid.setSelectionModel = new RowSelectionModel();
 
       // TODO var pager = new Pager(dataView, grid, $("#pager"));
@@ -176,7 +176,7 @@ class AppElement extends PolymerElement {
 
       // initialize the model after all the events have been hooked up
       dataView.beginUpdate();
-      dataView.setItems(data.items);
+      dataView.setItems(data);
       dataView.setFilterArgs({
         'percentCompleteThreshold': percentCompleteThreshold,
         'searchString': searchString
@@ -229,14 +229,14 @@ class AppElement extends PolymerElement {
 //    }
   }
 
-  bool myFilter(DataItem item, int args) {
-//    if (item["percentComplete"] < args.percentCompleteThreshold) {
-//      return false;
-//    }
-//
-//    if (args.searchString != "" && item["title"].indexOf(args.searchString) == -1) {
-//      return false;
-//    }
+  bool myFilter(DataItem item, Map args) {
+    if (item["percentComplete"] < args['percentCompleteThreshold']) {
+      return false;
+    }
+
+    if (args['searchString'] != "" && item["title"].indexOf(args['searchString']) == -1) {
+      return false;
+    }
 
     return true;
   }
@@ -250,8 +250,17 @@ class AppElement extends PolymerElement {
     return (x == y ? 0 : (x > y ? 1 : -1));
   }
 
+  // Header row search icon
   void toggleFilterRow(dom.MouseEvent e, detail, dom.HtmlElement target) {
     grid.setTopPanelVisibility = !grid.getGridOptions.showTopPanel;
+  }
+
+  void iconMouseOver(dom.MouseEvent e, detail, dom.HtmlElement target) {
+    target.classes.add('ui-state-hover');
+  }
+
+  void iconMouseOut(dom.MouseEvent e, detail, dom.HtmlElement target) {
+    target.classes.remove('ui-state-hover');
   }
 
   void onKeyDownHandler(KeyDown e) {
@@ -261,7 +270,7 @@ class AppElement extends PolymerElement {
     }
 
     var rows = [];
-    for (var i = 0; i < dataView.getLength; i++) {
+    for (var i = 0; i < dataView.length; i++) {
       rows.add(i);
     }
 

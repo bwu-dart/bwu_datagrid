@@ -28,9 +28,9 @@ part 'helpers.dart';
 //  });
 
 
-typedef FilterFunc(a, b);
+typedef FilterFn(a, b);
 
-class DataView {
+class DataView extends DataProvider {
 
   /***
    * A sample Model implementation.
@@ -42,7 +42,7 @@ class DataView {
   DataViewOptions options = new DataViewOptions();
   GroupingInfo groupingInfo = new GroupingInfo();
 
-  DataView([DataViewOptions options]) {
+  DataView({DataViewOptions options, List<DataItem> items}) : super(items) {
     if(options != null) {
       this.options = options;
     }
@@ -50,11 +50,11 @@ class DataView {
 
   // private
   String idProperty = "id";  // property holding a unique row id
-  List<DataItem> items = [];         // data by index
+  //List<core.ItemBase> items = [];         // data by index
   List<core.ItemBase> rows = [];          // data by row
   Map<String,int> idxById = {};       // indexes by id
   Map<String,int> rowsById = null;    // rows by id; lazy-calculated
-  FilterFunc filter = null;      // filter function
+  FilterFn filter = null;      // filter function
   Map<String,bool> updated = null;     // updated item ids
   bool suspend = false;    // suspends the recalculation
   bool sortAsc = true;
@@ -63,9 +63,9 @@ class DataView {
   Map<String,int> refreshHints = {}; // TODO make class
   Map<String,int> prevRefreshHints = {};
   Map filterArgs;
-  List<DataItem> filteredItems = [];
-  Function compiledFilter;
-  Function compiledFilterWithCaching;
+  List<core.ItemBase> filteredItems = [];
+  FilterFn compiledFilter;
+  FilterFn compiledFilterWithCaching;
   List<String> filterCache = [];
 
   List<GroupingInfo> groupingInfos = [];
@@ -136,11 +136,13 @@ class DataView {
     return items;
   }
 
+  @override set items(List<core.ItemBase> items) => setItems(items);
+
   void setItems(List<DataItem> data, [String objectIdProperty]) {
     if (objectIdProperty != null) {
       idProperty = objectIdProperty;
     }
-    items = filteredItems = data;
+    super.items = filteredItems = data;
     idxById = {};
     updateIdxById();
     ensureIdUniqueness();
@@ -218,11 +220,11 @@ class DataView {
       }
   }
 
-  void setFilter(filterFn) {
+  void setFilter(FilterFn filterFn) {
     filter = filterFn;
     if (options.inlineFilters) {
-      // TODO compiledFilter = compileFilter();
-      // TODO compiledFilterWithCaching = compileFilterWithCaching();
+      //compiledFilter = compileFilter();
+      //compiledFilterWithCaching = compileFilterWithCaching();
     }
     refresh();
   }
@@ -376,7 +378,7 @@ class DataView {
     refresh();
   }
 
-  int get getLength => rows.length;
+  int get length => rows.length;
 
   DataItem getItem(int i) {
     core.ItemBase item = rows[i];
@@ -398,6 +400,9 @@ class DataView {
   }
 
   RowMetadata getItemMetadata(int i) {
+    if(rows.length <= i) {
+      return null;
+    }
     var item = rows[i];
     if (item == null) {
       return null;
@@ -482,12 +487,12 @@ class DataView {
 
   List<core.Group> get getGroups => groups;
 
-  List<core.Group> extractGroups(List<int> rows, [core.Group parentGroup]) {
+  List<core.Group> extractGroups(List<core.ItemBase> rows, [core.Group parentGroup]) {
     core.Group group;
     int val;
     List<core.Group> groups = [];
     Map<int, core.Group> groupsByVal = {};
-    int r;
+    core.ItemBase r;
     int level = parentGroup != null ? parentGroup.level + 1 : 0;
     GroupingInfo gi = groupingInfos[level];
 
@@ -601,11 +606,11 @@ class DataView {
     }
   }
 
-  List<int> flattenGroupedRows(List<core.Group>groups, [int level]) {
+  List<core.ItemBase> flattenGroupedRows(List<core.Group> groups, [int level]) {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
-    List<int> groupedRows = [];
-    List<int>rows;
+    List<core.ItemBase> groupedRows = [];
+    List<core.ItemBase>rows;
     int gl = 0;
     core.Group g;
     for (int i = 0; i < groups.length; i++) {
@@ -626,12 +631,12 @@ class DataView {
     return groupedRows;
   }
 
-  FunctionInfo getFunctionInfo(Function fn) {
-    RegExp fnRegex = new RegExp(r'^function[^(]*\(([^)]*)\)\s*{([\s\S]*)}$');
-    List<Match> matches = fnRegex.allMatches(fn.toString());
-    //List<Match> matches = fn.toString().allMatches(fnRegex);
-    return new FunctionInfo(matches[1].split(","), matches[2]);
-  }
+//  FunctionInfo getFunctionInfo(Function fn) {
+//    RegExp fnRegex = new RegExp(r'^function[^(]*\(([^)]*)\)\s*{([\s\S]*)}$');
+//    List<Match> matches = fnRegex.allMatches(fn.toString());
+//    //List<Match> matches = fn.toString().allMatches(fnRegex);
+//    return new FunctionInfo(matches[1].split(","), matches[2]);
+//  }
 
   String compileAccumulatorLoop(Aggregator aggregator) {
     var accumulatorInfo = getFunctionInfo(aggregator.accumulate);
@@ -646,8 +651,9 @@ class DataView {
 //      return fn;
   }
 
-  String compileFilter() {
-    var filterInfo = getFunctionInfo(filter);
+
+//  FilterFn compileFilter() {
+//    var filterInfo = getFunctionInfo(filter);
 
 //      var filterBody = filterInfo.body
 //          .replace(/return false\s*([;}]|$)/gi, "{ continue _coreloop; }$1")
@@ -673,14 +679,14 @@ class DataView {
 //      tpl = tpl.replace(/\$item\$/gi, filterInfo.params[0]);
 //      tpl = tpl.replace(/\$args\$/gi, filterInfo.params[1]);
 
-    var fn = new Function("_items,_args", tpl);
-    fn.displayName = fn.name = "compiledFilter";
-    return fn;
-  }
+//    var fn = new Function("_items,_args", tpl);
+//    fn.displayName = fn.name = "compiledFilter";
+//    return fn;
+//  }
 
-  Function compileFilterWithCaching() {
-    var filterInfo = getFunctionInfo(filter);
-
+//  FilterFn compileFilterWithCaching() {
+//    var filterInfo = getFunctionInfo(filter);
+//
 //      var filterBody = filterInfo.body
 //          .replace(/return false\s*([;}]|$)/gi, "{ continue _coreloop; }$1")
 //          .replace(/return true\s*([;}]|$)/gi, "{ _cache[_i] = true;_retval[_idx++] = $item$; continue _coreloop; }$1")
@@ -709,18 +715,18 @@ class DataView {
 //      tpl = tpl.replace(/\$item\$/gi, filterInfo.params[0]);
 //      tpl = tpl.replace(/\$args\$/gi, filterInfo.params[1]);
 
-    var fn = new Function("_items,_args,_cache", tpl);
-    fn.displayName = fn.name = "compiledFilterWithCaching";
-    return fn;
-  }
+//    var fn = new Function("_items,_args,_cache", tpl);
+//    fn.displayName = fn.name = "compiledFilterWithCaching";
+//    return fn;
+//  }
 
-  List<int> uncompiledFilter(List<int>items, String args) {
-    List<int> retval = [];
+  List<core.ItemBase> uncompiledFilter(List<core.ItemBase>items, Map args) {
+    List<core.ItemBase> retval = [];
     int idx = 0;
 
     for (int i = 0; i < items.length; i++) {
       if (filter(items[i], args)) {
-        retval[idx++] = items[i];
+        retval.add(items[i]);
       }
     }
 
@@ -747,14 +753,14 @@ class DataView {
 
   Map getFilteredAndPagedItems(List<core.ItemBase> items) {
     if (filter != null) {
-      var batchFilter = options.inlineFilters ? compiledFilter : uncompiledFilter;
-      var batchFilterWithCaching = options.inlineFilters ? compiledFilterWithCaching : uncompiledFilterWithCaching;
+      var batchFilter = /*options.inlineFilters ? compiledFilter :*/ uncompiledFilter;
+      var batchFilterWithCaching = /*options.inlineFilters ? compiledFilterWithCaching :*/ uncompiledFilterWithCaching;
 
       if (refreshHints['isFilterNarrowing'] == true) {
         filteredItems = batchFilter(filteredItems, filterArgs);
       } else if (refreshHints['isFilterExpanding'] == true) {
         filteredItems = batchFilterWithCaching(items, filterArgs, filterCache);
-      } else if (refreshHints['isFilterUnchanged'] == false) {
+      } else if (refreshHints['isFilterUnchanged'] == null) {
         filteredItems = batchFilter(items, filterArgs);
       }
     } else {
@@ -778,7 +784,7 @@ class DataView {
     return {'totalRows': filteredItems.length, 'rows': paged};
   }
 
-  List<int> getRowDiffs(List<int> rows, List<int> newRows) {
+  List<int> getRowDiffs(List<core.ItemBase> rows, List<core.ItemBase> newRows) {
     core.ItemBase item;
     core.ItemBase r;
     bool eitherIsNonData;
@@ -832,7 +838,7 @@ class DataView {
 
     Map filteredItems = getFilteredAndPagedItems(items);
     totalRows = filteredItems['totalRows'];
-    List<int> newRows = filteredItems['rows'];
+    List<core.ItemBase> newRows = filteredItems['rows'];
 
     groups = [];
     if (groupingInfos.length > 0) {

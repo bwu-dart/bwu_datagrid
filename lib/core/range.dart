@@ -111,7 +111,7 @@ class Group extends NonDataItem {
   /**
    * Rows that are part of the group.
    */
-  List<int> rows = <int>[];
+  List<ItemBase> rows = <ItemBase>[];
 
   /**
    * Sub-groups that are part of the group.

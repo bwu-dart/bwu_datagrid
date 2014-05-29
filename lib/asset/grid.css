@@ -19,6 +19,14 @@ No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) 
 classes should alter those!
 */
 
+.slide-down, * /deep/ .slide-down,
+.slide-up, * /deep/ .slide-up {
+  transition: height 250ms ease-out;
+  -webkit-transition: height 250ms ease-out;
+  -moz-transition: height 250ms ease-out;
+  -o-transition: height 250ms ease-out;
+}
+
 .bwu-datagrid-header.ui-state-default/*, .bwu-datagrid-headerrow.ui-state-default*/ {
   width: 100%;
   overflow: hidden;

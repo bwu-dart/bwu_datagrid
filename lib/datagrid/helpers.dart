@@ -8,18 +8,19 @@ import 'package:bwu_datagrid/core/core.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 import 'package:collection/wrappers.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 
 typedef void SortableStartFn(dom.HtmlElement e, dom.HtmlElement ui);
 typedef void SortableBeforeStopFn(dom.HtmlElement e, dom.HtmlElement ui);
 typedef void SortableStopFn(dom.HtmlElement e);
 
 abstract class DataProvider {
-  final List<DataItem> items;
+  List<core.ItemBase> items;
   int get length;
   DataItem getItem(int index);
   RowMetadata getItemMetadata (int index);
 
-  DataProvider(List<DataItem> items) : this.items = (items == null ? <DataItem>[] : items);
+  DataProvider(List<core.ItemBase> items) : this.items = (items == null ? <core.ItemBase>[] : items);
 }
 
 class MapDataItemProvider extends DataProvider {

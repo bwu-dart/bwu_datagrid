@@ -1,6 +1,16 @@
 /* x@ import url('../slick-default-theme.css'); */
 
-* {
+/** increased selectivity to override jQuery styles */
+body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
+  background: url('../../packages/bwu_datagrid/asset/images/header-columns-bg.gif') repeat-x center bottom;
+}
+
+body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
+  border: 0px;
+  border-right: 1px solid silver;
+}
+
+body /deep/ * {
   font-family: arial;
   font-size: 8pt;
 }

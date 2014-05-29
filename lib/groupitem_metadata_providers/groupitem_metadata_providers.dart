@@ -166,7 +166,7 @@ class GroupItemMetadataProvider {
     }
   }
 
-  RowMetadata getGroupRowMetadata(DataItem item) {
+  RowMetadata getGroupRowMetadata(ItemBase item) {
     return new RowMetadata(
       selectable: false,
       focusable: groupFocusable,
@@ -180,7 +180,7 @@ class GroupItemMetadataProvider {
         });
       }
 
-  RowMetadata getTotalsRowMetadata(DataItem item) {
+  RowMetadata getTotalsRowMetadata(ItemBase item) {
     return new RowMetadata(
       selectable: false,
       focusable: totalsFocusable,
