@@ -6,13 +6,13 @@
       :host {
         display: block;
       }
-      div.label {
+      label.label {
         width: 200px;
         float: left;
       }
       #slider {
         width: 100px;
-        display: inline-block;
+        /*display: inline-block;*/
       }
       #txtSearch {
         width: 100px;
@@ -20,19 +20,16 @@
     </style>
 
     <label class='label'>Show tasks with % at least: </label>
-
-    <div style='padding:2px;'>
-      <div id='pcSlider'></div>
-    </div>
+    <input id='slider' type='range' value='{{threshold}}' min='0' max='100'>
 
     <br/>
 
     <label class='label'>And title including:</label>
-    <input type=text id='txtSearch'>
+    <input type=text id='txtSearch' value='{{searchString}}' on-keyup='{{clearSearch}}'>
 
     <br/><br/>
 
-    <button id='btnSelectRows'>Select first 10 rows</button>
+    <button id='btnSelectRows' on-click='{{btnSelectRowsHandler}}'>Select first 10 rows</button>
 
   </template>
   <script type='application/dart' src='filter_form.dart'></script>

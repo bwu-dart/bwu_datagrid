@@ -33,19 +33,19 @@ class BwuColumnPicker extends PolymerElement {
   @observable bool isSyncResize = false;
   @observable bool isAutoResize = false;
 
-  bool isInitialized = false;
+  bool _isInitialized = false;
 
   List<async.StreamSubscription> _subscriptions;
 
   void set options(ColumnPickerOptions options) {
-    if(isInitialized) {
+    if(_isInitialized) {
       throw '"options" must not be updated after the control was added to the DOM.';
     }
     _options = options;
   }
 
   void set grid(BwuDatagrid grid) {
-    if(isInitialized) {
+    if(_isInitialized) {
       throw '"grid" must not be updated after the control was added to the DOM.';
     }
     _grid = grid;
@@ -76,7 +76,7 @@ class BwuColumnPicker extends PolymerElement {
 
 
   void set columns(List<Column> columns) {
-    if(isInitialized) {
+    if(_isInitialized) {
       throw '"columns" must not be updated after the control was added to the DOM.';
     }
     _columns = toObservable(columns);
@@ -89,7 +89,7 @@ class BwuColumnPicker extends PolymerElement {
     _subscriptions.add(_grid.onBwuColumnsReordered.listen(updateColumnOrder));
     _subscriptions.add(onClick.listen(updateColumn));
 
-    isInitialized = true;
+    _isInitialized = true;
   }
 
   void detached() {

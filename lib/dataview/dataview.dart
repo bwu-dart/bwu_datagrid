@@ -132,7 +132,7 @@ class DataView extends DataProvider {
     }
   }
 
-  List<DataItem> getItems() {
+  List<core.ItemBase> getItems() {
     return items;
   }
 
@@ -159,7 +159,7 @@ class DataView extends DataProvider {
       pagenum = math.min(args.pageNum, math.max(0, (totalRows / pagesize).ceil() - 1));
     }
 
-    eventBus.fire(core.Events.PAGING_INFO_CHANGED, new core.PagingInfoChanged(this));
+    eventBus.fire(core.Events.PAGING_INFO_CHANGED, new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
     refresh();
   }
 
@@ -337,7 +337,7 @@ class DataView extends DataProvider {
     List<String> ids = [];
     for (int i = 0; i < rowArray.length; i++) {
       if (rowArray[i] < rows.length) {
-        ids[ids.length] = rows[rowArray[i]][idProperty];
+        ids.add(rows[rowArray[i]][idProperty]);
       }
     }
     return ids;
@@ -638,8 +638,8 @@ class DataView extends DataProvider {
 //    return new FunctionInfo(matches[1].split(","), matches[2]);
 //  }
 
-  String compileAccumulatorLoop(Aggregator aggregator) {
-    var accumulatorInfo = getFunctionInfo(aggregator.accumulate);
+//  String compileAccumulatorLoop(Aggregator aggregator) {
+//    var accumulatorInfo = getFunctionInfo(aggregator.accumulate);
 //      var fn = new Function(
 //          "_items",
 //          "for (var " + accumulatorInfo.params[0] + ", _i=0, _il=_items.length; _i<_il; _i++) {" +
@@ -649,7 +649,7 @@ class DataView extends DataProvider {
 //      );
 //      fn.displayName = fn.name = "compiledAccumulatorLoop";
 //      return fn;
-  }
+//  }
 
 
 //  FilterFn compileFilter() {
@@ -772,11 +772,11 @@ class DataView extends DataProvider {
 
     // get the current page
     List<core.ItemBase> paged;
-    if (pagesize != null) {
+    if (pagesize != 0) {
       if (filteredItems.length < pagenum * pagesize) {
         pagenum = (filteredItems.length / pagesize).floor();
       }
-      paged = filteredItems.getRange(pagesize * pagenum, pagesize * pagenum + pagesize).toList();
+      paged = filteredItems.getRange(pagesize * pagenum, math.min(pagesize * pagenum + pagesize, filteredItems.length)).toList();
     } else {
       paged = filteredItems;
     }
@@ -805,12 +805,13 @@ class DataView extends DataProvider {
     final rl = rows.length;
     for (int i = from; i < to; i++) {
       if (i >= rl) {
-        diff[diff.length] = i;
+        diff.add(i);
       } else {
         item = newRows[i];
         r = rows[i];
 
-        if ((groupingInfos.length > 0 && (eitherIsNonData = (item is core.NonDataItem) || (r is core.NonDataItem)) &&
+        eitherIsNonData = (item is core.NonDataItem);
+        if ((groupingInfos.length > 0 && (eitherIsNonData || (r is core.NonDataItem)) &&
             item is core.Group != r is core.Group ||
             item is core.Group && item != r)
             || (eitherIsNonData &&
@@ -821,7 +822,7 @@ class DataView extends DataProvider {
             || item[idProperty] != r[idProperty]
             || (updated != null && updated[item[idProperty]])
             ) {
-          diff[diff.length] = i;
+          diff.add(i);
         }
       }
     }
@@ -868,7 +869,7 @@ class DataView extends DataProvider {
 
     // if the current page is no longer valid, go to last page and recalc
     // we suffer a performance penalty here, but the main loop (recalc) remains highly optimized
-    if (pagesize != null && totalRows < pagenum * pagesize) {
+    if (pagesize != 0 && totalRows < pagenum * pagesize) {
       pagenum = math.max(0, (totalRows / pagesize).ceil() - 1);
       diff = recalc(items /*, filter*/);
     }

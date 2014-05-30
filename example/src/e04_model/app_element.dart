@@ -10,12 +10,14 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 
-import '../required_field_validator.dart';
-import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/dataview/dataview.dart';
-//import 'package:bwu_datagrid/dataview/events.dart' as dvEvents;
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
+import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
+import 'package:bwu_datagrid/tools/html.dart' as tools;
+
+import '../required_field_validator.dart';
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
@@ -48,8 +50,8 @@ class AppElement extends PolymerElement {
 
   String sortcol = "title";
   int sortdir = 1;
-  int percentCompleteThreshold = 0;
-  String searchString = "";
+  @observable String percentCompleteThreshold;
+  @observable String searchString;
 
 
   @override
@@ -77,7 +79,7 @@ class AppElement extends PolymerElement {
       grid.setup(dataProvider: dataView, columns: columns, gridOptions: gridOptions);
       grid.setSelectionModel = new RowSelectionModel();
 
-      // TODO var pager = new Pager(dataView, grid, $("#pager"));
+      ($['pager'] as BwuPager).init(dataView, grid);
       BwuColumnPicker columnPicker = new dom.Element.tag('bwu-column-picker') as BwuColumnPicker;
       columnPicker.columns = columns;
       columnPicker.grid = grid;
@@ -122,63 +124,24 @@ class AppElement extends PolymerElement {
         }
       });
 
-      var h_runfilters = null;
+      $['filter-form'].on['select-rows'].listen((e) {
+        if (!core.globalEditorLock.commitCurrentEdit()) {
+          return;
+        }
 
-      // wire up the slider to apply the filter to the model
-//      $("#pcSlider,#pcSlider2").slider({
-//        "range": "min",
-//        "slide": function (event, ui) {
-//          Slick.GlobalEditorLock.cancelCurrentEdit();
-//
-//          if (percentCompleteThreshold != ui.value) {
-//            window.clearTimeout(h_runfilters);
-//            h_runfilters = window.setTimeout(updateFilter, 10);
-//            percentCompleteThreshold = ui.value;
-//          }
-//        }
-//      });
+        var rows = [];
+        for (var i = 0; i < 10 && i < dataView.length; i++) {
+          rows.add(i);
+        }
 
-
-      // wire up the search textbox to apply the filter to the model
-//      $("#txtSearch,#txtSearch2").keyup(function (e) {
-//        GlobalEditorLock.cancelCurrentEdit();
-//
-//        // clear on Esc
-//        if (e.which == 27) {
-//          this.value = "";
-//        }
-//
-//        searchString = this.value;
-//        updateFilter();
-//      });
-
-      void updateFilter() {
-        dataView.setFilterArgs({
-          percentCompleteThreshold: percentCompleteThreshold,
-          searchString: searchString
-        });
-        dataView.refresh();
-      }
-
-//      $("#btnSelectRows").click(function () {
-//        if (!Slick.GlobalEditorLock.commitCurrentEdit()) {
-//          return;
-//        }
-//
-//        var rows = [];
-//        for (var i = 0; i < 10 && i < dataView.getLength; i++) {
-//          rows.add(i);
-//        }
-//
-//        grid.setSelectedRows(rows);
-//      });
-
+        grid.setSelectedRows(rows);
+      });
 
       // initialize the model after all the events have been hooked up
       dataView.beginUpdate();
       dataView.setItems(data);
       dataView.setFilterArgs({
-        'percentCompleteThreshold': percentCompleteThreshold,
+        'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
         'searchString': searchString
       });
       dataView.setFilter(myFilter);
@@ -201,32 +164,37 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void onSort(Sort e) {
+  void searchStringChanged(old) {
+    updateFilter();
+  }
+
+  void percentCompleteThresholdChanged(old) {
+    updateFilter();
+  }
+
+  void updateFilter() {
+    core.globalEditorLock.cancelCurrentEdit();
+
+    if(searchString == null) {
+      searchString = '';
+    }
+
+    if(percentCompleteThreshold == null) {
+      percentCompleteThreshold = '0';
+    }
+
+    dataView.setFilterArgs({
+      'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
+      'searchString': searchString
+    });
+    dataView.refresh();
+  }
+
+  void onSort(core.Sort e) {
     sortdir = e.sortAsc ? 1 : -1;
     sortcol = e.sortColumn.field;
 
-// TODO    if ($.browser.msie && $.browser.version <= 8) {
-//      // using temporary Object.prototype.toString override
-//      // more limited and does lexicographic sort only by default, but can be much faster
-//
-//      var percentCompleteValueFn = function () {
-//        var val = this["percentComplete"];
-//        if (val < 10) {
-//          return "00" + val;
-//        } else if (val < 100) {
-//          return "0" + val;
-//        } else {
-//          return val;
-//        }
-//      };
-//
-//      // use numeric sort of % and lexicographic for everything else
-//      dataView.fastSort((sortcol == "percentComplete") ? percentCompleteValueFn : sortcol, args.sortAsc);
-//    } else {
-      // using native sort with comparer
-      // preferred method but can be very slow in IE with huge datasets
-      dataView.sort(comparer, e.sortAsc);
-//    }
+    dataView.sort(comparer, e.sortAsc);
   }
 
   bool myFilter(DataItem item, Map args) {
@@ -263,7 +231,7 @@ class AppElement extends PolymerElement {
     target.classes.remove('ui-state-hover');
   }
 
-  void onKeyDownHandler(KeyDown e) {
+  void onKeyDownHandler(core.KeyDown e) {
     // select all rows on ctrl-a
     if (e.causedBy.which != dom.KeyCode.A || !e.causedBy.ctrlKey) {
       return; // false;

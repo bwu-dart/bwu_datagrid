@@ -1,0 +1,46 @@
+:host {
+  display: block;
+  with: 100%;
+  height: 26px;
+  border: 1px solid gray;
+  border-top: 0;
+  background: url('../../asset/images/header-columns-bg.gif') repeat-x center bottom;
+  vertical-align: middle;
+}
+
+.bwu-pager-settings-expanded {
+  display: none;
+}
+
+.bwu-pager-status {
+  display: inline-block;
+  padding: 6px;
+}
+
+.ui-icon-container.ui-state-default { /* second class only to increase selectivity to overrule default ui-state-default border */
+  display: inline-block;
+  margin: 2px;
+  border-color: gray;
+}
+
+.bwu-pager-nav {
+  display: inline-block;
+  float: left;
+  padding: 2px;
+}
+
+.bwu-pager-settings {
+  display: block;
+  float: right;
+  padding: 2px;
+}
+
+.bwu-pager-settings * {
+  vertical-align: middle;
+}
+
+.bwu-pager-settings a {
+  padding: 2px;
+  text-decoration: underline;
+  cursor: pointer;
+}
