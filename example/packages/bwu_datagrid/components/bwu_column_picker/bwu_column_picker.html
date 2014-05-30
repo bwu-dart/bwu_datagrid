@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<polymer-element name='bwu-column-picker'>
+  <template>
+    <link rel='stylesheet' href='bwu_column_picker.css'>
+    <!--<span class='slick-columnpicker' style='display:none;position:absolute;z-index:20;' />-->
+
+    <ul>
+      <template repeat='{{col in columnCheckboxes}}'>
+        <li>
+          <label>
+            <input type='checkbox' checked='{{col.checked}}' on-change='{{updateColumn}}' data-column-id='{{col.id}}'>{{col.text}}
+          </label>
+        </li>
+      </template>
+    </ul>
+    <hr>
+    <ul>
+      <li>
+        <label>
+          <input type='checkbox' checked='{{isAutoResize}}' on-change='{{autoResizeChangedHandler}}'>Force fit columns
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type='checkbox' checked='{{isSyncResize}}' on-change='{{syncResizeChangedHandler}}'>Synchronous resize
+        </label>
+      </li>
+    </ul>
+
+  </template>
+  <script type='application/dart' src='bwu_column_picker.dart'></script>
+</polymer-element>
