@@ -268,7 +268,7 @@ class DateEditor extends Editor  {
 //        var calendarOpen = false;
 //      }
 //    });
-    $input.width = $input.offsetWidth - 18;
+    $input.width = $input.offsetWidth.round() - 18;
   }
 
   @override

@@ -669,7 +669,7 @@ class BwuDatagrid extends PolymerElement {
       }
 
       var $col = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-header-column') as BwuDatagridHeaderColumn;
-      if ($col.children.length > 0) {
+      if ($col.children.length == 0) {
         return;
       }
 

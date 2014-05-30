@@ -5,25 +5,35 @@
     <style>
       :host {
         display: block;
+        height: 21px;
+/*        display: none; */
+        background: #dddddd;
+        padding: 2px;
+        color: black;
+        border: none;
+        padding-left: 10px;
       }
 
-      div.#inlineFilterPanel {
-        display: none;
-        background: #dddddd;
-        padding: 3px;
-        color: black;
+      input {
+        padding-top: 0px;
       }
 
       #slider {
+        -webkit-appearance: none;
+        -moz-apperance: none;
         width: 100px;
         display: inline-block;"
+        padding-top: 0px;
+        padding-bottom: 0px;
+        height: 5px;
+        background-color: #fff;
       }
     </style>
 
-    <div id="inlineFilterPanel">
-      Show tasks with title including <input type="text" id="txtSearch2" value='{{searchString}}'> and % at least &nbsp;
+    <!--<div id="inlineFilterPanel">-->
+      Show tasks with title including <input type="text" id="txtSearch" value='{{searchString}}' on-keyup='{{clearSearch}}'> and % at least &nbsp;
       <input id='slider' type='range' value='{{threshold}}' min='0' max='100'>
-    </div>
+    <!--</div> -->
   </template>
   <script type='application/dart' src='inline_filter_panel.dart'></script>
 </polymer-element>

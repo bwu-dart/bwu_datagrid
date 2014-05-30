@@ -4,6 +4,7 @@ import 'dart:html' as dom;
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
+//import 'package:template_binding/template_binding.dart' as tb;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -18,6 +19,7 @@ import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_datagrid/tools/html.dart' as tools;
 
 import '../required_field_validator.dart';
+import 'inline_filter_panel.dart';
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
@@ -86,7 +88,14 @@ class AppElement extends PolymerElement {
       dom.document.body.append(columnPicker);
       //columnPicker.options = new ColumnPickerOptions(/*gridOptions*/);
 
+      var filterPanel = new dom.Element.tag('inline-filter-panel') as InlineFilterPanel;
       grid.getTopPanel.append(new dom.Element.tag('inline-filter-panel'));
+      // TODO bind inline_filter_panel
+      //tb.nodeBind(filterPanel).bind('threshold', new PathObserver(this, 'percentCompleteThreshold'));
+      //tb.nodeBind(filterPanel).bind('searchString', new PathObserver(this, 'searchString'));
+      filterPanel.bind('threshold', new PathObserver(this, 'percentCompleteThreshold'));
+      filterPanel.bind('searchString', new PathObserver(this, 'searchString'));
+
 
       grid.onBwuCellChange.listen((e) {
           dataView.updateItem(e.item['id'], e.item);
@@ -165,10 +174,12 @@ class AppElement extends PolymerElement {
   }
 
   void searchStringChanged(old) {
+    print('searchString: ${searchString}');
     updateFilter();
   }
 
   void percentCompleteThresholdChanged(old) {
+    print('percentCompleteThreshold: ${percentCompleteThreshold}');
     updateFilter();
   }
 
@@ -214,7 +225,29 @@ class AppElement extends PolymerElement {
   }
 
   int comparer(DataItem a, DataItem b) {
+
     var x = a[sortcol], y = b[sortcol];
+    if(x == y ) {
+      return 0;
+    }
+
+    if(x is Comparable) {
+      return x.compareTo(y);
+    }
+
+    if(y is Comparable) {
+      return 1;
+    }
+
+    if(x == null && y != null) {
+      return -1;
+    } else if (x != null && y == null) {
+      return 1;
+    }
+
+    if(x is bool) {
+      return x == true ? 1 : 0;
+    }
     return (x == y ? 0 : (x > y ? 1 : -1));
   }
 

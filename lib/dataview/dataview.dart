@@ -327,7 +327,7 @@ class DataView extends DataProvider {
     for (int i = 0; i < idArray.length; i++) {
       var row = rowsById[idArray[i]];
       if (row != null) {
-        rows[rows.length] = row;
+        rows.add(row);
       }
     }
     return rows;
@@ -820,7 +820,7 @@ class DataView extends DataProvider {
             // always considering them 'dirty' seems easier for the time being
             (item is core.GroupTotals || r is core.GroupTotals))
             || item[idProperty] != r[idProperty]
-            || (updated != null && updated[item[idProperty]])
+            || (updated != null && updated[item[idProperty]] != null)
             ) {
           diff.add(i);
         }
