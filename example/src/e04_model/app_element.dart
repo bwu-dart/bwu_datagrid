@@ -2,6 +2,7 @@ library app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
+import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
 //import 'package:template_binding/template_binding.dart' as tb;
@@ -174,13 +175,19 @@ class AppElement extends PolymerElement {
   }
 
   void searchStringChanged(old) {
-    print('searchString: ${searchString}');
     updateFilter();
   }
 
+  async.Timer _pendingUpdateFilter;
   void percentCompleteThresholdChanged(old) {
-    print('percentCompleteThreshold: ${percentCompleteThreshold}');
-    updateFilter();
+    if(_pendingUpdateFilter != null) {
+      _pendingUpdateFilter.cancel();
+    }
+
+    _pendingUpdateFilter = new async.Timer(new Duration(milliseconds: 20), () {
+      updateFilter();
+      _pendingUpdateFilter = null;
+    });
   }
 
   void updateFilter() {

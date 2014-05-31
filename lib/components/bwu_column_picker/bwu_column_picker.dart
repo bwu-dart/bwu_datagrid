@@ -63,17 +63,16 @@ class BwuColumnPicker extends PolymerElement {
 //  }
 
   void syncResizeChangedHandler(dom.Event e, detail, dom.HtmlElement target) {
-    _grid.setGridOptions = new GridOptions(syncColumnCellResize: (target as dom.CheckboxInputElement).checked);
+    _grid.setGridOptions = new GridOptions.unitialized()..syncColumnCellResize = (target as dom.CheckboxInputElement).checked;
   }
 
   void autoResizeChangedHandler(dom.Event e, detail, dom.HtmlElement target) {
     var checked = (target as dom.CheckboxInputElement).checked;
-    _grid.setGridOptions = new GridOptions(forceFitColumns: checked);
+    _grid.setGridOptions = new GridOptions.unitialized()..forceFitColumns = checked;
     if(checked) {
       _grid.autosizeColumns();
     }
   }
-
 
   void set columns(List<Column> columns) {
     if(_isInitialized) {
@@ -85,9 +84,9 @@ class BwuColumnPicker extends PolymerElement {
   void attached() {
     super.attached();
 
-    _subscriptions.add(_grid.onBwuHeaderContextMenu.listen(handleHeaderContextMenu));
-    _subscriptions.add(_grid.onBwuColumnsReordered.listen(updateColumnOrder));
-    _subscriptions.add(onClick.listen(updateColumn));
+    _subscriptions.add(_grid.onBwuHeaderContextMenu.listen(_handleHeaderContextMenu));
+    _subscriptions.add(_grid.onBwuColumnsReordered.listen(_updateColumnOrder));
+    _subscriptions.add(onClick.listen(_updateColumn));
 
     _isInitialized = true;
   }
@@ -99,10 +98,10 @@ class BwuColumnPicker extends PolymerElement {
     remove();
   }
 
-  void handleHeaderContextMenu(HeaderContextMenu e) {
+  void _handleHeaderContextMenu(HeaderContextMenu e) {
     e.preventDefault();
     columnCheckboxes.clear();
-    updateColumnOrder();
+    _updateColumnOrder();
 
 
     var $li, $input;
@@ -121,7 +120,7 @@ class BwuColumnPicker extends PolymerElement {
     fadeIn(_options.fadeSpeed);
   }
 
-  void updateColumnOrder([ColumnsReordered e]) {
+  void _updateColumnOrder([ColumnsReordered e]) {
     // Because columns can be reordered, we have to update the `columns`
     // to reflect the new order, however we can't just take `grid.getColumns()`,
     // as it does not include columns currently hidden by the picker.
@@ -143,7 +142,7 @@ class BwuColumnPicker extends PolymerElement {
     _columns = ordered;
   }
 
-  void updateColumn(dom.Event e) {
+  void _updateColumn(dom.Event e) {
     var cb = e.target as dom.CheckboxInputElement;
     CbData curCbData;
 
@@ -163,7 +162,6 @@ class BwuColumnPicker extends PolymerElement {
       curCbData.checked = true;
       cb.checked = true;
       return;
-
     }
 
     _grid.setColumns = visibleColumns;

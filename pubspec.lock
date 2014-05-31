@@ -48,7 +48,7 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.10.0-pre.4"
+    version: "0.10.0"
   path:
     description: path
     source: hosted
@@ -56,11 +56,11 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.10.0-pre.13"
+    version: "0.10.0"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
-    version: "0.10.0-pre.3"
+    version: "0.10.0"
   quiver:
     description: quiver
     source: hosted
@@ -72,7 +72,7 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.1.0-pre.5"
+    version: "0.1.0"
   source_maps:
     description: source_maps
     source: hosted
@@ -84,7 +84,7 @@ packages:
   template_binding:
     description: template_binding
     source: hosted
-    version: "0.10.0-pre.1"
+    version: "0.10.0"
   unittest:
     description: unittest
     source: hosted
