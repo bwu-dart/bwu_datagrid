@@ -1844,7 +1844,8 @@ class BwuDatagrid extends PolymerElement {
     // this helps avoid redundant calls to .removeRow() when the size of the data decreased by thousands of rows
     var l = dataLengthIncludingAddNew - 1;
 
-    for (int i = 0; i < _rowsCache.length; i++) {
+    var rcLength = _rowsCache.length;
+    for (int i = 0; i < rcLength; i++) {
       if (i >= l) {
         _removeRowFromCache(i);
       }
