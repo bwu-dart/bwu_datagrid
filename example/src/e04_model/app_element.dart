@@ -130,7 +130,7 @@ class AppElement extends PolymerElement {
         var options = grid.getGridOptions;
 
         if (options.enableAddRow != enableAddRow) {
-          grid.setGridOptions = new GridOptions(enableAddRow: enableAddRow);
+          grid.setGridOptions = new GridOptions.unitialized()..enableAddRow = enableAddRow;
         }
       });
 

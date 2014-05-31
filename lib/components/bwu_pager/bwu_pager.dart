@@ -42,7 +42,6 @@ class BwuPager extends PolymerElement {
     });
 
     updatePager(_dataView.getPagingInfo());
-
   }
 
   void updateNavState() {

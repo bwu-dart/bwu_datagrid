@@ -865,7 +865,7 @@ class DataView extends DataProvider {
     int countBefore = rows.length;
     int totalRowsBefore = totalRows;
 
-    List<int> diff = recalc(items /*, filter*/); // pass as direct refs to avoid closure perf hit
+    List<int> diff = recalc(items /*, filter*/); //  pass as direct refs to avoid closure perf hit // TODO seems to be a bug. The receiving method has no filter param
 
     // if the current page is no longer valid, go to last page and recalc
     // we suffer a performance penalty here, but the main loop (recalc) remains highly optimized
