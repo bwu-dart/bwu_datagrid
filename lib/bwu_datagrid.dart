@@ -756,6 +756,8 @@ class BwuDatagrid extends PolymerElement {
       };
   }
 
+  bool isPendingApplyColumnWith = false;
+
   void _setupColumnResize() {
     Column c;
     int pageX;
@@ -922,7 +924,13 @@ class BwuDatagrid extends PolymerElement {
             }
             _applyColumnHeaderWidths();
             if (_gridOptions.syncColumnCellResize) {
-              _applyColumnWidths();
+              if(!isPendingApplyColumnWith) {
+                isPendingApplyColumnWith = true;
+                new async.Future(() {
+                  _applyColumnWidths();
+                  isPendingApplyColumnWith = false;
+                });
+              }
             }
           })
 
@@ -2157,7 +2165,9 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void render() {
-    if (!_initialized) { return; }
+    if (!_initialized) {
+      return;
+    }
     var visible = _getVisibleRange();
     var rendered = getRenderedRange();
 
