@@ -306,7 +306,7 @@ class BwuDatagrid extends PolymerElement {
     if (!_initialized) {
       _initialized = true;
 
-      _viewportW = this.offsetWidth.round(); //tools.parseInt(this.getComputedStyle().width);
+      _viewportW = this.clientWidth.round(); //tools.parseInt(this.getComputedStyle().width);
 
       // header columns and cells may have different padding/border skewing width calculations (box-sizing, hello?)
       // calculate the diff so we can set consistent sizes
@@ -756,8 +756,6 @@ class BwuDatagrid extends PolymerElement {
       };
   }
 
-  bool isPendingApplyColumnWith = false;
-
   void _setupColumnResize() {
     Column c;
     int pageX;
@@ -810,7 +808,7 @@ class BwuDatagrid extends PolymerElement {
                 c = columns[j];
                 if (c.resizable) {
                   if (stretchLeewayOnRight != null) {
-                    if (c.maxWidth != null && c.maxWidth > 0) {
+                    if (c.maxWidth != null) {
                       stretchLeewayOnRight += c.maxWidth - c.previousWidth;
                     } else {
                       stretchLeewayOnRight = null;
@@ -865,7 +863,7 @@ class BwuDatagrid extends PolymerElement {
                 c = columns[j];
                 if (c.resizable) {
                   actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, _absoluteColumnMinWidth);
-                  if (x != null && c.previousWidth + x < actualMinWidth) {
+                  if (x != 0 && c.previousWidth + x < actualMinWidth) {
                     x += c.previousWidth - actualMinWidth;
                     c.width = actualMinWidth;
                   } else {
@@ -895,7 +893,7 @@ class BwuDatagrid extends PolymerElement {
               for (int j = i; j >= 0; j--) {
                 c = columns[j];
                 if (c.resizable) {
-                  if (x > 0 && c.maxWidth != null && (c.maxWidth - c.previousWidth < x)) {
+                  if (x != 0 && c.maxWidth != null && (c.maxWidth - c.previousWidth < x)) {
                     x -= c.maxWidth - c.previousWidth;
                     c.width = c.maxWidth;
                   } else {
@@ -911,7 +909,7 @@ class BwuDatagrid extends PolymerElement {
                   c = columns[j];
                   if (c.resizable) {
                     actualMinWidth = math.max(c.minWidth != null ? c.minWidth : 0, _absoluteColumnMinWidth);
-                    if (x > 0 && c.previousWidth + x < actualMinWidth) {
+                    if (x != 0 && c.previousWidth + x < actualMinWidth) {
                       x += c.previousWidth - actualMinWidth;
                       c.width = actualMinWidth;
                     } else {
@@ -924,13 +922,7 @@ class BwuDatagrid extends PolymerElement {
             }
             _applyColumnHeaderWidths();
             if (_gridOptions.syncColumnCellResize) {
-              if(!isPendingApplyColumnWith) {
-                isPendingApplyColumnWith = true;
-                new async.Future(() {
-                  _applyColumnWidths();
-                  isPendingApplyColumnWith = false;
-                });
-              }
+              new async.Future(_applyColumnWidths);
             }
           })
 
@@ -1178,7 +1170,7 @@ class BwuDatagrid extends PolymerElement {
       for (i = 0; i < columns.length && total > availWidth; i++) {
         c = columns[i];
         var width = widths[i];
-        if (!c.resizable || width <= c.minWidth || width <= _absoluteColumnMinWidth) {
+        if (!c.resizable || (width <= c.minWidth) || width <= _absoluteColumnMinWidth) {
           continue;
         }
         var absMinWidth = math.max(c.minWidth, _absoluteColumnMinWidth);
@@ -1206,10 +1198,10 @@ class BwuDatagrid extends PolymerElement {
         var currentWidth = widths[i];
         var growSize;
 
-        if (!c.resizable || (c.maxWidth == null || c.maxWidth <= currentWidth)) {
+        if (!c.resizable || (c.maxWidth != null && c.maxWidth <= currentWidth)) {
           growSize = 0;
         } else {
-          var tmp = (c.maxWidth - currentWidth != 0 ? c.maxWidth - currentWidth : 1000000);
+          var tmp = c.maxWidth != null && (c.maxWidth - currentWidth) != 0 ? c.maxWidth - currentWidth : 1000000;
           growSize = math.min((growProportion * currentWidth).floor() - currentWidth, tmp);
           if(growSize == 0) {
             growSize = 1;
@@ -1245,7 +1237,7 @@ class BwuDatagrid extends PolymerElement {
     var h;
     for (int i = 0; i < _headers.children.length; i++) {
       h = _headers.children[i];
-      if (h.offsetWidth != columns[i].width - _headerColumnWidthDiff) { // TODO comparsion
+      if (h.clientWidth != columns[i].width - _headerColumnWidthDiff) { // TODO comparsion
         h.style.width = '${columns[i].width - _headerColumnWidthDiff}px';
       }
     }
@@ -1253,19 +1245,35 @@ class BwuDatagrid extends PolymerElement {
     _updateColumnCaches();
   }
 
+  bool _isPendingApplyColumnWith = false;
+  bool _isApplyColumnWithActive = false;
+
   void _applyColumnWidths() {
-    int x = 0;
-    int w;
-    Map<String,dom.CssStyleRule> rule;
-    if(columns != null) {
-      for (var i = 0; i < columns.length; i++) {
-        w = columns[i].width;
+    // only one active call at a time
+    if(_isApplyColumnWithActive) {
+      _isPendingApplyColumnWith = true;
+    } else {
+      _isApplyColumnWithActive = true;
 
-        rule = _getColumnCssRules(i);
-        rule['left'].style.left = '${x}px';
-        rule['right'].style.right = '${(_canvasWidth - x - w)}px';
+      int x = 0;
+      int w;
+      Map<String,dom.CssStyleRule> rule;
+      if(columns != null) {
+        for (var i = 0; i < columns.length; i++) {
+          w = columns[i].width;
 
-        x += columns[i].width;
+          rule = _getColumnCssRules(i);
+          rule['left'].style.left = '${x}px';
+          rule['right'].style.right = '${(_canvasWidth - x - w)}px';
+
+          x += columns[i].width;
+        }
+      }
+
+      _isApplyColumnWithActive = false;
+      if(_isPendingApplyColumnWith) {
+        _isPendingApplyColumnWith = false;
+        _applyColumnWidths();
       }
     }
 
@@ -1803,7 +1811,7 @@ class BwuDatagrid extends PolymerElement {
     }
 
     _numVisibleRows = (_viewportH / _gridOptions.rowHeight).ceil();
-    _viewportW = this.offsetWidth.round(); //tools.parseInt(this.getComputedStyle().width);
+    _viewportW = this.clientWidth.round(); //tools.parseInt(this.getComputedStyle().width);
     if (!_gridOptions.autoHeight) {
       _viewport.style.height = "${_viewportH}px";
     }
