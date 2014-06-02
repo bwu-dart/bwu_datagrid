@@ -20,7 +20,6 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 
 
-
 @CustomTag('bwu-datagrid')
 class BwuDatagrid extends PolymerElement {
 

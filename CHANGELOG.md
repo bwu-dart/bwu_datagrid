@@ -1,7 +1,14 @@
 ## 0.0.6
 
-* columnpicker
 * example 04_model
+* columnpicker
+* reorder columns
+* filter
+* sort by click on the column header
+* paging
+* top-panel
+* force fit columns
+* synchronous resize
 
 ## 0.0.5
 
