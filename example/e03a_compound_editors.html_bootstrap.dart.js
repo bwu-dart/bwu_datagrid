@@ -1448,7 +1448,7 @@ else z=!0
 if(z)return a
 H.aE(a,b)},
 ag:function(a){throw H.b(P.Gz("Cyclic initialization for static "+H.d(a)))},
-KT:function(a,b,c){return new H.tD(a,b,c,null)},
+KT:function(a,b,c){return new H.GN(a,b,c,null)},
 Og:function(a,b){var z=a.name
 if(b==null||b.length===0)return new H.tu(z)
 return new H.fw(z,b,null)},
@@ -1910,7 +1910,7 @@ bu:function(a){return"RuntimeError: "+H.d(this.G1)},
 static:{Pa:function(a){return new H.mh(a)}}},
 lbp:{
 "^":"a;"},
-tD:{
+GN:{
 "^":"lbp;dw,Iq,is,p6",
 BD:function(a){var z=this.rP(a)
 return z==null?!1:H.Ly(z,this.za())},
@@ -4589,20 +4589,21 @@ z.KA.push(J.GW(a).yI(new V.jF(z)))},
 $isEH:true},
 jF:{
 "^":"Tp:44;b",
-$1:[function(a){var z,y,x,w
+$1:[function(a){var z,y,x
 z=J.YE(a)
 if(z.gWB(a)===1){y=this.b
+x=H.Go(z.gN(a),"$isqE")
+y.Qd=x
+if(x.hasAttribute("draggable")===!0)return
+while(!0){x=y.Qd
+if(!(x!=null&&!J.kE(y.o6,x)))break
+y.Qd=y.Qd.parentElement}if(y.Qd==null)return
 x=z.gwl(a)
 x=x.gx(x)
-w=z.gwl(a)
-y.qp=H.VM(new P.hL(x,w.gy(w)),[P.KN])
-z=H.Go(z.gN(a),"$isqE")
-y.Qd=z
-while(!0){if(!(z!=null&&!J.kE(y.o6,z)))break
-z=y.Qd.parentElement
-y.Qd=z}z=y.Qd
-if(z==null){y.qp=null
-return}z.toString
+z=z.gwl(a)
+y.qp=H.VM(new P.hL(x,z.gy(z)),[P.KN])
+z=y.Qd
+z.toString
 z=C.CD.yu(C.jn.UD(C.CD.yu(C.CD.UD(z.offsetLeft))))
 x=y.Qd
 x.toString
@@ -7870,7 +7871,7 @@ return $.X3.oj(a,!0)},
 qE:{
 "^":"cv;",
 $isqE:true,
-"%":"HTMLAppletElement|HTMLBRElement|HTMLDListElement|HTMLDataListElement|HTMLDirectoryElement|HTMLDivElement|HTMLFontElement|HTMLFrameElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLMarqueeElement|HTMLMenuElement|HTMLModElement|HTMLOptGroupElement|HTMLParagraphElement|HTMLPreElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableHeaderCellElement|HTMLTitleElement|HTMLUListElement|HTMLUnknownElement;HTMLElement;Tt|GN|ir|RE|po|c4|FY|Fv"},
+"%":"HTMLAppletElement|HTMLBRElement|HTMLDListElement|HTMLDataListElement|HTMLDirectoryElement|HTMLDivElement|HTMLFontElement|HTMLFrameElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLMarqueeElement|HTMLMenuElement|HTMLModElement|HTMLOptGroupElement|HTMLParagraphElement|HTMLPreElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableHeaderCellElement|HTMLTitleElement|HTMLUListElement|HTMLUnknownElement;HTMLElement;Tt|Ao|ir|RE|po|c4|FY|Fv"},
 zw:{
 "^":"Gv;",
 $iszM:true,
@@ -7990,7 +7991,7 @@ gTD:function(a){return C.bS.aM(a)},
 Md:function(a,b){return W.vD(a.querySelectorAll(b),null)},
 $isQF:true,
 "%":"Document|HTMLDocument|XMLDocument"},
-bA:{
+Ec:{
 "^":"KV;",
 gwd:function(a){if(a._docChildren==null)a._docChildren=H.VM(new P.P0(a,new W.e7(a)),[null])
 return a._docChildren},
@@ -8348,7 +8349,7 @@ Hv:{
 bu:function(a){return a.toString()},
 "%":"Selection"},
 I0:{
-"^":"bA;hf:innerHTML}",
+"^":"Ec;hf:innerHTML}",
 Yv:function(a,b){return a.cloneNode(b)},
 Kb:function(a,b){return a.getElementById(b)},
 $isI0:true,
@@ -11023,7 +11024,7 @@ x=y.goc(z)
 w=$.cp().jD(a,x)
 v=y.gt5(z)
 x=J.x(v)
-u=Z.Zh(c,w,(x.n(v,C.nY)||x.n(v,C.HH))&&w!=null?J.bB(w):v)
+u=Z.Zh(c,w,(x.n(v,C.nY)||x.n(v,C.tD))&&w!=null?J.bB(w):v)
 if(u==null?w!=null:u!==w){y=y.goc(z)
 $.cp().Q1(a,y,u)}},"$2","ghW",4,0,121],
 B2:function(a,b){var z=a.Ox.gQ0()
@@ -11227,7 +11228,7 @@ xO:function(a){var z=this.Po
 if(z!=null){z.Gv()
 this.Po=null}J.yd(this.xl)}},
 ir:{
-"^":"GN;AP,fn,Ox,Ob,Om,vW,Rr,Pd,yS,OM",
+"^":"Ao;AP,fn,Ox,Ob,Om,vW,Rr,Pd,yS,OM",
 XI:function(a){this.Pa(a)},
 static:{oa:function(a){var z,y,x,w
 z=$.Nd()
@@ -11249,7 +11250,7 @@ $iswn:true,
 $iscv:true,
 $isD0:true,
 $isKV:true},
-GN:{
+Ao:{
 "^":"Tt+Pi;",
 $iswn:true},
 iS:{
@@ -14189,6 +14190,7 @@ C.Yx=H.Kx('Pg')
 C.lk=H.Kx('mJ')
 C.EM=H.Kx('Fv')
 C.jV=H.Kx('rF')
+C.tD=H.Kx('dynamic')
 C.KA=H.Kx('X6')
 C.nG=H.Kx('zt')
 C.Db=H.Kx('qU')
@@ -14196,7 +14198,6 @@ C.vi=H.Kx('FY')
 C.HL=H.Kx('a2')
 C.Qf=H.Kx('L9')
 C.lQ=H.Kx('po')
-C.HH=H.Kx('dynamic')
 C.ri=H.Kx('yy')
 C.CS=H.Kx('vm')
 C.J0=H.Kx('oI')
