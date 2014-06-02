@@ -118,18 +118,21 @@ class Sortable {
     _items.forEach((e) {
       _mouseDownSubscr.add(e.onMouseDown.listen((e) {
         if(e.which == 1) {
-          _dragStartPos = new math.Point<int>(e.client.x, e.client.y);
 
           _draggedElement = e.target as dom.HtmlElement;
+          if(_draggedElement.attributes.containsKey('draggable')) {
+            return;
+          }
+
           while(_draggedElement != null && !_items.contains(_draggedElement)) {
             _draggedElement = _draggedElement.parent;
           }
           if(_draggedElement == null) {
-            _dragStartPos = null;
             return;
           }
-          _draggedElementStartPos = new math.Point<int>(_draggedElement.offsetLeft.round(), _draggedElement.offsetTop.round());
 
+          _dragStartPos = new math.Point<int>(e.client.x, e.client.y);
+          _draggedElementStartPos = new math.Point<int>(_draggedElement.offsetLeft.round(), _draggedElement.offsetTop.round());
           _subscribeMouseMove();
         }
       }));
