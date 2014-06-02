@@ -52,7 +52,9 @@
           <span style='float:right' class='ui-icon ui-icon-search ui-state-default ui-corner-all' title='Toggle search panel'
                 on-click='{{toggleFilterRow}}' on-mouseover='{{iconMouseOver}}' on-mouseout='{{iconMouseOut}}'></span>
         </div>
-        <bwu-datagrid id='myGrid' style='width:100%;height:500px;'></bwu-datagrid>
+        <bwu-datagrid id='myGrid' style='width:100%;height:500px;'>
+          <inline-filter-panel id='filter-form' grid-target='toppanel' threshold='{{percentCompleteThreshold}}' searchString='{{searchString}}'></inline-filter-panel>
+        </bwu-datagrid>
         <bwu-pager id='pager' style='width:100%;'></bwu-pager>
       </div>
 

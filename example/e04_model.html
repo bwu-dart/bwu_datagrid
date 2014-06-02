@@ -868,6 +868,28 @@ classes should alter those!
         outline: 0;
       }
     </style>
+
+    <content select="[grid-target=&quot;popup&quot;]"></content>
+
+    <div id="focusSink" tabindex="0" hidefocus="true"></div>
+    <div id="headerScroller" class="bwu-datagrid-header ui-state-default">
+      <bwu-datagrid-headers id="bwuDatagridHeaders" class="bwu-datagrid-header-columns">
+      </bwu-datagrid-headers>
+    </div>
+    <div id="headerRowScroller" class="bwu-datagrid-headerrow ui-state-default">
+      <div id="headerRow" class="bwu-datagrid-headerrow-columns">
+      </div>
+      <div id="spacer"></div>
+    </div>
+    <div id="topPanelScroller" class="bwu-datagrid-top-panel-scroller ui-state-default">
+      <div id="topPanel" class="bwu-datagrid-top-panel">
+        <content select="[grid-target=&quot;toppanel&quot;]"></content>
+      </div>
+    </div>
+    <div id="viewport" class="bwu-datagrid-viewport">
+      <div id="canvas" class="grid-canvas"></div>
+    </div>
+
     <content></content>
   </template>
   
@@ -1512,7 +1534,16 @@ body /deep/ .ui-datepicker-cover {
     width: 200px; /*must have*/
     height: 200px; /*must have*/
 }</style>
-    <style>/* x@ import url(slick-default-theme.css); */
+    <style>* /deep/ bwu-datagrid {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+* /deep/ :unresolved, * /deep/ [unresolved] {
+  opacity: 0;
+}
+
+/* x@ import url(slick-default-theme.css); */
 
 /** increased selectivity to override jQuery styles */
 body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
@@ -1806,7 +1837,9 @@ input.editor-checkbox {
           <label>BWU Datagrid</label>
           <span style="float:right" class="ui-icon ui-icon-search ui-state-default ui-corner-all" title="Toggle search panel" on-click="{{toggleFilterRow}}" on-mouseover="{{iconMouseOver}}" on-mouseout="{{iconMouseOut}}"></span>
         </div>
-        <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
+        <bwu-datagrid id="myGrid" style="width:100%;height:500px;">
+          <inline-filter-panel id="filter-form" grid-target="toppanel" threshold="{{percentCompleteThreshold}}" searchstring="{{searchString}}"></inline-filter-panel>
+        </bwu-datagrid>
         <bwu-pager id="pager" style="width:100%;"></bwu-pager>
       </div>
 
@@ -1847,7 +1880,16 @@ input.editor-checkbox {
   </template>
   
 </polymer-element>
-<style>/* x@ import url(slick-default-theme.css); */
+<style>* /deep/ bwu-datagrid {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+* /deep/ :unresolved, * /deep/ [unresolved] {
+  opacity: 0;
+}
+
+/* x@ import url(slick-default-theme.css); */
 
 /** increased selectivity to override jQuery styles */
 body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
