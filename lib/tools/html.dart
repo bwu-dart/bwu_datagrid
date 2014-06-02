@@ -83,12 +83,12 @@ dom.HtmlElement closest(dom.HtmlElement e, String selector, {dom.HtmlElement con
     //print('tools.closest: context not yet supported: ${context}');
   }
 
-  dom.HtmlElement parent = curr.parentNode;
-  if(parent is dom.ShadowRoot) {
-    if(goThroughShadowBoundaries) {
-      parent = (parent as dom.ShadowRoot).host;
-    }
+  dom.Node p = curr.parentNode;
+  if(p is dom.ShadowRoot) {
+    p = (p as dom.ShadowRoot).host;
   }
+
+  dom.HtmlElement parent = (p as dom.HtmlElement);
 
   var prevParent = e;
   var found;

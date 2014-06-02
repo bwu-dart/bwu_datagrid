@@ -1,3 +1,12 @@
+* /deep/ bwu-datagrid {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+* /deep/ :unresolved, * /deep/ [unresolved] {
+  opacity: 0;
+}
+
 /* x@ import url('../slick-default-theme.css'); */
 
 /** increased selectivity to override jQuery styles */

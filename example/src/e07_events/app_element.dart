@@ -40,41 +40,42 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) {
 
-      // setup context menu handler
-      grid.onBwuContextMenu.listen((e) {
-        e.stopImmediatePropagation();
-        e.preventDefault();
-        ($['contextMenu'] as ContextMenu)
-            ..cell = e.cell
-            ..setPosition(e.causedBy.page.x, e.causedBy.page.y)
-            ..show();
-      });
+        // setup context menu handler
+        grid.onBwuContextMenu.listen((e) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          ($['contextMenu'] as ContextMenu)
+              ..cell = e.cell
+              ..setPosition(e.causedBy.page.x, e.causedBy.page.y)
+              ..show();
+        });
 
-      // setup context menu select handler
-      ($['contextMenu'] as ContextMenu).onContextMenuSelect.listen((e) {
-        if (!grid.getEditorLock.commitCurrentEdit()) {
-          return;
-        }
-        var cell = ($['contextMenu'] as ContextMenu).cell;
-        data.items[cell.row]['priority'] = e.detail;
-        grid.updateRow(cell.row);
-        ($['contextMenu'] as ContextMenu).hide();
-      });
-
-      // setup next value on cell click
-      grid.onBwuClick.listen((e) {
-        if (grid.getColumns[e.cell.cell].id == 'priority') {
+        // setup context menu select handler
+        ($['contextMenu'] as ContextMenu).onContextMenuSelect.listen((e) {
           if (!grid.getEditorLock.commitCurrentEdit()) {
             return;
           }
+          var cell = ($['contextMenu'] as ContextMenu).cell;
+          data.items[cell.row]['priority'] = e.detail;
+          grid.updateRow(cell.row);
+          ($['contextMenu'] as ContextMenu).hide();
+        });
 
-          var states = { 'Low': 'Medium', 'Medium': 'High', 'High': 'Low' };
-          data.items[e.cell.row]['priority'] = states[data.items[e.cell.row]['priority']];
-          grid.updateRow(e.cell.row);
-          e.stopPropagation();
-        }
+        // setup next value on cell click
+        grid.onBwuClick.listen((e) {
+          if (grid.getColumns[e.cell.cell].id == 'priority') {
+            if (!grid.getEditorLock.commitCurrentEdit()) {
+              return;
+            }
+
+            var states = { 'Low': 'Medium', 'Medium': 'High', 'High': 'Low' };
+            data.items[e.cell.row]['priority'] = states[data.items[e.cell.row]['priority']];
+            grid.updateRow(e.cell.row);
+            e.stopPropagation();
+          }
+        });
       });
 
     } on NoSuchMethodError catch (e) {

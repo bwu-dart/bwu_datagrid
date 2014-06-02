@@ -55,14 +55,14 @@ class CompositeEditor extends Editor {
   NodeBox getContainerBox(String id) {
       var c = containers[id];
       math.Rectangle<int> offset = c.offset;
-      var w = c.offsetWidth;
-      var h = c.offsetHeight;
+      var w = c.offsetWidth.round();
+      var h = c.offsetHeight.round();
 
       return new NodeBox(
-        top: offset.top,
-        left: offset.left,
-        bottom: offset.top + h,
-        right: offset.left + w,
+        top: offset.top.round(),
+        left: offset.left.round(),
+        bottom: offset.top.round() + h,
+        right: offset.left.round() + w,
         width: w,
         height: h,
         visible: true

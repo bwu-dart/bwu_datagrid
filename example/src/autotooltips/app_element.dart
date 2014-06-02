@@ -44,8 +44,8 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
-      grid.registerPlugin(new AutoTooltips(new AutoTooltipsOptions(enableForHeaderCells: true)));
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) =>
+      grid.registerPlugin(new AutoTooltips(new AutoTooltipsOptions(enableForHeaderCells: true))));
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');

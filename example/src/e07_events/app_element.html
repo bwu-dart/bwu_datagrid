@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
-<link rel="import" href='context_menu.html'>
+<link rel='import' href='context_menu.html'>
 
 <polymer-element name='app-element'>
   <template>
@@ -27,20 +27,19 @@
 
     <table>
       <tr>
-        <td valign="top" width="50%">
-          <bwu-datagrid id="myGrid" style="width:600px;height:500px;">
-            <context-menu id="contextMenu">
-              <ul> <!--  id="contextMenu" style="display:none; position:absolute" -->
+        <td valign='top' width='50%'>
+          <bwu-datagrid id='myGrid' style='width:600px;height:500px;'>
+            <context-menu id='contextMenu' grid-target='popup'>
+              <ul> <!--  id='contextMenu' style='display:none; position:absolute' -->
                 <b>Set priority:</b>
-                <li value="Low">Low</li>
-                <li value="Medium">Medium</li>
-                <li value="High">High</li>
+                <li value='Low'>Low</li>
+                <li value='Medium'>Medium</li>
+                <li value='High'>High</li>
               </ul>
             </context-menu>
-
           </bwu-datagrid>
         </td>
-        <td valign="top">
+        <td valign='top'>
           <h2>Demonstrates:</h2>
           <ul>
             <li>handling events from the grid:</li>
@@ -49,7 +48,7 @@
           </ul>
             <h2>View Source:</h2>
             <ul>
-                <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e07_events/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+                <li><A href='https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e07_events/app_element.dart' target='_sourcewindow'> View the source for this example on Github</a></li>
             </ul>
         </td>
       </tr>
@@ -57,5 +56,5 @@
 
 
   </template>
-  <script type="application/dart" src="app_element.dart"></script>
+  <script type='application/dart' src='app_element.dart'></script>
 </polymer-element>

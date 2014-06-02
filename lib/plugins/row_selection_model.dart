@@ -104,7 +104,7 @@ class RowSelectionModel extends SelectionModel {
   }
 
   void _handleActiveCellChange(ActiveCellChanged e) {
-    if (_options.selectActiveRow && e.cell.row != null) {
+    if (_options.selectActiveRow && e.cell != null && e.cell.row != null) {
       setSelectedRanges([new core.Range(e.cell.row, 0, toRow: e.cell.row, toCell: _grid.getColumns.length - 1)]);
     }
   }

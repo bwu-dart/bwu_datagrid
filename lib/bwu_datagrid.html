@@ -17,6 +17,28 @@
         outline: 0;
       }
     </style>
+
+    <content select='[grid-target="popup"]'></content>
+
+    <div id='focusSink' tabIndex='0' hideFocus=true></div>
+    <div id='headerScroller' class='bwu-datagrid-header ui-state-default'>
+      <bwu-datagrid-headers id='bwuDatagridHeaders' class='bwu-datagrid-header-columns'>
+      </bwu-datagrid-headers>
+    </div>
+    <div id='headerRowScroller' class='bwu-datagrid-headerrow ui-state-default'>
+      <div id='headerRow' class='bwu-datagrid-headerrow-columns'>
+      </div>
+      <div id='spacer'></div>
+    </div>
+    <div id='topPanelScroller' class='bwu-datagrid-top-panel-scroller ui-state-default'>
+      <div id='topPanel' class='bwu-datagrid-top-panel'>
+        <content select='[grid-target="toppanel"]'></content>
+      </div>
+    </div>
+    <div id='viewport' class='bwu-datagrid-viewport'>
+      <div id='canvas' class='grid-canvas'></div>
+    </div>
+
     <content></content>
   </template>
   <script type='application/dart' src='bwu_datagrid.dart'></script>

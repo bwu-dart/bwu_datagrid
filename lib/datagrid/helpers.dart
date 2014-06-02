@@ -10,10 +10,6 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:collection/wrappers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
-typedef void SortableStartFn(dom.HtmlElement e, dom.HtmlElement ui);
-typedef void SortableBeforeStopFn(dom.HtmlElement e, dom.HtmlElement ui);
-typedef void SortableStopFn(dom.HtmlElement e);
-
 abstract class DataProvider {
   List<core.ItemBase> items;
   int get length;
@@ -38,30 +34,6 @@ class MapDataItemProvider extends DataProvider {
   void set items(List<DataItem> items) {
     this.items = items;
   }
-}
-
-
-class Sortable {
-  String containment;
-  int distance;
-  String axis;
-  String cursor;
-  String tolerance;
-  String helper;
-  String placeholder;
-  SortableStartFn start;
-  SortableBeforeStopFn beforeStop;
-  SortableStopFn stop;
-
-  Sortable({this.containment, this.distance, this.axis, this.cursor, this.tolerance, this.helper, this.placeholder, this.start, this.beforeStop, this.stop});
-  void cancel() {}
-  void destroy() {}
-  List toArray() { return [];}
-}
-class Filter {
-  String selector;
-  Filter(this.selector);
-  Sortable sortable = new Sortable();
 }
 
 class CellPos {
@@ -200,6 +172,7 @@ class Column {
   bool cannotTriggerInsert;
   String colspan;
   String behavior;
+  bool isMovable;
 
   Editor editor;
   Formatter formatter;
@@ -213,7 +186,7 @@ class Column {
     this.resizable : true, this.sortable : false, this.focusable : true,
     this.selectable : true, this.defaultSortAsc : true,
     this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan,
-    this.behavior}) {
+    this.behavior, this.isMovable: true}) {
   }
 
   Column.unititialized();
@@ -240,6 +213,7 @@ class Column {
     if(c.validator != null) validator = c.validator;
     if(c.previousWidth != null) previousWidth = c.previousWidth;
     if(c.behavior != null) behavior = c.behavior;
+    if(c.isMovable != null) isMovable = c.isMovable;
   }
 
   void asyncPostRender(dom.HtmlElement node, int row, MapDataItem rowData, Column m) {

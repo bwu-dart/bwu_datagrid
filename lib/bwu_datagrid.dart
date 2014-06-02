@@ -17,6 +17,7 @@ import 'package:bwu_datagrid/datagrid/bwu_datagrid_headers.dart';
 import 'package:bwu_datagrid/tools/html.dart' as tools;
 import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
+import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 
 
 
@@ -25,17 +26,29 @@ class BwuDatagrid extends PolymerElement {
 
   BwuDatagrid.created() : super.created();
 
+  bool _isAttached = false;
+  bool _isPendingInit = false;
+
   @override
   void attached() {
     try {
+      attributes['unresolved'] = 'true';
       super.attached();
-      new async.Future(() {
-//        init();
-//        render();
-      });
+      _isAttached = true;
+      if(_isPendingInit) {
+        init();
+        render();
+        _unveilElement();
+        _setupCompleter.complete();
+      }
     }catch(e) {
-      print('BwuDataGrid.enteredView(): $e');
+      _unveilElement();
     }
+  }
+
+  void _unveilElement() {
+    attributes.remove('unresolved');
+    attributes['resolved'] = 'true';
   }
 
   // DataGrid(dom.HtmlElement container, String data, int columns, Options options);
@@ -145,8 +158,11 @@ class BwuDatagrid extends PolymerElement {
   core.EventBus get eventBus => _eventBus;
   core.EventBus _eventBus = new core.EventBus();
 
+  async.Completer _setupCompleter;
 
-  void setup({DataProvider dataProvider, List<Column> columns, GridOptions gridOptions}) {
+
+  async.Future setup({DataProvider dataProvider, List<Column> columns, GridOptions gridOptions}) {
+    _setupCompleter = new async.Completer();
     if(_initialized) {
       if(columns != null) {
         setColumns = columns;
@@ -159,8 +175,18 @@ class BwuDatagrid extends PolymerElement {
       _columns = columns;
       _gridOptions = gridOptions;
     }
-    init();
-    render();
+
+    if(_isAttached) {
+      new async.Future(() {
+        init();
+        render();
+        _unveilElement();
+        _setupCompleter.complete();
+      });
+    } else {
+      _isPendingInit = true;
+    }
+    return _setupCompleter.future;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,60 +245,58 @@ class BwuDatagrid extends PolymerElement {
       this.style.position = 'relative';
     }
 
-    _focusSink = new dom.DivElement()
-      ..tabIndex=0
-      //..hideFocus=true // IE
+    _focusSink = $['focusSink'] //new dom.DivElement()
       ..style.position = 'fixed'
       ..style.width='0'
       ..style.height='0'
       ..style.top='0'
       ..style.left='0'
       ..style.outline='0';
-    _container.append(_focusSink);
+    //_container.append(_focusSink);
 
-    _headerScroller = new dom.DivElement()
-      ..classes.add('bwu-datagrid-header')
-      ..classes.add('ui-state-default')
+    _headerScroller = $['headerScroller'] //new dom.DivElement()
+      //..classes.add('bwu-datagrid-header')
+      //..classes.add('ui-state-default')
       ..style.overflow ='hidden'
       ..style.position='relative';
-    _container.append(_headerScroller);
+    //_container.append(_headerScroller);
 
-    _headers = (new dom.Element.tag('bwu-datagrid-headers') as BwuDatagridHeaders)
-      ..classes.add('bwu-datagrid-header-columns')
+    _headers = ($['bwuDatagridHeaders'] as BwuDatagridHeaders) //(new dom.Element.tag('bwu-datagrid-headers') as BwuDatagridHeaders)
+      //..classes.add('bwu-datagrid-header-columns')
       ..style.left = '-1000px';
-    _headerScroller.append(_headers);
+    //_headerScroller.append(_headers);
     _headers.style.width = "${_getHeadersWidth()}px";
 
-    _headerRowScroller = new dom.DivElement()
-      ..classes.add('bwu-datagrid-headerrow')
-      ..classes.add('ui-state-default')
+    _headerRowScroller = $['headerRowScroller'] //new dom.DivElement()
+//      ..classes.add('bwu-datagrid-headerrow')
+//      ..classes.add('ui-state-default')
       ..style.overflow = 'hidden'
       ..style.position='relative';
-    _container.append(_headerRowScroller);
+    //_container.append(_headerRowScroller);
 
-    _headerRow = new dom.DivElement()
-      ..classes.add('bwu-datagrid-headerrow-columns');
-    _headerRowScroller.append(_headerRow);
+    _headerRow = $['headerRow']; //new dom.DivElement()
+      //..classes.add('bwu-datagrid-headerrow-columns');
+    //_headerRowScroller.append(_headerRow);
 
-    _headerRowSpacer = new dom.DivElement()
+    _headerRowSpacer = $['spacer'] //new dom.DivElement()
       ..style.display = 'block'
       ..style.height ='1px'
       ..style.position ='absolute'
       ..style.top ='0'
       ..style.left='0'
       ..style.width = '${_getCanvasWidth() + _scrollbarDimensions.x}px';
-    _headerRowScroller.append(_headerRowSpacer);
+    //_headerRowScroller.append(_headerRowSpacer);
 
-    _topPanelScroller = new dom.DivElement()
-      ..classes.add('bwu-datagrid-top-panel-scroller')
-      ..classes.add('ui-state-default')
+    _topPanelScroller = $['topPanelScroller'] //new dom.DivElement()
+      //..classes.add('bwu-datagrid-top-panel-scroller')
+      //..classes.add('ui-state-default')
       ..style.overflow ='hidden'
       ..style.position='relative';
-    _container.append(_topPanelScroller);
-    _topPanel = new dom.DivElement()
-      ..classes.add('bwu-datagrid-top-panel')
+    //_container.append(_topPanelScroller);
+    _topPanel = $['topPanel'] // new dom.DivElement()
+      //..classes.add('bwu-datagrid-top-panel')
       ..style.width='10000px';
-    _topPanelScroller.append(_topPanel);
+    //_topPanelScroller.append(_topPanel);
 
     if (!_gridOptions.showTopPanel) {
       _topPanelScroller.style.display = 'none'; //hide();
@@ -282,17 +306,17 @@ class BwuDatagrid extends PolymerElement {
       _headerRowScroller.style.display = 'none'; // hide();
     }
 
-    _viewport = new dom.DivElement()
-      ..classes.add('bwu-datagrid-viewport')
+    _viewport = $['viewport'] //new dom.DivElement()
+      //..classes.add('bwu-datagrid-viewport')
       ..style.width='100%'
       ..style.overflow ='auto'
       ..style.outline='0'
       ..style.position='relative';
-    _container.append(_viewport);
+    //_container.append(_viewport);
     _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
 
-    _canvas = new dom.DivElement()..classes.add('grid-canvas');
-    _viewport.append(_canvas);
+    _canvas = $['canvas']; //new dom.DivElement()..classes.add('grid-canvas');
+    //_viewport.append(_canvas);
 
     _focusSink2 = _focusSink.clone(true);
     _container.append(_focusSink2);
@@ -323,7 +347,9 @@ class BwuDatagrid extends PolymerElement {
         // disable text selection in grid cells except in input and textarea elements
         // (this is IE-specific, because selectstart event will only fire in IE)
         _viewport.onSelectStart.listen((event) {  //  bind("selectstart.ui",
-          return event.target is dom.InputElement || event.target is dom.TextAreaElement;
+          if(!(event.target is dom.InputElement || event.target is dom.TextAreaElement)) {
+            event.preventDefault();
+          }
         });
       }
 
@@ -464,16 +490,30 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _disableSelection(dom.HtmlElement $target) {
+// TODO also for all childs ?? commented out lines below didn't change anything
+// starting in the text of a header and dragging down to the grid selects text
     if ($target != null) {
       $target
-        ..attributes["unselectable"] = "on"
-        ..style.userSelect= "none"
+        ..attributes['unselectable'] = 'on'
+        ..style.userSelect= 'none'
         ..onSelectStart.listen((e) {
           e
-           ..stopPropagation()
-           ..stopImmediatePropagation();
+           ..preventDefault();
+           //..stopPropagation()
+           //..stopImmediatePropagation();
         }); // bind("selectstart.ui", function () {
     }
+    $target.querySelectorAll('*').forEach((dom.HtmlElement e) {
+      e
+        ..attributes['unselectable']='on';
+//        ..style.userSelect= 'none'
+//        ..onSelectStart.listen((e) {
+//          e
+//            ..preventDefault()
+//            ..stopPropagation()
+//            ..stopImmediatePropagation();
+//      });
+    });
   }
 
   int _getMaxSupportedCssHeight() {
@@ -621,6 +661,7 @@ class BwuDatagrid extends PolymerElement {
             //..attributes["id"] ='${uid}${m.id}'
             ..attributes["id"] ='${m.id}'
             ..attributes["title"] = m.toolTip != null ? m.toolTip : ""
+            ..attributes['ismovable'] = '${m.isMovable}'
             ..column = m
             ..classes.add(m.headerCssClass != null ? m.headerCssClass : "");
         _headers.append(header);
@@ -719,31 +760,34 @@ class BwuDatagrid extends PolymerElement {
     });
   }
 
+
   void _setupColumnReorder() {
-    _headers.filter = new Filter(":ui-sortable")..sortable.destroy(); //("destroy");
-    _headers.sortable = new Sortable(
+    //_headers.filter = new sort.Filter(":ui-sortable")
+    if(_headers.sortable != null) {
+      _headers.sortable.destroy();
+    }
+    _headers.sortable = new sort.Sortable(
+      sortable: _headers,
+      //selector: 'ui-sortable',
       containment: 'parent',
       distance: 3,
       axis: 'x',
       cursor: 'default',
       tolerance: 'intersection',
       helper: 'clone',
-      placeholder: 'bwu-datagrid-sortable-placeholder ui-state-default bwu-datagrid-header-column',
-      start: (e, ui) {
-        ui.placeholder.width(tools.outerWidth(ui) - _headerColumnWidthDiff);
-        (ui.helper as dom.HtmlElement).classes.add('bwu-datagrid-header-column-active');
+      placeholderCssClass: 'bwu-datagrid-sortable-placeholder ui-state-default bwu-datagrid-header-column',
+      start: (elm, helper, placeholder) {
+        //placeholder.style.width = '${tools.outerWidth(elm) - _headerColumnWidthDiff}px';
+        helper.classes.add('bwu-datagrid-header-column-active');
       },
-      beforeStop: (e, ui) {
-        (ui.helper as dom.HtmlElement).classes.remove('bwu-datagrid-header-column-active');
-      });
-    _headers.sortable.stop =
-      (e) {
+      beforeStop: (elm, helper) {
+        helper.classes.remove('bwu-datagrid-header-column-active');
         if (!getEditorLock.commitCurrentEdit()) {
-          _headers.sortable.cancel(); //('cancel'); // TODO
-          return;
+          _headers.sortable.cancel();
         }
-
-        var reorderedIds = _headers.sortable.toArray(); //("toArray");
+      });
+    _headers.sortable.stop = (e) {
+        var reorderedIds = _headers.sortable.reorderedIds; //("toArray");
         var reorderedColumns = [];
         for (var i = 0; i < reorderedIds.length; i++) {
           reorderedColumns.add(columns[getColumnIndex(reorderedIds[i] /*.replace(uid, "")*/)]); // TODO what is uid for here?
@@ -1113,7 +1157,8 @@ class BwuDatagrid extends PolymerElement {
     }
 
     if (_gridOptions.enableColumnReorder) {
-        _headers.filter = new Filter(":ui-sortable")..sortable.destroy(); //("destroy"); // TODO
+        _headers//.filter = new sort.Filter(":ui-sortable")
+          ..sortable.destroy(); //("destroy"); // TODO
     }
 
     _unbindAncestorScrollEvents();

@@ -56,10 +56,10 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
-
-      grid.setSelectionModel = new CellSelectionModel();
-      grid.onBwuAddNewRow.listen(addnewRowHandler);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) {
+        grid.setSelectionModel = new CellSelectionModel();
+        grid.onBwuAddNewRow.listen(addnewRowHandler);
+      });
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');

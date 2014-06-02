@@ -5,7 +5,6 @@ import 'dart:math' as math;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
-//import 'package:template_binding/template_binding.dart' as tb;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -20,7 +19,6 @@ import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_datagrid/tools/html.dart' as tools;
 
 import '../required_field_validator.dart';
-import 'inline_filter_panel.dart';
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
@@ -28,7 +26,7 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "sel", name: "#", field: "num", behavior: "select", cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false),
+    new Column(id: "sel", name: "#", field: "num", behavior: "select", cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false, isMovable: false),
     new Column(id: "title", name: "Title", field: "title", width: 120, minWidth: 120, cssClass: "cell-title", editor: new TextEditor(), validator: new RequiredFieldValidator(), sortable: true),
     new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor(), sortable: true),
     new Column(id: "%", defaultSortAsc: false, name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor(), sortable: true),
@@ -79,89 +77,80 @@ class AppElement extends PolymerElement {
       }
 
       dataView = new DataView(options: new DataViewOptions(inlineFilters: true));
-      grid.setup(dataProvider: dataView, columns: columns, gridOptions: gridOptions);
-      grid.setSelectionModel = new RowSelectionModel();
+      grid.setup(dataProvider: dataView, columns: columns, gridOptions: gridOptions).then((_) {
+        grid.setSelectionModel = new RowSelectionModel();
 
-      ($['pager'] as BwuPager).init(dataView, grid);
-      BwuColumnPicker columnPicker = new dom.Element.tag('bwu-column-picker') as BwuColumnPicker;
-      columnPicker.columns = columns;
-      columnPicker.grid = grid;
-      dom.document.body.append(columnPicker);
-      //columnPicker.options = new ColumnPickerOptions(/*gridOptions*/);
+        ($['pager'] as BwuPager).init(dataView, grid);
+        BwuColumnPicker columnPicker = new dom.Element.tag('bwu-column-picker') as BwuColumnPicker;
+        columnPicker.columns = columns;
+        columnPicker.grid = grid;
+        dom.document.body.append(columnPicker);
+        //columnPicker.options = new ColumnPickerOptions(/*gridOptions*/);
 
-      var filterPanel = new dom.Element.tag('inline-filter-panel') as InlineFilterPanel;
-      grid.getTopPanel.append(new dom.Element.tag('inline-filter-panel'));
-      // TODO bind inline_filter_panel
-      //tb.nodeBind(filterPanel).bind('threshold', new PathObserver(this, 'percentCompleteThreshold'));
-      //tb.nodeBind(filterPanel).bind('searchString', new PathObserver(this, 'searchString'));
-      filterPanel.bind('threshold', new PathObserver(this, 'percentCompleteThreshold'));
-      filterPanel.bind('searchString', new PathObserver(this, 'searchString'));
-
-
-      grid.onBwuCellChange.listen((e) {
+        grid.onBwuCellChange.listen((e) {
           dataView.updateItem(e.item['id'], e.item);
+        });
+
+        grid.onBwuAddNewRow.listen((e) {
+          var item = new MapDataItem({"num": data.length, "id": "new_${rnd.nextInt(10000)}", "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false});
+          item.extend(e.item); //$.extend(item, args.item);
+          dataView.addItem(item);
+        });
+
+        grid.onBwuKeyDown.listen(onKeyDownHandler);
+
+        grid.onBwuSort.listen(onSort);
+
+        // wire up model events to drive the grid
+        dataView.onBwuRowCountChanged.listen((e) {
+          grid.updateRowCount();
+          grid.render();
+        });
+
+        dataView.onBwuRowsChanged.listen((e) {
+          grid.invalidateRows(e.changedRows);
+          grid.render();
+        });
+
+        dataView.onBwuPagingInfoChanged.listen((e) { // function (e, pagingInfo) {
+          var isLastPage = e.pagingInfo.pageNum == e.pagingInfo.totalPages - 1;
+          var enableAddRow = isLastPage || e.pagingInfo.pageSize == 0;
+          var options = grid.getGridOptions;
+
+          if (options.enableAddRow != enableAddRow) {
+            grid.setGridOptions = new GridOptions.unitialized()..enableAddRow = enableAddRow;
+          }
+        });
+
+        $['filter-form'].on['select-rows'].listen((e) {
+          if (!core.globalEditorLock.commitCurrentEdit()) {
+            return;
+          }
+
+          var rows = [];
+          for (var i = 0; i < 10 && i < dataView.length; i++) {
+            rows.add(i);
+          }
+
+          grid.setSelectedRows(rows);
+        });
+
+        // initialize the model after all the events have been hooked up
+        dataView.beginUpdate();
+        dataView.setItems(data);
+        dataView.setFilterArgs({
+          'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
+          'searchString': searchString
+        });
+        dataView.setFilter(myFilter);
+        dataView.endUpdate();
+
+        // if you don't want the items that are not visible (due to being filtered out
+        // or being on a different page) to stay selected, pass 'false' to the second arg
+        dataView.syncGridSelection(grid, true);
+
+        // TODO $("#gridContainer").resizable();
       });
-
-      grid.onBwuAddNewRow.listen((e) {
-        var item = new MapDataItem({"num": data.length, "id": "new_${rnd.nextInt(10000)}", "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false});
-        item.extend(e.item); //$.extend(item, args.item);
-        dataView.addItem(item);
-      });
-
-      grid.onBwuKeyDown.listen(onKeyDownHandler);
-
-      grid.onBwuSort.listen(onSort);
-
-
-      // wire up model events to drive the grid
-      dataView.onBwuRowCountChanged.listen((e) {
-        grid.updateRowCount();
-        grid.render();
-      });
-
-      dataView.onBwuRowsChanged.listen((e) {
-        grid.invalidateRows(e.changedRows);
-        grid.render();
-      });
-
-      dataView.onBwuPagingInfoChanged.listen((e) { // function (e, pagingInfo) {
-        var isLastPage = e.pagingInfo.pageNum == e.pagingInfo.totalPages - 1;
-        var enableAddRow = isLastPage || e.pagingInfo.pageSize == 0;
-        var options = grid.getGridOptions;
-
-        if (options.enableAddRow != enableAddRow) {
-          grid.setGridOptions = new GridOptions.unitialized()..enableAddRow = enableAddRow;
-        }
-      });
-
-      $['filter-form'].on['select-rows'].listen((e) {
-        if (!core.globalEditorLock.commitCurrentEdit()) {
-          return;
-        }
-
-        var rows = [];
-        for (var i = 0; i < 10 && i < dataView.length; i++) {
-          rows.add(i);
-        }
-
-        grid.setSelectedRows(rows);
-      });
-
-      // initialize the model after all the events have been hooked up
-      dataView.beginUpdate();
-      dataView.setItems(data);
-      dataView.setFilterArgs({
-        'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
-        'searchString': searchString
-      });
-      dataView.setFilter(myFilter);
-      dataView.endUpdate();
-
-      // if you don't want the items that are not visible (due to being filtered out
-      // or being on a different page) to stay selected, pass 'false' to the second arg
-      dataView.syncGridSelection(grid, true);
-
-      // TODO $("#gridContainer").resizable();
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
@@ -220,7 +209,7 @@ class AppElement extends PolymerElement {
       return false;
     }
 
-    if (args['searchString'] != "" && item["title"].indexOf(args['searchString']) == -1) {
+    if (args['searchString'] != '' && item['title'].indexOf(args['searchString']) == -1) {
       return false;
     }
 

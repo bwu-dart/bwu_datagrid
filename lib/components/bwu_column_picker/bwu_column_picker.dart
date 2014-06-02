@@ -35,7 +35,7 @@ class BwuColumnPicker extends PolymerElement {
 
   bool _isInitialized = false;
 
-  List<async.StreamSubscription> _subscriptions;
+  List<async.StreamSubscription> _subscriptions = [];
 
   void set options(ColumnPickerOptions options) {
     if(_isInitialized) {

@@ -66,9 +66,8 @@ class AppElement extends PolymerElement {
       grid.onBwuAddNewRow.listen(addNewRowHandler);
       grid.onBwuValidationError.listen(validationErrorHandler);
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
-
-      grid.setActiveCell(0, 0);
+      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) =>
+          grid.setActiveCell(0, 0));
 
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
