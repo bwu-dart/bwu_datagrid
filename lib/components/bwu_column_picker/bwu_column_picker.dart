@@ -86,7 +86,7 @@ class BwuColumnPicker extends PolymerElement {
 
     _subscriptions.add(_grid.onBwuHeaderContextMenu.listen(_handleHeaderContextMenu));
     _subscriptions.add(_grid.onBwuColumnsReordered.listen(_updateColumnOrder));
-    _subscriptions.add(onClick.listen(_updateColumn));
+    //_subscriptions.add(onClick.listen(_updateColumn));
 
     _isInitialized = true;
   }
@@ -142,7 +142,7 @@ class BwuColumnPicker extends PolymerElement {
     _columns = ordered;
   }
 
-  void _updateColumn(dom.Event e) {
+  void updateColumn(dom.Event e) {
     var cb = e.target as dom.CheckboxInputElement;
     CbData curCbData;
 
