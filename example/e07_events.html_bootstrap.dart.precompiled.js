@@ -2134,7 +2134,7 @@ t=H.VM([],[M.OH])
 z=new V.mZ(t)
 for(y=0;J.u6(y,500);y=J.WB(y,1)){t=z.ghL()
 s=P.EF(["title","Task "+H.d(y),"priority","Medium"],null,null)
-t.push(new V.iC(s))}J.p3(a.Gn,a.oH,z,a.WO).UT(new O.HF(a,z))}catch(r){t=H.Ru(r)
+t.push(new V.iC(!1,s))}J.p3(a.Gn,a.oH,z,a.WO).UT(new O.HF(a,z))}catch(r){t=H.Ru(r)
 s=J.x(t)
 if(!!s.$isJS){x=t
 P.mp(H.d(x)+"\n\n"+new H.XO(x.$thrownJsError,null).bu(0))}else if(!!s.$isbJ){w=t
@@ -3639,7 +3639,7 @@ u=a.SM
 t=w!=null
 if(t)s=w
 else{s=P.L5(null,null,null,null,null)
-s=new V.iC(s)}r=this.gvl(a)
+s=new V.iC(!1,s)}r=this.gvl(a)
 q=this.guE(a)
 z.toString
 q=M.XF(new M.xq(a,y,v,u,x,s,r,q))
@@ -3838,7 +3838,7 @@ x=a.qW
 w=J.Vm(x.il)
 z.u(0,x.Kw.li.gt0(),w)
 this.dZ(a)
-a.Cz.jB(0,C.uV,new M.P9(new V.iC(z),v,a,null,P.Fl(null,null),!0,!1,!1,!1))}return!a.ZL.giG().gCW()}else{J.JZ(a.SM).Rz(0,"invalid")
+a.Cz.jB(0,C.uV,new M.P9(new V.iC(!1,z),v,a,null,P.Fl(null,null),!0,!1,!1,!1))}return!a.ZL.giG().gCW()}else{J.JZ(a.SM).Rz(0,"invalid")
 J.Px(J.qk(a.SM))
 J.JZ(a.SM).h(0,"invalid")
 a.Cz.jB(0,C.bP,new M.bp(a.qW,a.SM,u,new V.fa(a.fU,a.uk),v,a,null,P.Fl(null,null),!0,!1,!1,!1))
@@ -4276,7 +4276,7 @@ u2:{
 iR:{
 "^":"OH;"},
 iC:{
-"^":"Nx;EV",
+"^":"Nx;xj,EV",
 KQ:function(a,b){J.kH(b.gvc(),new V.zL(this,b))},
 $asNx:function(){return[null,null]},
 $asT8:function(){return[null,null]},
@@ -4582,11 +4582,13 @@ y=J.YE(u)
 if(y.gQg(u).MW.getAttribute("ismovable")!=="true")break
 if(u===this.I1)continue
 this.lm=C.CD.yu(C.jn.UD(y.gNa(u)+y.gmd(u)))}z=this.wy
+y=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
 if(typeof z!=="number")return z.W()
-this.wy=z-15
-z=this.lm
-if(typeof z!=="number")return z.g()
-this.lm=z+15
+this.wy=z-y
+y=this.lm
+z=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
+if(typeof y!=="number")return y.g()
+this.lm=y+z
 J.ZP(this.Qd,this.pp)},
 C7:function(a){var z,y,x,w,v,u,t
 z=this.vs.x
@@ -17807,7 +17809,8 @@ if(!"name" in iR)iR.name="iR"
 $desc=$collectedClasses.iR
 if($desc instanceof Array)$desc=$desc[1]
 iR.prototype=$desc
-function iC(EV){this.EV=EV}iC.builtin$cls="iC"
+function iC(xj,EV){this.xj=xj
+this.EV=EV}iC.builtin$cls="iC"
 if(!"name" in iC)iC.name="iC"
 $desc=$collectedClasses.iC
 if($desc instanceof Array)$desc=$desc[1]

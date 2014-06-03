@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid example: 04 Model</title>
+    <title>BWU Datagrid example: 05 Collapsing</title>
 
     
     
@@ -67,7 +67,6 @@ You can replace platform.js and polymer.html with different versions if desired.
   </script>
 
 </polymer-element><script src="packages/web_components/dart_support.js"></script>
-
 
 
 
@@ -1052,42 +1051,6 @@ li a:hover {
 
   </template>
   
-</polymer-element><polymer-element name="inline-filter-panel">
-  <template>
-    <style>
-      :host {
-        display: block;
-        height: 21px;
-/*        display: none; */
-        background: #dddddd;
-        padding: 2px;
-        color: black;
-        border: none;
-        padding-left: 10px;
-      }
-
-      input {
-        padding-top: 0px;
-      }
-
-      #slider {
-        -webkit-appearance: none;
-        -moz-apperance: none;
-        width: 100px;
-        display: inline-block;"
-        padding-top: 0px;
-        padding-bottom: 0px;
-        height: 5px;
-        background-color: #fff;
-      }
-    </style>
-
-    <!--<div id="inlineFilterPanel">-->
-      Show tasks with title including <input type="text" id="txtSearch" value="{{searchString}}" on-keyup="{{clearSearch}}"> and % at least &nbsp;
-      <input id="slider" type="range" value="{{threshold}}" min="0" max="100">
-    <!--</div> -->
-  </template>
-  
 </polymer-element><polymer-element name="filter-form">
   <template>
     <style>
@@ -1813,30 +1776,25 @@ input.editor-checkbox {
         text-align: center;
       }
 
-      bwu-datagrid /deep/ .cell-selection {
-        border-right-color: silver;
-        border-right-style: solid;
-        background: #f5f5f5;
-        color: gray;
-        text-align: right;
-        font-size: 10px;
+      bwu-datagrid /deep/ .toggle {
+        height: 9px;
+        width: 9px;
+        display: inline-block;
       }
 
-      bwu-datagrid /depp/ .bwu-datagrid-row.selected .cell-selection {
-        background-color: transparent; /* show default selected row background */
+      bwu-datagrid /deep/ .toggle.expand {
+        background: url(packages/bwu_datagrid/asset/images/expand.gif) no-repeat center center;
       }
+
+      bwu-datagrid /deep/ .toggle.collapse {
+        background: url(packages/bwu_datagrid/asset/images/collapse.gif) no-repeat center center;
+      }
+
     </style>
 
     <div style="position:relative">
       <div style="width:600px;">
-        <div class="grid-header" style="width:100%">
-          <label>BWU Datagrid</label>
-          <span style="float:right" class="ui-icon ui-icon-search ui-state-default ui-corner-all" title="Toggle search panel" on-click="{{toggleFilterRow}}" on-mouseover="{{iconMouseOver}}" on-mouseout="{{iconMouseOut}}"></span>
-        </div>
-        <bwu-datagrid id="myGrid" style="width:100%;height:500px;">
-          <inline-filter-panel id="filter-form" grid-target="toppanel" threshold="{{percentCompleteThreshold}}" searchstring="{{searchString}}"></inline-filter-panel>
-        </bwu-datagrid>
-        <bwu-pager id="pager" style="width:100%;"></bwu-pager>
+        <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
       </div>
 
       <div class="options-panel">
@@ -1844,35 +1802,17 @@ input.editor-checkbox {
         <hr>
         <div style="padding:6px;">
           <filter-form id="filter-form" threshold="{{percentCompleteThreshold}}" searchstring="{{searchString}}"></filter-form>
-          <br><br>
-
-          <button id="btnSelectRows" on-click="{{btnSelectRowsHandler}}">Select first 10 rows</button>
 
           <br>
 
           <h2>Demonstrates:</h2>
           <ul>
-            <li>a filtered Model (DataView) as a data source instead of a simple array</li>
-            <li>grid reacting to model events (onRowCountChanged, onRowsChanged)</li>
-            <li>
-              <b>FAST</b> DataView recalculation and <b>real-time</b> grid updating in response to data changes.<br>
-              The grid holds <b>50'000</b> rows, yet you are able to sort, filter, scroll, navigate and edit as if it had 50
-              rows.
-            </li>
-            <li>adding new rows, bidirectional sorting</li>
-            <li>column options: cannotTriggerInsert</li>
-            <li>events: onCellChange, onAddNewRow, onKeyDown, onSelectedRowsChanged, onSort</li>
-            <li><span class="highlight">NOTE:</span> all filters are immediately applied to new/edited rows</li>
-            <li>Handling row selection against model changes.</li>
-            <li>Paging.</li>
-            <li>inline filter panel</li>
+            <li>implementing expand/collapse as a filter for DataView</li>
           </ul>
-
           <h2>View Source:</h2>
           <ul>
-            <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e04_model/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+            <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e05_collapsing/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
           </ul>
-
         </div>
       </div>
     </div>
@@ -2555,4 +2495,4 @@ body /deep/ .ui-datepicker-cover {
     
   
 
-<script src="e04_model.html_bootstrap.dart.js"></script></body></html>
+<script src="e05_collapsing.html_bootstrap.dart.js"></script></body></html>

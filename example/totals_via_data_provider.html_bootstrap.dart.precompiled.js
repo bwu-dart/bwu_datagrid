@@ -2131,7 +2131,7 @@ if(typeof o!=="number")return H.s(o)
 r.push(new V.Hn(q,H.Lw(p+o),H.d(z),60,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,new M.b0(null,null,null,null,null,null,null,null,null,null),null,null,null,null))}a.Gn=this.gKM(a).Zp.t(0,"myGrid")
 a.Rn=Y.Fu(H.VM([],[V.iC]),r)
 for(y=0,q=a.ju;J.u6(y,10);y=J.WB(y,1)){p=P.EF(["id",y],null,null)
-x=new V.iC(p)
+x=new V.iC(!1,p)
 a.Rn.hL.push(x)
 for(w=0;J.u6(w,r.length);w=J.WB(w,1)){p=H.d(w)
 o=q.j1(10)
@@ -3634,7 +3634,7 @@ u=a.SM
 t=w!=null
 if(t)s=w
 else{s=P.L5(null,null,null,null,null)
-s=new V.iC(s)}r=this.gvl(a)
+s=new V.iC(!1,s)}r=this.gvl(a)
 q=this.guE(a)
 z.toString
 q=M.YX(new M.xq(a,y,v,u,x,s,r,q))
@@ -3854,7 +3854,7 @@ z.a=new V.Q5(x,w,t,J.AG(V.Ib(J.Vm(t.il))),a.qm,new B.zc(z,a,y),new B.qb(z,a,y))
 a.ZL.grT()
 z.a.rd()
 this.dZ(a)}else{z=P.L5(null,null,null,null,null)
-s=new V.iC(z)
+s=new V.iC(!1,z)
 z=a.qW
 z.oT(s,J.AG(V.Ib(J.Vm(z.il))))
 this.dZ(a)
@@ -4288,7 +4288,7 @@ u2:{
 iR:{
 "^":"OH;"},
 iC:{
-"^":"Nx;EV",
+"^":"Nx;xj,EV",
 KQ:function(a,b){J.kH(b.gvc(),new V.zL(this,b))},
 $isiC:true,
 $asNx:function(){return[null,null]},
@@ -4588,11 +4588,13 @@ y=J.YE(u)
 if(y.gQg(u).MW.getAttribute("ismovable")!=="true")break
 if(u===this.I1)continue
 this.lm=C.CD.yu(C.jn.UD(y.gNa(u)+y.gmd(u)))}z=this.wy
+y=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
 if(typeof z!=="number")return z.W()
-this.wy=z-15
-z=this.lm
-if(typeof z!=="number")return z.g()
-this.lm=z+15
+this.wy=z-y
+y=this.lm
+z=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
+if(typeof y!=="number")return y.g()
+this.lm=y+z
 J.Vf(this.Qd,this.pp)},
 C7:function(a){var z,y,x,w,v,u,t
 z=this.vs.x
@@ -4778,7 +4780,7 @@ static:{Fu:function(a,b){var z,y
 z=P.Fl(null,null)
 y=P.L5(null,null,null,P.qU,V.Hn)
 P.Fl(P.qU,V.Hn)
-z=new Y.IX(new V.iC(z),b,new N.Z4(null,null,"totals",y,null,null),a)
+z=new Y.IX(new V.iC(!1,z),b,new N.Z4(null,null,"totals",y,null,null),a)
 z.ca(a,b)
 return z}}}}],["bwu_datagrid.tools.html","package:bwu_datagrid/tools/html.dart",,V,{
 "^":"",
@@ -4786,9 +4788,14 @@ xR:function(a){var z
 try{V.Ib(a)
 return!0}catch(z){H.Ru(z)
 return!1}},
-Oi:function(a,b){var z,y
-try{z=H.BU(a,null,null)
-return z}catch(y){H.Ru(y)
+Oi:function(a,b){var z,y,x,w
+try{y=H.BU(a,null,null)
+return y}catch(x){y=H.Ru(x)
+z=y
+w=H.d(z)
+y=$.oK
+if(y==null)H.qw(w)
+else y.$1(w)
 return b}},
 Ib:function(a){var z,y,x,w
 if(a==null||J.NU(a)==="")return 0
@@ -17689,7 +17696,8 @@ if(!"name" in iR)iR.name="iR"
 $desc=$collectedClasses.iR
 if($desc instanceof Array)$desc=$desc[1]
 iR.prototype=$desc
-function iC(EV){this.EV=EV}iC.builtin$cls="iC"
+function iC(xj,EV){this.xj=xj
+this.EV=EV}iC.builtin$cls="iC"
 if(!"name" in iC)iC.name="iC"
 $desc=$collectedClasses.iC
 if($desc instanceof Array)$desc=$desc[1]

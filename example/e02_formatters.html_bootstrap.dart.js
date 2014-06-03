@@ -2134,7 +2134,7 @@ z=new V.mZ(t)
 for(y=0;J.u6(y,5);y=J.WB(y,1)){t=z.ghL()
 s="<a href='#' tabindex='0'>Task</a> "+H.d(y)
 s=P.EF(["title",s,"duration","5 days","percentComplete",P.J(100,C.CD.yu(C.ON.UD(C.pr.w7()*110))),"start","01/01/2009","finish","01/05/2009","effortDriven",J.jO(y,5)===0],null,null)
-t.push(new V.iC(s))}J.p3(a.Gn,a.oH,z,a.WO)}catch(r){t=H.Ru(r)
+t.push(new V.iC(!1,s))}J.p3(a.Gn,a.oH,z,a.WO)}catch(r){t=H.Ru(r)
 s=J.x(t)
 if(!!s.$isJS){x=t
 P.mp(H.d(x)+"\n\n"+new H.XO(x.$thrownJsError,null).bu(0))}else if(!!s.$isbJ){w=t
@@ -3519,7 +3519,7 @@ u=a.SM
 t=w!=null
 if(t)s=w
 else{s=P.L5(null,null,null,null,null)
-s=new V.iC(s)}s=z.MS(new M.xq(a,y,v,u,x,s,this.gvl(a),this.guE(a)))
+s=new V.iC(!1,s)}s=z.MS(new M.xq(a,y,v,u,x,s,this.gvl(a),this.guE(a)))
 a.qW=s
 if(t)s.Mv(w)
 a.qm=C.jN.LX(a.qW)
@@ -4117,7 +4117,7 @@ u2:{
 iR:{
 "^":"OH;"},
 iC:{
-"^":"Cs;EV",
+"^":"Cs;xj,EV",
 KQ:function(a,b){J.kH(b.gvc(),new V.zL(this,b))},
 $asCs:function(){return[null,null]},
 $asT8:function(){return[null,null]},
@@ -4400,11 +4400,13 @@ y=J.YE(u)
 if(y.gQg(u).MW.getAttribute("ismovable")!=="true")break
 if(u===this.I1)continue
 this.lm=C.CD.yu(C.jn.UD(y.gNa(u)+y.gmd(u)))}z=this.wy
+y=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
 if(typeof z!=="number")return z.W()
-this.wy=z-15
-z=this.lm
-if(typeof z!=="number")return z.g()
-this.lm=z+15
+this.wy=z-y
+y=this.lm
+z=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
+if(typeof y!=="number")return y.g()
+this.lm=y+z
 J.ZP(this.Qd,this.pp)},
 C7:function(a){var z,y,x,w,v,u,t
 z=this.vs.x

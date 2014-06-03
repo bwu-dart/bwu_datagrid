@@ -2155,7 +2155,7 @@ for(z=0,r=a.oH;J.u6(z,4);z=J.WB(z,1))r.push(new V.Hn("cpu"+H.d(z),"CPU"+H.d(z),"
 q=H.VM([],[M.OH])
 a.Rn=new V.mZ(q)
 for(y=0,q=a.ju;J.u6(y,500);y=J.WB(y,1)){p=P.EF(["server","Server "+H.d(y)],null,null)
-x=new V.iC(p)
+x=new V.iC(!1,p)
 a.Rn.hL.push(x)
 for(w=0;J.u6(w,4);w=J.WB(w,1)){p="cpu"+H.d(w)
 o=q.j1(100)
@@ -3603,7 +3603,7 @@ u=a.SM
 t=w!=null
 if(t)s=w
 else{s=P.L5(null,null,null,null,null)
-s=new V.iC(s)}s=z.MS(new M.xq(a,y,v,u,x,s,this.gvl(a),this.guE(a)))
+s=new V.iC(!1,s)}s=z.MS(new M.xq(a,y,v,u,x,s,this.gvl(a),this.guE(a)))
 a.qW=s
 if(t)s.Mv(w)
 a.qm=C.jN.LX(a.qW)
@@ -4220,7 +4220,7 @@ u2:{
 iR:{
 "^":"OH;"},
 iC:{
-"^":"Nx;EV",
+"^":"Nx;xj,EV",
 KQ:function(a,b){J.kH(b.gvc(),new V.zL(this,b))},
 $asNx:function(){return[null,null]},
 $asT8:function(){return[null,null]},
@@ -4479,11 +4479,13 @@ y=J.YE(u)
 if(y.gQg(u).MW.getAttribute("ismovable")!=="true")break
 if(u===this.I1)continue
 this.lm=C.CD.yu(C.jn.UD(y.gNa(u)+y.gmd(u)))}z=this.wy
+y=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
 if(typeof z!=="number")return z.W()
-this.wy=z-15
-z=this.lm
-if(typeof z!=="number")return z.g()
-this.lm=z+15
+this.wy=z-y
+y=this.lm
+z=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
+if(typeof y!=="number")return y.g()
+this.lm=y+z
 J.ZP(this.Qd,this.pp)},
 C7:function(a){var z,y,x,w,v,u,t
 z=this.vs.x
@@ -17561,7 +17563,8 @@ if(!"name" in iR)iR.name="iR"
 $desc=$collectedClasses.iR
 if($desc instanceof Array)$desc=$desc[1]
 iR.prototype=$desc
-function iC(EV){this.EV=EV}iC.builtin$cls="iC"
+function iC(xj,EV){this.xj=xj
+this.EV=EV}iC.builtin$cls="iC"
 if(!"name" in iC)iC.name="iC"
 $desc=$collectedClasses.iC
 if($desc instanceof Array)$desc=$desc[1]

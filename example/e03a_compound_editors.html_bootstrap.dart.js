@@ -2139,7 +2139,7 @@ for(y=0;J.u6(y,500);y=J.WB(y,1)){x=C.pr.j1(100)
 s=z.ghL()
 r="Task "+H.d(y)
 r=P.EF(["title",r,"from",x,"to",J.WB(x,C.pr.j1(100))],null,null)
-s.push(new V.iC(r))}J.p3(a.Gn,a.oH,z,a.WO)}catch(q){s=H.Ru(q)
+s.push(new V.iC(!1,r))}J.p3(a.Gn,a.oH,z,a.WO)}catch(q){s=H.Ru(q)
 r=J.x(s)
 if(!!r.$isJS){w=s
 P.mp(H.d(w)+"\n\n"+new H.XO(w.$thrownJsError,null).bu(0))}else if(!!r.$isbJ){v=s
@@ -3569,7 +3569,7 @@ u=a.SM
 t=w!=null
 if(t)s=w
 else{s=P.L5(null,null,null,null,null)
-s=new V.iC(s)}s=z.MS(new M.xq(a,y,v,u,x,s,this.gvl(a),this.guE(a)))
+s=new V.iC(!1,s)}s=z.MS(new M.xq(a,y,v,u,x,s,this.gvl(a),this.guE(a)))
 a.qW=s
 if(t)s.Mv(w)
 a.qm=a.qW.LX(0)
@@ -3760,7 +3760,7 @@ z.a=new V.Q5(x,w,t,t.LX(0),a.qm,new B.zc(z,a,y),new B.qb(z,a,y))
 a.ZL.grT()
 z.a.rd()
 this.dZ(a)}else{z=P.L5(null,null,null,null,null)
-s=new V.iC(z)
+s=new V.iC(!1,z)
 z=a.qW
 z.oT(s,z.LX(0))
 this.dZ(a)
@@ -4194,7 +4194,7 @@ u2:{
 iR:{
 "^":"OH;"},
 iC:{
-"^":"Nx;EV",
+"^":"Nx;xj,EV",
 KQ:function(a,b){J.kH(b.gvc(),new V.zL(this,b))},
 $asNx:function(){return[null,null]},
 $asT8:function(){return[null,null]},
@@ -4506,11 +4506,13 @@ y=J.YE(u)
 if(y.gQg(u).MW.getAttribute("ismovable")!=="true")break
 if(u===this.I1)continue
 this.lm=C.CD.yu(C.jn.UD(y.gNa(u)+y.gmd(u)))}z=this.wy
+y=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
 if(typeof z!=="number")return z.W()
-this.wy=z-15
-z=this.lm
-if(typeof z!=="number")return z.g()
-this.lm=z+15
+this.wy=z-y
+y=this.lm
+z=C.CD.yu(C.jn.UD(J.jx(this.I1)/2))
+if(typeof y!=="number")return y.g()
+this.lm=y+z
 J.ZP(this.Qd,this.pp)},
 C7:function(a){var z,y,x,w,v,u,t
 z=this.vs.x
@@ -4722,9 +4724,11 @@ xR:function(a){var z
 try{V.Ib(a)
 return!0}catch(z){H.Ru(z)
 return!1}},
-Oi:function(a,b){var z,y
-try{z=H.BU(a,null,null)
-return z}catch(y){H.Ru(y)
+Oi:function(a,b){var z,y,x
+try{y=H.BU(a,null,null)
+return y}catch(x){y=H.Ru(x)
+z=y
+P.mp(z)
 return b}},
 Ib:function(a){var z,y,x,w
 if(a==null||J.NU(a)==="")return 0
