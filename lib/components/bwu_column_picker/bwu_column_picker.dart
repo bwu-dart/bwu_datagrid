@@ -86,7 +86,6 @@ class BwuColumnPicker extends PolymerElement {
 
     _subscriptions.add(_grid.onBwuHeaderContextMenu.listen(_handleHeaderContextMenu));
     _subscriptions.add(_grid.onBwuColumnsReordered.listen(_updateColumnOrder));
-    //_subscriptions.add(onClick.listen(_updateColumn));
 
     _isInitialized = true;
   }
@@ -183,11 +182,4 @@ class BwuColumnPicker extends PolymerElement {
     new async.Future(() => style.opacity = '0');
     this.onTransitionEnd.first.then((e) => style.display = 'none');
   }
-
-      //init();
-
-//      return {
-//        "getAllColumns": getAllColumns,
-//        "destroy": destroy
-//      };
 }

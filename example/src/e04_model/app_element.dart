@@ -62,7 +62,7 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      data = new List<DataItem>(); //MapDataItemProvider();
+      data = new List<DataItem>();
       for (var i = 0; i < 50000; i++) {
         data.add(new MapDataItem({
           "id" : "id_${i}",
@@ -93,7 +93,7 @@ class AppElement extends PolymerElement {
 
         grid.onBwuAddNewRow.listen((e) {
           var item = new MapDataItem({"num": data.length, "id": "new_${rnd.nextInt(10000)}", "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false});
-          item.extend(e.item); //$.extend(item, args.item);
+          item.extend(e.item);
           dataView.addItem(item);
         });
 
@@ -112,7 +112,7 @@ class AppElement extends PolymerElement {
           grid.render();
         });
 
-        dataView.onBwuPagingInfoChanged.listen((e) { // function (e, pagingInfo) {
+        dataView.onBwuPagingInfoChanged.listen((e) {
           var isLastPage = e.pagingInfo.pageNum == e.pagingInfo.totalPages - 1;
           var enableAddRow = isLastPage || e.pagingInfo.pageSize == 0;
           var options = grid.getGridOptions;
