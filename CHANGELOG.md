@@ -1,3 +1,5 @@
+## 0.0.8
+
 ## 0.0.7
 
 * fix #48 click header to sort the column leads to drag
