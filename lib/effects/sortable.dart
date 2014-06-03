@@ -28,6 +28,7 @@ class Sortable {
   //dom.MutationObserver _mObserver;
 
   bool _isDragActive = false;
+  bool _isDragStartPending = false;
   math.Point<int> _dragStartPos;
   int _minLeft;
   int _maxLeft;
@@ -58,6 +59,7 @@ class Sortable {
           _dragEnd(e);
         }
       }
+      _isDragStartPending = false;
     });
   }
 
@@ -95,6 +97,7 @@ class Sortable {
       _mouseMoveSubscr = null;
     }
     _isDragActive = false;
+    _isDragStartPending = false;
     _dragStartPos = null;
     if(_draggedHelper != null) {
       _draggedHelper.remove();
@@ -118,12 +121,12 @@ class Sortable {
     _items.forEach((e) {
       _mouseDownSubscr.add(e.onMouseDown.listen((e) {
         if(e.which == 1) {
-
           _draggedElement = e.target as dom.HtmlElement;
           if(_draggedElement.attributes.containsKey('draggable')) {
             return;
           }
 
+          _isDragStartPending = true;
           while(_draggedElement != null && !_items.contains(_draggedElement)) {
             _draggedElement = _draggedElement.parent;
           }
@@ -141,7 +144,7 @@ class Sortable {
 
   void _subscribeMouseMove() {
     _mouseMoveSubscr = dom.document.onMouseMove.listen((e) {
-      if(_dragStartPos != null) { // seems we still receive events after _mouseMoveSubscr.cancel()
+      if(_dragStartPos != null && _isDragStartPending) { // seems we still receive events after _mouseMoveSubscr.cancel()
         if(!_isDragActive) {
           if(((e.client.x - _dragStartPos.x) as int).abs() > distance && !_isDragActive) {
             _dragStart();
