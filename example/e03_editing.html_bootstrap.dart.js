@@ -4739,7 +4739,7 @@ if(typeof z!=="number")return H.s(z)
 J.Fc(y,H.d(100-z))},"$1",null,2,0,null,1,"call"],
 $isEH:true},
 ew:{
-"^":"I1;qt,kj,kv,Kw,mS,Gn,Sv,Tm,li,Do,lj,Jr",
+"^":"I1;qt,kj,kv,Kw,C8,Gn,Sv,Tm,li,Do,lj,Jr",
 MS:function(a){var z=new M.ew(null,null,null,a,"auto",null,null,null,null,null,null,null)
 z.kS(a)
 return z},
@@ -4753,9 +4753,9 @@ J.dK(this.Kw.Gn,"next")}},"$1","gHc",2,0,93,1],
 A3:[function(a){this.Kw.DX()},function(){return this.A3(null)},"vn","$1","$0","guq",0,2,88,18,1],
 Sq:[function(a){J.Fc(this.qt,this.kv)
 this.Kw.GI()},function(){return this.Sq(null)},"Gv","$1","$0","gCI",0,2,88,18,1],
-qj:function(){this.mS=J.rv(this.kj.style)
+qj:function(){this.C8=J.rv(this.kj.style)
 J.oH(this.kj.style,"none")},
-nE:function(a){J.oH(this.kj.style,this.mS)},
+nE:function(a){J.oH(this.kj.style,this.C8)},
 G2:[function(a,b){var z,y
 z=this.kj
 y=J.YE(b)
@@ -4908,7 +4908,7 @@ C.Yu.XI(a)
 return a}}}}],["bwu_datagrid.effects.sortable","package:bwu_datagrid/effects/sortable.dart",,V,{
 "^":"",
 bH:{
-"^":"a;VD>,G9,KP,wf,MQ,tC,R5,Us,nn,M>,Er,cL,o6,mj,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA",
+"^":"a;VD>,G9,KP,wf,MQ,tC,R5,Us,nn,M>,Er,cL,o6,mj,mS,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA",
 vY:function(a,b,c,d){return this.M.$3(b,c,d)},
 bC:function(a,b){return this.Er.$2(a,b)},
 i1:function(a,b){return this.cL.$1(b)},
@@ -4916,6 +4916,7 @@ Gv:function(){var z,y
 z=this.qO
 if(z!=null){z.Gv()
 this.qO=null}this.mj=!1
+this.mS=!1
 this.qp=null
 z=this.I1
 if(z!=null){J.Mp(z)
@@ -5032,7 +5033,7 @@ hB:function(a,b,c,d,e,f,g,h,i,j,k){var z
 this.kI(0)
 z=C.hV.aM(document)
 H.VM(new W.fd(0,z.uv,z.Ph,W.VF(new V.ne(this)),z.Sg),[H.Kp(z,0)]).Zz()},
-static:{HE:function(a,b,c,d,e,f,g,h,i,j,k){var z=new V.bH(h,c,e,a,d,k,f,g,[],i,b,j,null,!1,null,null,null,null,null,null,null,null,null,[])
+static:{HE:function(a,b,c,d,e,f,g,h,i,j,k){var z=new V.bH(h,c,e,a,d,k,f,g,[],i,b,j,null,!1,!1,null,null,null,null,null,null,null,null,null,[])
 z.hB(a,b,c,d,e,f,g,h,i,j,k)
 return z}}},
 ne:{
@@ -5055,7 +5056,7 @@ z.KL()
 z.Qd=null
 z.r5=null
 z.vs=null
-if(z.cL!=null)z.i1(0,a)}}},"$1",null,2,0,null,1,"call"],
+if(z.cL!=null)z.i1(0,a)}}z.mS=!1},"$1",null,2,0,null,1,"call"],
 $isEH:true},
 uN:{
 "^":"Tp:44;",
@@ -5074,6 +5075,7 @@ if(z.gWB(a)===1){y=this.b
 x=H.Go(z.gN(a),"$isqE")
 y.Qd=x
 if(x.hasAttribute("draggable")===!0)return
+y.mS=!0
 while(!0){x=y.Qd
 if(!(x!=null&&!J.kE(y.o6,x)))break
 y.Qd=y.Qd.parentElement}if(y.Qd==null)return
@@ -5093,7 +5095,7 @@ JV:{
 "^":"Tp:44;a",
 $1:[function(a){var z,y,x
 z=this.a
-if(z.qp!=null)if(!z.mj){y=J.Xr(a)
+if(z.qp!=null&&z.mS)if(!z.mj){y=J.Xr(a)
 y=y.gx(y)
 x=z.qp.x
 if(typeof y!=="number")return y.W()
@@ -8538,7 +8540,8 @@ oJ:{
 T2:function(a,b){var z=a.getPropertyValue(b)
 return z!=null?z:""},
 hV:function(a,b,c,d){var z
-try{if(d==null)d=""
+try{if(c==null)c=""
+if(d==null)d=""
 a.setProperty(b,c,d)
 if(!!a.setAttribute)a.setAttribute(b,c)}catch(z){H.Ru(z)}},
 xd:[function(a,b){return a.item(b)},"$1","gDo",2,0,68,69],

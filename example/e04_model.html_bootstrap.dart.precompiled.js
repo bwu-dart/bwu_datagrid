@@ -4481,7 +4481,7 @@ if(z==null)throw H.b("Selection model is not set")
 z.AG(this.z9(a,b))},
 glZ:function(a){return a.Cz.xM(C.uV)},
 gta:function(a){return a.Cz.xM(C.AB)},
-gmS:function(a){return a.Cz.xM(C.ZR)},
+glh:function(a){return a.Cz.xM(C.ZR)},
 glB:function(a){return a.Cz.xM(C.D4)},
 gdB:function(a){return a.Cz.xM(C.kq)},
 gKI:function(a){return a.Cz.xM(C.Rf)},
@@ -5559,7 +5559,7 @@ ig:function(a){var z
 W.cv.prototype.ig.call(this,a)
 z=a.HY
 z.push(J.BD(a.IS).Ka(this.gFF(a)))
-z.push(J.mx(a.IS).Ka(this.gBE(a)))
+z.push(J.wj(a.IS).Ka(this.gBE(a)))
 a.Hi=!0},
 dQ:function(a){W.cv.prototype.dQ.call(this,a)
 H.bQ(a.HY,new B.RV())
@@ -5789,7 +5789,7 @@ $isEH:true}}],["bwu_datagrid.datagrid.bwu_datagrid_header_column","package:bwu_d
 c4:{
 "^":"ir;li=,AP,fn,Ox,Ob,Om,vW,Rr,Pd,yS,OM",
 $isc4:true,
-static:{wj:function(a){var z,y,x,w
+static:{jM:function(a){var z,y,x,w
 z=$.Nd()
 y=P.Py(null,null,null,P.qU,W.I0)
 x=P.qU
@@ -5835,7 +5835,7 @@ C.Yu.XI(a)
 return a}}}}],["bwu_datagrid.effects.sortable","package:bwu_datagrid/effects/sortable.dart",,V,{
 "^":"",
 bH:{
-"^":"a;VD>,G9,KP,wf,Xi,tC,R5,Us,nn,M,Er,cL,o6,mj,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA",
+"^":"a;VD>,G9,KP,wf,Xi,tC,R5,Us,nn,M,Er,cL,o6,mj,mS,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA",
 vY:function(a,b,c,d){return this.M.$3(b,c,d)},
 bC:function(a,b){return this.Er.$2(a,b)},
 i1:function(a,b){return this.cL.$1(b)},
@@ -5843,6 +5843,7 @@ Gv:function(){var z,y
 z=this.qO
 if(z!=null){z.Gv()
 this.qO=null}this.mj=!1
+this.mS=!1
 this.qp=null
 z=this.I1
 if(z!=null){J.Mp(z)
@@ -5959,7 +5960,7 @@ hB:function(a,b,c,d,e,f,g,h,i,j,k){var z
 this.kI(0)
 z=C.hV.aM(document)
 H.VM(new W.fd(0,z.uv,z.Ph,W.VF(new V.ne(this)),z.Sg),[H.Kp(z,0)]).Zz()},
-static:{HE:function(a,b,c,d,e,f,g,h,i,j,k){var z=new V.bH(h,c,e,a,d,k,f,g,[],i,b,j,null,!1,null,null,null,null,null,null,null,null,null,[])
+static:{HE:function(a,b,c,d,e,f,g,h,i,j,k){var z=new V.bH(h,c,e,a,d,k,f,g,[],i,b,j,null,!1,!1,null,null,null,null,null,null,null,null,null,[])
 z.hB(a,b,c,d,e,f,g,h,i,j,k)
 return z}}},
 ne:{
@@ -5982,7 +5983,7 @@ z.RE()
 z.Qd=null
 z.r5=null
 z.vs=null
-if(z.cL!=null)z.i1(0,a)}}},"$1",null,2,0,null,1,"call"],
+if(z.cL!=null)z.i1(0,a)}}z.mS=!1},"$1",null,2,0,null,1,"call"],
 $isEH:true},
 Gf:{
 "^":"Tp:44;",
@@ -6001,6 +6002,7 @@ if(z.gWB(a)===1){y=this.b
 x=H.Go(z.gN(a),"$isqE")
 y.Qd=x
 if(x.hasAttribute("draggable")===!0)return
+y.mS=!0
 while(!0){x=y.Qd
 if(!(x!=null&&!J.kE(y.o6,x)))break
 y.Qd=y.Qd.parentElement}if(y.Qd==null)return
@@ -6020,7 +6022,7 @@ JV:{
 "^":"Tp:44;a",
 $1:[function(a){var z,y,x
 z=this.a
-if(z.qp!=null)if(!z.mj){y=J.Xr(a)
+if(z.qp!=null&&z.mS)if(!z.mj){y=J.Xr(a)
 y=y.gx(y)
 x=z.qp.x
 if(typeof y!=="number")return y.W()
@@ -9525,7 +9527,8 @@ oJ:{
 T2:function(a,b){var z=a.getPropertyValue(b)
 return z!=null?z:""},
 hV:function(a,b,c,d){var z
-try{if(d==null)d=""
+try{if(c==null)c=""
+if(d==null)d=""
 a.setProperty(b,c,d)
 if(!!a.setAttribute)a.setAttribute(b,c)}catch(z){H.Ru(z)}},
 xd:[function(a,b){return a.item(b)},"$1","gDo",2,0,68,69],
@@ -15909,7 +15912,6 @@ J.lf=function(a){return J.YE(a).giP(a)}
 J.lg=function(a){return J.YE(a).ib(a)}
 J.lo=function(a){return J.YE(a).gta(a)}
 J.lx=function(a){return J.YE(a).gQz(a)}
-J.mx=function(a){return J.YE(a).gmS(a)}
 J.my=function(a){return J.YE(a).guc(a)}
 J.nJ=function(a){return J.YE(a).ga4(a)}
 J.nN=function(a,b){return J.YE(a).sWO(a,b)}
@@ -15964,6 +15966,7 @@ J.w8=function(a){return J.YE(a).gkc(a)}
 J.wA=function(a,b){return J.YE(a).sa4(a,b)}
 J.wT=function(a,b){return J.w1(a).h(a,b)}
 J.wg=function(a,b){return J.U6(a).sB(a,b)}
+J.wj=function(a){return J.YE(a).glh(a)}
 J.xC=function(a,b){if(a==null)return b==null
 if(typeof a!="object")return b!=null&&a===b
 return J.x(a).n(a,b)}
@@ -16330,7 +16333,7 @@ C.O4=H.Kx('CP')
 C.yw=H.Kx('KN')
 C.V8=H.Kx('y4')
 C.iN=H.Kx('yc')
-C.dF=H.Kx('Pg')
+C.HI=H.Kx('Pg')
 C.lk=H.Kx('mJ')
 C.EM=H.Kx('Fv')
 C.jV=H.Kx('rF')
@@ -16391,7 +16394,7 @@ $.An=!1
 $.M6=null
 $.UG=!0
 $.hQ=null
-$.uv=[C.rc,W.qE,{},C.k5,X.pF,{created:X.Xh},C.q0,H.Dg,{"":H.bu},C.eY,V.c4,{created:V.wj},C.dI,O.RE,{created:O.yn},C.Wup,H.LZ,{"":H.nU},C.hG,A.ir,{created:A.G7},C.V8,B.y4,{created:B.nj},C.dF,H.Pg,{"":H.aRu},C.EM,D.Fv,{created:D.UI},C.Om,V.MY,{created:V.xj},C.om,A.GN,{created:A.M9},C.vi,F.FY,{created:F.El},C.lQ,B.po,{created:B.ou},C.qz,W.oh,{},C.ri,W.yy,{}]
+$.uv=[C.rc,W.qE,{},C.k5,X.pF,{created:X.Xh},C.q0,H.Dg,{"":H.bu},C.eY,V.c4,{created:V.jM},C.dI,O.RE,{created:O.yn},C.Wup,H.LZ,{"":H.nU},C.hG,A.ir,{created:A.G7},C.V8,B.y4,{created:B.nj},C.HI,H.Pg,{"":H.aRu},C.EM,D.Fv,{created:D.UI},C.Om,V.MY,{created:V.xj},C.om,A.GN,{created:A.M9},C.vi,F.FY,{created:F.El},C.lQ,B.po,{created:B.ou},C.qz,W.oh,{},C.ri,W.yy,{}]
 I.$lazy($,"globalThis","DX","jk",function(){return function(){return this}()})
 I.$lazy($,"globalWindow","vQ","Kj",function(){return $.jk().window})
 I.$lazy($,"globalWorker","u9","vy",function(){return $.jk().Worker})
@@ -20782,7 +20785,7 @@ $desc=$collectedClasses.Fv
 if($desc instanceof Array)$desc=$desc[1]
 Fv.prototype=$desc
 Fv.prototype.gVD=function(receiver){return receiver.VD}
-function bH(VD,G9,KP,wf,Xi,tC,R5,Us,nn,M,Er,cL,o6,mj,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA){this.VD=VD
+function bH(VD,G9,KP,wf,Xi,tC,R5,Us,nn,M,Er,cL,o6,mj,mS,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA){this.VD=VD
 this.G9=G9
 this.KP=KP
 this.wf=wf
@@ -20796,6 +20799,7 @@ this.Er=Er
 this.cL=cL
 this.o6=o6
 this.mj=mj
+this.mS=mS
 this.qp=qp
 this.wy=wy
 this.lm=lm

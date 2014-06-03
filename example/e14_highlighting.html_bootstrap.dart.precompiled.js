@@ -4402,7 +4402,7 @@ C.Yu.XI(a)
 return a}}}}],["bwu_datagrid.effects.sortable","package:bwu_datagrid/effects/sortable.dart",,V,{
 "^":"",
 bH:{
-"^":"a;VD>,T5,KP,wf,MQ,tC,R5,Us,nn,M,Er,cL,o6,mj,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA",
+"^":"a;VD>,T5,KP,wf,MQ,tC,R5,Us,nn,M,Er,cL,o6,mj,mS,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA",
 vY:function(a,b,c,d){return this.M.$3(b,c,d)},
 bC:function(a,b){return this.Er.$2(a,b)},
 i1:function(a,b){return this.cL.$1(b)},
@@ -4410,6 +4410,7 @@ Gv:function(){var z,y
 z=this.qO
 if(z!=null){z.Gv()
 this.qO=null}this.mj=!1
+this.mS=!1
 this.qp=null
 z=this.I1
 if(z!=null){J.Mp(z)
@@ -4526,7 +4527,7 @@ hB:function(a,b,c,d,e,f,g,h,i,j,k){var z
 this.kI(0)
 z=C.hV.aM(document)
 H.VM(new W.fd(0,z.uv,z.Ph,W.VF(new V.ne(this)),z.Sg),[H.Kp(z,0)]).Zz()},
-static:{HE:function(a,b,c,d,e,f,g,h,i,j,k){var z=new V.bH(h,c,e,a,d,k,f,g,[],i,b,j,null,!1,null,null,null,null,null,null,null,null,null,[])
+static:{HE:function(a,b,c,d,e,f,g,h,i,j,k){var z=new V.bH(h,c,e,a,d,k,f,g,[],i,b,j,null,!1,!1,null,null,null,null,null,null,null,null,null,[])
 z.hB(a,b,c,d,e,f,g,h,i,j,k)
 return z}}},
 ne:{
@@ -4549,7 +4550,7 @@ z.KL()
 z.Qd=null
 z.r5=null
 z.vs=null
-if(z.cL!=null)z.i1(0,a)}}},"$1",null,2,0,null,1,"call"],
+if(z.cL!=null)z.i1(0,a)}}z.mS=!1},"$1",null,2,0,null,1,"call"],
 $isEH:true},
 uN:{
 "^":"Tp:44;",
@@ -4568,6 +4569,7 @@ if(z.gWB(a)===1){y=this.b
 x=H.Go(z.gN(a),"$isqE")
 y.Qd=x
 if(x.hasAttribute("draggable")===!0)return
+y.mS=!0
 while(!0){x=y.Qd
 if(!(x!=null&&!J.kE(y.o6,x)))break
 y.Qd=y.Qd.parentElement}if(y.Qd==null)return
@@ -4587,7 +4589,7 @@ JV:{
 "^":"Tp:44;a",
 $1:[function(a){var z,y,x
 z=this.a
-if(z.qp!=null)if(!z.mj){y=J.Xr(a)
+if(z.qp!=null&&z.mS)if(!z.mj){y=J.Xr(a)
 y=y.gx(y)
 x=z.qp.x
 if(typeof y!=="number")return y.W()
@@ -7871,7 +7873,8 @@ oJ:{
 T2:function(a,b){var z=a.getPropertyValue(b)
 return z!=null?z:""},
 hV:function(a,b,c,d){var z
-try{if(d==null)d=""
+try{if(c==null)c=""
+if(d==null)d=""
 a.setProperty(b,c,d)
 if(!!a.setAttribute)a.setAttribute(b,c)}catch(z){H.Ru(z)}},
 "%":"CSS2Properties|CSSStyleDeclaration|MSStyleCSSProperties"},
@@ -17787,7 +17790,7 @@ $desc=$collectedClasses.Fv
 if($desc instanceof Array)$desc=$desc[1]
 Fv.prototype=$desc
 Fv.prototype.gVD=function(receiver){return receiver.VD}
-function bH(VD,T5,KP,wf,MQ,tC,R5,Us,nn,M,Er,cL,o6,mj,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA){this.VD=VD
+function bH(VD,T5,KP,wf,MQ,tC,R5,Us,nn,M,Er,cL,o6,mj,mS,qp,wy,lm,I1,pp,Qd,vs,r5,qO,KA){this.VD=VD
 this.T5=T5
 this.KP=KP
 this.wf=wf
@@ -17801,6 +17804,7 @@ this.Er=Er
 this.cL=cL
 this.o6=o6
 this.mj=mj
+this.mS=mS
 this.qp=qp
 this.wy=wy
 this.lm=lm
