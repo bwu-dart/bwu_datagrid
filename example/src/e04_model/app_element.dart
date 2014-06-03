@@ -122,19 +122,6 @@ class AppElement extends PolymerElement {
           }
         });
 
-        $['filter-form'].on['select-rows'].listen((e) {
-          if (!core.globalEditorLock.commitCurrentEdit()) {
-            return;
-          }
-
-          var rows = [];
-          for (var i = 0; i < 10 && i < dataView.length; i++) {
-            rows.add(i);
-          }
-
-          grid.setSelectedRows(rows);
-        });
-
         // initialize the model after all the events have been hooked up
         dataView.beginUpdate();
         dataView.setItems(data);
@@ -161,6 +148,21 @@ class AppElement extends PolymerElement {
     } catch(e) {
       print('$e');
     }
+  }
+
+  void btnSelectRowsHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
+
+//  $['filter-form'].on['select-rows'].listen((e) {
+    if (!core.globalEditorLock.commitCurrentEdit()) {
+      return;
+    }
+
+    var rows = [];
+    for (var i = 0; i < 10 && i < dataView.length; i++) {
+      rows.add(i);
+    }
+
+    grid.setSelectedRows(rows);
   }
 
   void searchStringChanged(old) {

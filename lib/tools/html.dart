@@ -38,6 +38,7 @@ int parseIntSafe(String s, {int onErrorDefault : 0}) {
   try {
     return int.parse(s);
   } catch(e) {
+    print(e);
     return onErrorDefault;
   }
 }

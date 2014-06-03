@@ -11,10 +11,6 @@ class FilterForm extends PolymerElement {
   @published String threshold = '0';
   @published String searchString = '';
 
-  void btnSelectRowsHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
-    fire('select-rows');
-  }
-
   void clearSearch(dom.KeyboardEvent e, detail, dom.HtmlElement target) {
     if(e.which == dom.KeyCode.ESC) {
       searchString = '';

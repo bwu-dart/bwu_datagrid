@@ -110,12 +110,14 @@ abstract class FormatterFactory {
 //}
 
 abstract class DataItem extends ItemBase {
+  bool collapsed;
 }
 
 class MapDataItem extends DelegatingMap implements DataItem {
 //  String title;
 //  int level;
-//  bool collapsed;
+  bool collapsed = false;
+
   //Map operator [](String idx) => data[idx];
   MapDataItem([Map base]) : super(base != null ? base : new Map());
 

@@ -28,7 +28,7 @@ part 'helpers.dart';
 //  });
 
 
-typedef FilterFn(a, b);
+typedef bool FilterFn(a, b);
 
 class DataView extends DataProvider {
 
@@ -724,10 +724,15 @@ class DataView extends DataProvider {
     List<core.ItemBase> retval = [];
     int idx = 0;
 
-    for (int i = 0; i < items.length; i++) {
-      if (filter(items[i], args)) {
-        retval.add(items[i]);
+    try {
+      for (int i = 0; i < items.length; i++) {
+        if (filter(items[i], args)) {
+          retval.add(items[i]);
+        }
       }
+    }catch(e, s) {
+      print(e);
+      print(s);
     }
 
     return retval;

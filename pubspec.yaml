@@ -33,4 +33,6 @@ transformers:
     - example/composite_editor_item_details.html
     - example/totals_via_data_provider.html
     - example/e04_model.html
+    - example/e05_collapsing.html
+    - example/temp_collapsing.html
     - example/autotooltips.html
