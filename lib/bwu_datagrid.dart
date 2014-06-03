@@ -219,12 +219,6 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-// TODO port jQuery UI sortable
-//    // validate loaded JavaScript modules against requested options
-//    if (gridOptions.enableColumnReorder && !$.fn.sortable) {
-//      throw "DataGrid's 'enableColumnReorder = true' option requires jquery-ui.sortable module to be loaded";
-//    }
-
     _editController = new EditController(_commitCurrentEdit, _cancelCurrentEdit);
 
     //$container
