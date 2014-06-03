@@ -202,8 +202,8 @@ class Sortable {
       }
       _maxLeft = (elm.offsetLeft + elm.offsetWidth).round();
     }
-    _minLeft -= 15;
-    _maxLeft += 15;
+    _minLeft -= (_draggedHelper.offsetWidth / 2).round();
+    _maxLeft += (_draggedHelper.offsetWidth / 2).round();
 
     _draggedElement.replaceWith(_placeholder);
   }
