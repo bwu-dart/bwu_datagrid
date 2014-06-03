@@ -170,7 +170,6 @@ class Sortable {
       ..position = 'absolute'
       ..left = '${_draggedElementStartPos.x}px'
       ..top = '${_draggedElementStartPos.y}px';
-      //..background = '#f00';
     _draggedHelper.id = 'draggable';
     sortable.append(_draggedHelper);
 
