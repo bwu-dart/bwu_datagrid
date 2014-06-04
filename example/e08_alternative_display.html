@@ -890,33 +890,23 @@ classes should alter those!
     <content></content>
   </template>
   
-</polymer-element><polymer-element name="filter-form">
+</polymer-element><polymer-element name="row-item">
   <template>
     <style>
       :host {
         display: block;
       }
-      label.label {
-        width: 200px;
-        float: left;
-      }
-      #slider {
-        width: 100px;
-        /*display: inline-block;*/
-      }
-      #txtSearch {
-        width: 100px;
-      }
     </style>
 
-    <label class="label">Show tasks with % at least: </label>
-    <input id="slider" type="range" value="{{threshold}}" min="0" max="100">
-
-    <br>
-
-    <label class="label">And title including:</label>
-    <input type="text" id="txtSearch" value="{{searchString}}" on-keyup="{{clearSearch}}">
-
+    <div class="cell-inner">
+      <div class="cell-left"></div>
+      <div class="cell-main">
+        <b><span id="name"></span></b><br>
+        <span id="title"></span><br>
+        <span id="email"></span><br>
+        <span id="phone"></span>
+      </div>
+    </div>
   </template>
   
 </polymer-element><polymer-element name="app-element">
@@ -1602,33 +1592,61 @@ input.editor-checkbox {
         display: block;
         width: 100%;
       }
-      span.highlight {
-        color: red;
-      }
     </style>
     <style>
-      bwu-datagrid /deep/ .cell-title {
-        font-weight: bold;
+      bwu-datagrid /deep/ .bwu-datagrid-cell {
+        background: white !important;
+        border-color: transparent !important;
+        line-height: 19px !important;
       }
 
-      bwu-datagrid /deep/ .cell-effort-driven {
-        text-align: center;
+        /* alternating offsets */
+      bwu-datagrid /deep/ .bwu-datagrid-row .cell-inner {
+        margin-right: 60px;
       }
 
-      bwu-datagrid /deep/ .toggle {
-        height: 9px;
-        width: 9px;
-        display: inline-block;
+/*
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="1"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="3"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="5"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="7"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="9"] .cell-inner {
+        margin-left: 60px;
+        margin-right: 0;
+      }
+*/
+      bwu-datagrid /deep/ .contact-card-cell {
+        border-color: transparent !important;
       }
 
-      bwu-datagrid /deep/ .toggle.expand {
-        background: url(packages/bwu_datagrid/asset/images/expand.gif) no-repeat center center;
+      bwu-datagrid /deep/ .cell-inner {
+        height: 80px;
+        margin: 10px;
+        padding: 10px;
+        background: #fafafa;
+        border: 1px solid gray;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-box-shadow: 1px 1px 5px silver;
+        -webkit-box-shadow: 1px 1px 5px silver;
+        -webkit-transition: all 0.5s;
       }
 
-      bwu-datagrid /deep/ .toggle.collapse {
-        background: url(packages/bwu_datagrid/asset/images/collapse.gif) no-repeat center center;
+      bwu-datagrid /deep/ .cell-inner:hover {
+        background: #f0f0f0;
       }
 
+      bwu-datagrid /deep/ .cell-left {
+        width: 40px;
+        height: 100%;
+        float: left;
+        border-right: 1px dotted gray;
+        background: url(packages/bwu_datagrid/asset/images/user_identity.gif) no-repeat top center;
+      }
+
+      bwu-datagrid /deep/ .cell-main {
+        margin-left: 50px;
+      }
     </style>
 
     <div style="position:relative">
@@ -1637,22 +1655,18 @@ input.editor-checkbox {
       </div>
 
       <div class="options-panel">
-        <b>Search:</b>
-        <hr>
-        <div style="padding:6px;">
-          <filter-form id="filter-form" threshold="{{percentCompleteThreshold}}" searchstring="{{searchString}}"></filter-form>
+        <h2>Demonstrates:</h2>
 
-          <br>
-
-          <h2>Demonstrates:</h2>
-          <ul>
-            <li>implementing expand/collapse as a filter for DataView</li>
-          </ul>
-          <h2>View Source:</h2>
-          <ul>
-            <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e05_collapsing/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-          </ul>
-        </div>
+        <ul>
+          <li>
+            Uses a simple custom Polymer element to render a row
+            but still using BWU Datagrid's virtual rendering technology.
+          </li>
+        </ul>
+        <h2>View Source:</h2>
+        <ul>
+          <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e08_alternative_display/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+        </ul>
       </div>
     </div>
   </template>
@@ -2334,4 +2348,4 @@ body /deep/ .ui-datepicker-cover {
     
   
 
-<script src="e05_collapsing.html_bootstrap.dart.js"></script></body></html>
+<script src="e08_alternative_display.html_bootstrap.dart.js"></script></body></html>
