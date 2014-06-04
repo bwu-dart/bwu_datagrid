@@ -1,4 +1,5 @@
 <img src="http://bwu-dart.github.io/core_elements/assets/polymer/p-logo.svg" alt="Polymer logo" width="120px" />
+[![Build Status](https://drone.io/github.com/bwu-dart/bwu_datagrid/status.png)](https://drone.io/github.com/bwu-dart/bwu_datagrid/latest)
 
 # Welcome to BWU Datagrid
 
