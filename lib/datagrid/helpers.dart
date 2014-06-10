@@ -11,29 +11,28 @@ import 'package:collection/wrappers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
 abstract class DataProvider {
-  List<core.ItemBase> items;
+  List<core.ItemBase> _items;
   int get length;
   DataItem getItem(int index);
   RowMetadata getItemMetadata (int index);
+  List<core.ItemBase> get items => _items;
+  set items(List<core.ItemBase> items) => _items = items;
 
-  DataProvider(List<core.ItemBase> items) : this.items = (items == null ? <core.ItemBase>[] : items);
+  DataProvider(List<core.ItemBase> items) : this._items = (items == null ? <core.ItemBase>[] : items);
 }
 
 class MapDataItemProvider extends DataProvider {
   MapDataItemProvider([List<DataItem> items]) : super(items);
 
   @override
-  int get length => items.length;
+  int get length => _items.length;
 
   @override
-  DataItem getItem (int index) => items[index];
+  DataItem getItem (int index) => _items[index];
 
   @override
   RowMetadata getItemMetadata (int index) => null;
 
-  void set items(List<DataItem> items) {
-    this.items = items;
-  }
 }
 
 class CellPos {
@@ -60,6 +59,9 @@ class NodeBox {
   bool visible;
 
   NodeBox({this.top, this.left, this.bottom, this.right, this.width, this.height, this.visible});
+
+  @override
+  String toString() => '${super.toString()} - top: ${top}; left: ${left}; bottom: ${bottom}; right: ${right}; width: ${width}; height: ${height}; visible: ${visible}';
 }
 
 class Row {
@@ -173,8 +175,9 @@ class Column {
   String cssClass;
   bool cannotTriggerInsert;
   String colspan;
-  String behavior;
-  bool isMovable;
+  List<String> behavior;
+  bool isMovable;   // allow column reorder
+  bool isDraggable; // add attribute 'draggable
 
   Editor editor;
   Formatter formatter;
@@ -188,7 +191,7 @@ class Column {
     this.resizable : true, this.sortable : false, this.focusable : true,
     this.selectable : true, this.defaultSortAsc : true,
     this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan,
-    this.behavior, this.isMovable: true}) {
+    this.behavior, this.isMovable: true, this.isDraggable : false}) {
   }
 
   Column.unititialized();
@@ -216,6 +219,7 @@ class Column {
     if(c.previousWidth != null) previousWidth = c.previousWidth;
     if(c.behavior != null) behavior = c.behavior;
     if(c.isMovable != null) isMovable = c.isMovable;
+    if(c.isDraggable != null) isDraggable = c.isDraggable;
   }
 
   void asyncPostRender(dom.HtmlElement node, int row, MapDataItem rowData, Column m) {

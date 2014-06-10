@@ -26,7 +26,7 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "sel", name: "#", field: "num", behavior: "select", cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false, isMovable: false),
+    new Column(id: "sel", name: "#", field: "num", behavior: ["select"], cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false, isMovable: false),
     new Column(id: "title", name: "Title", field: "title", width: 120, minWidth: 120, cssClass: "cell-title", editor: new TextEditor(), validator: new RequiredFieldValidator(), sortable: true),
     new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor(), sortable: true),
     new Column(id: "%", defaultSortAsc: false, name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor(), sortable: true),

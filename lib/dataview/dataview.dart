@@ -132,9 +132,7 @@ class DataView extends DataProvider {
     }
   }
 
-  List<core.ItemBase> getItems() {
-    return items;
-  }
+  List<core.ItemBase> getItems() => items;
 
   @override set items(List<core.ItemBase> items) => setItems(items);
 
