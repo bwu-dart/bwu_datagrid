@@ -1,3 +1,10 @@
+## 0.0.9
+
+* example 09 row reordering
+* drag and drop
+* cell selection/range selection
+* example 08 alternative display
+
 ## 0.0.8
 
 * #51 Adding tree functionality (expand/collapse) to the grid
