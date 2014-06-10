@@ -8,10 +8,9 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
-  polymer: '>=0.10.0 < 1.0.0'
-  quiver: '>=0.18.2 < 0.19.0'
-  quiver_log: '>= 1.0.1 < 1.1.0'
-
+  polymer:
+  quiver:
+  quiver_log:
 
 dev_dependencies:
   unittest: any
@@ -35,4 +34,5 @@ transformers:
     - example/e04_model.html
     - example/e05_collapsing.html
     - example/e08_alternative_display.html
+    - example/e09_row_reordering.html
     - example/autotooltips.html

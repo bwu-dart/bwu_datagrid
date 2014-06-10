@@ -6,7 +6,6 @@ import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
 
-import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/plugins/plugin.dart';
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
@@ -14,10 +13,13 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_headerrow_column.dart';
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_header_column.dart';
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_headers.dart';
-import 'package:bwu_datagrid/tools/html.dart' as tools;
 import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
+
+import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/tools/html.dart' as tools;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
+//import 'package:bwu_datagrid/effects/drag_aware.dart' as cdrag;
 
 
 @CustomTag('bwu-datagrid')
@@ -375,16 +377,24 @@ class BwuDatagrid extends PolymerElement {
           ..onDoubleClick.listen(_handleDblClick)
           ..onContextMenu.listen(_handleContextMenu)
           ..onDrag.listen(_handleDrag)
-          //..bind("draginit", handleDragInit) // TODO special jQuery event before DragStart (click)
-          ..onDragStart.listen((e) {/*{distance: 3}*/; _handleDragStart(e, {'distance': 3});}) // TODO what is distance?
-          ..onDragOver.listen(_handleDrag)
-          ..onDragEnd.listen(_handleDragEnd);
+          ..onDragStart.listen(_handleDragStart)
+          ..onDragEnd.listen(_handleDragEnd)
+          ..onDragEnter.listen(_handleDragEnter)
+          ..onDragLeave.listen(_handleDragLeave)
+          ..onDragOver.listen(_handleDragOver)
+          ..onDrop.listen(_handleDrop);
+
+//      _canvasDrag = new cdrag.DragAware(_canvas, distance: 3)
+//          ..onBwuCustomDrag.listen(_handleCustomDrag)
+//          ..onBwuCustomDragStart.listen(_handleCustomDragStart)
+//          ..onBwuCustomDragEnd.listen(_handleCustomDragEnd);
 //          ..querySelectorAll(".bwu-datagrid-cell").forEach((e) {
 //            (e as dom.HtmlElement)
 //              ..onMouseEnter.listen(handleMouseEnter)
 //              ..onMouseLeave.listen(handleMouseLeave);
 //          });
 
+      // TODO does Dart need this?
       // Work around http://crbug.com/312427.
       if (dom.window.navigator.userAgent.toLowerCase().contains('webkit') &&
           dom.window.navigator.userAgent.toLowerCase().contains('macintosh')) {
@@ -753,7 +763,6 @@ class BwuDatagrid extends PolymerElement {
     });
   }
 
-
   void _setupColumnReorder() {
     //_headers.filter = new sort.Filter(":ui-sortable")
     if(_headers.sortable != null) {
@@ -783,7 +792,7 @@ class BwuDatagrid extends PolymerElement {
         var reorderedIds = _headers.sortable.reorderedIds; //("toArray");
         var reorderedColumns = [];
         for (var i = 0; i < reorderedIds.length; i++) {
-          reorderedColumns.add(columns[getColumnIndex(reorderedIds[i] /*.replace(uid, "")*/)]); // TODO what is uid for here?
+          reorderedColumns.add(columns[getColumnIndex(reorderedIds[i])]);
         }
         setColumns = reorderedColumns;
 
@@ -1704,6 +1713,11 @@ class BwuDatagrid extends PolymerElement {
     }
 
     dom.HtmlElement cellElement = new dom.DivElement()..classes.add(cellCss);
+
+    if(m.isDraggable) {
+      cellElement.attributes['draggable'] = 'true';
+    }
+
     rowElement.append(cellElement);
 
     // if there is a corresponding row (if not, this is the Add New row or this data hasn't been loaded yet)
@@ -2442,43 +2456,95 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  bool _handleDrag(dom.MouseEvent e, [int dd]) {
+  void _handleDrag(dom.MouseEvent e /*, [int dd]*/) {
     Cell cell = getCellFromEvent(e);
     if (cell == null || !_cellExists(cell.row, cell.cell)) {
-      return false;
+      return; // false;
     }
 
-    var data = _eventBus.fire(core.Events.DRAG_INIT, new core.DragInit(this, dd: dd, causedBy: e));
-    if (e.currentTarget == null && e.eventPhase == 0) { // .isImmediatePropagationStopped()) {
-      return data.retVal;
+    var data = _eventBus.fire(core.Events.DRAG, new core.Drag(this /*, dd: dd*/, causedBy: e));
+    if(data.isDefaultPrevented) {
+      return ; //data.retVal;
     }
 
     // if nobody claims to be handling drag'n'drop by stopping immediate propagation,
     // cancel out of it
-    return false;
+    //return false;
   }
 
-  bool _handleDragStart(dom.MouseEvent e, Map dd) {
+  void _handleDragStart(dom.MouseEvent e) {
     var cell = getCellFromEvent(e);
-    if (cell != null|| !_cellExists(cell.row, cell.cell)) {
-      return false;
+    if (cell == null|| !_cellExists(cell.row, cell.cell)) {
+      e.preventDefault();
+      return; // false;
     }
 
-    var data = _eventBus.fire(core.Events.DRAG_START, new core.DragStart(this, dd: dd, causedBy: e));
-    if (data.isImmediatePropagationStopped) {
-      return data.retVal;
+    var data = _eventBus.fire(core.Events.DRAG_START, new core.DragStart(this, causedBy: e));
+    if (data.isDefaultPrevented) {
+      return; // data.retVal;
     }
 
-    return false;
+    //return false;
   }
 
-  bool _handleDragOver(dom.MouseEvent e, [Map dd]) {
-    return _eventBus.fire(core.Events.DRAG, new core.Drag(this, dd: dd, causedBy: e)).retVal;
+//  bool _handleDragOver(dom.MouseEvent e, [Map dd]) {
+//    return _eventBus.fire(core.Events.DRAG, new core.Drag(this, dd: dd, causedBy: e)).retVal;
+//  }
+
+  void _handleDragEnd(dom.MouseEvent e /*, [Map dd]*/) {
+    _eventBus.fire(core.Events.DRAG_END, new core.DragEnd(this/*, dd: dd*/, causedBy: e));
   }
 
-  void _handleDragEnd(dom.MouseEvent e, [Map dd]) {
-    _eventBus.fire(core.Events.DRAG_END, new core.DragEnd(this, dd:dd, causedBy: e));
+  void _handleDragEnter(dom.MouseEvent e) {
+    _eventBus.fire(core.Events.DRAG_ENTER, new core.DragEnter(this, causedBy: e));
   }
+
+  void _handleDragLeave(dom.MouseEvent e) {
+    _eventBus.fire(core.Events.DRAG_LEAVE, new core.DragLeave(this, causedBy: e));
+  }
+
+  void _handleDragOver(dom.MouseEvent e) {
+    _eventBus.fire(core.Events.DRAG_OVER, new core.DragOver(this, causedBy: e));
+  }
+
+  void _handleDrop(dom.MouseEvent e) {
+    _eventBus.fire(core.Events.DROP, new core.Drop(this, causedBy: e));
+  }
+
+//  // TODO I think this boolean return values are outdated - verify, what is the new way?
+//  bool _handleCustomDrag(dom.CustomEvent e) {
+//    Cell cell = getCellFromTarget((e.detail as cdrag.CustomDrag).target);
+//    if (cell == null || !_cellExists(cell.row, cell.cell)) {
+//      return false;
+//    }
+//
+//    var data = _eventBus.fire(core.Events.CUSTOM_DRAG, new core.CustomDrag(this, causedByCustomDrag: e.detail as cdrag.CustomDrag));
+//    if(data.isImmediatePropagationStopped) {
+//      return data.retVal;
+//    }
+//
+//    // if nobody claims to be handling drag'n'drop by stopping immediate propagation,
+//    // cancel out of it
+//    return false;
+//  }
+//
+//  bool _handleCustomDragStart(dom.CustomEvent e) {
+//    var cell = getCellFromTarget((e.detail as cdrag.CustomDrag).target);
+//    if (cell == null|| !_cellExists(cell.row, cell.cell)) {
+//      return false;
+//    }
+//
+//    var data = _eventBus.fire(core.Events.CUSTOM_DRAG_START, new core.CustomDragStart(this, causedByCustomDrag: e.detail as cdrag.CustomDrag));
+//    if (data.isImmediatePropagationStopped) {
+//      return data.retVal;
+//    }
+//
+//    return false;
+//  }
+//
+//  void _handleCustomDragEnd(dom.CustomEvent e) {
+//    _eventBus.fire(core.Events.CUSTOM_DRAG_END, new core.CustomDragEnd(this, causedByCustomDrag: e.detail as cdrag.CustomDrag));
+//  }
 
   void _handleKeyDown(dom.KeyboardEvent e) {
     var data = _eventBus.fire(core.Events.KEY_DOWN, new  core.KeyDown(this, new Cell(_activeRow, _activeCell), causedBy: e));
@@ -2674,7 +2740,11 @@ class BwuDatagrid extends PolymerElement {
   }
 
   Cell getCellFromEvent(dom.Event e) {
-    var $cell = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-cell', context: _canvas);
+    return getCellFromTarget(e.target as dom.HtmlElement);
+  }
+
+  Cell getCellFromTarget(dom.HtmlElement t) {
+    var $cell = tools.closest(t, '.bwu-datagrid-cell', context: _canvas);
     if ($cell == null) {
       return null;
     }
@@ -3616,6 +3686,15 @@ class BwuDatagrid extends PolymerElement {
   async.Stream<core.ContextMenu> get onBwuContextMenu =>
       _eventBus.onEvent(core.Events.CONTEXT_MENU);
 
+//  async.Stream<core.CustomDrag> get onBwuCustomDrag =>
+//      _eventBus.onEvent(core.Events.CUSTOM_DRAG);
+//
+//  async.Stream<core.CustomDragEnd> get onBwuCustomDragEnd =>
+//      _eventBus.onEvent(core.Events.CUSTOM_DRAG_END);
+//
+//  async.Stream<core.CustomDragStart> get onBwuCustomDragStart =>
+//      _eventBus.onEvent(core.Events.CUSTOM_DRAG_START);
+//
   async.Stream<core.DoubleClick> get onBwuDoubleClick =>
       _eventBus.onEvent(core.Events.DOUBLE_CLICK);
 
@@ -3625,11 +3704,24 @@ class BwuDatagrid extends PolymerElement {
   async.Stream<core.DragEnd> get onBwuDragEnd =>
       _eventBus.onEvent(core.Events.DRAG_END);
 
-      async.Stream<core.DragInit> get onBwuDragInit =>
-          _eventBus.onEvent(core.Events.DRAG_INIT);
+  async.Stream<core.DragEnter> get onBwuDragEnter =>
+      _eventBus.onEvent(core.Events.DRAG_ENTER);
+
+  async.Stream<core.DragLeave> get onBwuDragLeave =>
+      _eventBus.onEvent(core.Events.DRAG_LEAVE);
+
+  async.Stream<core.DragOver> get onBwuDragOver =>
+      _eventBus.onEvent(core.Events.DRAG_OVER);
+
+// TODO this event is jQuery specific and not avaialble in Dart
+//  async.Stream<core.DragInit> get onBwuDragInit =>
+//      _eventBus.onEvent(core.Events.DRAG_INIT);
 
   async.Stream<core.DragStart> get onBwuDragStart =>
       _eventBus.onEvent(core.Events.DRAG_START);
+
+  async.Stream<core.Drop> get onBwuDrop =>
+      _eventBus.onEvent(core.Events.DROP);
 
   async.Stream<core.HeaderCellRendered> get onBwuHeaderCellRendered =>
       _eventBus.onEvent(core.Events.HEADER_CELL_RENDERED);
@@ -3675,5 +3767,4 @@ class BwuDatagrid extends PolymerElement {
 
   async.Stream<core.ViewportChanged> get onBwuViewportChanged =>
       _eventBus.onEvent(core.Events.VIEWPORT_CHANGED);
-
 }

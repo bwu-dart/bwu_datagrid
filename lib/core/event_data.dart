@@ -29,6 +29,8 @@ abstract class Events {
       const EventType<BeforeHeaderRowCellDestroy>('bwu-before-header-row-cell-destroy'
       );
 
+  static const BEFORE_MOVE_ROWS = const EventType<BeforeMoveRows>('bwu-before-move-rows');
+
   static const CELL_CHANGE = const EventType<CellChange>('bwu-cell-changed');
 
   static const CELL_RANGE_SELECTED = const EventType<CellRangeSelected>(
@@ -54,11 +56,26 @@ abstract class Events {
 
   static const DOUBLE_CLICK = const EventType<DoubleClick>('bwu-double-click');
 
+//  static const CUSTOM_DRAG = const EventType<CustomDrag>('bwu-custom-drag');
+//
+//  static const CUSTOM_DRAG_END = const EventType<CustomDragEnd>('bwu-custom-drag-end');
+//
+//  static const CUSTOM_DRAG_START = const EventType<CustomDragStart>('bwu-custom-drag-start');
+//
   static const DRAG = const EventType<Drag>('bwu-drag');
 
   static const DRAG_END = const EventType<DragEnd>('bwu-drag-end');
 
-  static const DRAG_INIT = const EventType<DragInit>('bwu-drag-init');
+  static const DRAG_ENTER = const EventType<DragEnter>('bwu-drag-enter');
+
+  static const DRAG_LEAVE = const EventType<DragLeave>('bwu-drag-leave');
+
+  static const DRAG_OVER = const EventType<DragOver>('bwu-drag-over');
+
+  static const DROP = const EventType<Drop>('bwu-drop');
+
+  // TODO this is a jQuery specific event, there is no replacement for it
+  //static const DRAG_INIT = const EventType<DragInit>('bwu-drag-init');
 
   static const DRAG_START = const EventType<DragStart>('bwu-drag-start');
 
@@ -84,6 +101,8 @@ abstract class Events {
   static const MOUSE_ENTER = const EventType<MouseEnter>('bwu-mouse-enter');
 
   static const MOUSE_LEAVE = const EventType<MouseLeave>('bwu-mouse-leave');
+
+  static const MOVE_ROWS = const EventType<MoveRows>('bwu-move-rows');
 
   static const PAGING_INFO_CHANGED = const EventType<PagingInfoChanged>(
       'bwu-paging-info-changed');
@@ -252,6 +271,14 @@ class BeforeHeaderRowCellDestroy extends EventData {
       sender);
 }
 
+class BeforeMoveRows extends EventData {
+  List<int> rows;
+  int insertBefore;
+
+  BeforeMoveRows(sender, {this.rows, this.insertBefore}) : super(sender:
+      sender);
+}
+
 class CellCssStylesChanged extends EventData {
   final String key;
   final Map<int, Map<String, String>> hash;
@@ -310,35 +337,140 @@ class DoubleClick extends EventData {
       sender, causedBy: causedBy);
 }
 
-class Drag extends EventData {
-  final Map dd;
-  dom.MouseEvent get causedBy => super.causedBy;
+//// TODO do we really need different event data containers for DragXxx and CustomDragXxx events?
+//// at least these carry the additional cDrag.CustomDrag container
+//class CustomDrag extends EventData {
+//  dom.MouseEvent get causedBy => super.causedBy;
+//  cdrag.CustomDrag causedByCustomDrag;
+//  dom.HtmlElement guide;
+//  dom.HtmlElement selectionProxy;
+//  int insertBefore;
+//  List<int> selectedRows;
+//  bool canMove;
+//  String mode;
+//
+//  CustomDrag(sender, {this.guide, this.selectionProxy, this.insertBefore,
+//    this.selectedRows, this.canMove, this.mode, cdrag.CustomDrag causedByCustomDrag}) : super(sender: sender,
+//      causedBy: causedByCustomDrag.causedBy) {
+//    this.causedByCustomDrag = causedByCustomDrag;
+//  }
+//}
+//
+//class CustomDragEnd extends EventData {
+//  dom.MouseEvent get causedBy => super.causedBy;
+//  cdrag.CustomDrag causedByCustomDrag;
+//  dom.HtmlElement guide;
+//  dom.HtmlElement selectionProxy;
+//  bool canMove;
+//  List<int> selectedRows;
+//  int insertBefore;
+//  String mode ;
+//
+//  CustomDragEnd(sender, {this.selectedRows, this.insertBefore,
+//      this.guide, this.selectionProxy, this.canMove, this.mode,
+//          cdrag.CustomDrag causedByCustomDrag}) : super(sender: sender,
+//      causedBy: causedByCustomDrag.causedBy) {
+//    this.causedByCustomDrag = causedByCustomDrag;
+//  }
+//}
+//
+//class CustomDragStart extends EventData {
+//  dom.MouseEvent get causedBy => super.causedBy;
+//  cdrag.CustomDrag causedByCustomDrag;
+//  List<int> selectedRows;
+//  int insertBefore;
+//  dom.HtmlElement selectionProxy;
+//  dom.HtmlElement guide;
+//
+//  CustomDragStart(sender, {this.selectedRows, this.insertBefore,
+//    this.selectionProxy, this.guide, cdrag.CustomDrag causedByCustomDrag})
+//    : super(sender: sender,
+//      causedBy: causedByCustomDrag.causedBy){
+//        this.causedByCustomDrag = causedByCustomDrag;
+//      }
+//}
 
-  Drag(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+
+class Drag extends EventData {
+//  final Map dd;
+  dom.MouseEvent get causedBy => super.causedBy;
+  dom.HtmlElement guide;
+  dom.HtmlElement selectionProxy;
+  int insertBefore;
+  List<int> selectedRows;
+  bool canMove;
+  String mode;
+
+  Drag(sender, {/*this.dd,*/ this.guide, this.selectionProxy, this.insertBefore,
+    this.selectedRows, this.canMove, this.mode, dom.MouseEvent causedBy}) : super(sender: sender,
       causedBy: causedBy);
 }
 
 class DragEnd extends EventData {
-  final Map dd;
+  //final Map dd;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  DragEnd(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+  dom.HtmlElement guide;
+  dom.HtmlElement selectionProxy;
+  bool canMove;
+  List<int> selectedRows;
+  int insertBefore;
+  String mode ;
+
+  DragEnd(sender, {this.selectedRows, this.insertBefore,
+      /*this.dd,*/ this.guide, this.selectionProxy, this.canMove, this.mode,
+        dom.MouseEvent causedBy}) : super(sender: sender,
       causedBy: causedBy);
 }
 
-class DragInit extends EventData {
-  final int dd;
+
+class DragEnter extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
-  DragInit(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+  DragEnter(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
       causedBy: causedBy);
 }
+
+class DragLeave extends EventData {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  DragLeave(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class DragOver extends EventData {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  DragOver(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class Drop extends EventData {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  Drop(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+// TODO this was for a jQuery specific event we don't have
+//class DragInit extends EventData {
+//  final int dd;
+//  dom.MouseEvent get causedBy => super.causedBy;
+//
+//  DragInit(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+//      causedBy: causedBy);
+//}
 
 class DragStart extends EventData {
-  final Map dd;
   dom.MouseEvent get causedBy => super.causedBy;
+  List<int> selectedRows;
+  int insertBefore;
+  dom.HtmlElement selectionProxy;
+  dom.HtmlElement guide;
 
-  DragStart(sender, {this.dd, dom.MouseEvent causedBy}) : super(sender: sender,
+  DragStart(sender, {this.selectedRows, this.insertBefore,
+    this.selectionProxy, this.guide, dom.MouseEvent causedBy})
+    : super(sender: sender,
       causedBy: causedBy);
 }
 
@@ -404,6 +536,16 @@ class MouseLeave extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
   MouseLeave(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
+      causedBy: causedBy);
+}
+
+class MoveRows extends EventData {
+  dom.MouseEvent get causedBy => super.causedBy;
+
+  List<int> rows;
+  int insertBefore;
+
+  MoveRows(sender, {this.rows, this.insertBefore, dom.MouseEvent causedBy}) : super(sender: sender,
       causedBy: causedBy);
 }
 

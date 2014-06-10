@@ -1,7 +1,8 @@
-library bwu_datagrid.plugins.cell_rang_selector;
+library bwu_datagrid.plugins.cell_range_selector;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
+import 'dart:math' as math;
 
 import 'package:bwu_datagrid/plugins/cell_range_decorator.dart';
 import 'package:bwu_datagrid/core/core.dart';
@@ -11,103 +12,117 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 
 class CellRangeSelector extends Plugin {
 
-
   BwuDatagrid _grid;
   dom.HtmlElement _canvas;
-  bool _dragging;
+  bool _dragging = false;
   Decorator _decorator;
   //var _handler = new Slick.EventHandler();
-  Map _defaults = {
-    'selectionCss': {
-      "border": "2px dashed blue"
-    }
-  };
+  math.Point<int> _canvasOrigin;
+  Range _range;
+  dom.HtmlElement _dummyProxy;
+
   CellRangeDecoratorOptions _options;
 
-  CellRangeSelector(this._options);
+  CellRangeSelector([CellRangeDecoratorOptions options]) {
+    if(options != null) {
+      _options = options;
+    } else {
+      _options = new CellRangeDecoratorOptions(selectionCss: {
+        'border': '2px dashed blue', 'z-index': '9999'
+      });
+    }
+  }
 
   var _subscriptions = <async.StreamSubscription>[];
 
   void init(BwuDatagrid grid) {
     // TODO options = $.extend(true, {}, _defaults, options);
-    _decorator = new CellRangeDecorator(grid, _options);
+    _decorator = new CellRangeDecorator(grid, options: _options);
     _grid = grid;
     _canvas = _grid.getCanvasNode;
-    _subscriptions.add(_grid.onBwuDragInit.listen(handleDragInit));
-    _subscriptions.add(_grid.onBwuDragStart.listen(handleDragStart));
-    _subscriptions.add(_grid.onBwuDrag.listen(handleDrag));
-    _subscriptions.add(_grid.onBwuDragEnd.listen(handleDragEnd));
+    _canvas.attributes['draggable']='true';
+
+    _subscriptions.add(_grid.onBwuDragStart.listen(_handleDragStart));
+    _subscriptions.add(_grid.onBwuDrag.listen(_handleDrag));
+    _subscriptions.add(_grid.onBwuDragEnd.listen(_handleDragEnd));
+
+    _dummyProxy = new dom.DivElement()
+      ..style.width = '0'
+      ..style.height = '0';
+    _canvas.append(_dummyProxy);
+
   }
 
   void destroy() {
     _subscriptions.forEach((e) => e.cancel());
   }
 
-  void handleDragInit(DragInit e) {
-    // prevent the grid from cancelling drag'n'drop by default
-    e.stopImmediatePropagation();
-  }
+//  void handleDragInit(DragInit e) {
+//    // prevent the grid from cancelling drag'n'drop by default
+//    e.stopImmediatePropagation();
+//  }
 
-  dom.HtmlElement handleDragStart(DragStart e) {
+  dom.HtmlElement _handleDragStart(DragStart e) {
     var cell = _grid.getCellFromEvent(e.causedBy);
-    if (_grid.eventBus.fire(core.Events.BEFORE_CELL_RANGE_SELECTED, new core.BeforeCellRangeSelected(this, cell)) != false) {
+    if (_grid.eventBus.fire(core.Events.BEFORE_CELL_RANGE_SELECTED, new core.BeforeCellRangeSelected(this, cell)).retVal) {
       if (_grid.canCellBeSelected(cell.row, cell.cell)) {
         _dragging = true;
-        e.stopImmediatePropagation();
       }
     }
     if (!_dragging) {
+      e.preventDefault();
       return null;
     }
 
     _grid.focus();
+    var canvasBounds = _canvas.getBoundingClientRect();
+    _canvasOrigin = new math.Point(canvasBounds.left.round(), canvasBounds.top.round());
+    e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
+
 
     var start = _grid.getCellFromPoint(
-        e.dd['startX'] - _canvas.offset.left,
-        e.dd['startY'] - _canvas.offset.top);
+        e.causedBy.client.x - _canvasOrigin.x,
+        e.causedBy.client.y - _canvasOrigin.y);
 
-    e.dd['range'] = {'start': start, 'end': {}};
+    _range = new Range(start.row, start.cell);
 
-    return _decorator.show(new Range(start.row, start.cell));
+    return _decorator.show(_range);
   }
 
-  void handleDrag(Drag e) {
+  void _handleDrag(Drag e) {
     if (!_dragging) {
       return;
     }
-    e.stopImmediatePropagation();
+    e.preventDefault();
 
     var end = _grid.getCellFromPoint(
-        e.causedBy.page.x - _canvas.offset.left,
-        e.causedBy.page.y - _canvas.offset.top);
+        e.causedBy.page.x - _canvasOrigin.x,
+        e.causedBy.page.y - _canvasOrigin.y);
 
     if (!_grid.canCellBeSelected(end.row, end.cell)) {
       return;
     }
 
-    e.dd['range'].end = end;
-    _decorator.show(new Range(e.dd['range'].start.row, e.dd['range'].start.cell, toRow: end.row, toCell: end.cell));
+    _range
+      ..toCell = end.cell
+      ..toRow = end.row;
+
+    _decorator.show(_range);
   }
 
-  void handleDragEnd(DragEnd e) {
+  void _handleDragEnd(DragEnd e) {
     if (_dragging == null || !_dragging) {
       return;
     }
 
     _dragging = false;
-    e.stopImmediatePropagation();
+    e.preventDefault();
 
     _decorator.hide();
-    _grid.eventBus.fire(core.Events.CELL_RANGE_SELECTED, new core.CellRangeSelected(this,
-      new Range(
-          e.dd['range'].start.row,
-          e.dd['range'].start.cell,
-          toRow: e.dd['range'].end.row,
-          toCell: e.dd['range'].end.cell
-      )
-    ));
+    _grid.eventBus.fire(core.Events.CELL_RANGE_SELECTED, new core.CellRangeSelected(this, _range));
   }
 }
+
 //    $.extend(this, {
 //      "init": init,
 //      "destroy": destroy,

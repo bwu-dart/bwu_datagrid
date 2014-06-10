@@ -36,6 +36,9 @@ class Range {
 
   int get toCell => math.max(_fromCell, _toCell);
 
+  set toCell(int cell) => _toCell = cell;
+  set toRow(int row) => _toRow = row;
+
   /***
    * Returns whether a range represents a single row.
    */

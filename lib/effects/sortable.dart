@@ -30,8 +30,8 @@ class Sortable {
   bool _isDragActive = false;
   bool _isDragStartPending = false;
   math.Point<int> _dragStartPos;
-  int _minLeft;
-  int _maxLeft;
+  int _minLeft, _maxLeft;
+  int _minTop, _maxTop;
   dom.HtmlElement _draggedHelper;
   dom.HtmlElement _placeholder;
   dom.HtmlElement _draggedElement;
@@ -136,6 +136,7 @@ class Sortable {
 
           _dragStartPos = new math.Point<int>(e.client.x, e.client.y);
           _draggedElementStartPos = new math.Point<int>(_draggedElement.offsetLeft.round(), _draggedElement.offsetTop.round());
+
           _subscribeMouseMove();
         }
       }));
@@ -146,7 +147,8 @@ class Sortable {
     _mouseMoveSubscr = dom.document.onMouseMove.listen((e) {
       if(_dragStartPos != null && _isDragStartPending) { // seems we still receive events after _mouseMoveSubscr.cancel()
         if(!_isDragActive) {
-          if(((e.client.x - _dragStartPos.x) as int).abs() > distance && !_isDragActive) {
+          if((((e.client.x - _dragStartPos.x) as int).abs() > distance) ||
+              (((e.client.y - _dragStartPos.y) as int).abs() > distance) && !_isDragActive) {
             _dragStart();
           }
         } else {
@@ -160,6 +162,7 @@ class Sortable {
     reorderedIds.clear();
     sortable.children.forEach((e) => reorderedIds.add(e.id));
   }
+
   void _dragStart() {
     _updateIds();
     _isDragActive = true;
@@ -182,34 +185,65 @@ class Sortable {
       start(_draggedElement, _draggedHelper, _placeholder);
     }
     int dIdx = sortable.children.indexOf(_draggedElement);
-    _minLeft = _draggedElement.offsetLeft.round();
-    _maxLeft = (_draggedElement.offsetLeft + _draggedElement.offsetWidth).round();
-    for(int i = dIdx - 1; i >= 0; i--) {
-      var elm = sortable.children[i];
-      if(elm.attributes['ismovable'] != 'true') {
-        break;
+
+    if(axis.contains('x')) {
+      _minLeft = _draggedElement.offsetLeft.round();
+      _maxLeft = (_draggedElement.offsetLeft + _draggedElement.offsetWidth).round();
+      for(int i = dIdx - 1; i >= 0; i--) {
+        var elm = sortable.children[i];
+        if(elm.attributes['ismovable'] != 'true') {
+          break;
+        }
+        _minLeft = elm.offsetLeft.round();
+
       }
-      _minLeft = elm.offsetLeft.round();
+
+      for(int i = dIdx + 1; i < sortable.children.length; i++) {
+        var elm = sortable.children[i];
+        if(elm.attributes['ismovable'] != 'true') {
+          break;
+        }
+        if(elm == _draggedHelper) {
+          continue;
+        }
+        _maxLeft = (elm.offsetLeft + elm.offsetWidth).round();
+      }
+      _minLeft -= (_draggedHelper.offsetWidth / 2).round();
+      _maxLeft += (_draggedHelper.offsetWidth / 2).round();
     }
 
-    for(int i = dIdx + 1; i < sortable.children.length; i++) {
-      var elm = sortable.children[i];
-      if(elm.attributes['ismovable'] != 'true') {
-        break;
+    if(axis.contains('y')) {
+      _minTop = _draggedElement.offsetTop.round();
+      _maxTop = (_draggedElement.offsetTop + _draggedElement.offsetHeight).round();
+      for(int i = dIdx - 1; i >= 0; i--) {
+        var elm = sortable.children[i];
+        if(elm.attributes['ismovable'] != 'true') {
+          break;
+        }
+        _minTop = elm.offsetTop.round();
       }
-      if(elm == _draggedHelper) {
-        continue;
+
+      for(int i = dIdx + 1; i < sortable.children.length; i++) {
+        var elm = sortable.children[i];
+        if(elm.attributes['ismovable'] != 'true') {
+          break;
+        }
+        if(elm == _draggedHelper) {
+          continue;
+        }
+        _maxTop = (elm.offsetTop + elm.offsetHeight).round();
       }
-      _maxLeft = (elm.offsetLeft + elm.offsetWidth).round();
+      _minTop -= (_draggedHelper.offsetHeight / 2).round();
+      _maxTop += (_draggedHelper.offsetHeight / 2).round();
     }
-    _minLeft -= (_draggedHelper.offsetWidth / 2).round();
-    _maxLeft += (_draggedHelper.offsetWidth / 2).round();
 
     _draggedElement.replaceWith(_placeholder);
   }
 
   void _drag(dom.MouseEvent e) {
-    math.Point<int> _newPos = new math.Point<int>(_draggedElementStartPos.x + e.client.x - _dragStartPos.x, _draggedElementStartPos.y + e.client.y);
+    math.Point<int> _newPos = new math.Point<int>(
+        _draggedElementStartPos.x + e.client.x - _dragStartPos.x,
+        _draggedElementStartPos.y + e.client.y - _dragStartPos.y);
     if(axis == null || axis.isEmpty || axis == 'x') {
       if(_newPos.x < _minLeft) {
         _newPos = new math.Point(_minLeft, _newPos.y);
@@ -220,28 +254,56 @@ class Sortable {
       _draggedHelper.style.left = '${_newPos.x}px';
     }
     if(axis == null || axis.isEmpty || axis == 'y') {
+      if(_newPos.y < _minTop) {
+        _newPos = new math.Point(_newPos.x, _minTop);
+      }
+      if(_newPos.y + _placeholder.offsetHeight > _maxTop) {
+        _newPos = new math.Point(_newPos.x, (_maxTop - _placeholder.offsetHeight).round());
+      }
       _draggedHelper.style.top = '${_newPos.y}px';
     }
 
     int placeholderPos;
     dom.HtmlElement hoverElement;
     int placeholderIdx = sortable.children.indexOf(_placeholder);
+
+    // TODO check only relevant children
+
     sortable.children.toList().forEach((elm) {
       var bcr = elm.getBoundingClientRect();
       int left = bcr.left.round();
       int right = (bcr.left + bcr.width).round();
       int midX = (left + bcr.width / 2).round();
+      int top = bcr.top.round();
+      int bottom = (bcr.top + bcr.height).round();
+      int midY = (top + bcr.height / 2).round();
+
       int overIdx = sortable.children.indexOf(elm);
 
-      if(elm != _placeholder && elm != _draggedHelper &&
-          elm.attributes['ismovable'] == 'true'
-          && e.client.x > left && e.client.x < right) {
-        if(e.client.x > midX && placeholderIdx < overIdx) {
-          sortable.children.insert(overIdx + 1, _placeholder);
-        } else if(e.client.x < midX && placeholderIdx > overIdx) {
-          sortable.children.insert(overIdx, _placeholder);
+      if(axis != null && axis.contains('x')) {
+        if(elm != _placeholder && elm != _draggedHelper &&
+            elm.attributes['ismovable'] == 'true'
+            && e.client.x > left && e.client.x < right) {
+          if(e.client.x > midX && placeholderIdx < overIdx) {
+            sortable.children.insert(overIdx + 1, _placeholder);
+          } else if(e.client.x < midX && placeholderIdx > overIdx) {
+            sortable.children.insert(overIdx, _placeholder);
+          }
         }
       }
+
+      if(axis != null && axis.contains('y')) {
+        if(elm != _placeholder && elm != _draggedHelper &&
+            elm.attributes['ismovable'] == 'true'
+            && e.client.y > top && e.client.y < bottom) {
+          if(e.client.y > midY && placeholderIdx < overIdx) {
+            sortable.children.insert(overIdx + 1, _placeholder);
+          } else if(e.client.y < midY && placeholderIdx > overIdx) {
+            sortable.children.insert(overIdx, _placeholder);
+          }
+        }
+      }
+
     });
   }
 

@@ -22,7 +22,7 @@ class CellSelectionModel extends SelectionModel {
   dom.HtmlElement _canvas;
   List<core.Range> _ranges = <core.Range>[];
   var _selector = new CellRangeSelector(new CellRangeDecoratorOptions(
-    selectionCss: {'border': '2px solid black'}
+    selectionCss: {'border': '2px solid black', 'z-index': '9999'}
   ));
   CellSelectionModelOptions _options;
   var _defaults = {
@@ -82,12 +82,11 @@ class CellSelectionModel extends SelectionModel {
     return _ranges;
   }
 
-  bool handleBeforeCellRangeSelected(BeforeCellRangeSelected e) {
+  void handleBeforeCellRangeSelected(BeforeCellRangeSelected e) {
     if (_grid.getEditorLock.isActive) {
       e.stopPropagation();
-      return false;
+      e.retVal = false;
     }
-    return true; // TODO was return;
   }
 
   void handleCellRangeSelected(CellRangeSelected e) {

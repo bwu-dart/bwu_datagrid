@@ -13,19 +13,13 @@ class CellRangeDecoratorOptions {
   String selectionCssClass;
   Map<String,String> selectionCss;
 
-  CellRangeDecoratorOptions({this.selectionCssClass, this.selectionCss});
+  CellRangeDecoratorOptions({this.selectionCssClass : 'bwu-datagrid-range-decorator',
+    this.selectionCss : const { 'z-index': '9999', 'border': '2px dashed red'} });
 }
 
 class CellRangeDecorator extends Decorator {
 
-  var _elem;
-  var _defaults = {
-    'selectionCssClass': 'slick-range-decorator',
-    'selectionCss': {
-      'zIndex': '9999',
-      'border': '2px dashed red'
-    }
-  };
+  dom.HtmlElement _elem;
 
   BwuDatagrid _grid;
   CellRangeDecoratorOptions _options;
@@ -41,40 +35,45 @@ class CellRangeDecorator extends Decorator {
    * @param {Grid} grid
    * @param {Object} options
    */
-  CellRangeDecorator(this._grid, this._options);
+  CellRangeDecorator(this._grid, {CellRangeDecoratorOptions options}) {
+    if(options != null) {
+      _options = options;
+    } else {
+      _options = new CellRangeDecoratorOptions();
+    }
+  }
 
-
-    // TODO options = $.extend(true, {}, _defaults, options);
-
-    @override
-    dom.HtmlElement show(Range range) {
-      if (!_elem) {
-        _elem = new dom.DivElement()
-            // TODO (_options.selectionCss) //$("<div></div>", {'css': options.selectionCss})
-            ..classes.add(_options.selectionCssClass)
-            ..style.position= 'absolute';
-        _grid.getCanvasNode.append(_elem);
+  @override
+  dom.HtmlElement show(Range range) {
+    if (_elem == null) {
+      _elem = new dom.DivElement()
+          ..classes.add(_options.selectionCssClass)
+          ..style.position= 'absolute';
+      for(var k in _options.selectionCss.keys) {
+        _elem.style.setProperty(k, _options.selectionCss[k]);
       }
-
-      var from = _grid.getCellNodeBox(range.fromRow, range.fromCell);
-      var to = _grid.getCellNodeBox(range.toRow, range.toCell);
-
-      _elem.style
-        ..top = from.top - 1
-        ..left = from.left - 1
-        ..height = to.bottom - from.top - 2
-        ..width = to.right - from.left - 2;
-
-      return _elem;
+      _grid.getCanvasNode.append(_elem);
     }
 
-    @override
-    void hide() {
-      if (_elem) {
-        _elem.remove();
-        _elem = null;
-      }
+    var from = _grid.getCellNodeBox(range.fromRow, range.fromCell);
+    var to = _grid.getCellNodeBox(range.toRow, range.toCell);
+
+    _elem.style
+      ..top = '${from.top - 1}px'
+      ..left = '${from.left - 1}px'
+      ..height = '${to.bottom - from.top - 2}px'
+      ..width = '${to.right - from.left - 2}px';
+
+    return _elem;
+  }
+
+  @override
+  void hide() {
+    if (_elem != null) {
+      _elem.remove();
+      _elem = null;
     }
+  }
 
 //    $.extend(this, {
 //      "show": show,

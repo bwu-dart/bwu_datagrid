@@ -16,7 +16,3 @@ part 'event_data.dart';
 part 'event_bus.dart';
 part 'range.dart';
 
-//final EventBus EVENT_BUS = new EventBus();
-
-//typedef int SortComparerFunc(a, b);
-//typedef FormatterFunc(a); // TODO there is a Formatter class (with call())
