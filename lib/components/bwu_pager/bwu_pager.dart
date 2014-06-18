@@ -3,11 +3,12 @@ library bwu_datagrid.compponents.bwu_pager;
 import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
+import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
+
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'package:bwu_datagrid/tools/html.dart' as tools;
 
 class NavState extends Observable {
   @observable bool canGotoFirst;
@@ -91,7 +92,7 @@ class BwuPager extends PolymerElement {
   }
 
   void pageSizeClickHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
-    int pagesize = tools.parseIntSafe((e.target as dom.HtmlElement).dataset['value']);
+    int pagesize = tools.parseInt((e.target as dom.HtmlElement).dataset['value'], onErrorDefault: 0);
     //if (pagesize != 0) {
       if (pagesize == -1) {
         Range vp = _grid.getViewport();

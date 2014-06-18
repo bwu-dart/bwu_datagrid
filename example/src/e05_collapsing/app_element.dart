@@ -12,8 +12,8 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 
 import 'package:bwu_datagrid/dataview/dataview.dart';
-import 'package:bwu_datagrid/tools/html.dart' as tools;
 import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
 
 import '../required_field_validator.dart';
 
@@ -128,7 +128,7 @@ class AppElement extends PolymerElement {
         ..beginUpdate()
         ..setItems(data)
         ..setFilterArgs({
-          'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
+          'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
         })
         ..setFilter(myFilter)
@@ -210,7 +210,7 @@ class AppElement extends PolymerElement {
     }
 
     dataView.setFilterArgs({
-      'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
+      'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString
     });
     dataView.refresh();
@@ -228,7 +228,9 @@ class AppElement extends PolymerElement {
       var parent = data[item['parent']];
 
       while (parent != null) {
-        if (parent.collapsed || (parent["percentComplete"] < tools.parseIntSafe(percentCompleteThreshold)) || (searchString != "" && parent["title"].indexOf(searchString) == -1)) {
+        if (parent.collapsed || (parent["percentComplete"]
+            < tools.parseInt(percentCompleteThreshold, onErrorDefault: 0))
+                || (searchString != "" && parent["title"].indexOf(searchString) == -1)) {
           return false;
         }
 

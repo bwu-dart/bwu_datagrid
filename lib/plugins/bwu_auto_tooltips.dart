@@ -8,7 +8,7 @@ import 'dart:async' as async;
 //import 'package:core_elements/core_tooltip/core_tooltip.dart' as tt;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'package:bwu_datagrid/tools/html.dart' as tools;
+import 'package:bwu_utils_browser/html/html.dart' as tools;
 
 import 'plugin.dart';
 

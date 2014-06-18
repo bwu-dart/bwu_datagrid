@@ -2,7 +2,7 @@ library bwu_datagrid.example.e03a_compund_editors.numeric_range_editor;
 
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/editors/editors.dart';
-import 'package:bwu_datagrid/tools/html.dart' as tools;
+import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
 
 class NumericRangeEditor extends Editor {
   EditorArgs args;
@@ -57,7 +57,7 @@ class NumericRangeEditor extends Editor {
 
   @override
   bool get isValueChanged {
-    return args.item['from'] != tools.parseIntSafe($from.value) || args.item['to'] != tools.parseIntSafe($from.value);
+    return args.item['from'] != tools.parseInt($from.value, onErrorDefault: 0) || args.item['to'] != tools.parseInt($from.value, onErrorDefault: 0);
   }
 
   @override
@@ -68,12 +68,12 @@ class NumericRangeEditor extends Editor {
 
   @override
   Map serializeValue() {
-    return {'from': tools.parseIntSafe($from.value), 'to': tools.parseIntSafe($to.value)};
+    return {'from': tools.parseInt($from.value, onErrorDefault: 0), 'to': tools.parseInt($to.value, onErrorDefault: 0)};
   }
 
   @override
   ValidationResult validate() {
-    if (!tools.canParseInt($from.value) || !tools.canParseInt($to.value)) {
+    if (!tools.isInt($from.value) || !tools.isInt($to.value)) {
       return new ValidationResult(false, 'Please type in valid numbers.');
     }
 

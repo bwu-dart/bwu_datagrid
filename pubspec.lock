@@ -12,11 +12,21 @@ packages:
   barback:
     description: barback
     source: hosted
-    version: "0.14.0+3"
+    version: "0.14.1"
   browser:
     description: browser
     source: hosted
     version: "0.10.0+2"
+  bwu_utils:
+    description: bwu_utils
+    source: hosted
+    version: "0.0.1"
+  bwu_utils_browser:
+    description:
+      path: "../../bwu_utils_browser"
+      relative: true
+    source: path
+    version: "0.0.2"
   code_transformers:
     description: code_transformers
     source: hosted
@@ -36,7 +46,7 @@ packages:
   intl:
     description: intl
     source: hosted
-    version: "0.8.10+4"
+    version: "0.9.10"
   logging:
     description: logging
     source: hosted
@@ -44,11 +54,7 @@ packages:
   matcher:
     description: matcher
     source: hosted
-    version: "0.10.0+3"
-  meta:
-    description: meta
-    source: hosted
-    version: "0.8.8"
+    version: "0.10.1+1"
   observe:
     description: observe
     source: hosted
@@ -60,11 +66,11 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.10.1+1"
+    version: "0.11.0-dev.6"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
-    version: "0.10.0"
+    version: "0.11.2"
   quiver:
     description: quiver
     source: hosted
@@ -84,7 +90,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "0.9.3+2"
+    version: "1.0.0"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -92,7 +98,7 @@ packages:
   template_binding:
     description: template_binding
     source: hosted
-    version: "0.10.0"
+    version: "0.11.0-dev"
   unittest:
     description: unittest
     source: hosted
@@ -104,7 +110,7 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.3.4"
+    version: "0.3.5-dev.2"
   yaml:
     description: yaml
     source: hosted

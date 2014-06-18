@@ -1,4 +1,6 @@
-<img src="http://bwu-dart.github.io/core_elements/assets/polymer/p-logo.svg" alt="Polymer logo" width="120px" />
+![Polmyer Element](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/polmyer_logo.png)
+
+
 [![Build Status](https://drone.io/github.com/bwu-dart/bwu_datagrid/status.png)](https://drone.io/github.com/bwu-dart/bwu_datagrid/latest)
 
 # Welcome to BWU Datagrid
@@ -37,3 +39,20 @@ Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_da
 * Advanced detached & multi-field editors with undo/redo support.
 * “GlobalEditorLock” to manage concurrent edits in cases where multiple Views on a page can edit the same data.
 * Support for [millions of rows](http://stackoverflow.com/a/2569488/1269037)
+
+## Screenshots
+
+### Composite Editor
+![composite_editor_item_details](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/composite_editor_item_details.png)
+
+### Custom Editors
+![e03_editing_01](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/e03_editing_01.png)
+
+### Inline Filter, Paging, ...
+![e04_model](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/e04_model.png)
+
+### Tree functionality
+![e05_collapsing](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/e05_collapsing.png)
+
+### Alternative Display
+![e08_alternative_display](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/e08_alternative_display.png)

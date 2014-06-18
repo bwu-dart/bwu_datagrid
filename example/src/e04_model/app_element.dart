@@ -16,7 +16,7 @@ import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
-import 'package:bwu_datagrid/tools/html.dart' as tools;
+import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
 
 import '../required_field_validator.dart';
 
@@ -126,7 +126,7 @@ class AppElement extends PolymerElement {
         dataView.beginUpdate();
         dataView.setItems(data);
         dataView.setFilterArgs({
-          'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
+          'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
         });
         dataView.setFilter(myFilter);
@@ -193,7 +193,7 @@ class AppElement extends PolymerElement {
     }
 
     dataView.setFilterArgs({
-      'percentCompleteThreshold': tools.parseIntSafe(percentCompleteThreshold),
+      'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString
     });
     dataView.refresh();

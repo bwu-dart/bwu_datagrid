@@ -2,9 +2,11 @@ library bwu_dart.bwu_datagrid.editors;
 
 import 'dart:html' as dom;
 
+import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
+import 'package:bwu_utils_browser/html/html.dart' as dom_tools;
+
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
-import 'package:bwu_datagrid/tools/html.dart' as tools;
 
 /***
  * Contains basic BwuDatagrid editors.
@@ -217,7 +219,7 @@ class IntegerEditor extends Editor {
     if(state is int) {
       val = state;
     } else if (state is String) {
-      val = tools.parseIntSafe(state);
+      val = tools.parseInt(state, onErrorDefault: 0);
     } else if (state == null){
       val = 0;
     } else {
@@ -233,7 +235,7 @@ class IntegerEditor extends Editor {
 
   @override
   ValidationResult validate () {
-    if (!tools.canParseInt($input.value)) {
+    if (!tools.isInt($input.value)) {
       return new ValidationResult(false, "Please enter a valid integer");
     }
 
@@ -479,7 +481,7 @@ class PercentCompleteEditor extends Editor {
 
   PercentCompleteEditor._(this.args) {
     $input = new dom.TextInputElement()..classes.add('editor-percentcomplete');
-    $input.style.width = '${tools.innerWidth(args.container) - 25}px';
+    $input.style.width = '${dom_tools.innerWidth(args.container) - 25}px';
     args.container.append($input);
 
     $picker = new dom.DivElement()
@@ -580,7 +582,7 @@ class PercentCompleteEditor extends Editor {
 
   @override
   String serializeValue () {
-    return tools.parseIntSafe($input.value).toString(); // || 0; // todo default 0
+    return tools.parseInt($input.value, onErrorDefault: 0).toString(); // || 0; // todo default 0
   }
 
   @override
@@ -590,12 +592,12 @@ class PercentCompleteEditor extends Editor {
 
   @override
   bool get isValueChanged {
-    return (!($input.value == '' && defaultValue == null)) && (tools.parseIntSafe($input.value) != defaultValue);
+    return (!($input.value == '' && defaultValue == null)) && (tools.parseInt($input.value, onErrorDefault: 0) != defaultValue);
   }
 
   @override
   ValidationResult validate() {
-    if (!tools.canParseInt($input.value)) {
+    if (!tools.isInt($input.value)) {
       return new ValidationResult(false, "Please enter a valid positive number");
     }
 

@@ -17,7 +17,7 @@ import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'package:bwu_datagrid/tools/html.dart' as tools;
+import 'package:bwu_utils_browser/html/html.dart' as tools;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 //import 'package:bwu_datagrid/effects/drag_aware.dart' as cdrag;
 

@@ -7,7 +7,7 @@ import 'dart:math' as math;
 import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'package:bwu_datagrid/tools/html.dart' as tools;
+import 'package:bwu_utils_browser/html/html.dart' as tools;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 
 class RowMoveManager extends Plugin {
