@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid example: 08 Alternative Display</title>
+    <title>BWU Datagrid example: 10 Async Post Render</title>
 
     
     
@@ -1124,23 +1124,46 @@ classes should alter those!
   
 </polymer-element>
 
-<polymer-element name="row-item">
+
+
+
+<polymer-element name="sp-tooltip">
   <template>
     <style>
-      :host {
+      :host(.jqstooltip) {
         display: block;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        visibility: hidden;
+
+        z-index: 10000;
+        background-color: rgba(0,0,0,0.6);
+        background: rgb(0, 0, 0) transparent;
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+        color: white;
+        font: 10px arial, san serif;
+        text-align: left;
+        white-space: nowrap;
+        padding: 5px;
+        border: 1px solid white;
       }
     </style>
 
-    <div class="cell-inner">
-      <div class="cell-left"></div>
-      <div class="cell-main">
-        <b><span id="name"></span></b><br>
-        <span id="title"></span><br>
-        <span id="email"></span><br>
-        <span id="phone"></span>
-      </div>
-    </div>
+    <content id="content"></content>
+  </template>
+  
+</polymer-element><polymer-element name="bwu-sparkline">
+  <template>
+    <style>
+      #canvas {
+        display: 'inline-block';
+        verticalAlign: 'top';
+      }
+    </style>
+    <canvas id="canvas"></canvas>
+    <content></content>
   </template>
   
 </polymer-element><polymer-element name="app-element">
@@ -1828,78 +1851,53 @@ input.editor-checkbox {
       }
     </style>
     <style>
-      bwu-datagrid /deep/ .bwu-datagrid-cell {
-        background: white !important;
-        border-color: transparent !important;
-        line-height: 19px !important;
+      bwu-datagrid /deep/ .cell-title {
+        font-weight: bold;
       }
 
-        /* alternating offsets */
-      bwu-datagrid /deep/ .bwu-datagrid-row .cell-inner {
-        margin-right: 60px;
+      bwu-datagrid /deep/ .cell-effort-driven {
+        text-align: center;
       }
 
-/*
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="1"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="3"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="5"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="7"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="9"] .cell-inner {
-        margin-left: 60px;
-        margin-right: 0;
-      }
-*/
-      bwu-datagrid /deep/ .contact-card-cell {
-        border-color: transparent !important;
-      }
-
-      bwu-datagrid /deep/ .cell-inner {
-        height: 80px;
-        margin: 10px;
-        padding: 10px;
-        background: #fafafa;
-        border: 1px solid gray;
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        -moz-box-shadow: 1px 1px 5px silver;
-        -webkit-box-shadow: 1px 1px 5px silver;
-        -webkit-transition: all 0.5s;
-      }
-
-      bwu-datagrid /deep/ .cell-inner:hover {
-        background: #f0f0f0;
-      }
-
-      bwu-datagrid /deep/ .cell-left {
-        width: 40px;
-        height: 100%;
-        float: left;
-        border-right: 1px dotted gray;
-        background: url(packages/bwu_datagrid/asset/images/user_identity.gif) no-repeat top center;
-      }
-
-      bwu-datagrid /deep/ .cell-main {
-        margin-left: 50px;
+      .description * {
+        font-size: 11pt;
       }
     </style>
 
     <div style="position:relative">
       <div style="width:600px;">
+        <div class="grid-header" style="width:100%">
+          <label>Scores:</label>
+        </div>
         <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
       </div>
 
       <div class="options-panel">
         <h2>Demonstrates:</h2>
+          <p>
+            With BWU Datagrid, you can still have rich, complex cells rendered against the actual DOM nodes while still preserving
+            the speed and responsiveness.
+            This is achieved through async background post-rendering.
+            BWU Datagrid exposes a <u>asyncPostRender</u> property on a column which you can use to set your own function that will
+            manipulate the cell DOM node directly.
+            The event is fired one by one for all visible rows in the viewport on a timer so it doesn't impact the UI
+            responsiveness.
+            You should still make sure that post-processing one row doesn't take too long though.
+            BWU Datagrid will figure out what and when needs to be updated for you.
+          </p>
 
-        <ul>
-          <li>
-            Uses a simple custom Polymer element to render a row
-            but still using BWU Datagrid's virtual rendering technology.
-          </li>
-        </ul>
+          <p>
+            The example below is a list of 500 rows with a title and 5 integer cells followed by graphical representation of
+            these integers.
+            The graph is drawn using a CANVAS element in the background.
+            The grid is editable, so you can edit the numbers and see the changes reflected (almost) immediately in the graph.
+            The graph cell behaves just like an ordinary cell and can be resized/reordered.
+            The graphs themselves are created using the <a href="https://github.com/bwu-dart/bwu_sparkline" target="_blank">BWU Sparkline</a> library.
+          </p>
+
         <h2>View Source:</h2>
         <ul>
-          <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e08_alternative_display/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+          <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e10_async_post_render/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
         </ul>
       </div>
     </div>
@@ -2582,4 +2580,4 @@ body /deep/ .ui-datepicker-cover {
     
   
 
-<script src="e08_alternative_display.html_bootstrap.dart.js"></script></body></html>
+<script src="e10_async_post_render.html_bootstrap.dart.js"></script></body></html>

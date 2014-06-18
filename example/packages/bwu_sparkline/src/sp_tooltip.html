@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<link rel="import" href="../../../packages/polymer/polymer.html">
+
+<polymer-element name='sp-tooltip'>
+  <template>
+    <style>
+      :host(.jqstooltip) {
+        display: block;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        visibility: hidden;
+
+        z-index: 10000;
+        background-color: rgba(0,0,0,0.6);
+        background: rgb(0, 0, 0) transparent;
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+        color: white;
+        font: 10px arial, san serif;
+        text-align: left;
+        white-space: nowrap;
+        padding: 5px;
+        border: 1px solid white;
+      }
+    </style>
+
+    <content id='content'></content>
+  </template>
+  <script type='application/dart' src='sp_tooltip.dart'></script>
+</polymer-element>

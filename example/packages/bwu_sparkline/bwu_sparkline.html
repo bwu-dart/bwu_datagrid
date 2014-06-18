@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<link rel="import" href="../../packages/polymer/polymer.html">
+<link rel='import' href='src/sp_tooltip.html'>
+
+<polymer-element name='bwu-sparkline'>
+  <template>
+    <style>
+      #canvas {
+        display: 'inline-block';
+        verticalAlign: 'top';
+      }
+    </style>
+    <canvas id='canvas'></canvas>
+    <content></content>
+  </template>
+  <script type='application/dart' src='bwu_sparkline.dart'></script>
+</polymer-element>
