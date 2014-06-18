@@ -1,4 +1,4 @@
-![Polmyer Element](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/polmyer_logo.png)
+![Polmyer Element](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/polymer_logo.png)
 
 
 [![Build Status](https://drone.io/github.com/bwu-dart/bwu_datagrid/status.png)](https://drone.io/github.com/bwu-dart/bwu_datagrid/latest)
