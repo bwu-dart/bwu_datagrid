@@ -2,6 +2,7 @@
 
 <link rel="import" href="../../packages/polymer/polymer.html">
 <link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
+<link rel='import' href='../../packages/bwu_sparkline/bwu_sparkline.html'>
 
 <polymer-element name='app-element'>
   <template>
@@ -39,22 +40,32 @@
       </div>
 
       <div class='options-panel'>
-        Click to select, Ctrl-click to toggle selection, Shift-click to select a range.<br/>
-        Drag one or more rows by the handle to reorder.<br/>
-        Drag one or more rows to the recycle bin to delete.
+        <h2>Demonstrates:</h2>
+          <p>
+            With BWU Datagrid, you can still have rich, complex cells rendered against the actual DOM nodes while still preserving
+            the speed and responsiveness.
+            This is achieved through async background post-rendering.
+            BWU Datagrid exposes a <u>asyncPostRender</u> property on a column which you can use to set your own function that will
+            manipulate the cell DOM node directly.
+            The event is fired one by one for all visible rows in the viewport on a timer so it doesn't impact the UI
+            responsiveness.
+            You should still make sure that post-processing one row doesn't take too long though.
+            BWU Datagrid will figure out what and when needs to be updated for you.
+          </p>
 
-        <br/>
-        <br/>
-
-        <drop-zone  dropzone='move s:text/bwu-datagrid-recycle' on-drop="{{zoneDropHandler}}">
-          <div class="recycle-bin" >
-            Recycle Bin
-          </div>
-        </drop-zone>
+          <p>
+            The example below is a list of 500 rows with a title and 5 integer cells followed by graphical representation of
+            these integers.
+            The graph is drawn using a CANVAS element in the background.
+            The grid is editable, so you can edit the numbers and see the changes reflected (almost) immediately in the graph.
+            The graph cell behaves just like an ordinary cell and can be resized/reordered.
+            The graphs themselves are created using the <a href="https://github.com/bwu-dart/bwu_sparkline"
+                                                                     target="_blank">BWU Sparkline</a> library.
+          </p>
 
         <h2>View Source:</h2>
         <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e09_row_reordering/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e10_async_post_render/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
         </ul>
       </div>
     </div>

@@ -17,15 +17,17 @@ packages:
     description: browser
     source: hosted
     version: "0.10.0+2"
+  bwu_sparkline:
+    description: bwu_sparkline
+    source: hosted
+    version: "0.0.2"
   bwu_utils:
     description: bwu_utils
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   bwu_utils_browser:
-    description:
-      path: "../../bwu_utils_browser"
-      relative: true
-    source: path
+    description: bwu_utils_browser
+    source: hosted
     version: "0.0.2"
   code_transformers:
     description: code_transformers

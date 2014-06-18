@@ -157,6 +157,8 @@ class EditController {
   EditController(this.commitCurrentEdit, this.cancelCurrentEdit);
 }
 
+typedef void AsyncPostRenderFn(dom.HtmlElement target, int row, DataItem dataContext, Column colDef);
+
 class Column {
   String id;
   String name;
@@ -183,6 +185,7 @@ class Column {
   Formatter formatter;
   Formatter groupTotalsFormatter;
   Validator validator;
+  AsyncPostRenderFn asyncPostRender;
 
   int previousWidth;
 
@@ -191,7 +194,7 @@ class Column {
     this.resizable : true, this.sortable : false, this.focusable : true,
     this.selectable : true, this.defaultSortAsc : true,
     this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan,
-    this.behavior, this.isMovable: true, this.isDraggable : false}) {
+    this.behavior, this.isMovable: true, this.isDraggable : false, this.asyncPostRender}) {
   }
 
   Column.unititialized();
@@ -213,17 +216,17 @@ class Column {
     if(c.toolTip != null) toolTip = c.toolTip;
     if(c.cssClass != null) cssClass = c.cssClass;
     if(c.cannotTriggerInsert != null) cannotTriggerInsert = c.cannotTriggerInsert;
-    if(c.editor != null) editor = c.editor;
-    if(c.formatter != null) formatter = c.formatter;
-    if(c.validator != null) validator = c.validator;
-    if(c.previousWidth != null) previousWidth = c.previousWidth;
     if(c.behavior != null) behavior = c.behavior;
     if(c.isMovable != null) isMovable = c.isMovable;
     if(c.isDraggable != null) isDraggable = c.isDraggable;
-  }
 
-  void asyncPostRender(dom.HtmlElement node, int row, MapDataItem rowData, Column m) {
-    print('Column.asyncPostRender not yet implemented');
+    if(c.editor != null) editor = c.editor;
+    if(c.groupTotalsFormatter != null) groupTotalsFormatter = c.groupTotalsFormatter;
+    if(c.formatter != null) formatter = c.formatter;
+    if(c.validator != null) validator = c.validator;
+    if(c.asyncPostRender != null) asyncPostRender = c.asyncPostRender;
+
+    if(c.previousWidth != null) previousWidth = c.previousWidth;
   }
 }
 

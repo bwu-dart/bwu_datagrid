@@ -26,6 +26,7 @@ Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_da
 * Pluggable cell formatters & editors
 * Support for editing and creating new rows.
 * Advanced detached & multi-field editors with undo/redo support.
+* Background post-rendering for richer cells
 
 ### Some highlights (when it's ready):
 
@@ -34,7 +35,6 @@ Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_da
 * Adaptive virtual scrolling (handle hundreds of thousands of rows with extreme responsiveness)
 * Extremely fast rendering speed 
 * ~~Supports jQuery UI Themes~~ (not sure yet)
-* Background post-rendering for richer cells
 * Configurable & customizable
 * Grouping, filtering, custom aggregators, and more!
 * “GlobalEditorLock” to manage concurrent edits in cases where multiple Views on a page can edit the same data.
@@ -56,3 +56,6 @@ Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_da
 
 ### Alternative Display
 ![e08_alternative_display](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/e08_alternative_display.png)
+
+### Async Post Render
+![e10_async_post_render](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/e10_async_post_render.png)

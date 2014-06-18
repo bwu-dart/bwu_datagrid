@@ -1,3 +1,9 @@
+## 0.0.10
+
+* example 10 async post render
+* uses BWU Sparkline for inline charts
+* 
+
 ## 0.0.9
 
 * example 09 row reordering

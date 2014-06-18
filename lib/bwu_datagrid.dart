@@ -143,7 +143,7 @@ class BwuDatagrid extends PolymerElement {
   async.Timer _h_editorLoader = null;
   async.Timer _h_render = null;
   async.Timer _h_postrender = null;
-  List<List<bool>> _postProcessedRows = [];
+  Map<int,List<bool>> _postProcessedRows = {};
   int _postProcessToRow = null;
   int _postProcessFromRow = null;
 
@@ -2040,7 +2040,7 @@ class BwuDatagrid extends PolymerElement {
       cacheEntry.cellNodesByColumnIdx[cellToRemove].remove();
       cacheEntry.cellColSpans.remove(cellToRemove);
       cacheEntry.cellNodesByColumnIdx.remove(cellToRemove);
-      if (_postProcessedRows.contains(row)) {
+      if (_postProcessedRows.containsKey(row)) {
         _postProcessedRows[row].remove(cellToRemove);
       }
       totalCellsRemoved++;
@@ -2320,7 +2320,7 @@ class BwuDatagrid extends PolymerElement {
     while (_postProcessFromRow <= _postProcessToRow) {
       var row = (_vScrollDir >= 0) ? _postProcessFromRow++ : _postProcessToRow--;
       var cacheEntry = _rowsCache[row];
-      if (!cacheEntry || row >= dataLength) {
+      if (cacheEntry == null|| row >= dataLength) {
         continue;
       }
 
@@ -2329,18 +2329,22 @@ class BwuDatagrid extends PolymerElement {
       }
 
       _ensureCellNodesInRowsCache(row);
-      for (var columnIdx in cacheEntry.cellNodesByColumnIdx) {
+      for (var columnIdx in cacheEntry.cellNodesByColumnIdx.keys) {
         if (!cacheEntry.cellNodesByColumnIdx.containsKey(columnIdx)) {
           continue;
         }
 
-        columnIdx = columnIdx | 0; // TODO
+        // columnIdx = columnIdx | 0; // TODO
 
         var m = columns[columnIdx];
-        if (m.asyncPostRender && _postProcessedRows[row][columnIdx] == null) {
+        if (m.asyncPostRender != null && (_postProcessedRows[row].length < columnIdx
+            || _postProcessedRows[row][columnIdx] == null)) {
           var node = cacheEntry.cellNodesByColumnIdx[columnIdx];
-          if (node) {
+          if (node != null) {
             m.asyncPostRender(node, row, getDataItem(row), m);
+          }
+          if(_postProcessedRows[row].length <= columnIdx) {
+            _postProcessedRows[row].length = columnIdx + 1;
           }
           _postProcessedRows[row][columnIdx] = true;
         }
