@@ -16,6 +16,7 @@
 
 
 
+
 <!-- unminfied for debugging:
 <link rel="import" href="src/js/polymer/layout.html">
 <script src="src/js/polymer/polymer.concat.js"></script>
@@ -254,7 +255,7 @@ html /deep/ [block] {
 
 /* ie support for hidden */
 html /deep/ [hidden] {
-  display: none;
+  display: none !important;
 }
 
 html /deep/ [relative] {
@@ -292,7 +293,10 @@ html /deep/ [segment], html /deep/ segment {
   border-radius: 5px 5px 5px 5px;
 }
 
-</style><script src="packages/polymer/src/js/polymer/polymer.js"></script>
+</style><script src="packages/polymer/src/js/polymer/polymer.js"></script><script>
+// TODO(sigmund): remove this script tag (dartbug.com/19650). This empty
+// script tag is necessary to work around a bug in Chrome 36.
+</script>
 
 
 
@@ -1124,14 +1128,17 @@ classes should alter those!
   <template>
     <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
     <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
-    <style>* /deep/ bwu-datagrid {
+    <style>/*
+* /deep/ bwu-datagrid {
   opacity: 1;
   transition: opacity 200ms;
 }
-
-* /deep/ :unresolved, * /deep/ [unresolved] {
+*/
+/*
+* /deep/ :unresolved,
+* /deep/ [unresolved] {
   opacity: 0;
-}
+}*/
 
 /* x@ import url(slick-default-theme.css); */
 
@@ -1436,14 +1443,17 @@ input.editor-checkbox {
 <script src="../lib/jquery-1.7.min.js"></script>
 <script src="../lib/jquery.event.drag-2.2.js"></script>
 
---><style>* /deep/ bwu-datagrid {
+--><style>/*
+* /deep/ bwu-datagrid {
   opacity: 1;
   transition: opacity 200ms;
 }
-
-* /deep/ :unresolved, * /deep/ [unresolved] {
+*/
+/*
+* /deep/ :unresolved,
+* /deep/ [unresolved] {
   opacity: 0;
-}
+}*/
 
 /* x@ import url(slick-default-theme.css); */
 
@@ -1704,4 +1714,4 @@ input.editor-checkbox {
     
   
 
-<script src="autotooltips.html_bootstrap.dart.js"></script></body></html>
+<script src="autotooltips.html_bootstrap.dart.js" async=""></script></body></html>

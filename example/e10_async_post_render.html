@@ -18,6 +18,7 @@
 
 
 
+
 <!-- unminfied for debugging:
 <link rel="import" href="src/js/polymer/layout.html">
 <script src="src/js/polymer/polymer.concat.js"></script>
@@ -256,7 +257,7 @@ html /deep/ [block] {
 
 /* ie support for hidden */
 html /deep/ [hidden] {
-  display: none;
+  display: none !important;
 }
 
 html /deep/ [relative] {
@@ -294,7 +295,10 @@ html /deep/ [segment], html /deep/ segment {
   border-radius: 5px 5px 5px 5px;
 }
 
-</style><script src="packages/polymer/src/js/polymer/polymer.js"></script>
+</style><script src="packages/polymer/src/js/polymer/polymer.js"></script><script>
+// TODO(sigmund): remove this script tag (dartbug.com/19650). This empty
+// script tag is necessary to work around a bug in Chrome 36.
+</script>
 
 
 
@@ -1579,14 +1583,17 @@ body /deep/ .ui-datepicker-cover {
     width: 200px; /*must have*/
     height: 200px; /*must have*/
 }</style>
-    <style>* /deep/ bwu-datagrid {
+    <style>/*
+* /deep/ bwu-datagrid {
   opacity: 1;
   transition: opacity 200ms;
 }
-
-* /deep/ :unresolved, * /deep/ [unresolved] {
+*/
+/*
+* /deep/ :unresolved,
+* /deep/ [unresolved] {
   opacity: 0;
-}
+}*/
 
 /* x@ import url(slick-default-theme.css); */
 
@@ -1904,14 +1911,17 @@ input.editor-checkbox {
   </template>
   
 </polymer-element>
-<style>* /deep/ bwu-datagrid {
+<style>/*
+* /deep/ bwu-datagrid {
   opacity: 1;
   transition: opacity 200ms;
 }
-
-* /deep/ :unresolved, * /deep/ [unresolved] {
+*/
+/*
+* /deep/ :unresolved,
+* /deep/ [unresolved] {
   opacity: 0;
-}
+}*/
 
 /* x@ import url(slick-default-theme.css); */
 
@@ -2580,4 +2590,4 @@ body /deep/ .ui-datepicker-cover {
     
   
 
-<script src="e10_async_post_render.html_bootstrap.dart.js"></script></body></html>
+<script src="e10_async_post_render.html_bootstrap.dart.js" async=""></script></body></html>
