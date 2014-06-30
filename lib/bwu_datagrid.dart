@@ -19,8 +19,6 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils_browser/html/html.dart' as tools;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
-//import 'package:bwu_datagrid/effects/drag_aware.dart' as cdrag;
-
 
 @CustomTag('bwu-datagrid')
 class BwuDatagrid extends PolymerElement {
@@ -33,24 +31,24 @@ class BwuDatagrid extends PolymerElement {
   @override
   void attached() {
     try {
-      attributes['unresolved'] = 'true';
+//      attributes['unresolved'] = 'true';
       super.attached();
       _isAttached = true;
       if(_isPendingInit) {
         init();
         render();
-        _unveilElement();
+  //      _unveilElement();
         _setupCompleter.complete();
       }
     }catch(e) {
-      _unveilElement();
+//      _unveilElement();
     }
   }
 
-  void _unveilElement() {
-    attributes.remove('unresolved');
-    attributes['resolved'] = 'true';
-  }
+//  void _unveilElement() {
+//    attributes['resolved'] = 'true';
+//    attributes.remove('unresolved');
+//  }
 
   // DataGrid(dom.HtmlElement container, String data, int columns, Options options);
   DataProvider _dataProvider;
@@ -181,7 +179,7 @@ class BwuDatagrid extends PolymerElement {
       new async.Future(() {
         init();
         render();
-        _unveilElement();
+        //_unveilElement();
         _setupCompleter.complete();
       });
     } else {

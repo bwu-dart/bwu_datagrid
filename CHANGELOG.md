@@ -1,8 +1,16 @@
-## 0.0.10
+## 0.0.12
+
+* example 11 auto-height
+
+## 0.0.11
 
 * example 10 async post render
 * uses BWU Sparkline for inline charts
-* 
+* uses Polymer 0.11.0-dev.6
+
+## 0.0.10
+
+* nothing (accidentally skipped)
 
 ## 0.0.9
 
