@@ -1999,7 +1999,7 @@ class BwuDatagrid extends PolymerElement {
       if (cacheEntry.cellRenderQueue.length > 0) {
         var lastChild = cacheEntry.rowNode.lastChild;
         while (cacheEntry.cellRenderQueue.length > 0) {
-          var columnIdx = cacheEntry.cellRenderQueue.removeLast(); // TODO check if removefirst is the right replacement for pop()
+          var columnIdx = cacheEntry.cellRenderQueue.removeLast();
           cacheEntry.cellNodesByColumnIdx[columnIdx] = lastChild;
           lastChild = lastChild.previousNode;
         }
@@ -2115,7 +2115,7 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    if (rowElement.children.length != 0) {
+    if (rowElement.children.length == 0) {
       return;
     }
 
@@ -2227,8 +2227,8 @@ class BwuDatagrid extends PolymerElement {
     if (!_initialized) {
       return;
     }
-    var visible = _getVisibleRange();
-    var rendered = getRenderedRange();
+    Range visible = _getVisibleRange();
+    Range rendered = getRenderedRange();
 
     // remove rows no longer in the viewport
     _cleanupRows(rendered);
@@ -2263,14 +2263,14 @@ class BwuDatagrid extends PolymerElement {
     int vScrollDist = (_scrollTop - _prevScrollTop).abs();
     int hScrollDist = (_scrollLeft - _prevScrollLeft).abs();
 
-    if (hScrollDist != null && hScrollDist != 0) {
+    if (hScrollDist != 0) {
       _prevScrollLeft = _scrollLeft;
       _headerScroller.scrollLeft = _scrollLeft;
       _topPanelScroller.scrollLeft = _scrollLeft;
       _headerRowScroller.scrollLeft = _scrollLeft;
     }
 
-    if (vScrollDist != null && vScrollDist != 0) {
+    if (vScrollDist != 0) {
       _vScrollDir = _prevScrollTop < _scrollTop ? 1 : -1;
       _prevScrollTop = _scrollTop;
 
@@ -2291,7 +2291,7 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    if ((hScrollDist != null && hScrollDist != 0) || (vScrollDist != null && vScrollDist != 0)) {
+    if (hScrollDist != 0 || vScrollDist != 0) {
       if (_h_render != null) {
         _h_render.cancel();
       }
@@ -2318,7 +2318,7 @@ class BwuDatagrid extends PolymerElement {
     while (_postProcessFromRow <= _postProcessToRow) {
       var row = (_vScrollDir >= 0) ? _postProcessFromRow++ : _postProcessToRow--;
       var cacheEntry = _rowsCache[row];
-      if (cacheEntry == null|| row >= dataLength) {
+      if (cacheEntry == null || row >= dataLength) {
         continue;
       }
 
