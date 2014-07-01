@@ -1,0 +1,2553 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>BWU Datagrid example: 12 Filling the whole window</title>
+
+    
+    
+    
+
+    
+     <!-- TODO remove, only here due to a bug in code generation when files change -->
+    
+  </head>
+
+  <body><script src="packages/web_components/platform.js"></script><script src="packages/web_components/dart_support.js"></script>
+
+
+
+
+
+<!-- unminfied for debugging:
+<link rel="import" href="src/js/polymer/layout.html">
+<script src="src/js/polymer/polymer.concat.js"></script>
+-->
+
+
+
+<style shim-shadowdom="">
+/*******************************
+          Flex Layout
+*******************************/
+
+html /deep/ [layout][horizontal], html /deep/ [layout][vertical] {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+html /deep/ [layout][horizontal][inline], html /deep/ [layout][vertical][inline] {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+}
+
+html /deep/ [layout][horizontal] {
+  -ms-flex-direction: row;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+}
+
+html /deep/ [layout][horizontal][reverse] {
+  -ms-flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
+html /deep/ [layout][vertical] {
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+html /deep/ [layout][vertical][reverse] {
+  -ms-flex-direction: column-reverse;
+  -webkit-flex-direction: column-reverse;
+  flex-direction: column-reverse;
+}
+
+html /deep/ [layout][wrap] {
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+html /deep/ [layout][wrap-reverse] {
+  -ms-flex-wrap: wrap-reverse;
+  -webkit-flex-wrap: wrap-reverse;
+  flex-wrap: wrap-reverse;
+}
+
+html /deep/ [flex] {
+  -ms-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+html /deep/ [flex][auto] {
+  -ms-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+html /deep/ [flex][none] {
+  -ms-flex: none;
+  -webkit-flex: none;
+  flex: none;
+}
+
+html /deep/ [flex][one] {
+  -ms-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+html /deep/ [flex][two] {
+  -ms-flex: 2;
+  -webkit-flex: 2;
+  flex: 2;
+}
+
+html /deep/ [flex][three] {
+  -ms-flex: 3;
+  -webkit-flex: 3;
+  flex: 3;
+}
+
+html /deep/ [flex][four] {
+  -ms-flex: 4;
+  -webkit-flex: 4;
+  flex: 4;
+}
+
+html /deep/ [flex][five] {
+  -ms-flex: 5;
+  -webkit-flex: 5;
+  flex: 5;
+}
+
+html /deep/ [flex][six] {
+  -ms-flex: 6;
+  -webkit-flex: 6;
+  flex: 6;
+}
+
+html /deep/ [flex][seven] {
+  -ms-flex: 7;
+  -webkit-flex: 7;
+  flex: 7;
+}
+
+html /deep/ [flex][eight] {
+  -ms-flex: 8;
+  -webkit-flex: 8;
+  flex: 8;
+}
+
+html /deep/ [flex][nine] {
+  -ms-flex: 9;
+  -webkit-flex: 9;
+  flex: 9;
+}
+
+html /deep/ [flex][ten] {
+  -ms-flex: 10;
+  -webkit-flex: 10;
+  flex: 10;
+}
+
+html /deep/ [flex][eleven] {
+  -ms-flex: 11;
+  -webkit-flex: 11;
+  flex: 11;
+}
+
+html /deep/ [flex][twelve] {
+  -ms-flex: 12;
+  -webkit-flex: 12;
+  flex: 12;
+}
+
+/* alignment in cross axis */
+
+html /deep/ [layout][start] {
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+
+html /deep/ [layout][center] {
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+html /deep/ [layout][end] {
+  -ms-flex-align: end;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
+}
+
+/* alignment in main axis */
+
+html /deep/ [layout][start-justified] {
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+html /deep/ [layout][center-justified] {
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+html /deep/ [layout][end-justified] {
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+html /deep/ [layout][around-justified] {
+  -ms-flex-pack: around;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+
+html /deep/ [layout][justified] {
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+/* self alignment */
+
+html /deep/ [self-start] {
+  -ms-align-self: flex-start;
+  -webkit-align-self: flex-start;
+  align-self: flex-start;
+}
+
+html /deep/ [self-center] {
+  -ms-align-self: center;
+  -webkit-align-self: center;
+  align-self: center;
+}
+
+html /deep/ [self-end] {
+  -ms-align-self: flex-end;
+  -webkit-align-self: flex-end;
+  align-self: flex-end;
+}
+
+html /deep/ [self-stretch] {
+  -ms-align-self: stretch;
+  -webkit-align-self: stretch;
+  align-self: stretch;
+}
+
+/*******************************
+          Other Layout
+*******************************/
+
+html /deep/ [block] {
+  display: block;
+}
+
+/* ie support for hidden */
+html /deep/ [hidden] {
+  display: none !important;
+}
+
+html /deep/ [relative] {
+  position: relative;
+}
+
+html /deep/ [fit] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+body[fullbleed] {
+  margin: 0;
+  height: 100vh;
+}
+
+/*******************************
+            Other
+*******************************/
+
+html /deep/ [segment], html /deep/ segment {
+  display: block;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 1em 0.5em;
+  padding: 1em;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 5px 5px 5px 5px;
+}
+
+</style><script src="packages/polymer/src/js/polymer/polymer.js"></script><script>
+// TODO(sigmund): remove this script tag (dartbug.com/19650). This empty
+// script tag is necessary to work around a bug in Chrome 36.
+</script>
+
+
+
+
+
+
+<polymer-element name="bwu-datagrid-headers">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <!--<link rel='stylesheet' href='../asset/grid.css'>
+    <link rel='stylesheet' href='../asset/default_theme.css'> -->
+    <style>/*.bwu-datagrid-header-columns */
+:host {
+  position: relative;
+  white-space: nowrap;
+  cursor: default;
+  overflow: hidden;
+}
+</style>
+    <style>/*.bwu-datagrid-header-columns*/
+:host {
+  background: url(packages/bwu_datagrid/asset/images/header-columns-bg.gif) repeat-x center bottom;
+  border-bottom: 1px solid silver;
+}
+</style>
+
+    <content></content>
+  </template>
+  
+</polymer-element>
+
+<polymer-element name="bwu-datagrid-header-column">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <!--<link rel='stylesheet' href='../asset/grid.css'>
+    <link rel='stylesheet' href='../asset/default_theme.css'> -->
+    <style>:host(.ui-state-default)
+/*.bwu-datagrid-header-column.ui-state-default*/ {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  height: 16px;
+  line-height: 16px;
+  margin: 0;
+  padding: 4px;
+  border-right: 1px solid silver;
+  border-left: 0px;
+  border-top: 0px;
+  border-bottom: 0px;
+  float: left;
+}
+
+/*.bwu-datagrid-resizable-handle {
+  position: absolute;
+  font-size: 0.1px;
+  display: block;
+  cursor: col-resize;
+  width: 4px;
+  right: 0px;
+  top: 0;
+  height: 100%;
+}
+*/</style>
+    <style>/*.bwu-datagrid-header-column*/
+:host {
+  background: url(packages/bwu_datagrid/asset/images/header-columns-bg.gif) repeat-x center bottom;
+  border-right: 1px solid silver;
+}
+
+/*.bwu-datagrid-header-column:hover, .bwu-datagrid-header-column-active */
+:host(.bwu-datagrid-header-column:hover) , :host(.bwu-datagrid-header-column-active) {
+  background: white url(packages/bwu_datagrid/asset/images/header-columns-over-bg.gif) repeat-x center bottom;
+}
+</style>
+
+    <content></content>
+  </template>
+  
+</polymer-element>
+
+<polymer-element name="bwu-datagrid-headerrow-column">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <!--<link rel='stylesheet' href='../asset/grid.css'>
+    <link rel='stylesheet' href='../asset/default_theme.css'> -->
+    <style>/* .bwu-datagrid-headerrow-column.ui-state-default*/
+:host(.ui-state-default){
+  padding: 4px;
+}
+
+:host(.ui-state-default)
+/*.bwu-datagrid-header.ui-state-default, .bwu-datagrid-headerrow.ui-state-default */ {
+  width: 100%;
+  overflow: hidden;
+  border-left: 0px;
+}
+</style>
+    <style>/*.bwu-datagrid-headerrow*/
+:host {
+  background: #fafafa;
+}
+
+
+.bwu-datagrid-headerrow-column {
+  background: #fafafa;
+  border-bottom: 0;
+  height: 100%;
+}
+
+:host(.bwu-datagrid-header-column-sorted) {
+  font-style: italic;
+}
+
+</style>
+
+    <content></content>
+  </template>
+  
+</polymer-element><polymer-element name="bwu-datagrid">
+  <template>
+    <style>/*
+ * jQuery UI CSS Framework 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming/API
+ */
+
+/* Layout helpers
+----------------------------------*/
+body /deep/ .ui-helper-hidden { display: none; }
+body /deep/ .ui-helper-hidden-accessible { position: absolute !important; clip: rect(1px 1px 1px 1px); clip: rect(1px,1px,1px,1px); }
+body /deep/ .ui-helper-reset { margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none; }
+body /deep/ .ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+body /deep/ .ui-helper-clearfix { display: inline-block; }
+/* required comment for clearfix to work in Opera \*/
+* html .ui-helper-clearfix { height:1%; }
+body /deep/ .ui-helper-clearfix { display:block; }
+/* end clearfix */
+body /deep/ .ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }
+
+
+/* Interaction Cues
+----------------------------------*/
+body /deep/ .ui-state-disabled { cursor: default !important; }
+
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+body /deep/ .ui-icon { display: block; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+body /deep/ .ui-widget-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+
+/*
+ * jQuery UI CSS Framework 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming/API
+ *
+ * To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Verdana,Arial,sans-serif&fwDefault=normal&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=cccccc&bgTextureHeader=03_highlight_soft.png&bgImgOpacityHeader=75&borderColorHeader=aaaaaa&fcHeader=222222&iconColorHeader=222222&bgColorContent=ffffff&bgTextureContent=01_flat.png&bgImgOpacityContent=75&borderColorContent=aaaaaa&fcContent=222222&iconColorContent=222222&bgColorDefault=e6e6e6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=75&borderColorDefault=d3d3d3&fcDefault=555555&iconColorDefault=888888&bgColorHover=dadada&bgTextureHover=02_glass.png&bgImgOpacityHover=75&borderColorHover=999999&fcHover=212121&iconColorHover=454545&bgColorActive=ffffff&bgTextureActive=02_glass.png&bgImgOpacityActive=65&borderColorActive=aaaaaa&fcActive=212121&iconColorActive=454545&bgColorHighlight=fbf9ee&bgTextureHighlight=02_glass.png&bgImgOpacityHighlight=55&borderColorHighlight=fcefa1&fcHighlight=363636&iconColorHighlight=2e83ff&bgColorError=fef1ec&bgTextureError=02_glass.png&bgImgOpacityError=95&borderColorError=cd0a0a&fcError=cd0a0a&iconColorError=cd0a0a&bgColorOverlay=aaaaaa&bgTextureOverlay=01_flat.png&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=aaaaaa&bgTextureShadow=01_flat.png&bgImgOpacityShadow=0&opacityShadow=30&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px
+ */
+
+
+/* Component containers
+----------------------------------*/
+body /deep/ .ui-widget, :host { font-family: Verdana,Arial,sans-serif; font-size: 1.1em; }
+body /deep/ .ui-widget { font-size: 1em; }
+body /deep/ .ui-widget input, input, body /deep/ .ui-widget, select, body /deep/ .ui-widget textarea, textarea, body /deep/ .ui-widget button, button { font-family: Verdana,Arial,sans-serif; font-size: 1em; }
+body /deep/ .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #222222; }
+body /deep/ .ui-widget-content a { color: #222222; }
+body /deep/ .ui-widget-header { border: 1px solid #aaaaaa; background: #cccccc url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x; color: #222222; font-weight: bold; }
+body /deep/ .ui-widget-header a { color: #222222; }
+
+/* Interaction states
+----------------------------------*/
+body /deep/ .ui-state-default, body /deep/ .ui-widget-content .ui-state-default, body /deep/ .ui-widget-header .ui-state-default { border: 1px solid #d3d3d3; background: #e6e6e6 url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #555555; }
+body /deep/ .ui-state-default a, body /deep/ .ui-state-default a:link, body /deep/ .ui-state-default a:visited { color: #555555; text-decoration: none; }
+body /deep/ .ui-state-hover, body /deep/ .ui-widget-content .ui-state-hover, body /deep/ .ui-widget-header .ui-state-hover, body /deep/ .ui-state-focus, body /deep/ .ui-widget-content .ui-state-focus, body /deep/ .ui-widget-header .ui-state-focus { border: 1px solid #999999; background: #dadada url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_dadada_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
+body /deep/ .ui-state-hover a, body /deep/ .ui-state-hover a:hover { color: #212121; text-decoration: none; }
+body /deep/ .ui-state-active, body /deep/ .ui-widget-content body /deep/ .ui-state-active, body /deep/ .ui-widget-header body /deep/ .ui-state-active { border: 1px solid #aaaaaa; background: #ffffff url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
+body /deep/ .ui-state-active a, body /deep/ .ui-state-active a:link, body /deep/ .ui-state-active a:visited { color: #212121; text-decoration: none; }
+body /deep/ .ui-widget, :active { outline: none; }
+
+/* Interaction Cues
+----------------------------------*/
+body /deep/ .ui-state-highlight, body /deep/ .ui-widget-content body /deep/ .ui-state-highlight, body /deep/ .ui-widget-header body /deep/ .ui-state-highlight  {border: 1px solid #fcefa1; background: #fbf9ee url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x; color: #363636; }
+body /deep/ .ui-state-highlight a, body /deep/ .ui-widget-content .ui-state-highlight a, body /deep/ .ui-widget-header .ui-state-highlight a { color: #363636; }
+body /deep/ .ui-state-error, body /deep/ .ui-widget-content body /deep/ .ui-state-error, body /deep/ .ui-widget-header .ui-state-error {border: 1px solid #cd0a0a; background: #fef1ec url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x; color: #cd0a0a; }
+body /deep/ .ui-state-error a, body /deep/ .ui-widget-content .ui-state-error a, body /deep/ .ui-widget-header .ui-state-error a { color: #cd0a0a; }
+body /deep/ .ui-state-error-text, body /deep/ .ui-widget-content .ui-state-error-text, body /deep/ .ui-widget-header .ui-state-error-text { color: #cd0a0a; }
+body /deep/ .ui-priority-primary, body /deep/ .ui-widget-content .ui-priority-primary, body /deep/ .ui-widget-header .ui-priority-primary { font-weight: bold; }
+body /deep/ .ui-priority-secondary, body /deep/ .ui-widget-content .ui-priority-secondary, body /deep/ .ui-widget-header .ui-priority-secondary { opacity: .7; filter:Alpha(Opacity=70); font-weight: normal; }
+body /deep/ .ui-state-disabled, body /deep/ .ui-widget-content .ui-state-disabled, body /deep/ .ui-widget-header .ui-state-disabled { opacity: .35; filter:Alpha(Opacity=35); background-image: none; }
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+body /deep/ .ui-icon { width: 16px; height: 16px; background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-widget-content .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-widget-header .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-state-default .ui-icon { background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_888888_256x240.png); }
+body /deep/ .ui-state-hover .ui-icon, body /deep/ .ui-state-focus .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_454545_256x240.png); }
+body /deep/ .ui-state-active .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_454545_256x240.png); }
+body /deep/ .ui-state-highlight .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_2e83ff_256x240.png); }
+body /deep/ .ui-state-error .ui-icon, body /deep/ .ui-state-error-text .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_cd0a0a_256x240.png); }
+
+/* positioning */
+body /deep/ .ui-icon-carat-1-n { background-position: 0 0; }
+body /deep/ .ui-icon-carat-1-ne { background-position: -16px 0; }
+body /deep/ .ui-icon-carat-1-e { background-position: -32px 0; }
+body /deep/ .ui-icon-carat-1-se { background-position: -48px 0; }
+body /deep/ .ui-icon-carat-1-s { background-position: -64px 0; }
+body /deep/ .ui-icon-carat-1-sw { background-position: -80px 0; }
+body /deep/ .ui-icon-carat-1-w { background-position: -96px 0; }
+body /deep/ .ui-icon-carat-1-nw { background-position: -112px 0; }
+body /deep/ .ui-icon-carat-2-n-s { background-position: -128px 0; }
+body /deep/ .ui-icon-carat-2-e-w { background-position: -144px 0; }
+body /deep/ .ui-icon-triangle-1-n { background-position: 0 -16px; }
+body /deep/ .ui-icon-triangle-1-ne { background-position: -16px -16px; }
+body /deep/ .ui-icon-triangle-1-e { background-position: -32px -16px; }
+body /deep/ .ui-icon-triangle-1-se { background-position: -48px -16px; }
+body /deep/ .ui-icon-triangle-1-s { background-position: -64px -16px; }
+body /deep/ .ui-icon-triangle-1-sw { background-position: -80px -16px; }
+body /deep/ .ui-icon-triangle-1-w { background-position: -96px -16px; }
+body /deep/ .ui-icon-triangle-1-nw { background-position: -112px -16px; }
+body /deep/ .ui-icon-triangle-2-n-s { background-position: -128px -16px; }
+body /deep/ .ui-icon-triangle-2-e-w { background-position: -144px -16px; }
+body /deep/ .ui-icon-arrow-1-n { background-position: 0 -32px; }
+body /deep/ .ui-icon-arrow-1-ne { background-position: -16px -32px; }
+body /deep/ .ui-icon-arrow-1-e { background-position: -32px -32px; }
+body /deep/ .ui-icon-arrow-1-se { background-position: -48px -32px; }
+body /deep/ .ui-icon-arrow-1-s { background-position: -64px -32px; }
+body /deep/ .ui-icon-arrow-1-sw { background-position: -80px -32px; }
+body /deep/ .ui-icon-arrow-1-w { background-position: -96px -32px; }
+body /deep/ .ui-icon-arrow-1-nw { background-position: -112px -32px; }
+body /deep/ .ui-icon-arrow-2-n-s { background-position: -128px -32px; }
+body /deep/ .ui-icon-arrow-2-ne-sw { background-position: -144px -32px; }
+body /deep/ .ui-icon-arrow-2-e-w { background-position: -160px -32px; }
+body /deep/ .ui-icon-arrow-2-se-nw { background-position: -176px -32px; }
+body /deep/ .ui-icon-arrowstop-1-n { background-position: -192px -32px; }
+body /deep/ .ui-icon-arrowstop-1-e { background-position: -208px -32px; }
+body /deep/ .ui-icon-arrowstop-1-s { background-position: -224px -32px; }
+body /deep/ .ui-icon-arrowstop-1-w { background-position: -240px -32px; }
+body /deep/ .ui-icon-arrowthick-1-n { background-position: 0 -48px; }
+body /deep/ .ui-icon-arrowthick-1-ne { background-position: -16px -48px; }
+body /deep/ .ui-icon-arrowthick-1-e { background-position: -32px -48px; }
+body /deep/ .ui-icon-arrowthick-1-se { background-position: -48px -48px; }
+body /deep/ .ui-icon-arrowthick-1-s { background-position: -64px -48px; }
+body /deep/ .ui-icon-arrowthick-1-sw { background-position: -80px -48px; }
+body /deep/ .ui-icon-arrowthick-1-w { background-position: -96px -48px; }
+body /deep/ .ui-icon-arrowthick-1-nw { background-position: -112px -48px; }
+body /deep/ .ui-icon-arrowthick-2-n-s { background-position: -128px -48px; }
+body /deep/ .ui-icon-arrowthick-2-ne-sw { background-position: -144px -48px; }
+body /deep/ .ui-icon-arrowthick-2-e-w { background-position: -160px -48px; }
+body /deep/ .ui-icon-arrowthick-2-se-nw { background-position: -176px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-n { background-position: -192px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-e { background-position: -208px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-s { background-position: -224px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-w { background-position: -240px -48px; }
+body /deep/ .ui-icon-arrowreturnthick-1-w { background-position: 0 -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-n { background-position: -16px -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-e { background-position: -32px -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-s { background-position: -48px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-w { background-position: -64px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-n { background-position: -80px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-e { background-position: -96px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-s { background-position: -112px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-w { background-position: -128px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-n { background-position: -144px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-e { background-position: -160px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-s { background-position: -176px -64px; }
+body /deep/ .ui-icon-arrow-4 { background-position: 0 -80px; }
+body /deep/ .ui-icon-arrow-4-diag { background-position: -16px -80px; }
+body /deep/ .ui-icon-extlink { background-position: -32px -80px; }
+body /deep/ .ui-icon-newwin { background-position: -48px -80px; }
+body /deep/ .ui-icon-refresh { background-position: -64px -80px; }
+body /deep/ .ui-icon-shuffle { background-position: -80px -80px; }
+body /deep/ .ui-icon-transfer-e-w { background-position: -96px -80px; }
+body /deep/ .ui-icon-transferthick-e-w { background-position: -112px -80px; }
+body /deep/ .ui-icon-folder-collapsed { background-position: 0 -96px; }
+body /deep/ .ui-icon-folder-open { background-position: -16px -96px; }
+body /deep/ .ui-icon-document { background-position: -32px -96px; }
+body /deep/ .ui-icon-document-b { background-position: -48px -96px; }
+body /deep/ .ui-icon-note { background-position: -64px -96px; }
+body /deep/ .ui-icon-mail-closed { background-position: -80px -96px; }
+body /deep/ .ui-icon-mail-open { background-position: -96px -96px; }
+body /deep/ .ui-icon-suitcase { background-position: -112px -96px; }
+body /deep/ .ui-icon-comment { background-position: -128px -96px; }
+body /deep/ .ui-icon-person { background-position: -144px -96px; }
+body /deep/ .ui-icon-print { background-position: -160px -96px; }
+body /deep/ .ui-icon-trash { background-position: -176px -96px; }
+body /deep/ .ui-icon-locked { background-position: -192px -96px; }
+body /deep/ .ui-icon-unlocked { background-position: -208px -96px; }
+body /deep/ .ui-icon-bookmark { background-position: -224px -96px; }
+body /deep/ .ui-icon-tag { background-position: -240px -96px; }
+body /deep/ .ui-icon-home { background-position: 0 -112px; }
+body /deep/ .ui-icon-flag { background-position: -16px -112px; }
+body /deep/ .ui-icon-calendar { background-position: -32px -112px; }
+body /deep/ .ui-icon-cart { background-position: -48px -112px; }
+body /deep/ .ui-icon-pencil { background-position: -64px -112px; }
+body /deep/ .ui-icon-clock { background-position: -80px -112px; }
+body /deep/ .ui-icon-disk { background-position: -96px -112px; }
+body /deep/ .ui-icon-calculator { background-position: -112px -112px; }
+body /deep/ .ui-icon-zoomin { background-position: -128px -112px; }
+body /deep/ .ui-icon-zoomout { background-position: -144px -112px; }
+body /deep/ .ui-icon-search { background-position: -160px -112px; }
+body /deep/ .ui-icon-wrench { background-position: -176px -112px; }
+body /deep/ .ui-icon-gear { background-position: -192px -112px; }
+body /deep/ .ui-icon-heart { background-position: -208px -112px; }
+body /deep/ .ui-icon-star { background-position: -224px -112px; }
+body /deep/ .ui-icon-link { background-position: -240px -112px; }
+body /deep/ .ui-icon-cancel { background-position: 0 -128px; }
+body /deep/ .ui-icon-plus { background-position: -16px -128px; }
+body /deep/ .ui-icon-plusthick { background-position: -32px -128px; }
+body /deep/ .ui-icon-minus { background-position: -48px -128px; }
+body /deep/ .ui-icon-minusthick { background-position: -64px -128px; }
+body /deep/ .ui-icon-close { background-position: -80px -128px; }
+body /deep/ .ui-icon-closethick { background-position: -96px -128px; }
+body /deep/ .ui-icon-key { background-position: -112px -128px; }
+body /deep/ .ui-icon-lightbulb { background-position: -128px -128px; }
+body /deep/ .ui-icon-scissors { background-position: -144px -128px; }
+body /deep/ .ui-icon-clipboard { background-position: -160px -128px; }
+body /deep/ .ui-icon-copy { background-position: -176px -128px; }
+body /deep/ .ui-icon-contact { background-position: -192px -128px; }
+body /deep/ .ui-icon-image { background-position: -208px -128px; }
+body /deep/ .ui-icon-video { background-position: -224px -128px; }
+body /deep/ .ui-icon-script { background-position: -240px -128px; }
+body /deep/ .ui-icon-alert { background-position: 0 -144px; }
+body /deep/ .ui-icon-info { background-position: -16px -144px; }
+body /deep/ .ui-icon-notice { background-position: -32px -144px; }
+body /deep/ .ui-icon-help { background-position: -48px -144px; }
+body /deep/ .ui-icon-check { background-position: -64px -144px; }
+body /deep/ .ui-icon-bullet { background-position: -80px -144px; }
+body /deep/ .ui-icon-radio-off { background-position: -96px -144px; }
+body /deep/ .ui-icon-radio-on { background-position: -112px -144px; }
+body /deep/ .ui-icon-pin-w { background-position: -128px -144px; }
+body /deep/ .ui-icon-pin-s { background-position: -144px -144px; }
+body /deep/ .ui-icon-play { background-position: 0 -160px; }
+body /deep/ .ui-icon-pause { background-position: -16px -160px; }
+body /deep/ .ui-icon-seek-next { background-position: -32px -160px; }
+body /deep/ .ui-icon-seek-prev { background-position: -48px -160px; }
+body /deep/ .ui-icon-seek-end { background-position: -64px -160px; }
+body /deep/ .ui-icon-seek-start { background-position: -80px -160px; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+body /deep/ .ui-icon-seek-first { background-position: -80px -160px; }
+body /deep/ .ui-icon-stop { background-position: -96px -160px; }
+body /deep/ .ui-icon-eject { background-position: -112px -160px; }
+body /deep/ .ui-icon-volume-off { background-position: -128px -160px; }
+body /deep/ .ui-icon-volume-on { background-position: -144px -160px; }
+body /deep/ .ui-icon-power { background-position: 0 -176px; }
+body /deep/ .ui-icon-signal-diag { background-position: -16px -176px; }
+body /deep/ .ui-icon-signal { background-position: -32px -176px; }
+body /deep/ .ui-icon-battery-0 { background-position: -48px -176px; }
+body /deep/ .ui-icon-battery-1 { background-position: -64px -176px; }
+body /deep/ .ui-icon-battery-2 { background-position: -80px -176px; }
+body /deep/ .ui-icon-battery-3 { background-position: -96px -176px; }
+body /deep/ .ui-icon-circle-plus { background-position: 0 -192px; }
+body /deep/ .ui-icon-circle-minus { background-position: -16px -192px; }
+body /deep/ .ui-icon-circle-close { background-position: -32px -192px; }
+body /deep/ .ui-icon-circle-triangle-e { background-position: -48px -192px; }
+body /deep/ .ui-icon-circle-triangle-s { background-position: -64px -192px; }
+body /deep/ .ui-icon-circle-triangle-w { background-position: -80px -192px; }
+body /deep/ .ui-icon-circle-triangle-n { background-position: -96px -192px; }
+body /deep/ .ui-icon-circle-arrow-e { background-position: -112px -192px; }
+body /deep/ .ui-icon-circle-arrow-s { background-position: -128px -192px; }
+body /deep/ .ui-icon-circle-arrow-w { background-position: -144px -192px; }
+body /deep/ .ui-icon-circle-arrow-n { background-position: -160px -192px; }
+body /deep/ .ui-icon-circle-zoomin { background-position: -176px -192px; }
+body /deep/ .ui-icon-circle-zoomout { background-position: -192px -192px; }
+body /deep/ .ui-icon-circle-check { background-position: -208px -192px; }
+body /deep/ .ui-icon-circlesmall-plus { background-position: 0 -208px; }
+body /deep/ .ui-icon-circlesmall-minus { background-position: -16px -208px; }
+body /deep/ .ui-icon-circlesmall-close { background-position: -32px -208px; }
+body /deep/ .ui-icon-squaresmall-plus { background-position: -48px -208px; }
+body /deep/ .ui-icon-squaresmall-minus { background-position: -64px -208px; }
+body /deep/ .ui-icon-squaresmall-close { background-position: -80px -208px; }
+body /deep/ .ui-icon-grip-dotted-vertical { background-position: 0 -224px; }
+body /deep/ .ui-icon-grip-dotted-horizontal { background-position: -16px -224px; }
+body /deep/ .ui-icon-grip-solid-vertical { background-position: -32px -224px; }
+body /deep/ .ui-icon-grip-solid-horizontal { background-position: -48px -224px; }
+body /deep/ .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+body /deep/ .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-top, body /deep/ .ui-corner-left, body /deep/ .ui-corner-tl { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -khtml-border-top-left-radius: 4px; border-top-left-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-top, body /deep/ .ui-corner-right, body /deep/ .ui-corner-tr { -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -khtml-border-top-right-radius: 4px; border-top-right-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-bottom, body /deep/ .ui-corner-left, body /deep/ .ui-corner-bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-bottom, body /deep/ .ui-corner-right, body /deep/ .ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
+
+/* Overlays */
+body /deep/ .ui-widget-overlay { background: #aaaaaa url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
+body /deep/ .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*
+ * jQuery UI Resizable 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Resizable#theming
+ */
+body /deep/ .ui-resizable { position: relative;}
+body /deep/ .ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
+body /deep/ .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+body /deep/ .ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+body /deep/ .ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+body /deep/ .ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+body /deep/ .ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+body /deep/ .ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
+body /deep/ .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+body /deep/ .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+body /deep/ .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/*
+ * jQuery UI Selectable 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Selectable#theming
+ */
+body /deep/ .ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }
+/*
+ * jQuery UI Slider 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Slider#theming
+ */
+body /deep/ .ui-slider { position: relative; text-align: left; }
+body /deep/ .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
+body /deep/ .ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; background-position: 0 0; }
+
+body /deep/ .ui-slider-horizontal { height: .8em; }
+body /deep/ .ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }
+body /deep/ .ui-slider-horizontal .ui-slider-range { top: 0; height: 100%; }
+body /deep/ .ui-slider-horizontal .ui-slider-range-min { left: 0; }
+body /deep/ .ui-slider-horizontal .ui-slider-range-max { right: 0; }
+
+body /deep/ .ui-slider-vertical { width: .8em; height: 100px; }
+body /deep/ .ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }
+body /deep/ .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }
+body /deep/ .ui-slider-vertical .ui-slider-range-min { bottom: 0; }
+body /deep/ .ui-slider-vertical .ui-slider-range-max { top: 0; }/*
+ * jQuery UI Datepicker 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Datepicker#theming
+ */
+body /deep/ .ui-datepicker { width: 17em; padding: .2em .2em 0; display: none; }
+body /deep/ .ui-datepicker .ui-datepicker-header { position:relative; padding:.2em 0; }
+body /deep/ .ui-datepicker .ui-datepicker-prev, body /deep/ .ui-datepicker .ui-datepicker-next { position:absolute; top: 2px; width: 1.8em; height: 1.8em; }
+body /deep/ .ui-datepicker .ui-datepicker-prev-hover, body /deep/ .ui-datepicker .ui-datepicker-next-hover { top: 1px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev { left:2px; }
+body /deep/ .ui-datepicker .ui-datepicker-next { right:2px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev-hover { left:1px; }
+body /deep/ .ui-datepicker .ui-datepicker-next-hover { right:1px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev span, body /deep/ .ui-datepicker .ui-datepicker-next span { display: block; position: absolute; left: 50%; margin-left: -8px; top: 50%; margin-top: -8px;  }
+body /deep/ .ui-datepicker .ui-datepicker-title { margin: 0 2.3em; line-height: 1.8em; text-align: center; }
+body /deep/ .ui-datepicker .ui-datepicker-title select { font-size:1em; margin:1px 0; }
+body /deep/ .ui-datepicker select.ui-datepicker-month-year {width: 100%;}
+body /deep/ .ui-datepicker select.ui-datepicker-month,
+body /deep/ .ui-datepicker select.ui-datepicker-year { width: 49%;}
+body /deep/ .ui-datepicker table {width: 100%; font-size: .9em; border-collapse: collapse; margin:0 0 .4em; }
+body /deep/ .ui-datepicker th { padding: .7em .3em; text-align: center; font-weight: bold; border: 0;  }
+body /deep/ .ui-datepicker td { border: 0; padding: 1px; }
+body /deep/ .ui-datepicker td span, body /deep/ .ui-datepicker td a { display: block; padding: .2em; text-align: right; text-decoration: none; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane { background-image: none; margin: .7em 0 0 0; padding:0 .2em; border-left: 0; border-right: 0; border-bottom: 0; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane button { float: right; margin: .5em .2em .4em; cursor: pointer; padding: .2em .6em .3em .6em; width:auto; overflow:visible; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current { float:left; }
+
+/* with multiple calendars */
+body /deep/ .ui-datepicker.ui-datepicker-multi { width:auto; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group { float:left; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group table { width:95%; margin:0 auto .4em; }
+body /deep/ .ui-datepicker-multi-2 .ui-datepicker-group { width:50%; }
+body /deep/ .ui-datepicker-multi-3 .ui-datepicker-group { width:33.3%; }
+body /deep/ .ui-datepicker-multi-4 .ui-datepicker-group { width:25%; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header { border-left-width:0; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header { border-left-width:0; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-buttonpane { clear:left; }
+body /deep/ .ui-datepicker-row-break { clear:both; width:100%; font-size:0em; }
+
+/* RTL support */
+body /deep/ .ui-datepicker-rtl { direction: rtl; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-prev { right: 2px; left: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-next { left: 2px; right: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-prev:hover { right: 1px; left: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-next:hover { left: 1px; right: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane { clear:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane button { float: left; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current { float:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group { float:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+
+/* IE6 IFRAME FIX (taken from datepicker 1.5.3 */
+body /deep/ .ui-datepicker-cover {
+    display: none; /*sorry for IE5*/
+    display/**/: block; /*sorry for IE5*/
+    position: absolute; /*must have*/
+    z-index: -1; /*must have*/
+    filter: mask(); /*must have*/
+    top: -4px; /*must have*/
+    left: -4px; /*must have*/
+    width: 200px; /*must have*/
+    height: 200px; /*must have*/
+}</style>
+    <style>/* from jquery-ui-1.8.16.custom.css */
+
+.ui-state-default {
+  border: 1px solid #d3d3d3;
+  border-bottom: 0px; /* to fix higher selectibility of this outer style */
+  background: #e6e6e6 url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x;
+  font-weight: normal;
+  color: #555555;
+
+/* from example.css */
+  font-family: arial;
+  font-size: 8pt;
+}
+
+/*
+IMPORTANT:
+In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.
+No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS
+classes should alter those!
+*/
+
+.slide-down, * /deep/ .slide-down,
+.slide-up, * /deep/ .slide-up {
+  transition: height 250ms ease-out;
+  -webkit-transition: height 250ms ease-out;
+  -moz-transition: height 250ms ease-out;
+  -o-transition: height 250ms ease-out;
+}
+
+.bwu-datagrid-header.ui-state-default/*, .bwu-datagrid-headerrow.ui-state-default*/ {
+  width: 100%;
+  overflow: hidden;
+  border-left: 0px;
+}
+
+.bwu-datagrid-header-columns, .bwu-datagrid-headerrow-columns {
+  position: relative;
+  white-space: nowrap;
+  cursor: default;
+  overflow: hidden;
+}
+
+.bwu-datagrid-sort-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 5px;
+  margin-left: 4px;
+  margin-top: 6px;
+  float: left;
+}
+
+.bwu-datagrid-sort-indicator-desc {
+  background: url(packages/bwu_datagrid/asset/images/sort-desc.gif);
+}
+
+.bwu-datagrid-sort-indicator-asc {
+  background: url(packages/bwu_datagrid/asset/images/sort-asc.gif);
+}
+
+.bwu-datagrid-resizable-handle {
+  position: absolute;
+  font-size: 0.1px;
+  display: block;
+  cursor: col-resize;
+  width: 4px;
+  right: 0px;
+  top: 0;
+  height: 100%;
+}
+
+.bwu-datagrid-sortable-placeholder {
+  background: silver;
+}
+
+.grid-canvas {
+  position: relative;
+  outline: 0;
+}
+
+.bwu-datagrid-row.ui-widget-content, .bwu-datagrid-row.ui-state-active {
+  position: absolute;
+  border: 0px;
+  width: 100%;
+}
+
+.bwu-datagrid-cell, .bwu-datagrid-headerrow-column {
+  position: absolute;
+  border: 1px solid transparent;
+  border-right: 1px dotted silver;
+  border-bottom-color: silver;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  z-index: 1;
+  padding: 1px 2px 2px 1px;
+  margin: 0;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.bwu-datagrid-group {
+}
+
+.bwu-datagrid-group-toggle {
+  display: inline-block;
+}
+
+.bwu-datagrid-cell.highlighted {
+  background: lightskyblue;
+  background: rgba(0, 0, 255, 0.2);
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.bwu-datagrid-cell.flashing {
+  border: 1px solid red !important;
+}
+
+.bwu-datagrid-cell.editable {
+  z-index: 11;
+  overflow: visible;
+  background: white;
+  border-color: black;
+  border-style: solid;
+}
+
+.bwu-datagrid-cell:focus {
+  outline: none;
+}
+
+.bwu-datagrid-reorder-proxy {
+  display: inline-block;
+  background: blue;
+  opacity: 0.15;
+  filter: alpha(opacity = 15);
+  cursor: move;
+}
+
+.bwu-datagrid-reorder-guide {
+  display: inline-block;
+  height: 2px;
+  background: blue;
+  opacity: 0.7;
+  filter: alpha(opacity = 70);
+}
+
+.bwu-datagrid-selection {
+  z-index: 10;
+  position: absolute;
+  border: 2px dashed black;
+}
+</style>
+    <style>/*
+IMPORTANT:
+In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.
+No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS
+classes should alter those!
+*/
+
+
+
+.bwu-datagrid-row.ui-state-active {
+  background: #F5F7D7;
+}
+
+.bwu-datagrid-row {
+  position: absolute;
+  background: white;
+  border: 0px;
+  line-height: 20px;
+}
+
+.bwu-datagrid-row.selected {
+  z-index: 10;
+  background: #DFE8F6;
+}
+
+.bwu-datagrid-cell {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.bwu-datagrid-group {
+  border-bottom: 2px solid silver;
+}
+
+.bwu-datagrid-group-toggle {
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+}
+
+.bwu-datagrid-group-toggle.expanded {
+  background: url(packages/bwu_datagrid/asset/images/collapse.gif) no-repeat center center;
+}
+
+.bwu-datagrid-group-toggle.collapsed {
+  background: url(packages/bwu_datagrid/asset/images/expand.gif) no-repeat center center;
+}
+
+.bwu-datagrid-group-totals {
+  color: gray;
+  background: white;
+}
+
+.bwu-datagrid-cell.selected {
+  background-color: beige;
+}
+
+.bwu-datagrid-cell.active {
+  border-color: gray;
+  border-style: solid;
+}
+
+.bwu-datagrid-sortable-placeholder {
+  background: silver !important;
+}
+
+.bwu-datagrid-row.odd {
+  background: #fafafa;
+}
+
+.bwu-datagrid-row.ui-state-active {
+  background: #F5F7D7;
+}
+
+.bwu-datagrid-row.loading {
+  opacity: 0.5;
+  filter: alpha(opacity = 50);
+}
+
+.bwu-datagrid-cell.invalid {
+  border-color: red;
+  -moz-animation-duration: 0.2s;
+  -webkit-animation-duration: 0.2s;
+  -moz-animation-name: bwu-datagrid-invalid-hilite;
+  -webkit-animation-name: bwu-datagrid-invalid-hilite;
+}
+
+@-moz-keyframes bwu-datagrid-invalid-hilite {
+  from { box-shadow: 0 0 6px red; }
+  to { box-shadow: none; }
+}
+
+@-webkit-keyframes bwu-datagrid-invalid-hilite {
+  from { box-shadow: 0 0 6px red; }
+  to { box-shadow: none; }
+}</style>
+    <style>
+      :host {
+        background-color: blue;
+        display: block;
+        overflow: hidden;
+        outline: 0;
+      }
+    </style>
+
+    <content select="[grid-target=&quot;popup&quot;]"></content>
+
+    <div id="focusSink" tabindex="0" hidefocus="true"></div>
+    <div id="headerScroller" class="bwu-datagrid-header ui-state-default">
+      <bwu-datagrid-headers id="bwuDatagridHeaders" class="bwu-datagrid-header-columns">
+      </bwu-datagrid-headers>
+    </div>
+    <div id="headerRowScroller" class="bwu-datagrid-headerrow ui-state-default">
+      <div id="headerRow" class="bwu-datagrid-headerrow-columns">
+      </div>
+      <div id="spacer"></div>
+    </div>
+    <div id="topPanelScroller" class="bwu-datagrid-top-panel-scroller ui-state-default">
+      <div id="topPanel" class="bwu-datagrid-top-panel">
+        <content select="[grid-target=&quot;toppanel&quot;]"></content>
+      </div>
+    </div>
+    <div id="viewport" class="bwu-datagrid-viewport">
+      <div id="canvas" class="grid-canvas"></div>
+    </div>
+
+    <content></content>
+  </template>
+  
+</polymer-element><polymer-element name="app-element">
+  <template>
+    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
+    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
+    <style>/*
+ * jQuery UI CSS Framework 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming/API
+ */
+
+/* Layout helpers
+----------------------------------*/
+body /deep/ .ui-helper-hidden { display: none; }
+body /deep/ .ui-helper-hidden-accessible { position: absolute !important; clip: rect(1px 1px 1px 1px); clip: rect(1px,1px,1px,1px); }
+body /deep/ .ui-helper-reset { margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none; }
+body /deep/ .ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+body /deep/ .ui-helper-clearfix { display: inline-block; }
+/* required comment for clearfix to work in Opera \*/
+* html .ui-helper-clearfix { height:1%; }
+body /deep/ .ui-helper-clearfix { display:block; }
+/* end clearfix */
+body /deep/ .ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }
+
+
+/* Interaction Cues
+----------------------------------*/
+body /deep/ .ui-state-disabled { cursor: default !important; }
+
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+body /deep/ .ui-icon { display: block; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+body /deep/ .ui-widget-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+
+/*
+ * jQuery UI CSS Framework 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming/API
+ *
+ * To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Verdana,Arial,sans-serif&fwDefault=normal&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=cccccc&bgTextureHeader=03_highlight_soft.png&bgImgOpacityHeader=75&borderColorHeader=aaaaaa&fcHeader=222222&iconColorHeader=222222&bgColorContent=ffffff&bgTextureContent=01_flat.png&bgImgOpacityContent=75&borderColorContent=aaaaaa&fcContent=222222&iconColorContent=222222&bgColorDefault=e6e6e6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=75&borderColorDefault=d3d3d3&fcDefault=555555&iconColorDefault=888888&bgColorHover=dadada&bgTextureHover=02_glass.png&bgImgOpacityHover=75&borderColorHover=999999&fcHover=212121&iconColorHover=454545&bgColorActive=ffffff&bgTextureActive=02_glass.png&bgImgOpacityActive=65&borderColorActive=aaaaaa&fcActive=212121&iconColorActive=454545&bgColorHighlight=fbf9ee&bgTextureHighlight=02_glass.png&bgImgOpacityHighlight=55&borderColorHighlight=fcefa1&fcHighlight=363636&iconColorHighlight=2e83ff&bgColorError=fef1ec&bgTextureError=02_glass.png&bgImgOpacityError=95&borderColorError=cd0a0a&fcError=cd0a0a&iconColorError=cd0a0a&bgColorOverlay=aaaaaa&bgTextureOverlay=01_flat.png&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=aaaaaa&bgTextureShadow=01_flat.png&bgImgOpacityShadow=0&opacityShadow=30&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px
+ */
+
+
+/* Component containers
+----------------------------------*/
+body /deep/ .ui-widget, :host { font-family: Verdana,Arial,sans-serif; font-size: 1.1em; }
+body /deep/ .ui-widget { font-size: 1em; }
+body /deep/ .ui-widget input, input, body /deep/ .ui-widget, select, body /deep/ .ui-widget textarea, textarea, body /deep/ .ui-widget button, button { font-family: Verdana,Arial,sans-serif; font-size: 1em; }
+body /deep/ .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #222222; }
+body /deep/ .ui-widget-content a { color: #222222; }
+body /deep/ .ui-widget-header { border: 1px solid #aaaaaa; background: #cccccc url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x; color: #222222; font-weight: bold; }
+body /deep/ .ui-widget-header a { color: #222222; }
+
+/* Interaction states
+----------------------------------*/
+body /deep/ .ui-state-default, body /deep/ .ui-widget-content .ui-state-default, body /deep/ .ui-widget-header .ui-state-default { border: 1px solid #d3d3d3; background: #e6e6e6 url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #555555; }
+body /deep/ .ui-state-default a, body /deep/ .ui-state-default a:link, body /deep/ .ui-state-default a:visited { color: #555555; text-decoration: none; }
+body /deep/ .ui-state-hover, body /deep/ .ui-widget-content .ui-state-hover, body /deep/ .ui-widget-header .ui-state-hover, body /deep/ .ui-state-focus, body /deep/ .ui-widget-content .ui-state-focus, body /deep/ .ui-widget-header .ui-state-focus { border: 1px solid #999999; background: #dadada url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_dadada_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
+body /deep/ .ui-state-hover a, body /deep/ .ui-state-hover a:hover { color: #212121; text-decoration: none; }
+body /deep/ .ui-state-active, body /deep/ .ui-widget-content body /deep/ .ui-state-active, body /deep/ .ui-widget-header body /deep/ .ui-state-active { border: 1px solid #aaaaaa; background: #ffffff url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
+body /deep/ .ui-state-active a, body /deep/ .ui-state-active a:link, body /deep/ .ui-state-active a:visited { color: #212121; text-decoration: none; }
+body /deep/ .ui-widget, :active { outline: none; }
+
+/* Interaction Cues
+----------------------------------*/
+body /deep/ .ui-state-highlight, body /deep/ .ui-widget-content body /deep/ .ui-state-highlight, body /deep/ .ui-widget-header body /deep/ .ui-state-highlight  {border: 1px solid #fcefa1; background: #fbf9ee url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x; color: #363636; }
+body /deep/ .ui-state-highlight a, body /deep/ .ui-widget-content .ui-state-highlight a, body /deep/ .ui-widget-header .ui-state-highlight a { color: #363636; }
+body /deep/ .ui-state-error, body /deep/ .ui-widget-content body /deep/ .ui-state-error, body /deep/ .ui-widget-header .ui-state-error {border: 1px solid #cd0a0a; background: #fef1ec url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x; color: #cd0a0a; }
+body /deep/ .ui-state-error a, body /deep/ .ui-widget-content .ui-state-error a, body /deep/ .ui-widget-header .ui-state-error a { color: #cd0a0a; }
+body /deep/ .ui-state-error-text, body /deep/ .ui-widget-content .ui-state-error-text, body /deep/ .ui-widget-header .ui-state-error-text { color: #cd0a0a; }
+body /deep/ .ui-priority-primary, body /deep/ .ui-widget-content .ui-priority-primary, body /deep/ .ui-widget-header .ui-priority-primary { font-weight: bold; }
+body /deep/ .ui-priority-secondary, body /deep/ .ui-widget-content .ui-priority-secondary, body /deep/ .ui-widget-header .ui-priority-secondary { opacity: .7; filter:Alpha(Opacity=70); font-weight: normal; }
+body /deep/ .ui-state-disabled, body /deep/ .ui-widget-content .ui-state-disabled, body /deep/ .ui-widget-header .ui-state-disabled { opacity: .35; filter:Alpha(Opacity=35); background-image: none; }
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+body /deep/ .ui-icon { width: 16px; height: 16px; background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-widget-content .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-widget-header .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-state-default .ui-icon { background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_888888_256x240.png); }
+body /deep/ .ui-state-hover .ui-icon, body /deep/ .ui-state-focus .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_454545_256x240.png); }
+body /deep/ .ui-state-active .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_454545_256x240.png); }
+body /deep/ .ui-state-highlight .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_2e83ff_256x240.png); }
+body /deep/ .ui-state-error .ui-icon, body /deep/ .ui-state-error-text .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_cd0a0a_256x240.png); }
+
+/* positioning */
+body /deep/ .ui-icon-carat-1-n { background-position: 0 0; }
+body /deep/ .ui-icon-carat-1-ne { background-position: -16px 0; }
+body /deep/ .ui-icon-carat-1-e { background-position: -32px 0; }
+body /deep/ .ui-icon-carat-1-se { background-position: -48px 0; }
+body /deep/ .ui-icon-carat-1-s { background-position: -64px 0; }
+body /deep/ .ui-icon-carat-1-sw { background-position: -80px 0; }
+body /deep/ .ui-icon-carat-1-w { background-position: -96px 0; }
+body /deep/ .ui-icon-carat-1-nw { background-position: -112px 0; }
+body /deep/ .ui-icon-carat-2-n-s { background-position: -128px 0; }
+body /deep/ .ui-icon-carat-2-e-w { background-position: -144px 0; }
+body /deep/ .ui-icon-triangle-1-n { background-position: 0 -16px; }
+body /deep/ .ui-icon-triangle-1-ne { background-position: -16px -16px; }
+body /deep/ .ui-icon-triangle-1-e { background-position: -32px -16px; }
+body /deep/ .ui-icon-triangle-1-se { background-position: -48px -16px; }
+body /deep/ .ui-icon-triangle-1-s { background-position: -64px -16px; }
+body /deep/ .ui-icon-triangle-1-sw { background-position: -80px -16px; }
+body /deep/ .ui-icon-triangle-1-w { background-position: -96px -16px; }
+body /deep/ .ui-icon-triangle-1-nw { background-position: -112px -16px; }
+body /deep/ .ui-icon-triangle-2-n-s { background-position: -128px -16px; }
+body /deep/ .ui-icon-triangle-2-e-w { background-position: -144px -16px; }
+body /deep/ .ui-icon-arrow-1-n { background-position: 0 -32px; }
+body /deep/ .ui-icon-arrow-1-ne { background-position: -16px -32px; }
+body /deep/ .ui-icon-arrow-1-e { background-position: -32px -32px; }
+body /deep/ .ui-icon-arrow-1-se { background-position: -48px -32px; }
+body /deep/ .ui-icon-arrow-1-s { background-position: -64px -32px; }
+body /deep/ .ui-icon-arrow-1-sw { background-position: -80px -32px; }
+body /deep/ .ui-icon-arrow-1-w { background-position: -96px -32px; }
+body /deep/ .ui-icon-arrow-1-nw { background-position: -112px -32px; }
+body /deep/ .ui-icon-arrow-2-n-s { background-position: -128px -32px; }
+body /deep/ .ui-icon-arrow-2-ne-sw { background-position: -144px -32px; }
+body /deep/ .ui-icon-arrow-2-e-w { background-position: -160px -32px; }
+body /deep/ .ui-icon-arrow-2-se-nw { background-position: -176px -32px; }
+body /deep/ .ui-icon-arrowstop-1-n { background-position: -192px -32px; }
+body /deep/ .ui-icon-arrowstop-1-e { background-position: -208px -32px; }
+body /deep/ .ui-icon-arrowstop-1-s { background-position: -224px -32px; }
+body /deep/ .ui-icon-arrowstop-1-w { background-position: -240px -32px; }
+body /deep/ .ui-icon-arrowthick-1-n { background-position: 0 -48px; }
+body /deep/ .ui-icon-arrowthick-1-ne { background-position: -16px -48px; }
+body /deep/ .ui-icon-arrowthick-1-e { background-position: -32px -48px; }
+body /deep/ .ui-icon-arrowthick-1-se { background-position: -48px -48px; }
+body /deep/ .ui-icon-arrowthick-1-s { background-position: -64px -48px; }
+body /deep/ .ui-icon-arrowthick-1-sw { background-position: -80px -48px; }
+body /deep/ .ui-icon-arrowthick-1-w { background-position: -96px -48px; }
+body /deep/ .ui-icon-arrowthick-1-nw { background-position: -112px -48px; }
+body /deep/ .ui-icon-arrowthick-2-n-s { background-position: -128px -48px; }
+body /deep/ .ui-icon-arrowthick-2-ne-sw { background-position: -144px -48px; }
+body /deep/ .ui-icon-arrowthick-2-e-w { background-position: -160px -48px; }
+body /deep/ .ui-icon-arrowthick-2-se-nw { background-position: -176px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-n { background-position: -192px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-e { background-position: -208px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-s { background-position: -224px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-w { background-position: -240px -48px; }
+body /deep/ .ui-icon-arrowreturnthick-1-w { background-position: 0 -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-n { background-position: -16px -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-e { background-position: -32px -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-s { background-position: -48px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-w { background-position: -64px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-n { background-position: -80px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-e { background-position: -96px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-s { background-position: -112px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-w { background-position: -128px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-n { background-position: -144px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-e { background-position: -160px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-s { background-position: -176px -64px; }
+body /deep/ .ui-icon-arrow-4 { background-position: 0 -80px; }
+body /deep/ .ui-icon-arrow-4-diag { background-position: -16px -80px; }
+body /deep/ .ui-icon-extlink { background-position: -32px -80px; }
+body /deep/ .ui-icon-newwin { background-position: -48px -80px; }
+body /deep/ .ui-icon-refresh { background-position: -64px -80px; }
+body /deep/ .ui-icon-shuffle { background-position: -80px -80px; }
+body /deep/ .ui-icon-transfer-e-w { background-position: -96px -80px; }
+body /deep/ .ui-icon-transferthick-e-w { background-position: -112px -80px; }
+body /deep/ .ui-icon-folder-collapsed { background-position: 0 -96px; }
+body /deep/ .ui-icon-folder-open { background-position: -16px -96px; }
+body /deep/ .ui-icon-document { background-position: -32px -96px; }
+body /deep/ .ui-icon-document-b { background-position: -48px -96px; }
+body /deep/ .ui-icon-note { background-position: -64px -96px; }
+body /deep/ .ui-icon-mail-closed { background-position: -80px -96px; }
+body /deep/ .ui-icon-mail-open { background-position: -96px -96px; }
+body /deep/ .ui-icon-suitcase { background-position: -112px -96px; }
+body /deep/ .ui-icon-comment { background-position: -128px -96px; }
+body /deep/ .ui-icon-person { background-position: -144px -96px; }
+body /deep/ .ui-icon-print { background-position: -160px -96px; }
+body /deep/ .ui-icon-trash { background-position: -176px -96px; }
+body /deep/ .ui-icon-locked { background-position: -192px -96px; }
+body /deep/ .ui-icon-unlocked { background-position: -208px -96px; }
+body /deep/ .ui-icon-bookmark { background-position: -224px -96px; }
+body /deep/ .ui-icon-tag { background-position: -240px -96px; }
+body /deep/ .ui-icon-home { background-position: 0 -112px; }
+body /deep/ .ui-icon-flag { background-position: -16px -112px; }
+body /deep/ .ui-icon-calendar { background-position: -32px -112px; }
+body /deep/ .ui-icon-cart { background-position: -48px -112px; }
+body /deep/ .ui-icon-pencil { background-position: -64px -112px; }
+body /deep/ .ui-icon-clock { background-position: -80px -112px; }
+body /deep/ .ui-icon-disk { background-position: -96px -112px; }
+body /deep/ .ui-icon-calculator { background-position: -112px -112px; }
+body /deep/ .ui-icon-zoomin { background-position: -128px -112px; }
+body /deep/ .ui-icon-zoomout { background-position: -144px -112px; }
+body /deep/ .ui-icon-search { background-position: -160px -112px; }
+body /deep/ .ui-icon-wrench { background-position: -176px -112px; }
+body /deep/ .ui-icon-gear { background-position: -192px -112px; }
+body /deep/ .ui-icon-heart { background-position: -208px -112px; }
+body /deep/ .ui-icon-star { background-position: -224px -112px; }
+body /deep/ .ui-icon-link { background-position: -240px -112px; }
+body /deep/ .ui-icon-cancel { background-position: 0 -128px; }
+body /deep/ .ui-icon-plus { background-position: -16px -128px; }
+body /deep/ .ui-icon-plusthick { background-position: -32px -128px; }
+body /deep/ .ui-icon-minus { background-position: -48px -128px; }
+body /deep/ .ui-icon-minusthick { background-position: -64px -128px; }
+body /deep/ .ui-icon-close { background-position: -80px -128px; }
+body /deep/ .ui-icon-closethick { background-position: -96px -128px; }
+body /deep/ .ui-icon-key { background-position: -112px -128px; }
+body /deep/ .ui-icon-lightbulb { background-position: -128px -128px; }
+body /deep/ .ui-icon-scissors { background-position: -144px -128px; }
+body /deep/ .ui-icon-clipboard { background-position: -160px -128px; }
+body /deep/ .ui-icon-copy { background-position: -176px -128px; }
+body /deep/ .ui-icon-contact { background-position: -192px -128px; }
+body /deep/ .ui-icon-image { background-position: -208px -128px; }
+body /deep/ .ui-icon-video { background-position: -224px -128px; }
+body /deep/ .ui-icon-script { background-position: -240px -128px; }
+body /deep/ .ui-icon-alert { background-position: 0 -144px; }
+body /deep/ .ui-icon-info { background-position: -16px -144px; }
+body /deep/ .ui-icon-notice { background-position: -32px -144px; }
+body /deep/ .ui-icon-help { background-position: -48px -144px; }
+body /deep/ .ui-icon-check { background-position: -64px -144px; }
+body /deep/ .ui-icon-bullet { background-position: -80px -144px; }
+body /deep/ .ui-icon-radio-off { background-position: -96px -144px; }
+body /deep/ .ui-icon-radio-on { background-position: -112px -144px; }
+body /deep/ .ui-icon-pin-w { background-position: -128px -144px; }
+body /deep/ .ui-icon-pin-s { background-position: -144px -144px; }
+body /deep/ .ui-icon-play { background-position: 0 -160px; }
+body /deep/ .ui-icon-pause { background-position: -16px -160px; }
+body /deep/ .ui-icon-seek-next { background-position: -32px -160px; }
+body /deep/ .ui-icon-seek-prev { background-position: -48px -160px; }
+body /deep/ .ui-icon-seek-end { background-position: -64px -160px; }
+body /deep/ .ui-icon-seek-start { background-position: -80px -160px; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+body /deep/ .ui-icon-seek-first { background-position: -80px -160px; }
+body /deep/ .ui-icon-stop { background-position: -96px -160px; }
+body /deep/ .ui-icon-eject { background-position: -112px -160px; }
+body /deep/ .ui-icon-volume-off { background-position: -128px -160px; }
+body /deep/ .ui-icon-volume-on { background-position: -144px -160px; }
+body /deep/ .ui-icon-power { background-position: 0 -176px; }
+body /deep/ .ui-icon-signal-diag { background-position: -16px -176px; }
+body /deep/ .ui-icon-signal { background-position: -32px -176px; }
+body /deep/ .ui-icon-battery-0 { background-position: -48px -176px; }
+body /deep/ .ui-icon-battery-1 { background-position: -64px -176px; }
+body /deep/ .ui-icon-battery-2 { background-position: -80px -176px; }
+body /deep/ .ui-icon-battery-3 { background-position: -96px -176px; }
+body /deep/ .ui-icon-circle-plus { background-position: 0 -192px; }
+body /deep/ .ui-icon-circle-minus { background-position: -16px -192px; }
+body /deep/ .ui-icon-circle-close { background-position: -32px -192px; }
+body /deep/ .ui-icon-circle-triangle-e { background-position: -48px -192px; }
+body /deep/ .ui-icon-circle-triangle-s { background-position: -64px -192px; }
+body /deep/ .ui-icon-circle-triangle-w { background-position: -80px -192px; }
+body /deep/ .ui-icon-circle-triangle-n { background-position: -96px -192px; }
+body /deep/ .ui-icon-circle-arrow-e { background-position: -112px -192px; }
+body /deep/ .ui-icon-circle-arrow-s { background-position: -128px -192px; }
+body /deep/ .ui-icon-circle-arrow-w { background-position: -144px -192px; }
+body /deep/ .ui-icon-circle-arrow-n { background-position: -160px -192px; }
+body /deep/ .ui-icon-circle-zoomin { background-position: -176px -192px; }
+body /deep/ .ui-icon-circle-zoomout { background-position: -192px -192px; }
+body /deep/ .ui-icon-circle-check { background-position: -208px -192px; }
+body /deep/ .ui-icon-circlesmall-plus { background-position: 0 -208px; }
+body /deep/ .ui-icon-circlesmall-minus { background-position: -16px -208px; }
+body /deep/ .ui-icon-circlesmall-close { background-position: -32px -208px; }
+body /deep/ .ui-icon-squaresmall-plus { background-position: -48px -208px; }
+body /deep/ .ui-icon-squaresmall-minus { background-position: -64px -208px; }
+body /deep/ .ui-icon-squaresmall-close { background-position: -80px -208px; }
+body /deep/ .ui-icon-grip-dotted-vertical { background-position: 0 -224px; }
+body /deep/ .ui-icon-grip-dotted-horizontal { background-position: -16px -224px; }
+body /deep/ .ui-icon-grip-solid-vertical { background-position: -32px -224px; }
+body /deep/ .ui-icon-grip-solid-horizontal { background-position: -48px -224px; }
+body /deep/ .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+body /deep/ .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-top, body /deep/ .ui-corner-left, body /deep/ .ui-corner-tl { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -khtml-border-top-left-radius: 4px; border-top-left-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-top, body /deep/ .ui-corner-right, body /deep/ .ui-corner-tr { -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -khtml-border-top-right-radius: 4px; border-top-right-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-bottom, body /deep/ .ui-corner-left, body /deep/ .ui-corner-bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-bottom, body /deep/ .ui-corner-right, body /deep/ .ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
+
+/* Overlays */
+body /deep/ .ui-widget-overlay { background: #aaaaaa url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
+body /deep/ .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*
+ * jQuery UI Resizable 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Resizable#theming
+ */
+body /deep/ .ui-resizable { position: relative;}
+body /deep/ .ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
+body /deep/ .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+body /deep/ .ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+body /deep/ .ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+body /deep/ .ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+body /deep/ .ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+body /deep/ .ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
+body /deep/ .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+body /deep/ .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+body /deep/ .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/*
+ * jQuery UI Selectable 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Selectable#theming
+ */
+body /deep/ .ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }
+/*
+ * jQuery UI Slider 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Slider#theming
+ */
+body /deep/ .ui-slider { position: relative; text-align: left; }
+body /deep/ .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
+body /deep/ .ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; background-position: 0 0; }
+
+body /deep/ .ui-slider-horizontal { height: .8em; }
+body /deep/ .ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }
+body /deep/ .ui-slider-horizontal .ui-slider-range { top: 0; height: 100%; }
+body /deep/ .ui-slider-horizontal .ui-slider-range-min { left: 0; }
+body /deep/ .ui-slider-horizontal .ui-slider-range-max { right: 0; }
+
+body /deep/ .ui-slider-vertical { width: .8em; height: 100px; }
+body /deep/ .ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }
+body /deep/ .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }
+body /deep/ .ui-slider-vertical .ui-slider-range-min { bottom: 0; }
+body /deep/ .ui-slider-vertical .ui-slider-range-max { top: 0; }/*
+ * jQuery UI Datepicker 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Datepicker#theming
+ */
+body /deep/ .ui-datepicker { width: 17em; padding: .2em .2em 0; display: none; }
+body /deep/ .ui-datepicker .ui-datepicker-header { position:relative; padding:.2em 0; }
+body /deep/ .ui-datepicker .ui-datepicker-prev, body /deep/ .ui-datepicker .ui-datepicker-next { position:absolute; top: 2px; width: 1.8em; height: 1.8em; }
+body /deep/ .ui-datepicker .ui-datepicker-prev-hover, body /deep/ .ui-datepicker .ui-datepicker-next-hover { top: 1px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev { left:2px; }
+body /deep/ .ui-datepicker .ui-datepicker-next { right:2px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev-hover { left:1px; }
+body /deep/ .ui-datepicker .ui-datepicker-next-hover { right:1px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev span, body /deep/ .ui-datepicker .ui-datepicker-next span { display: block; position: absolute; left: 50%; margin-left: -8px; top: 50%; margin-top: -8px;  }
+body /deep/ .ui-datepicker .ui-datepicker-title { margin: 0 2.3em; line-height: 1.8em; text-align: center; }
+body /deep/ .ui-datepicker .ui-datepicker-title select { font-size:1em; margin:1px 0; }
+body /deep/ .ui-datepicker select.ui-datepicker-month-year {width: 100%;}
+body /deep/ .ui-datepicker select.ui-datepicker-month,
+body /deep/ .ui-datepicker select.ui-datepicker-year { width: 49%;}
+body /deep/ .ui-datepicker table {width: 100%; font-size: .9em; border-collapse: collapse; margin:0 0 .4em; }
+body /deep/ .ui-datepicker th { padding: .7em .3em; text-align: center; font-weight: bold; border: 0;  }
+body /deep/ .ui-datepicker td { border: 0; padding: 1px; }
+body /deep/ .ui-datepicker td span, body /deep/ .ui-datepicker td a { display: block; padding: .2em; text-align: right; text-decoration: none; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane { background-image: none; margin: .7em 0 0 0; padding:0 .2em; border-left: 0; border-right: 0; border-bottom: 0; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane button { float: right; margin: .5em .2em .4em; cursor: pointer; padding: .2em .6em .3em .6em; width:auto; overflow:visible; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current { float:left; }
+
+/* with multiple calendars */
+body /deep/ .ui-datepicker.ui-datepicker-multi { width:auto; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group { float:left; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group table { width:95%; margin:0 auto .4em; }
+body /deep/ .ui-datepicker-multi-2 .ui-datepicker-group { width:50%; }
+body /deep/ .ui-datepicker-multi-3 .ui-datepicker-group { width:33.3%; }
+body /deep/ .ui-datepicker-multi-4 .ui-datepicker-group { width:25%; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header { border-left-width:0; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header { border-left-width:0; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-buttonpane { clear:left; }
+body /deep/ .ui-datepicker-row-break { clear:both; width:100%; font-size:0em; }
+
+/* RTL support */
+body /deep/ .ui-datepicker-rtl { direction: rtl; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-prev { right: 2px; left: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-next { left: 2px; right: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-prev:hover { right: 1px; left: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-next:hover { left: 1px; right: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane { clear:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane button { float: left; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current { float:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group { float:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+
+/* IE6 IFRAME FIX (taken from datepicker 1.5.3 */
+body /deep/ .ui-datepicker-cover {
+    display: none; /*sorry for IE5*/
+    display/**/: block; /*sorry for IE5*/
+    position: absolute; /*must have*/
+    z-index: -1; /*must have*/
+    filter: mask(); /*must have*/
+    top: -4px; /*must have*/
+    left: -4px; /*must have*/
+    width: 200px; /*must have*/
+    height: 200px; /*must have*/
+}</style>
+    <style>/*
+* /deep/ bwu-datagrid {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+*/
+/*
+* /deep/ :unresolved,
+* /deep/ [unresolved] {
+  opacity: 0;
+}*/
+
+/* x@ import url(slick-default-theme.css); */
+
+/** increased selectivity to override jQuery styles */
+body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
+  background: url(packages/bwu_datagrid/asset/images/header-columns-bg.gif) repeat-x center bottom;
+}
+
+body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
+  border: 0px;
+  border-right: 1px solid silver;
+}
+
+body /deep/ * {
+  font-family: arial;
+  font-size: 8pt;
+}
+
+body {
+  background: beige;
+  padding: 0;
+  margin: 8px;
+}
+
+h2 {
+  font-size: 10pt;
+  border-bottom: 1px dotted gray;
+}
+
+ul {
+  margin-left: 0;
+  padding: 0;
+  cursor: default;
+}
+
+li {
+  background: url(packages/bwu_datagrid/asset/images/arrow_right_spearmint.png) no-repeat center left;
+  padding: 0 0 0 14px;
+
+  list-style: none;
+  margin: 0;
+}
+
+#myGrid {
+  background: white;
+  outline: 0;
+  border: 1px solid gray;
+}
+
+.grid-header {
+  border: 1px solid gray;
+  border-bottom: 0;
+  border-top: 0;
+  background: url(packages/bwu_datagrid/asset/images/header-bg.gif) repeat-x center top;
+  color: black;
+  height: 24px;
+  line-height: 24px;
+}
+
+.grid-header label {
+  display: inline-block;
+  font-weight: bold;
+  margin: auto auto auto 6px;
+}
+
+.grid-header .ui-icon {
+  margin: 4px 4px auto 6px;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.grid-header .ui-icon.ui-state-hover {
+  background-color: white;
+}
+
+.grid-header #txtSearch {
+  margin: 0 4px 0 4px;
+  padding: 2px 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border: 1px solid silver;
+}
+
+.options-panel {
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border: 1px solid silver;
+  background: #f0f0f0;
+  padding: 4px;
+  margin-bottom: 20px;
+  width: 320px;
+  position: absolute;
+  top: 0px;
+  left: 650px;
+}
+
+/* Individual cell styles */
+bwu-datagrid /deep/ .bwu-datagrid-cell.task-name {
+  font-weight: bold;
+  text-align: right;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-cell.task-percent {
+  text-align: right;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-cell.cell-move-handle {
+  font-weight: bold;
+  text-align: right;
+  border-right: solid gray;
+
+  background: #efefef;
+  cursor: move;
+}
+
+bwu-datagrid /deep/ .cell-move-handle:hover {
+  background: #b6b9bd;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-row.selected .cell-move-handle {
+  background: #D5DC8D;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-row .cell-actions {
+  text-align: left;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-row.complete {
+  background-color: #DFD;
+  color: #555;
+}
+
+bwu-datagrid /deep/ .percent-complete-bar,
+.percent-complete-bar  {
+  display: inline-block;
+  height: 6px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+/* Editors.Text, Editors.Date */
+bwu-datagrid /deep/ input.editor-text,
+input.editor-text {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+
+}
+
+bwu-datagrid /deep/ .ui-datepicker-trigger,
+.ui-datepicker-trigger {
+  margin-top: 2px;
+  padding: 0;
+  vertical-align: top;
+}
+
+/* Editors.PercentComplete */
+bwu-datagrid /deep/ input.editor-percentcomplete,
+input.editor-percentcomplete {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+
+  float: left;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-picker,
+.editor-percentcomplete-picker {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 100%;
+  background: url(packages/bwu_datagrid/asset/images/pencil.gif) no-repeat center center;
+  overflow: visible;
+  z-index: 1000;
+  float: right;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-helper,
+.editor-percentcomplete-helper {
+  border: 0 solid gray;
+  position: absolute;
+  top: -2px;
+  left: -9px;
+  background: url(packages/bwu_datagrid/asset/images/editor-helper-bg.gif) no-repeat top left;
+  padding-left: 9px;
+
+  width: 120px;
+  height: 140px;
+  display: none;
+  overflow: visible;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-wrapper,
+.editor-percentcomplete-wrapper {
+  background: beige;
+  padding: 20px 8px;
+
+  width: 100%;
+  height: 98px;
+  border: 1px solid gray;
+  border-left: 0;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-buttons,
+.editor-percentcomplete-buttons {
+  float: right;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-buttons button,
+.editor-percentcomplete-buttons button {
+  width: 80px;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-slider,
+.editor-percentcomplete-slider {
+  float: left;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-picker:hover .editor-percentcomplete-helper,
+.editor-percentcomplete-picker:hover .editor-percentcomplete-helper {
+  display: block;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-helper:hover,
+.editor-percentcomplete-helper:hover {
+  display: block;
+}
+
+/* Editors.YesNoSelect */
+bwu-datagrid /deep/ select.editor-yesno,
+select.editor-yesno {
+  width: 100%;
+  margin: 0;
+  vertical-align: middle;
+}
+
+/* Editors.Checkbox */
+bwu-datagrid /deep/ input.editor-checkbox,
+input.editor-checkbox {
+  margin: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+}
+
+
+</style>
+
+    <style>
+      :host {
+        display: block;
+        margin: 0;
+        padding: 0;
+      }
+
+      #description {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        width: 25em;
+        background: beige;
+        border: solid 1px gray;
+        z-index: 1000;
+      }
+
+      #description h2 {
+        padding-left: 0.5em;
+      }
+
+      #myGrid {
+        position: absolute;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 0;
+      }
+    </style>
+
+    <!--<div style='position:relative'>-->
+      <!--<div >-->
+        <bwu-datagrid id="myGrid"></bwu-datagrid>
+      <!--</div>-->
+
+      <div id="description">
+        <h2>Demonstrates:</h2>
+        <ul>
+          <li>Grid filling browser window completely (using absolute positioning)</li>
+          <li>Grid resizing when browser window changes size</li>
+          <li>Overall performance of the grid when displaying large tabular data (17 columns x 10,000 rows)</li>
+        </ul>
+        <h2>View Source:</h2>
+        <ul>
+          <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e12_fillbrowser/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+        </ul>
+      </div>
+    <!--</div>-->
+  </template>
+  
+</polymer-element>
+<style>/*
+* /deep/ bwu-datagrid {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+*/
+/*
+* /deep/ :unresolved,
+* /deep/ [unresolved] {
+  opacity: 0;
+}*/
+
+/* x@ import url(slick-default-theme.css); */
+
+/** increased selectivity to override jQuery styles */
+body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
+  background: url(packages/bwu_datagrid/asset/images/header-columns-bg.gif) repeat-x center bottom;
+}
+
+body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
+  border: 0px;
+  border-right: 1px solid silver;
+}
+
+body /deep/ * {
+  font-family: arial;
+  font-size: 8pt;
+}
+
+body {
+  background: beige;
+  padding: 0;
+  margin: 8px;
+}
+
+h2 {
+  font-size: 10pt;
+  border-bottom: 1px dotted gray;
+}
+
+ul {
+  margin-left: 0;
+  padding: 0;
+  cursor: default;
+}
+
+li {
+  background: url(packages/bwu_datagrid/asset/images/arrow_right_spearmint.png) no-repeat center left;
+  padding: 0 0 0 14px;
+
+  list-style: none;
+  margin: 0;
+}
+
+#myGrid {
+  background: white;
+  outline: 0;
+  border: 1px solid gray;
+}
+
+.grid-header {
+  border: 1px solid gray;
+  border-bottom: 0;
+  border-top: 0;
+  background: url(packages/bwu_datagrid/asset/images/header-bg.gif) repeat-x center top;
+  color: black;
+  height: 24px;
+  line-height: 24px;
+}
+
+.grid-header label {
+  display: inline-block;
+  font-weight: bold;
+  margin: auto auto auto 6px;
+}
+
+.grid-header .ui-icon {
+  margin: 4px 4px auto 6px;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.grid-header .ui-icon.ui-state-hover {
+  background-color: white;
+}
+
+.grid-header #txtSearch {
+  margin: 0 4px 0 4px;
+  padding: 2px 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border: 1px solid silver;
+}
+
+.options-panel {
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border: 1px solid silver;
+  background: #f0f0f0;
+  padding: 4px;
+  margin-bottom: 20px;
+  width: 320px;
+  position: absolute;
+  top: 0px;
+  left: 650px;
+}
+
+/* Individual cell styles */
+bwu-datagrid /deep/ .bwu-datagrid-cell.task-name {
+  font-weight: bold;
+  text-align: right;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-cell.task-percent {
+  text-align: right;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-cell.cell-move-handle {
+  font-weight: bold;
+  text-align: right;
+  border-right: solid gray;
+
+  background: #efefef;
+  cursor: move;
+}
+
+bwu-datagrid /deep/ .cell-move-handle:hover {
+  background: #b6b9bd;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-row.selected .cell-move-handle {
+  background: #D5DC8D;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-row .cell-actions {
+  text-align: left;
+}
+
+bwu-datagrid /deep/ .bwu-datagrid-row.complete {
+  background-color: #DFD;
+  color: #555;
+}
+
+bwu-datagrid /deep/ .percent-complete-bar,
+.percent-complete-bar  {
+  display: inline-block;
+  height: 6px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+/* Editors.Text, Editors.Date */
+bwu-datagrid /deep/ input.editor-text,
+input.editor-text {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+
+}
+
+bwu-datagrid /deep/ .ui-datepicker-trigger,
+.ui-datepicker-trigger {
+  margin-top: 2px;
+  padding: 0;
+  vertical-align: top;
+}
+
+/* Editors.PercentComplete */
+bwu-datagrid /deep/ input.editor-percentcomplete,
+input.editor-percentcomplete {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+
+  float: left;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-picker,
+.editor-percentcomplete-picker {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 100%;
+  background: url(packages/bwu_datagrid/asset/images/pencil.gif) no-repeat center center;
+  overflow: visible;
+  z-index: 1000;
+  float: right;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-helper,
+.editor-percentcomplete-helper {
+  border: 0 solid gray;
+  position: absolute;
+  top: -2px;
+  left: -9px;
+  background: url(packages/bwu_datagrid/asset/images/editor-helper-bg.gif) no-repeat top left;
+  padding-left: 9px;
+
+  width: 120px;
+  height: 140px;
+  display: none;
+  overflow: visible;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-wrapper,
+.editor-percentcomplete-wrapper {
+  background: beige;
+  padding: 20px 8px;
+
+  width: 100%;
+  height: 98px;
+  border: 1px solid gray;
+  border-left: 0;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-buttons,
+.editor-percentcomplete-buttons {
+  float: right;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-buttons button,
+.editor-percentcomplete-buttons button {
+  width: 80px;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-slider,
+.editor-percentcomplete-slider {
+  float: left;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-picker:hover .editor-percentcomplete-helper,
+.editor-percentcomplete-picker:hover .editor-percentcomplete-helper {
+  display: block;
+}
+
+bwu-datagrid /deep/ .editor-percentcomplete-helper:hover,
+.editor-percentcomplete-helper:hover {
+  display: block;
+}
+
+/* Editors.YesNoSelect */
+bwu-datagrid /deep/ select.editor-yesno,
+select.editor-yesno {
+  width: 100%;
+  margin: 0;
+  vertical-align: middle;
+}
+
+/* Editors.Checkbox */
+bwu-datagrid /deep/ input.editor-checkbox,
+input.editor-checkbox {
+  margin: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+}
+
+
+</style><style>/*
+ * jQuery UI CSS Framework 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming/API
+ */
+
+/* Layout helpers
+----------------------------------*/
+body /deep/ .ui-helper-hidden { display: none; }
+body /deep/ .ui-helper-hidden-accessible { position: absolute !important; clip: rect(1px 1px 1px 1px); clip: rect(1px,1px,1px,1px); }
+body /deep/ .ui-helper-reset { margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none; }
+body /deep/ .ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+body /deep/ .ui-helper-clearfix { display: inline-block; }
+/* required comment for clearfix to work in Opera \*/
+* html .ui-helper-clearfix { height:1%; }
+body /deep/ .ui-helper-clearfix { display:block; }
+/* end clearfix */
+body /deep/ .ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }
+
+
+/* Interaction Cues
+----------------------------------*/
+body /deep/ .ui-state-disabled { cursor: default !important; }
+
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+body /deep/ .ui-icon { display: block; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+body /deep/ .ui-widget-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+
+/*
+ * jQuery UI CSS Framework 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming/API
+ *
+ * To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Verdana,Arial,sans-serif&fwDefault=normal&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=cccccc&bgTextureHeader=03_highlight_soft.png&bgImgOpacityHeader=75&borderColorHeader=aaaaaa&fcHeader=222222&iconColorHeader=222222&bgColorContent=ffffff&bgTextureContent=01_flat.png&bgImgOpacityContent=75&borderColorContent=aaaaaa&fcContent=222222&iconColorContent=222222&bgColorDefault=e6e6e6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=75&borderColorDefault=d3d3d3&fcDefault=555555&iconColorDefault=888888&bgColorHover=dadada&bgTextureHover=02_glass.png&bgImgOpacityHover=75&borderColorHover=999999&fcHover=212121&iconColorHover=454545&bgColorActive=ffffff&bgTextureActive=02_glass.png&bgImgOpacityActive=65&borderColorActive=aaaaaa&fcActive=212121&iconColorActive=454545&bgColorHighlight=fbf9ee&bgTextureHighlight=02_glass.png&bgImgOpacityHighlight=55&borderColorHighlight=fcefa1&fcHighlight=363636&iconColorHighlight=2e83ff&bgColorError=fef1ec&bgTextureError=02_glass.png&bgImgOpacityError=95&borderColorError=cd0a0a&fcError=cd0a0a&iconColorError=cd0a0a&bgColorOverlay=aaaaaa&bgTextureOverlay=01_flat.png&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=aaaaaa&bgTextureShadow=01_flat.png&bgImgOpacityShadow=0&opacityShadow=30&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px
+ */
+
+
+/* Component containers
+----------------------------------*/
+body /deep/ .ui-widget, :host { font-family: Verdana,Arial,sans-serif; font-size: 1.1em; }
+body /deep/ .ui-widget { font-size: 1em; }
+body /deep/ .ui-widget input, input, body /deep/ .ui-widget, select, body /deep/ .ui-widget textarea, textarea, body /deep/ .ui-widget button, button { font-family: Verdana,Arial,sans-serif; font-size: 1em; }
+body /deep/ .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #222222; }
+body /deep/ .ui-widget-content a { color: #222222; }
+body /deep/ .ui-widget-header { border: 1px solid #aaaaaa; background: #cccccc url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x; color: #222222; font-weight: bold; }
+body /deep/ .ui-widget-header a { color: #222222; }
+
+/* Interaction states
+----------------------------------*/
+body /deep/ .ui-state-default, body /deep/ .ui-widget-content .ui-state-default, body /deep/ .ui-widget-header .ui-state-default { border: 1px solid #d3d3d3; background: #e6e6e6 url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #555555; }
+body /deep/ .ui-state-default a, body /deep/ .ui-state-default a:link, body /deep/ .ui-state-default a:visited { color: #555555; text-decoration: none; }
+body /deep/ .ui-state-hover, body /deep/ .ui-widget-content .ui-state-hover, body /deep/ .ui-widget-header .ui-state-hover, body /deep/ .ui-state-focus, body /deep/ .ui-widget-content .ui-state-focus, body /deep/ .ui-widget-header .ui-state-focus { border: 1px solid #999999; background: #dadada url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_dadada_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
+body /deep/ .ui-state-hover a, body /deep/ .ui-state-hover a:hover { color: #212121; text-decoration: none; }
+body /deep/ .ui-state-active, body /deep/ .ui-widget-content body /deep/ .ui-state-active, body /deep/ .ui-widget-header body /deep/ .ui-state-active { border: 1px solid #aaaaaa; background: #ffffff url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
+body /deep/ .ui-state-active a, body /deep/ .ui-state-active a:link, body /deep/ .ui-state-active a:visited { color: #212121; text-decoration: none; }
+body /deep/ .ui-widget, :active { outline: none; }
+
+/* Interaction Cues
+----------------------------------*/
+body /deep/ .ui-state-highlight, body /deep/ .ui-widget-content body /deep/ .ui-state-highlight, body /deep/ .ui-widget-header body /deep/ .ui-state-highlight  {border: 1px solid #fcefa1; background: #fbf9ee url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x; color: #363636; }
+body /deep/ .ui-state-highlight a, body /deep/ .ui-widget-content .ui-state-highlight a, body /deep/ .ui-widget-header .ui-state-highlight a { color: #363636; }
+body /deep/ .ui-state-error, body /deep/ .ui-widget-content body /deep/ .ui-state-error, body /deep/ .ui-widget-header .ui-state-error {border: 1px solid #cd0a0a; background: #fef1ec url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x; color: #cd0a0a; }
+body /deep/ .ui-state-error a, body /deep/ .ui-widget-content .ui-state-error a, body /deep/ .ui-widget-header .ui-state-error a { color: #cd0a0a; }
+body /deep/ .ui-state-error-text, body /deep/ .ui-widget-content .ui-state-error-text, body /deep/ .ui-widget-header .ui-state-error-text { color: #cd0a0a; }
+body /deep/ .ui-priority-primary, body /deep/ .ui-widget-content .ui-priority-primary, body /deep/ .ui-widget-header .ui-priority-primary { font-weight: bold; }
+body /deep/ .ui-priority-secondary, body /deep/ .ui-widget-content .ui-priority-secondary, body /deep/ .ui-widget-header .ui-priority-secondary { opacity: .7; filter:Alpha(Opacity=70); font-weight: normal; }
+body /deep/ .ui-state-disabled, body /deep/ .ui-widget-content .ui-state-disabled, body /deep/ .ui-widget-header .ui-state-disabled { opacity: .35; filter:Alpha(Opacity=35); background-image: none; }
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+body /deep/ .ui-icon { width: 16px; height: 16px; background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-widget-content .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-widget-header .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_222222_256x240.png); }
+body /deep/ .ui-state-default .ui-icon { background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_888888_256x240.png); }
+body /deep/ .ui-state-hover .ui-icon, body /deep/ .ui-state-focus .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_454545_256x240.png); }
+body /deep/ .ui-state-active .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_454545_256x240.png); }
+body /deep/ .ui-state-highlight .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_2e83ff_256x240.png); }
+body /deep/ .ui-state-error .ui-icon, body /deep/ .ui-state-error-text .ui-icon {background-image: url(packages/bwu_datagrid/asset/smoothness/images/ui-icons_cd0a0a_256x240.png); }
+
+/* positioning */
+body /deep/ .ui-icon-carat-1-n { background-position: 0 0; }
+body /deep/ .ui-icon-carat-1-ne { background-position: -16px 0; }
+body /deep/ .ui-icon-carat-1-e { background-position: -32px 0; }
+body /deep/ .ui-icon-carat-1-se { background-position: -48px 0; }
+body /deep/ .ui-icon-carat-1-s { background-position: -64px 0; }
+body /deep/ .ui-icon-carat-1-sw { background-position: -80px 0; }
+body /deep/ .ui-icon-carat-1-w { background-position: -96px 0; }
+body /deep/ .ui-icon-carat-1-nw { background-position: -112px 0; }
+body /deep/ .ui-icon-carat-2-n-s { background-position: -128px 0; }
+body /deep/ .ui-icon-carat-2-e-w { background-position: -144px 0; }
+body /deep/ .ui-icon-triangle-1-n { background-position: 0 -16px; }
+body /deep/ .ui-icon-triangle-1-ne { background-position: -16px -16px; }
+body /deep/ .ui-icon-triangle-1-e { background-position: -32px -16px; }
+body /deep/ .ui-icon-triangle-1-se { background-position: -48px -16px; }
+body /deep/ .ui-icon-triangle-1-s { background-position: -64px -16px; }
+body /deep/ .ui-icon-triangle-1-sw { background-position: -80px -16px; }
+body /deep/ .ui-icon-triangle-1-w { background-position: -96px -16px; }
+body /deep/ .ui-icon-triangle-1-nw { background-position: -112px -16px; }
+body /deep/ .ui-icon-triangle-2-n-s { background-position: -128px -16px; }
+body /deep/ .ui-icon-triangle-2-e-w { background-position: -144px -16px; }
+body /deep/ .ui-icon-arrow-1-n { background-position: 0 -32px; }
+body /deep/ .ui-icon-arrow-1-ne { background-position: -16px -32px; }
+body /deep/ .ui-icon-arrow-1-e { background-position: -32px -32px; }
+body /deep/ .ui-icon-arrow-1-se { background-position: -48px -32px; }
+body /deep/ .ui-icon-arrow-1-s { background-position: -64px -32px; }
+body /deep/ .ui-icon-arrow-1-sw { background-position: -80px -32px; }
+body /deep/ .ui-icon-arrow-1-w { background-position: -96px -32px; }
+body /deep/ .ui-icon-arrow-1-nw { background-position: -112px -32px; }
+body /deep/ .ui-icon-arrow-2-n-s { background-position: -128px -32px; }
+body /deep/ .ui-icon-arrow-2-ne-sw { background-position: -144px -32px; }
+body /deep/ .ui-icon-arrow-2-e-w { background-position: -160px -32px; }
+body /deep/ .ui-icon-arrow-2-se-nw { background-position: -176px -32px; }
+body /deep/ .ui-icon-arrowstop-1-n { background-position: -192px -32px; }
+body /deep/ .ui-icon-arrowstop-1-e { background-position: -208px -32px; }
+body /deep/ .ui-icon-arrowstop-1-s { background-position: -224px -32px; }
+body /deep/ .ui-icon-arrowstop-1-w { background-position: -240px -32px; }
+body /deep/ .ui-icon-arrowthick-1-n { background-position: 0 -48px; }
+body /deep/ .ui-icon-arrowthick-1-ne { background-position: -16px -48px; }
+body /deep/ .ui-icon-arrowthick-1-e { background-position: -32px -48px; }
+body /deep/ .ui-icon-arrowthick-1-se { background-position: -48px -48px; }
+body /deep/ .ui-icon-arrowthick-1-s { background-position: -64px -48px; }
+body /deep/ .ui-icon-arrowthick-1-sw { background-position: -80px -48px; }
+body /deep/ .ui-icon-arrowthick-1-w { background-position: -96px -48px; }
+body /deep/ .ui-icon-arrowthick-1-nw { background-position: -112px -48px; }
+body /deep/ .ui-icon-arrowthick-2-n-s { background-position: -128px -48px; }
+body /deep/ .ui-icon-arrowthick-2-ne-sw { background-position: -144px -48px; }
+body /deep/ .ui-icon-arrowthick-2-e-w { background-position: -160px -48px; }
+body /deep/ .ui-icon-arrowthick-2-se-nw { background-position: -176px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-n { background-position: -192px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-e { background-position: -208px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-s { background-position: -224px -48px; }
+body /deep/ .ui-icon-arrowthickstop-1-w { background-position: -240px -48px; }
+body /deep/ .ui-icon-arrowreturnthick-1-w { background-position: 0 -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-n { background-position: -16px -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-e { background-position: -32px -64px; }
+body /deep/ .ui-icon-arrowreturnthick-1-s { background-position: -48px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-w { background-position: -64px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-n { background-position: -80px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-e { background-position: -96px -64px; }
+body /deep/ .ui-icon-arrowreturn-1-s { background-position: -112px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-w { background-position: -128px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-n { background-position: -144px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-e { background-position: -160px -64px; }
+body /deep/ .ui-icon-arrowrefresh-1-s { background-position: -176px -64px; }
+body /deep/ .ui-icon-arrow-4 { background-position: 0 -80px; }
+body /deep/ .ui-icon-arrow-4-diag { background-position: -16px -80px; }
+body /deep/ .ui-icon-extlink { background-position: -32px -80px; }
+body /deep/ .ui-icon-newwin { background-position: -48px -80px; }
+body /deep/ .ui-icon-refresh { background-position: -64px -80px; }
+body /deep/ .ui-icon-shuffle { background-position: -80px -80px; }
+body /deep/ .ui-icon-transfer-e-w { background-position: -96px -80px; }
+body /deep/ .ui-icon-transferthick-e-w { background-position: -112px -80px; }
+body /deep/ .ui-icon-folder-collapsed { background-position: 0 -96px; }
+body /deep/ .ui-icon-folder-open { background-position: -16px -96px; }
+body /deep/ .ui-icon-document { background-position: -32px -96px; }
+body /deep/ .ui-icon-document-b { background-position: -48px -96px; }
+body /deep/ .ui-icon-note { background-position: -64px -96px; }
+body /deep/ .ui-icon-mail-closed { background-position: -80px -96px; }
+body /deep/ .ui-icon-mail-open { background-position: -96px -96px; }
+body /deep/ .ui-icon-suitcase { background-position: -112px -96px; }
+body /deep/ .ui-icon-comment { background-position: -128px -96px; }
+body /deep/ .ui-icon-person { background-position: -144px -96px; }
+body /deep/ .ui-icon-print { background-position: -160px -96px; }
+body /deep/ .ui-icon-trash { background-position: -176px -96px; }
+body /deep/ .ui-icon-locked { background-position: -192px -96px; }
+body /deep/ .ui-icon-unlocked { background-position: -208px -96px; }
+body /deep/ .ui-icon-bookmark { background-position: -224px -96px; }
+body /deep/ .ui-icon-tag { background-position: -240px -96px; }
+body /deep/ .ui-icon-home { background-position: 0 -112px; }
+body /deep/ .ui-icon-flag { background-position: -16px -112px; }
+body /deep/ .ui-icon-calendar { background-position: -32px -112px; }
+body /deep/ .ui-icon-cart { background-position: -48px -112px; }
+body /deep/ .ui-icon-pencil { background-position: -64px -112px; }
+body /deep/ .ui-icon-clock { background-position: -80px -112px; }
+body /deep/ .ui-icon-disk { background-position: -96px -112px; }
+body /deep/ .ui-icon-calculator { background-position: -112px -112px; }
+body /deep/ .ui-icon-zoomin { background-position: -128px -112px; }
+body /deep/ .ui-icon-zoomout { background-position: -144px -112px; }
+body /deep/ .ui-icon-search { background-position: -160px -112px; }
+body /deep/ .ui-icon-wrench { background-position: -176px -112px; }
+body /deep/ .ui-icon-gear { background-position: -192px -112px; }
+body /deep/ .ui-icon-heart { background-position: -208px -112px; }
+body /deep/ .ui-icon-star { background-position: -224px -112px; }
+body /deep/ .ui-icon-link { background-position: -240px -112px; }
+body /deep/ .ui-icon-cancel { background-position: 0 -128px; }
+body /deep/ .ui-icon-plus { background-position: -16px -128px; }
+body /deep/ .ui-icon-plusthick { background-position: -32px -128px; }
+body /deep/ .ui-icon-minus { background-position: -48px -128px; }
+body /deep/ .ui-icon-minusthick { background-position: -64px -128px; }
+body /deep/ .ui-icon-close { background-position: -80px -128px; }
+body /deep/ .ui-icon-closethick { background-position: -96px -128px; }
+body /deep/ .ui-icon-key { background-position: -112px -128px; }
+body /deep/ .ui-icon-lightbulb { background-position: -128px -128px; }
+body /deep/ .ui-icon-scissors { background-position: -144px -128px; }
+body /deep/ .ui-icon-clipboard { background-position: -160px -128px; }
+body /deep/ .ui-icon-copy { background-position: -176px -128px; }
+body /deep/ .ui-icon-contact { background-position: -192px -128px; }
+body /deep/ .ui-icon-image { background-position: -208px -128px; }
+body /deep/ .ui-icon-video { background-position: -224px -128px; }
+body /deep/ .ui-icon-script { background-position: -240px -128px; }
+body /deep/ .ui-icon-alert { background-position: 0 -144px; }
+body /deep/ .ui-icon-info { background-position: -16px -144px; }
+body /deep/ .ui-icon-notice { background-position: -32px -144px; }
+body /deep/ .ui-icon-help { background-position: -48px -144px; }
+body /deep/ .ui-icon-check { background-position: -64px -144px; }
+body /deep/ .ui-icon-bullet { background-position: -80px -144px; }
+body /deep/ .ui-icon-radio-off { background-position: -96px -144px; }
+body /deep/ .ui-icon-radio-on { background-position: -112px -144px; }
+body /deep/ .ui-icon-pin-w { background-position: -128px -144px; }
+body /deep/ .ui-icon-pin-s { background-position: -144px -144px; }
+body /deep/ .ui-icon-play { background-position: 0 -160px; }
+body /deep/ .ui-icon-pause { background-position: -16px -160px; }
+body /deep/ .ui-icon-seek-next { background-position: -32px -160px; }
+body /deep/ .ui-icon-seek-prev { background-position: -48px -160px; }
+body /deep/ .ui-icon-seek-end { background-position: -64px -160px; }
+body /deep/ .ui-icon-seek-start { background-position: -80px -160px; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+body /deep/ .ui-icon-seek-first { background-position: -80px -160px; }
+body /deep/ .ui-icon-stop { background-position: -96px -160px; }
+body /deep/ .ui-icon-eject { background-position: -112px -160px; }
+body /deep/ .ui-icon-volume-off { background-position: -128px -160px; }
+body /deep/ .ui-icon-volume-on { background-position: -144px -160px; }
+body /deep/ .ui-icon-power { background-position: 0 -176px; }
+body /deep/ .ui-icon-signal-diag { background-position: -16px -176px; }
+body /deep/ .ui-icon-signal { background-position: -32px -176px; }
+body /deep/ .ui-icon-battery-0 { background-position: -48px -176px; }
+body /deep/ .ui-icon-battery-1 { background-position: -64px -176px; }
+body /deep/ .ui-icon-battery-2 { background-position: -80px -176px; }
+body /deep/ .ui-icon-battery-3 { background-position: -96px -176px; }
+body /deep/ .ui-icon-circle-plus { background-position: 0 -192px; }
+body /deep/ .ui-icon-circle-minus { background-position: -16px -192px; }
+body /deep/ .ui-icon-circle-close { background-position: -32px -192px; }
+body /deep/ .ui-icon-circle-triangle-e { background-position: -48px -192px; }
+body /deep/ .ui-icon-circle-triangle-s { background-position: -64px -192px; }
+body /deep/ .ui-icon-circle-triangle-w { background-position: -80px -192px; }
+body /deep/ .ui-icon-circle-triangle-n { background-position: -96px -192px; }
+body /deep/ .ui-icon-circle-arrow-e { background-position: -112px -192px; }
+body /deep/ .ui-icon-circle-arrow-s { background-position: -128px -192px; }
+body /deep/ .ui-icon-circle-arrow-w { background-position: -144px -192px; }
+body /deep/ .ui-icon-circle-arrow-n { background-position: -160px -192px; }
+body /deep/ .ui-icon-circle-zoomin { background-position: -176px -192px; }
+body /deep/ .ui-icon-circle-zoomout { background-position: -192px -192px; }
+body /deep/ .ui-icon-circle-check { background-position: -208px -192px; }
+body /deep/ .ui-icon-circlesmall-plus { background-position: 0 -208px; }
+body /deep/ .ui-icon-circlesmall-minus { background-position: -16px -208px; }
+body /deep/ .ui-icon-circlesmall-close { background-position: -32px -208px; }
+body /deep/ .ui-icon-squaresmall-plus { background-position: -48px -208px; }
+body /deep/ .ui-icon-squaresmall-minus { background-position: -64px -208px; }
+body /deep/ .ui-icon-squaresmall-close { background-position: -80px -208px; }
+body /deep/ .ui-icon-grip-dotted-vertical { background-position: 0 -224px; }
+body /deep/ .ui-icon-grip-dotted-horizontal { background-position: -16px -224px; }
+body /deep/ .ui-icon-grip-solid-vertical { background-position: -32px -224px; }
+body /deep/ .ui-icon-grip-solid-horizontal { background-position: -48px -224px; }
+body /deep/ .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+body /deep/ .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-top, body /deep/ .ui-corner-left, body /deep/ .ui-corner-tl { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -khtml-border-top-left-radius: 4px; border-top-left-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-top, body /deep/ .ui-corner-right, body /deep/ .ui-corner-tr { -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -khtml-border-top-right-radius: 4px; border-top-right-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-bottom, body /deep/ .ui-corner-left, body /deep/ .ui-corner-bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
+body /deep/ .ui-corner-all, body /deep/ .ui-corner-bottom, body /deep/ .ui-corner-right, body /deep/ .ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
+
+/* Overlays */
+body /deep/ .ui-widget-overlay { background: #aaaaaa url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
+body /deep/ .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*
+ * jQuery UI Resizable 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Resizable#theming
+ */
+body /deep/ .ui-resizable { position: relative;}
+body /deep/ .ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
+body /deep/ .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+body /deep/ .ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+body /deep/ .ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+body /deep/ .ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+body /deep/ .ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+body /deep/ .ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
+body /deep/ .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+body /deep/ .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+body /deep/ .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/*
+ * jQuery UI Selectable 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Selectable#theming
+ */
+body /deep/ .ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }
+/*
+ * jQuery UI Slider 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Slider#theming
+ */
+body /deep/ .ui-slider { position: relative; text-align: left; }
+body /deep/ .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
+body /deep/ .ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; background-position: 0 0; }
+
+body /deep/ .ui-slider-horizontal { height: .8em; }
+body /deep/ .ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }
+body /deep/ .ui-slider-horizontal .ui-slider-range { top: 0; height: 100%; }
+body /deep/ .ui-slider-horizontal .ui-slider-range-min { left: 0; }
+body /deep/ .ui-slider-horizontal .ui-slider-range-max { right: 0; }
+
+body /deep/ .ui-slider-vertical { width: .8em; height: 100px; }
+body /deep/ .ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }
+body /deep/ .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }
+body /deep/ .ui-slider-vertical .ui-slider-range-min { bottom: 0; }
+body /deep/ .ui-slider-vertical .ui-slider-range-max { top: 0; }/*
+ * jQuery UI Datepicker 1.8.16
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Datepicker#theming
+ */
+body /deep/ .ui-datepicker { width: 17em; padding: .2em .2em 0; display: none; }
+body /deep/ .ui-datepicker .ui-datepicker-header { position:relative; padding:.2em 0; }
+body /deep/ .ui-datepicker .ui-datepicker-prev, body /deep/ .ui-datepicker .ui-datepicker-next { position:absolute; top: 2px; width: 1.8em; height: 1.8em; }
+body /deep/ .ui-datepicker .ui-datepicker-prev-hover, body /deep/ .ui-datepicker .ui-datepicker-next-hover { top: 1px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev { left:2px; }
+body /deep/ .ui-datepicker .ui-datepicker-next { right:2px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev-hover { left:1px; }
+body /deep/ .ui-datepicker .ui-datepicker-next-hover { right:1px; }
+body /deep/ .ui-datepicker .ui-datepicker-prev span, body /deep/ .ui-datepicker .ui-datepicker-next span { display: block; position: absolute; left: 50%; margin-left: -8px; top: 50%; margin-top: -8px;  }
+body /deep/ .ui-datepicker .ui-datepicker-title { margin: 0 2.3em; line-height: 1.8em; text-align: center; }
+body /deep/ .ui-datepicker .ui-datepicker-title select { font-size:1em; margin:1px 0; }
+body /deep/ .ui-datepicker select.ui-datepicker-month-year {width: 100%;}
+body /deep/ .ui-datepicker select.ui-datepicker-month,
+body /deep/ .ui-datepicker select.ui-datepicker-year { width: 49%;}
+body /deep/ .ui-datepicker table {width: 100%; font-size: .9em; border-collapse: collapse; margin:0 0 .4em; }
+body /deep/ .ui-datepicker th { padding: .7em .3em; text-align: center; font-weight: bold; border: 0;  }
+body /deep/ .ui-datepicker td { border: 0; padding: 1px; }
+body /deep/ .ui-datepicker td span, body /deep/ .ui-datepicker td a { display: block; padding: .2em; text-align: right; text-decoration: none; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane { background-image: none; margin: .7em 0 0 0; padding:0 .2em; border-left: 0; border-right: 0; border-bottom: 0; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane button { float: right; margin: .5em .2em .4em; cursor: pointer; padding: .2em .6em .3em .6em; width:auto; overflow:visible; }
+body /deep/ .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current { float:left; }
+
+/* with multiple calendars */
+body /deep/ .ui-datepicker.ui-datepicker-multi { width:auto; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group { float:left; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group table { width:95%; margin:0 auto .4em; }
+body /deep/ .ui-datepicker-multi-2 .ui-datepicker-group { width:50%; }
+body /deep/ .ui-datepicker-multi-3 .ui-datepicker-group { width:33.3%; }
+body /deep/ .ui-datepicker-multi-4 .ui-datepicker-group { width:25%; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header { border-left-width:0; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header { border-left-width:0; }
+body /deep/ .ui-datepicker-multi .ui-datepicker-buttonpane { clear:left; }
+body /deep/ .ui-datepicker-row-break { clear:both; width:100%; font-size:0em; }
+
+/* RTL support */
+body /deep/ .ui-datepicker-rtl { direction: rtl; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-prev { right: 2px; left: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-next { left: 2px; right: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-prev:hover { right: 1px; left: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-next:hover { left: 1px; right: auto; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane { clear:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane button { float: left; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current { float:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group { float:right; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+body /deep/ .ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+
+/* IE6 IFRAME FIX (taken from datepicker 1.5.3 */
+body /deep/ .ui-datepicker-cover {
+    display: none; /*sorry for IE5*/
+    display/**/: block; /*sorry for IE5*/
+    position: absolute; /*must have*/
+    z-index: -1; /*must have*/
+    filter: mask(); /*must have*/
+    top: -4px; /*must have*/
+    left: -4px; /*must have*/
+    width: 200px; /*must have*/
+    height: 200px; /*must have*/
+}</style><style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: White;
+        overflow: auto;
+      }
+
+      body {
+        font: 11px Helvetica, Arial, sans-serif;
+      }
+    </style>
+    <app-element></app-element>
+    
+  
+
+<script src="e12_fillbrowser.html_bootstrap.dart.js" async=""></script></body></html>

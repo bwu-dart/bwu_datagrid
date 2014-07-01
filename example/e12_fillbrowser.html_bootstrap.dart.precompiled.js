@@ -1992,7 +1992,7 @@ tQ:{
 "^":"a;M,J9,zO",
 t:function(a,b){if(!J.xC(b,0))H.vh(P.N(b))
 return this.zO},
-$isOd:true}}],["app_bootstrap","e11_autoheight.html_bootstrap.dart",,E,{
+$isOd:true}}],["app_bootstrap","e12_fillbrowser.html_bootstrap.dart",,E,{
 "^":"",
 QL:[function(){var z,y,x,w,v
 z=P.EF([C.p1,new E.em(),C.rs,new E.Lb(),C.BC,new E.QA()],null,null)
@@ -2041,7 +2041,7 @@ $isEH:true},
 wf:{
 "^":"Tp:71;",
 $0:[function(){return A.Ad("app-element",C.dI)},"$0",null,0,0,null,"call"],
-$isEH:true}},1],["app_element","src/e11_autoheight/app_element.dart",,O,{
+$isEH:true}},1],["app_element","src/e12_fillbrowser/app_element.dart",,O,{
 "^":"",
 RE:{
 "^":"ir;oH=,WO%,ju,Gn,Rn,AP,fn,LB,km,Ob,Om,vW,Rr,vQ,De,aa,ze,OM",
@@ -2050,8 +2050,8 @@ A.zs.prototype.Es.call(this,a)
 try{a.Gn=this.gXO(a).Zp.t(0,"myGrid")
 u=H.VM([],[M.OH])
 a.Rn=new V.UH(u)
-for(z=1,u=a.ju;J.Bl(z,100);z=J.WB(z,1)){t=a.Rn.PS
-s=P.EF(["title","Task "+H.d(z),"duration","5 days","percentComplete",u.j1(100),"start","01/01/2009","finish","01/05/2009","effortDriven",J.bY(z,5)===0],null,null)
+for(z=1,u=a.ju;J.Bl(z,10000);z=J.WB(z,1)){t=a.Rn.PS
+s=P.EF(["title","Task "+H.d(z),"duration","5 days","percentComplete",u.j1(100),"start","01/01/2009","finish","01/05/2009","effortDriven",J.bY(z,5)===0,"c7","C7-"+H.d(z),"c8","C8-"+H.d(z),"c9","C9-"+H.d(z),"c10","C10-"+H.d(z),"c11","C11-"+H.d(z),"c12","C12-"+H.d(z),"c13","C13-"+H.d(z),"c14","C14-"+H.d(z),"c15","C15-"+H.d(z),"c16","C16-"+H.d(z),"c17","C17-"+H.d(z)],null,null)
 t.push(new V.iC(!1,s))}J.p3(a.Gn,a.oH,a.Rn,a.WO)}catch(r){u=H.Ru(r)
 t=J.x(u)
 if(!!t.$isJS){y=u
@@ -2060,7 +2060,7 @@ P.mp(H.d(x)+"\n\n"+new H.XO(x.$thrownJsError,null).bu(0))}else if(!!t.$isEz){w=u
 P.mp(H.d(w)+"\n\n"+new H.XO(w.$thrownJsError,null).bu(0))}else{v=u
 P.mp(H.d(v))}}},
 static:{yn:function(a){var z,y,x
-z=new V.CK("new-row",!1,!0,null,!1,null,"flashing","highlight",null,80,null,!1,null,null,null,!1,!1,!1,!0,!1,!1,!1,!1,null,!1,!1,25,!1,!0,25,"selected",!1,!1,!1,25)
+z=new V.CK("new-row",!1,!1,null,!1,null,"flashing","highlight",null,80,null,!1,null,null,null,!1,!1,!1,!1,!1,!1,!1,!1,null,!1,!1,25,!1,!0,25,"selected",!1,!1,!1,25)
 z.V4=C.DX
 z.Ru=C.kA
 z.iG=$.Vp()
@@ -2068,7 +2068,7 @@ z.AY=new G.E1()
 y=P.L5(null,null,null,P.qU,W.I0)
 x=P.qU
 x=H.VM(new V.br(P.Py(null,null,null,x,null),null,null),[x,null])
-a.oH=[new V.Hn("title","Title","title",null,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("duration","Duration","duration",null,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("%","% Complete","percentComplete",null,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("start","Start","start",null,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("finish","Finish","finish",null,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("effort-driven","Effort Driven","effortDriven",null,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null)]
+a.oH=[new V.Hn("title","Title","title",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("duration","Duration","duration",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("%","% Complete","percentComplete",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("start","Start","start",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("finish","Finish","finish",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("effort-driven","Effort Driven","effortDriven",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c7","C7","c7",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c8","C8","c8",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c9","C9","c9",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c10","C10","c10",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c11","C11","c11",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c12","C12","c12",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c13","C13","c13",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c14","C14","c14",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c15","C15","c15",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c16","C16","c16",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null),new V.Hn("c17","C17","c17",120,30,null,!0,!1,!0,!0,!0,null,!1,null,null,!1,null,null,!0,!1,null,null,null,null,null,null)]
 a.WO=z
 a.ju=C.pr
 a.Ob=[]
