@@ -42,4 +42,5 @@ transformers:
     - example/e09_row_reordering.html
     - example/e10_async_post_render.html
     - example/e11_autoheight.html
+    - example/e12_fillbrowser.html
     - example/autotooltips.html

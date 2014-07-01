@@ -1,6 +1,7 @@
 ## 0.0.12
 
 * example 11 auto-height
+* example 12 fill-browser
 
 ## 0.0.11
 
