@@ -43,4 +43,5 @@ transformers:
     - example/e10_async_post_render.html
     - example/e11_autoheight.html
     - example/e12_fillbrowser.html
+    - example/e13_get_item_sorting.html
     - example/autotooltips.html

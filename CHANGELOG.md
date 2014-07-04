@@ -2,6 +2,7 @@
 
 * example 11 auto-height
 * example 12 fill-browser
+* example 13 getItem-sorting
 
 ## 0.0.11
 
