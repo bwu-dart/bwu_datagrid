@@ -44,4 +44,5 @@ transformers:
     - example/e11_autoheight.html
     - example/e12_fillbrowser.html
     - example/e13_get_item_sorting.html
+    - example/header_row.html
     - example/autotooltips.html

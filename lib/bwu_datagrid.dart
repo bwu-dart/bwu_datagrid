@@ -35,7 +35,7 @@ class BwuDatagrid extends PolymerElement {
       super.attached();
       _isAttached = true;
       if(_isPendingInit) {
-        init();
+        _init();
         render();
   //      _unveilElement();
         _setupCompleter.complete();
@@ -177,7 +177,7 @@ class BwuDatagrid extends PolymerElement {
 
     if(_isAttached) {
       new async.Future(() {
-        init();
+        _init();
         render();
         //_unveilElement();
         _setupCompleter.complete();
@@ -191,8 +191,11 @@ class BwuDatagrid extends PolymerElement {
   //////////////////////////////////////////////////////////////////////////////////////////////
   // Initialization
 
-
   void init() {
+    _finishInitialization();
+  }
+
+  void _init() {
     _container = this.shadowRoot;
 
     // calculate these only once and share between grid instances
@@ -689,7 +692,7 @@ class BwuDatagrid extends PolymerElement {
               ..column =  m;
               _headerRow.append(headerRowCell);
 
-              _eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, headerRowCell, m));
+              _eventBus.fire(core.Events.HEADER_ROW_CELL_RENDERED, new core.HeaderRowCellRendered(this, headerRowCell, m));
         }
       }
     }

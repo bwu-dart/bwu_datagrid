@@ -514,7 +514,10 @@ class HeaderMouseLeave extends EventData {
 }
 
 class HeaderRowCellRendered extends EventData {
-  HeaderRowCellRendered(sender) : super(sender: sender);
+  final dom.HtmlElement node;
+  final Column columnDef;
+
+  HeaderRowCellRendered(sender,this.node, this.columnDef) : super(sender: sender);
 }
 
 class KeyDown extends EventData {
