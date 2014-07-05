@@ -65,31 +65,26 @@ class AppElement extends PolymerElement {
         });
 
         Function filterChangedHandler = (dom.Event e) {
-          var columnId = (e.target as dom.HtmlElement).dataset['columnId']; //$(this).data("columnId");
+          var columnId = (e.target as dom.HtmlElement).dataset['columnId'];
           if (columnId != null) {
-            columnFilters[columnId] = (e.target as dom.InputElement).value; //$.trim($(this).val());
+            columnFilters[columnId] = (e.target as dom.InputElement).value;
             dataView.refresh();
           }
         };
 
-//        grid.getHeaderRow().querySelectorAll('input').forEach((dom.HtmlElement ie) {
-//          //delegate(":input", "change keyup", (e) {
-//        });
-
         grid.onBwuHeaderRowCellRendered.listen((e) {
-            //$(args.node).empty();
           e.node.children.clear();
+          String value = columnFilters[e.columnDef.id];
+          if(value == null) {
+            value = '';
+          }
           e.node.append(
-              new dom.TextInputElement()
-                ..dataset['columnId'] = e.columnDef.id
-                ..value = columnFilters[e.columnDef.id]
-                ..onKeyUp.listen(filterChangedHandler)
-                ..onChange.listen(filterChangedHandler)
-              );
-//            $("<input type='text'>")
-//               .data("columnId", args.column.id)
-//               .val(columnFilters[args.column.id])
-//               .appendTo(args.node);
+            new dom.TextInputElement()
+              ..dataset['columnId'] = e.columnDef.id
+              ..value = value
+              ..onKeyUp.listen(filterChangedHandler)
+              ..onChange.listen(filterChangedHandler)
+            );
         });
 
         grid.init();
@@ -98,7 +93,6 @@ class AppElement extends PolymerElement {
         dataView.setItems(data);
         dataView.setFilter(filter);
         dataView.endUpdate();
-
       });
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
@@ -110,7 +104,6 @@ class AppElement extends PolymerElement {
       print('$e');
     }
   }
-
 
   bool filter(DataItem item, [args]) {
     for (final columnId in columnFilters.keys) {
