@@ -83,7 +83,8 @@ classes should alter those!
   width: 100%;
 }
 
-.bwu-datagrid-cell, .bwu-datagrid-headerrow-column {
+/* also update bwu-datagrid-headerrow-column element CSS */
+.bwu-datagrid-cell {
   position: absolute;
   border: 1px solid transparent;
   border-right: 1px dotted silver;

@@ -399,23 +399,33 @@ html /deep/ [segment], html /deep/ segment {
     <style>/* .bwu-datagrid-headerrow-column.ui-state-default*/
 :host(.ui-state-default){
   padding: 4px;
-}
 
-:host(.ui-state-default)
-/*.bwu-datagrid-header.ui-state-default, .bwu-datagrid-headerrow.ui-state-default */ {
-  width: 100%;
+/*.bwu-datagrid-header.ui-state-default, .bwu-datagrid-headerrow.ui-state-default */
+/*  width: 100%; */
   overflow: hidden;
   border-left: 0px;
+}
+
+:host {
+  position: absolute;
+  border: 1px solid transparent;
+  border-right: 1px dotted silver;
+  border-bottom-color: silver;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  z-index: 1;
+  padding: 1px 2px 2px 1px;
+  margin: 0;
+  white-space: nowrap;
+  cursor: default;
 }
 </style>
     <style>/*.bwu-datagrid-headerrow*/
 :host {
   background: #fafafa;
-}
 
-
-.bwu-datagrid-headerrow-column {
-  background: #fafafa;
   border-bottom: 0;
   height: 100%;
 }
@@ -925,7 +935,8 @@ classes should alter those!
   width: 100%;
 }
 
-.bwu-datagrid-cell, .bwu-datagrid-headerrow-column {
+/* also update bwu-datagrid-headerrow-column element CSS */
+.bwu-datagrid-cell {
   position: absolute;
   border: 1px solid transparent;
   border-right: 1px dotted silver;
@@ -1143,16 +1154,16 @@ classes should alter those!
 /* x@ import url(slick-default-theme.css); */
 
 /** increased selectivity to override jQuery styles */
-body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
+* /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
   background: url(packages/bwu_datagrid/asset/images/header-columns-bg.gif) repeat-x center bottom;
 }
 
-body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
+* /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
   border: 0px;
   border-right: 1px solid silver;
 }
 
-body /deep/ * {
+* /deep/ * {
   font-family: arial;
   font-size: 8pt;
 }
@@ -1449,16 +1460,16 @@ input.editor-checkbox {
 /* x@ import url(slick-default-theme.css); */
 
 /** increased selectivity to override jQuery styles */
-body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
+* /deep/ bwu-datagrid-headers bwu-datagrid-header-column.bwu-datagrid-header-column {
   background: url(packages/bwu_datagrid/asset/images/header-columns-bg.gif) repeat-x center bottom;
 }
 
-body /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
+* /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
   border: 0px;
   border-right: 1px solid silver;
 }
 
-body /deep/ * {
+* /deep/ * {
   font-family: arial;
   font-size: 8pt;
 }
