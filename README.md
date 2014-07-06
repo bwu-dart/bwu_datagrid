@@ -65,3 +65,7 @@ Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_da
 
 ### Checkbox row select
 ![checkbox_row_select](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/checkbox_row_select.png)
+
+### Sort by column ascending/descending
+![sort_ascending](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/sort_asc.png)
+![sort_descending](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/sort_desc.png)
