@@ -4,6 +4,7 @@
 * add example 12 fill-browser
 * add example 13 getItem-sorting
 * add example header-row
+* add example checkbox row select
 
 ## 0.0.11
 

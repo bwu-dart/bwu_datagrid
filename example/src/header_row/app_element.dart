@@ -36,7 +36,7 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       for(int i = 0; i < 10; i++) {
-        columns.add(new Column(id: i.toString(), name: 'A$i', field: i.toString(), width: 60));
+        columns.add(new Column(id: i.toString(), name: new String.fromCharCode('A'.codeUnits[0] + i), field: i.toString(), width: 60));
       }
 
       // prepare the data

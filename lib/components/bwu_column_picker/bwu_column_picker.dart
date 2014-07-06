@@ -164,6 +164,7 @@ class BwuColumnPicker extends PolymerElement {
     }
 
     _grid.setColumns = visibleColumns;
+    _grid.setSelectedRows(_grid.getSelectedRows());
   }
 
   List<Column> getAllColumns() {

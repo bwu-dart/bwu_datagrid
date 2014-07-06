@@ -585,7 +585,7 @@ class BwuDatagrid extends PolymerElement {
     _boundAncestors = null;
   }
 
-  void updateColumnHeader(String columnId, String title, String toolTip) {
+  void updateColumnHeader(String columnId, String title, String toolTip, {dom.Element nameElement}) {
     if (!_initialized) { return; }
     var idx = getColumnIndex(columnId);
     if (idx == null) {
@@ -593,10 +593,13 @@ class BwuDatagrid extends PolymerElement {
     }
 
     Column columnDef = columns[idx];
-    dom.HtmlElement $header = _headers.children.firstWhere((e) => e.id == idx); //().eq(idx); // TODO check
+    dom.Element $header = _headers.children[idx];
     if ($header != null) {
       if (title != null) {
         columns[idx].name = title;
+      }
+      if (nameElement != null) {
+        columns[idx].nameElement = nameElement;
       }
       if (toolTip != null) {
         columns[idx].toolTip = toolTip;
@@ -605,8 +608,14 @@ class BwuDatagrid extends PolymerElement {
       _eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY, new core.BeforeHeaderCellDestroy(this, $header, columnDef));
 
       $header
-          ..attributes["title"] = toolTip != null ? toolTip : ""
-          ..children.where((e) => e.id == 0).forEach((e) => e.innerHtml = title); //().eq(0).html(title); // TODO check
+          ..attributes["title"] = toolTip != null ? toolTip : "";
+      if(nameElement == null && title != null) {
+        $header.text = title;
+      }
+      if(nameElement != null) {
+        $header.children.clear();
+        $header.append(nameElement);
+      }
 
       _eventBus.fire(core.Events.HEADER_CELL_RENDERED, new core.HeaderCellRendered(this, $header, columnDef));
     }
@@ -657,10 +666,17 @@ class BwuDatagrid extends PolymerElement {
       for (int i = 0; i < columns.length; i++) {
         Column m = columns[i];
 
+        dom.Element nameElement;
+        if(m.nameElement == null && m.name.isNotEmpty) {
+          nameElement = new dom.SpanElement()..classes.add('bwu-datagrid-column-name')..text = m.name; // TODO this span element is not added in updateColumnHeader()
+        }
+        if (m.nameElement != null) {
+          nameElement = m.nameElement;
+        }
         var header = (new dom.Element.tag('bwu-datagrid-header-column') as BwuDatagridHeaderColumn)
             ..classes.add('ui-state-default')
             ..classes.add('bwu-datagrid-header-column')
-            ..append(new dom.SpanElement()..classes.add('bwu-datagrid-column-name')..text = m.name)
+            ..append(nameElement)
             ..style.width = "${m.width - _headerColumnWidthDiff}px"
             //..attributes["id"] ='${uid}${m.id}'
             ..attributes["id"] ='${m.id}'

@@ -81,9 +81,9 @@ class AppElement extends PolymerElement {
         grid.setSelectionModel = new RowSelectionModel();
 
         ($['pager'] as BwuPager).init(dataView, grid);
-        BwuColumnPicker columnPicker = new dom.Element.tag('bwu-column-picker') as BwuColumnPicker;
-        columnPicker.columns = columns;
-        columnPicker.grid = grid;
+        BwuColumnPicker columnPicker = (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
+            ..columns = columns
+            ..grid = grid;
         dom.document.body.append(columnPicker);
         //columnPicker.options = new ColumnPickerOptions(/*gridOptions*/);
 

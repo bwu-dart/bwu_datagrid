@@ -162,6 +162,7 @@ typedef void AsyncPostRenderFn(dom.HtmlElement target, int row, DataItem dataCon
 class Column {
   String id;
   String name;
+  dom.Element nameElement;
   String field;
   int width;
   int minWidth;
@@ -190,18 +191,18 @@ class Column {
   int previousWidth;
 
   Column({this.id, this.field, this.minWidth : 30, this.maxWidth, this.cssClass,
-    this.formatter, this.editor, this.validator, this.name: '' , this.width,
+    this.formatter, this.editor, this.validator, this.name: '' , this.nameElement, this.width,
     this.resizable : true, this.sortable : false, this.focusable : true,
     this.selectable : true, this.defaultSortAsc : true,
     this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan,
-    this.behavior, this.isMovable: true, this.isDraggable : false, this.asyncPostRender}) {
-  }
+    this.behavior, this.isMovable: true, this.isDraggable : false, this.asyncPostRender, this.toolTip});
 
   Column.unititialized();
 
   void extend(Column c) {
     if(c.id != null) id = c.id;
     if(c.name != null) name = c.name;
+    if(c.nameElement != null) nameElement = c.nameElement;
     if(c.field != null) field = c.field;
     if(c.width != null) width = c.width;
     if(c.minWidth != null) minWidth = c.minWidth;
