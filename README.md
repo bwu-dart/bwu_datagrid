@@ -68,4 +68,4 @@ Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_da
 
 ### Sort by column ascending/descending
 ![sort_ascending](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/sort_asc.png)
-       ![sort_descending](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/sort_desc.png)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![sort_descending](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/sort_desc.png)
