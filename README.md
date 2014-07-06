@@ -59,3 +59,9 @@ Find documentation and examples in [the wiki](https://github.com/bwu-dart/bwu_da
 
 ### Async Post Render
 ![e10_async_post_render](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/e10_async_post_render.png)
+
+### Header row
+![header_row](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/header_row.png)
+
+### Checkbox row select
+![checkbox_row_select](https://raw.githubusercontent.com/bwu-dart/bwu_datagrid/master/doc/screenshots/checkbox_row_select.png)

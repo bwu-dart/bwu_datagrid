@@ -14,7 +14,7 @@
 
 ## 0.0.10
 
-* nothing (accidentally skipped)
+* nothing (inadvertently skipped)
 
 ## 0.0.9
 
