@@ -21,6 +21,9 @@ class CellRangeSelector extends Plugin {
   Range _range;
   dom.HtmlElement _dummyProxy;
 
+  core.EventBus get eventBus => _eventBus;
+  core.EventBus _eventBus = new core.EventBus();
+
   CellRangeDecoratorOptions _options;
 
   CellRangeSelector([CellRangeDecoratorOptions options]) {
@@ -54,6 +57,7 @@ class CellRangeSelector extends Plugin {
   }
 
   void destroy() {
+
     _subscriptions.forEach((e) => e.cancel());
   }
 
@@ -63,10 +67,13 @@ class CellRangeSelector extends Plugin {
 //  }
 
   dom.HtmlElement _handleDragStart(DragStart e) {
+    if(e.isImmediatePropagationStopped || isSuspended) return null;
+
     var cell = _grid.getCellFromEvent(e.causedBy);
-    if (_grid.eventBus.fire(core.Events.BEFORE_CELL_RANGE_SELECTED, new core.BeforeCellRangeSelected(this, cell)).retVal) {
+    if (eventBus.fire(core.Events.BEFORE_CELL_RANGE_SELECTED, new core.BeforeCellRangeSelected(this, cell)).retVal) {
       if (_grid.canCellBeSelected(cell.row, cell.cell)) {
         _dragging = true;
+        e.stopImmediatePropagation();
       }
     }
     if (!_dragging) {
@@ -74,7 +81,8 @@ class CellRangeSelector extends Plugin {
       return null;
     }
 
-    _grid.focus();
+    _grid.setFocus();
+
     var canvasBounds = _canvas.getBoundingClientRect();
     _canvasOrigin = new math.Point(canvasBounds.left.round(), canvasBounds.top.round());
     e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
@@ -119,8 +127,14 @@ class CellRangeSelector extends Plugin {
     e.preventDefault();
 
     _decorator.hide();
-    _grid.eventBus.fire(core.Events.CELL_RANGE_SELECTED, new core.CellRangeSelected(this, _range));
+    eventBus.fire(core.Events.CELL_RANGE_SELECTED, new core.CellRangeSelected(this, _range));
   }
+
+  async.Stream<core.BeforeCellRangeSelected> get onBwuBeforeCellRangeSelected =>
+      _eventBus.onEvent(core.Events.BEFORE_CELL_RANGE_SELECTED);
+
+  async.Stream<core.CellRangeSelected> get onBwuCellRangeSelected =>
+      _eventBus.onEvent(core.Events.CELL_RANGE_SELECTED);
 }
 
 //    $.extend(this, {

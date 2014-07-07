@@ -7,16 +7,11 @@ import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
-//  // register namespace
-//  $.extend(true, window, {
-//    "Slick": {
-//      "CellCopyManager": CellCopyManager
-//    }
-//  });
-
-
 class CellCopyManager extends Plugin {
-  var _copiedRanges;
+  List<core.Range> _copiedRanges;
+
+  core.EventBus get eventBus => _eventBus;
+  core.EventBus _eventBus = new core.EventBus();
 
   CellCopyManager();
 
@@ -25,7 +20,7 @@ class CellCopyManager extends Plugin {
   @override
   void init(BwuDatagrid grid) {
     super.init(grid);
-    keyDownSubscription = grid.onKeyDown.listen(handleKeyDown);
+    keyDownSubscription = grid.onBwuKeyDown.listen(_handleKeyDown);
   }
 
   void destroy() {
@@ -34,52 +29,41 @@ class CellCopyManager extends Plugin {
     }
   }
 
-  void handleKeyDown(dom.KeyboardEvent e) {
-    Map args = e.detail as Map;
-    var ranges;
+  void _handleKeyDown(core.KeyDown e) {
+    List<core.Range> ranges;
     if (!grid.getEditorLock.isActive) {
-      if (e.which == dom.KeyCode.ESC) {
-        if (_copiedRanges) {
+      if (e.causedBy.which == dom.KeyCode.ESC) {
+        if (_copiedRanges != null) {
           e.preventDefault();
           clearCopySelection();
-          grid.eventBus.fire(core.Events.COPY_CANCELLED, new core.CopyCancelled(this, _copiedRanges));
-//          onCopyCancelled.notify({
-//            ranges: _copiedRanges
-//          });
+          eventBus.fire(core.Events.COPY_CANCELLED, new core.CopyCancelled(this, _copiedRanges));
           _copiedRanges = null;
         }
       }
 
-      if (e.which == 67 && (e.ctrlKey || e.metaKey)) {
+      if (e.causedBy.which == 67 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
         ranges = grid.getSelectionModel.getSelectedRanges();
         if (ranges.length != 0) {
           e.preventDefault();
           _copiedRanges = ranges;
-          markCopySelection(ranges);
-          grid.eventBus.fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
-//          onCopyCells.notify({
-//            'ranges': ranges
-//          });
+          _markCopySelection(ranges);
+          eventBus.fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
         }
       }
 
-      if (e.which == 86 && (e.ctrlKey || e.metaKey)) {
-        if (_copiedRanges) {
+      if (e.causedBy.which == 86 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
+        if (_copiedRanges != null) {
           e.preventDefault();
           clearCopySelection();
           ranges = grid.getSelectionModel.getSelectedRanges();
-          grid.eventBus.fire(core.Events.PASTE_CELLS, new core.PasteCells(this, _copiedRanges, ranges));
-//          onPasteCells.notify({
-//            'from': _copiedRanges,
-//            'to': ranges
-//          });
+          eventBus.fire(core.Events.PASTE_CELLS, new core.PasteCells(this, _copiedRanges, ranges));
           _copiedRanges = null;
         }
       }
     }
   }
 
-  void markCopySelection(List<core.Range> ranges) {
+  void _markCopySelection(List<core.Range> ranges) {
     var columns = grid.getColumns;
     var hash = {};
     for (var i = 0; i < ranges.length; i++) {
@@ -97,13 +81,12 @@ class CellCopyManager extends Plugin {
     grid.removeCellCssStyles("copy-manager");
   }
 
-    //    $.extend(this, {
-    //      "init": init,
-    //      "destroy": destroy,
-    //      "clearCopySelection": clearCopySelection,
-    //
-    //      "onCopyCells": new Slick.Event(),
-    //      "onCopyCancelled": new Slick.Event(),
-    //      "onPasteCells": new Slick.Event()
-    //    });
+  async.Stream<core.CopyCells> get onBwuCopyCells =>
+      _eventBus.onEvent(core.Events.COPY_CELLS);
+
+  async.Stream<core.CopyCancelled> get onBwuCopyCancelled =>
+      _eventBus.onEvent(core.Events.COPY_CANCELLED);
+
+  async.Stream<core.PasteCells> get onBwuPasteCells =>
+      _eventBus.onEvent(core.Events.PASTE_CELLS);
 }

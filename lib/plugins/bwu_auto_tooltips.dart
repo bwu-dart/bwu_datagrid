@@ -151,7 +151,6 @@ class AutoTooltips extends Plugin {
     var column = e.data;
     var $node = tools.closest((e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
     if($node == null) {
-      print($node);
       $node = tools.closest((e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
     }
     if (column.toolTip == null) {

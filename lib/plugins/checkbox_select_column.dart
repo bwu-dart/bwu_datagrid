@@ -26,6 +26,7 @@ class CheckboxSelectionFormatter extends Formatter {
 
 class CheckboxSelectColumn extends Column implements Plugin {
 
+  bool isSuspended;
   BwuDatagrid _grid;
   BwuDatagrid get grid => _grid;
 

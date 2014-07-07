@@ -49,8 +49,8 @@ class CellSelectionModel extends SelectionModel {
     _subscriptions.add(_grid.onBwuActiveCellChanged.listen(handleActiveCellChange));
     _subscriptions.add(_grid.onBwuKeyDown.listen(handleKeyDown));
     grid.registerPlugin(_selector);
-    _subscriptions.add(_grid.onBwuCellRangeSelected.listen(handleCellRangeSelected));
-    _subscriptions.add(_grid.onBwuBeforeCellRangeSelected.listen(handleBeforeCellRangeSelected));
+    _subscriptions.add(_selector.onBwuCellRangeSelected.listen(handleCellRangeSelected));
+    _subscriptions.add(_selector.onBwuBeforeCellRangeSelected.listen(handleBeforeCellRangeSelected));
   }
 
 

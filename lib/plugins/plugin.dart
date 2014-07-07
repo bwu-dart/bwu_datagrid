@@ -8,6 +8,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 abstract class Plugin {
   BwuDatagrid _grid;
   BwuDatagrid get grid => _grid;
+  bool isSuspended = false;
 
   Plugin();
 

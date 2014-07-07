@@ -46,4 +46,5 @@ transformers:
     - example/e13_get_item_sorting.html
     - example/header_row.html
     - example/checkbox_row_select.html
+    - example/spreadsheet.html
     - example/autotooltips.html

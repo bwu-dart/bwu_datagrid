@@ -130,7 +130,7 @@ class TextEditor extends Editor {
   String get value => $input.value;
 
 //  @override
-  void  set value(val) => $input.value = val;
+  set value(val) => $input.value = val;
 
   @override
   void loadValue(DataItem item) {
@@ -284,7 +284,7 @@ class DateEditor extends Editor  {
   @override
   void show () {
     if (calendarOpen) {
-      print('show, calendarOpen');
+//      print('show, calendarOpen');
 //      datepicker.dpDiv.stop(true, true).show();
     }
   }
@@ -292,7 +292,7 @@ class DateEditor extends Editor  {
   @override
   void hide () {
     if (calendarOpen) {
-      print('hide, calendarOpen');
+//      print('hide, calendarOpen');
 //      datepicker.dpDiv.stop(true, true).hide();
     }
   }

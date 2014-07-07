@@ -5,6 +5,7 @@
 * add example 13 getItem-sorting
 * add example header-row
 * add example checkbox row select
+* add example spreadsheet
 
 ## 0.0.11
 
