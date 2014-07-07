@@ -47,21 +47,6 @@ class AppElement extends PolymerElement {
   void attached() {
     super.attached();
 
-
-//    dom.document.onFocus.listen((e) {
-//      print(e.target);
-//    });
-//
-//    dom.document.onClick.listen((e) {
-//
-//      try {print(dom.document.querySelector(':focus').outerHtml);}catch(e){}
-//      try {print(dom.document.querySelector(':focus').outerHtml);}catch(e){}
-//      try {print(grid.shadowRoot.querySelector(':focus').outerHtml);}catch(e){}
-//      try {print(dom.document.activeElement.outerHtml);}catch(e){}
-//      try {new async.Future(() => print(dom.document.activeElement.outerHtml));}catch(e){}
-//      try {new async.Future(() => print(grid.shadowRoot.querySelector(':focus').outerHtml));}catch(e){}
-//    });
-
     try {
       grid = $['myGrid'];
 
@@ -78,7 +63,6 @@ class AppElement extends PolymerElement {
           editor: formulaEditor
         ));
       }
-
 
       // prepare the data
       data = new MapDataItemProvider();
@@ -139,4 +123,3 @@ class AppElement extends PolymerElement {
     }
   }
 }
-
