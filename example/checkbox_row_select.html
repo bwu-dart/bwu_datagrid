@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid example: Header row</title>
+    <title>BWU Datagrid example: Checkbox Row Select</title>
 
     
     
@@ -13,7 +13,6 @@
   </head>
 
   <body><script src="packages/web_components/platform.js"></script><script src="packages/web_components/dart_support.js"></script>
-
 
 
 
@@ -442,7 +441,7 @@ html /deep/ [segment], html /deep/ segment {
     <content></content>
   </template>
   
-</polymer-element><polymer-element name="bwu-datagrid">
+</polymer-element><polymer-element name="bwu-datagrid" tabindex="0">
   <template>
     <style>/*
  * jQuery UI CSS Framework 1.8.16
@@ -1116,7 +1115,7 @@ classes should alter those!
 
     <content select="[grid-target=&quot;popup&quot;]"></content>
 
-    <div id="focusSink" tabindex="0" hidefocus="true"></div>
+    <div id="focusSink" tabindex="0" hidefocus=""></div>
     <div id="headerScroller" class="bwu-datagrid-header ui-state-default">
       <bwu-datagrid-headers id="bwuDatagridHeaders" class="bwu-datagrid-header-columns">
       </bwu-datagrid-headers>
@@ -1209,50 +1208,6 @@ li a:hover {
       </li>
     </ul>
 
-  </template>
-  
-</polymer-element>
-
-
-
-
-<polymer-element name="sp-tooltip">
-  <template>
-    <style>
-      :host(.jqstooltip) {
-        display: block;
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        visibility: hidden;
-
-        z-index: 10000;
-        background-color: rgba(0,0,0,0.6);
-        background: rgb(0, 0, 0) transparent;
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
-        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
-        color: white;
-        font: 10px arial, san serif;
-        text-align: left;
-        white-space: nowrap;
-        padding: 5px;
-        border: 1px solid white;
-      }
-    </style>
-
-    <content id="content"></content>
-  </template>
-  
-</polymer-element><polymer-element name="bwu-sparkline">
-  <template>
-    <style>
-      #canvas {
-        display: 'inline-block';
-        verticalAlign: 'top';
-      }
-    </style>
-    <canvas id="canvas"></canvas>
-    <content></content>
   </template>
   
 </polymer-element><polymer-element name="app-element">

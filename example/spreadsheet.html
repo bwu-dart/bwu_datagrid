@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title>BWU Datagrid example: 13 Sorting by an index, getItem method</title>
+    <title>BWU Datagrid example: Spreadsheet</title>
 
     
     
@@ -10,10 +10,10 @@
 
     
      <!-- TODO remove, only here due to a bug in code generation when files change -->
-    
   </head>
 
   <body><script src="packages/web_components/platform.js"></script><script src="packages/web_components/dart_support.js"></script>
+
 
 
 
@@ -1137,6 +1137,79 @@ classes should alter those!
     <content></content>
   </template>
   
+</polymer-element>
+
+<polymer-element name="bwu-column-picker">
+  <template>
+    <style>:host {
+  display: none;
+  position: absolute;
+  z-index: 20;
+
+  border: 1px solid #718BB7;
+  background: #f0f0f0;
+  padding: 6px;
+  -moz-box-shadow: 2px 2px 2px silver;
+  -webkit-box-shadow: 2px 2px 2px silver;
+  box-shadow: 2px 2px 2px silver;
+  min-width: 100px;
+  cursor: default;
+  opacity: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+
+input {
+  margin: 4px;
+}
+
+li a {
+  display: block;
+  padding: 4px;
+  font-weight: bold;
+}
+
+li a:hover {
+  background: white;
+}
+</style>
+
+    <ul>
+      <template repeat="{{col in columnCheckboxes}}">
+        <li>
+          <label>
+            <input type="checkbox" checked="{{col.checked}}" on-change="{{updateColumn}}" data-column-id="{{col.id}}">{{col.text}}
+          </label>
+        </li>
+      </template>
+    </ul>
+    <hr>
+    <ul>
+      <li>
+        <label>
+          <input type="checkbox" checked="{{isAutoResize}}" on-change="{{autoResizeChangedHandler}}">Force fit columns
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" checked="{{isSyncResize}}" on-change="{{syncResizeChangedHandler}}">Synchronous resize
+        </label>
+      </li>
+    </ul>
+
+  </template>
+  
 </polymer-element><polymer-element name="app-element">
   <template>
     <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
@@ -1823,49 +1896,37 @@ input.editor-checkbox {
         display: block;
         width: 100%;
       }
+    </style>
 
-      #description {
-        position: fixed;
-        top: 30px;
-        right: 30px;
-        width: 25em;
-        background: beige;
-        border: solid 1px gray;
-        z-index: 1000;
-      }
-
-      #description h2 {
-        padding-left: 0.5em;
-      }
-
-      #myGrid {
-        position: absolute;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 0;
+    <style>
+      .slick-cell.copied {
+        background: blue;
+        background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
       }
     </style>
 
-    <!-- <div style='position:relative'>
-      <div style='width:600px;'>-->
-        <bwu-datagrid id="myGrid"></bwu-datagrid>
-      <!--</div> -->
+    <div style="position:relative">
+      <div style="width:600px;">
+        <bwu-datagrid id="myGrid" style="width:100%;height:500px;"></bwu-datagrid>
+      </div>
 
-      <div id="description">
+      <div class="options-panel">
         <h2>Demonstrates:</h2>
         <ul>
-          <li>Sorting grid items by an index</li>
-          <li>Using the getItem method to provide data</li>
+          <li>Virtual scrolling on both rows and columns.</li>
+          <li>Select a range of cells with a mouse</li>
+          <li>Use Ctrl-C and Ctrl-V keyboard shortcuts to cut and paste cells</li>
+          <li>Use Esc to cancel a copy and paste operation</li>
+          <li>Edit the cell and select a cell range to paste the range</li>
         </ul>
+
         <h2>View Source:</h2>
         <ul>
-          <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e12_get_item_sorting/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+          <li><a href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/spreadsheet/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
         </ul>
       </div>
-    <!--</div>-->
+    </div>
   </template>
   
 </polymer-element>
@@ -2543,20 +2604,9 @@ body /deep/ .ui-datepicker-cover {
     left: -4px; /*must have*/
     width: 200px; /*must have*/
     height: 200px; /*must have*/
-}</style><style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background-color: White;
-        overflow: auto;
-      }
-
-      body {
-        font: 11px Helvetica, Arial, sans-serif;
-      }
-    </style>
+}</style>
     <app-element></app-element>
     
   
 
-<script src="e13_get_item_sorting.html_bootstrap.dart.js" async=""></script></body></html>
+<script src="spreadsheet.html_bootstrap.dart.js" async=""></script></body></html>

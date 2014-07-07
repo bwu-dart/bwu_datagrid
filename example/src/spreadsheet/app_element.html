@@ -19,10 +19,10 @@
     </style>
 
     <style>
-      * /deep/ .bwu-datagrid-cell-checkboxsel {
-        background: #f0f0f0;
-        border-right-color: silver;
-        border-right-style: solid;
+      .slick-cell.copied {
+        background: blue;
+        background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
       }
     </style>
 
@@ -34,12 +34,16 @@
       <div class='options-panel'>
         <h2>Demonstrates:</h2>
         <ul>
-          <li>Checkbox row select column</li>
+          <li>Virtual scrolling on both rows and columns.</li>
+          <li>Select a range of cells with a mouse</li>
+          <li>Use Ctrl-C and Ctrl-V keyboard shortcuts to cut and paste cells</li>
+          <li>Use Esc to cancel a copy and paste operation</li>
+          <li>Edit the cell and select a cell range to paste the range</li>
         </ul>
 
         <h2>View Source:</h2>
         <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/checkbox_row_select/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
+          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/spreadsheet/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
         </ul>
       </div>
     </div>

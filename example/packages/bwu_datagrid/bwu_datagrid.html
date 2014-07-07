@@ -5,7 +5,7 @@
 <link rel='import' href='datagrid/bwu_datagrid_header_column.html'>
 <link rel='import' href='datagrid/bwu_datagrid_headerrow_column.html'>
 
-<polymer-element name='bwu-datagrid'>
+<polymer-element name='bwu-datagrid' tabindex='0'>
   <template>
     <link rel='stylesheet' href='asset/smoothness/jquery-ui-1.8.16.custom.css'>
     <link rel='stylesheet' href='asset/grid.css'>
@@ -21,7 +21,7 @@
 
     <content select='[grid-target="popup"]'></content>
 
-    <div id='focusSink' tabIndex='0' hideFocus=true></div>
+    <div id='focusSink' tabIndex='0' hideFocus></div>
     <div id='headerScroller' class='bwu-datagrid-header ui-state-default'>
       <bwu-datagrid-headers id='bwuDatagridHeaders' class='bwu-datagrid-header-columns'>
       </bwu-datagrid-headers>
