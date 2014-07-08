@@ -68,8 +68,13 @@ class Range {
 }
 
 abstract class ItemBase {
-  dynamic operator[](String key);
-  void operator[]=(String key, value);
+  Map _values = {};
+  dynamic operator[](String key) {
+    return _values[key];
+  }
+  void operator[]=(String key, value) {
+    _values[key] = value;
+  }
 }
 
 /***
@@ -89,7 +94,7 @@ class Group extends NonDataItem {
   /***
    * Number of rows in the group.
    */
-  int count = 0;
+  int get count => rows == null ? 0 : rows.length;
 
   /***
    * Grouping value.
@@ -99,12 +104,12 @@ class Group extends NonDataItem {
   /***
    * Formatted display value of the group.
    */
-  String title;
+  dom.Node title;
 
   /***
    * Whether a group is collapsed.
    */
-  bool isCollapsed;
+  bool isCollapsed = false;
 
   /***
    * GroupTotals, if any.
@@ -125,7 +130,7 @@ class Group extends NonDataItem {
    * A unique key used to identify the group.  This key can be used in calls to DataView
    * collapseGroup() or expandGroup().
    */
-  dynamic groupingKey; // TODO should it be made generic?
+  String groupingKey; // TODO should it be made generic?
 
   @override
   bool operator ==(other) {
@@ -139,16 +144,14 @@ class Group extends NonDataItem {
 
   @override
   int get hashCode => quc.hash3(count, isCollapsed, title);
+}
 
-  @override
-  operator [](String key) {
-    throw 'not yet implemented'; // TODO
-  }
+abstract class GroupTotalsFormatter extends fm.FormatterBase {
+  void call(dom.Element target, GroupTotals totals, Column columnDef);
+}
 
-  @override
-  void operator []=(String key, value) {
-    throw 'not yet implemented'; // TODO
-  }
+abstract class GroupTitleFormatter extends fm.FormatterBase {
+  dom.Node call(Group totals);
 }
 
 /**
@@ -161,23 +164,13 @@ class GroupTotals extends NonDataItem {
   /***
    * Parent Group.
    */
-  Group parent;
+  Group group;
 
   /***
    * Whether the totals have been fully initialized / calculated.
    * Will be set to false for lazy-calculated group totals.
    */
   bool isInitialized = false;
-
-  @override
-  operator [](key) {
-    throw 'not yet implemented'; // TODO
-  }
-
-  @override
-  void operator []=(key, value) {
-    throw 'not yet implemented'; // TODO
-  }
 }
 
 /***

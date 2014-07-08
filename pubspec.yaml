@@ -47,4 +47,5 @@ transformers:
     - example/header_row.html
     - example/checkbox_row_select.html
     - example/spreadsheet.html
+    - example/grouping.html
     - example/autotooltips.html

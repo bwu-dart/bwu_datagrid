@@ -11,6 +11,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
+import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
 part 'event_data.dart';
 part 'event_bus.dart';

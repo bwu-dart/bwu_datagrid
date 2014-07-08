@@ -1517,7 +1517,7 @@ class BwuDatagrid extends PolymerElement {
     return getDataLength + (_gridOptions.enableAddRow ? 1 : 0);
   }
 
-  DataItem getDataItem(int i) {
+  core.ItemBase getDataItem(int i) {
     if(i >= _dataProvider.length) {
       return null;
     }
@@ -1622,7 +1622,7 @@ class BwuDatagrid extends PolymerElement {
     int newScrollTop = y - _pageOffset;
 
     if (_pageOffset != oldOffset) {
-      var range = _getVisibleRange(newScrollTop);
+      Range range = _getVisibleRange(newScrollTop);
       _cleanupRows(range);
       _updateRowPositions();
     }
@@ -1635,14 +1635,14 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  Formatter _getFormatter(int row, Column column) {
-    var rowMetadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
+  FormatterBase _getFormatter(int row, Column column) {
+    RowMetadata rowMetadata = dataProvider != null && dataProvider.getItemMetadata != null ? dataProvider.getItemMetadata(row) : null;
 
     // look up by id, then index
-    var columnOverrides = rowMetadata != null ?
-        (rowMetadata.columns[column.id] != null ? rowMetadata.columns[column.id] : rowMetadata.columns[getColumnIndex(column.id)]) : null;
+    Column columnOverrides = rowMetadata != null && rowMetadata.columns != null ?
+        (rowMetadata.columns[column.id] != null ? rowMetadata.columns[column.id] : rowMetadata.columns['${getColumnIndex(column.id)}']) : null;
 
-    var result = (columnOverrides != null && columnOverrides.formatter != null) ? columnOverrides.formatter :
+    FormatterBase result = (columnOverrides != null && columnOverrides.formatter != null) ? columnOverrides.formatter :
         (rowMetadata != null && rowMetadata.formatter != null ? rowMetadata.formatter :
         column.formatter); // TODO check
     if(result == null) {
@@ -1671,7 +1671,7 @@ class BwuDatagrid extends PolymerElement {
     return column.editor != null ? column.editor : (_gridOptions.editorFactory != null ? _gridOptions.editorFactory.getEditor(column): null);
   }
 
-  dynamic _getDataItemValueForColumn(DataItem item, Column columnDef) {
+  dynamic _getDataItemValueForColumn(core.ItemBase item, Column columnDef) {
     if (_gridOptions.dataItemColumnValueExtractor != null) {
       return _gridOptions.dataItemColumnValueExtractor(item, columnDef);
     }
@@ -1706,7 +1706,7 @@ class BwuDatagrid extends PolymerElement {
         m = columns[i];
         colspan = '1';
         if (metadata != null && metadata.columns != null) {
-          var columnData = metadata.columns[m.id] != null ? metadata.columns[m.id] : metadata.columns[i];
+          var columnData = metadata.columns[m.id] != null ? metadata.columns[m.id] : metadata.columns['$i'];
           colspan = columnData != null && columnData.colspan != null ? columnData.colspan : '1';
           if (colspan == "*") {
             colspan = '${ii - i}';
@@ -1734,7 +1734,7 @@ class BwuDatagrid extends PolymerElement {
     return rowElement;
   }
 
-  void _appendCellHtml(dom.HtmlElement rowElement, int row, int cell, String colspan, DataItem item) {
+  void _appendCellHtml(dom.HtmlElement rowElement, int row, int cell, String colspan, core.ItemBase item) {
     var m = columns[cell];
     var cellCss = "bwu-datagrid-cell l${cell} r${math.min(columns.length - 1, cell + tools.parseInt(colspan) - 1)} ${
       (m.cssClass != null ? m.cssClass : '')}";
@@ -1759,8 +1759,13 @@ class BwuDatagrid extends PolymerElement {
 
     // if there is a corresponding row (if not, this is the Add New row or this data hasn't been loaded yet)
     if (item != null) {
-      var value = _getDataItemValueForColumn(item, m);
-      /*cellElement.append(new dom.Text(*/_getFormatter(row, m)(cellElement, row, cell, value, m, item); //));
+      var value = _getDataItemValueForColumn(item, m);  // TODO this distinction is already made in DefaultTotalsCellFormatter - so remove it here and make DefaultTotalsCellFormatter work with the signature of the default formatter
+      FormatterBase fm = _getFormatter(row, m);
+      if(fm is Formatter) {
+      /*cellElement.append(new dom.Text(*/fm.call(cellElement, row, cell, value, m, item); //));
+      } else if(fm is core.GroupTotalsFormatter) {
+        fm.call(cellElement, item, m);
+      }
     }
 
     //stringArray.add("</div>");
@@ -1796,12 +1801,14 @@ class BwuDatagrid extends PolymerElement {
       return;
     }
 
-    if (_rowNodeFromLastMouseWheelEvent == cacheEntry.rowNode) {
-      cacheEntry.rowNode.style.display = 'none';
-      _zombieRowNodeFromLastMouseWheelEvent = _rowNodeFromLastMouseWheelEvent;
-    } else {
-      //$canvas.children[0].remove(cacheEntry.rowNode);
-      cacheEntry.rowNode.remove(); // TODO remove/add event handlers?
+    if(cacheEntry.rowNode != null) { // TODO is this ever be null
+      if (_rowNodeFromLastMouseWheelEvent == cacheEntry.rowNode) {
+        cacheEntry.rowNode.style.display = 'none';
+        _zombieRowNodeFromLastMouseWheelEvent = _rowNodeFromLastMouseWheelEvent;
+      } else {
+        //$canvas.children[0].remove(cacheEntry.rowNode);
+        cacheEntry.rowNode.remove(); // TODO remove/add event handlers?
+      }
     }
 
     _rowsCache.remove(row);

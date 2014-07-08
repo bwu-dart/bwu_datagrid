@@ -1,13 +1,16 @@
 part of bwu_dart.bwu_datagrid.dataview;
 
 abstract class Aggregator {
-  void init();
-  void storeResult(GroupTotals groupTotals);
-  void accumulate(String item);
+  void init() {}
+  void storeResult(core.GroupTotals groupTotals);
+  void accumulate(core.ItemBase item);
+  void call(List<core.ItemBase> rows) {
+    rows.forEach((r) => accumulate(r));
+  }
 }
 
 class AvgAggregator extends Aggregator {
-  int _field;
+  String _field;
 
   int _count = 0;
   int _nonNullCount = 0;
@@ -16,33 +19,37 @@ class AvgAggregator extends Aggregator {
   AvgAggregator(this._field);
 
   @override
-  void accumulate(String item) {
+  void accumulate(core.ItemBase item) {
     var val = item[_field];
     _count++;
-    if (val != null && val != '' && val is num) {
+    if (val != null) {
       _nonNullCount++;
+      if(val is String && val.isNotEmpty) {
       _sum += double.parse(val);
+      } else if(val is num) {
+        _sum += val;
+      }
     }
   }
 
   @override
-  void storeResult(GroupTotals groupTotals) {
-    if (groupTotals.avg == null) {
-      groupTotals.avg = {};
+  void storeResult(core.GroupTotals groupTotals) {
+    if (groupTotals['avg'] == null) {
+      groupTotals['avg'] = {};
     }
     if (_nonNullCount != 0) {
-      groupTotals.avg[_field] = _sum / _nonNullCount;
+      groupTotals['avg'][_field] = _sum / _nonNullCount;
     }
   }
 }
 
 class MinAggregator extends Aggregator {
-  int _field;
+  String _field;
   double _min;
   MinAggregator(this._field);
 
   @override
-  void accumulate(String item) {
+  void accumulate(core.ItemBase item) {
     num val = item[_field];
     if (val != null && val != '' && val is num) {
       if (_min == null || val < _min) {
@@ -52,21 +59,21 @@ class MinAggregator extends Aggregator {
   }
 
   @override
-  void storeResult(GroupTotals groupTotals) {
-    if (groupTotals.min == null) {
-      groupTotals.min = {};
+  void storeResult(core.GroupTotals groupTotals) {
+    if (groupTotals['min'] == null) {
+      groupTotals['min'] = {};
     }
-    groupTotals.min[_field] = _min;
+    groupTotals['min'][_field] = _min;
   }
 }
 
 class MaxAggregator extends Aggregator {
-  int _field;
+  String _field;
   double _max;
   MaxAggregator(this._field);
 
   @override
-  void accumulate(String item) {
+  void accumulate(core.ItemBase item) {
     num val = item[_field];
     if (val != null && val != '' && val is num) {
       if (_max == null || val > _max) {
@@ -76,33 +83,37 @@ class MaxAggregator extends Aggregator {
   }
 
   @override
-  void storeResult(GroupTotals groupTotals) {
-    if (groupTotals.max == null) {
-      groupTotals.max = {};
+  void storeResult(core.GroupTotals groupTotals) {
+    if (groupTotals['max'] == null) {
+      groupTotals['max'] = {};
     }
-    groupTotals.max[_field] = _max_;
+    groupTotals['max'][_field] = _max;
   }
 }
 
 class SumAggregator extends Aggregator {
-  int _field;
-  double _sum;
+  String _field;
+  double _sum = 0.0;
   SumAggregator(this._field);
 
   @override
-  void accumulate(String item) {
-    num val = item[_field];
-    if (val != null && val != '' && val is double) {
-      _sum += double.parse(val);
+  void accumulate(core.ItemBase item) {
+    var val = item[_field];
+    if (val != null) {
+      if(val is String && val.isNotEmpty){
+        _sum += double.parse(val);
+      } else if(val is num) {
+        _sum += val;
+      }
     }
   }
 
   @override
-  void storeResult(GroupTotals groupTotals) {
-    if (groupTotals.sum == null) {
-      groupTotals.sum = {};
+  void storeResult(core.GroupTotals groupTotals) {
+    if (groupTotals['sum'] == null) {
+      groupTotals['sum'] = {};
     }
-    groupTotals.sum[_field] = _sum;
+    groupTotals['sum'][_field] = _sum;
   }
 }
 

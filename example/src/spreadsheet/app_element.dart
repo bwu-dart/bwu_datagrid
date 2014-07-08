@@ -1,8 +1,6 @@
 library app_element;
 
 import 'dart:math' as math;
-import 'dart:html' as dom;
-import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
 

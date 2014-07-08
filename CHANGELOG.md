@@ -6,6 +6,7 @@
 * add example header-row
 * add example checkbox row select
 * add example spreadsheet
+* add example grouping
 
 ## 0.0.11
 

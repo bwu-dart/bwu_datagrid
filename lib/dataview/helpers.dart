@@ -10,22 +10,27 @@ class DataViewOptions {
 typedef int SortComparerFunc(a, b);
 
 class GroupingInfo {
-  bool getter = null;
-  Formatter formatter = null;
-  SortComparerFunc comparer = (a, b) => a.value - b.value;
-  List predefinedValues = [];
-  List<Aggregator> aggregators = [];
-  bool doAggregateEmpty = false;
-  bool doAggregateCollapsed = false;
-  bool doAggregateChildGroups = false;
-  bool isCollapsed = false;
-  bool isDisplayTotalsRow = true;
-  bool isLazyTotalsCalculation = false;
+  var getter;
+  bool getterIsAFn = false;
+  core.GroupTitleFormatter formatter;
+  SortComparerFunc comparer;
+  List predefinedValues;
+  List<Aggregator> aggregators;
+  bool doAggregateEmpty;
+  bool doAggregateCollapsed;
+  bool doAggregateChildGroups;
+  bool isCollapsed;
+  bool isDisplayTotalsRow;
+  bool isLazyTotalsCalculation;
 
   GroupingInfo({this.getter, this.formatter, this.comparer,
-    this.predefinedValues, this.aggregators, this.doAggregateEmpty,
-        this.doAggregateCollapsed, this.doAggregateChildGroups, this.isCollapsed,
-        this.isDisplayTotalsRow, this.isLazyTotalsCalculation});
+    this.predefinedValues, this.aggregators, this.doAggregateEmpty : false,
+        this.doAggregateCollapsed : false, this.doAggregateChildGroups : false, this.isCollapsed : false,
+        this.isDisplayTotalsRow : true, this.isLazyTotalsCalculation: false}) {
+    if(predefinedValues == null) predefinedValues = [];
+    if(aggregators == null) aggregators = [];
+    if(comparer == null) comparer  =(a, b) => a.value - b.value;
+  }
 }
 
 class Args {

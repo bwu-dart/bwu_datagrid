@@ -184,7 +184,7 @@ class Column {
 
   Editor editor;
   Formatter formatter;
-  Formatter groupTotalsFormatter;
+  GroupTotalsFormatter groupTotalsFormatter;
   Validator validator;
   AsyncPostRenderFn asyncPostRender;
 
@@ -195,7 +195,8 @@ class Column {
     this.resizable : true, this.sortable : false, this.focusable : true,
     this.selectable : true, this.defaultSortAsc : true,
     this.rerenderOnResize : false, this.cannotTriggerInsert: false, this.colspan,
-    this.behavior, this.isMovable: true, this.isDraggable : false, this.asyncPostRender, this.toolTip});
+    this.behavior, this.isMovable: true, this.isDraggable : false, this.asyncPostRender, this.toolTip,
+    this.groupTotalsFormatter});
 
   Column.unititialized();
 

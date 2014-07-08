@@ -2,6 +2,7 @@ library bwu_dart.bwu_datagrid.formatters;
 
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 
 /***
  * Contains basic BwuDatagrid formatters.
@@ -14,18 +15,17 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
  */
 
 class DefaultFormatter extends Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value != null) {
-      //return "";
-    //} else {
-      /*return*/ target.text = ('$value'.replaceAll(r'&',"&amp;").replaceAll(r'<',"&lt;").replaceAll(r'>',"&gt;"));
+      target.text = '${value}'; //('$value'.replaceAll(r'&',"&amp;").replaceAll(r'<',"&lt;").replaceAll(r'>',"&gt;"));
     }
   }
 }
 
+abstract class FormatterBase extends Function {}
 
-abstract class Formatter {
+abstract class Formatter extends FormatterBase {
   void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext);
 }
 
@@ -49,7 +49,7 @@ class PercentCompleteFormatter extends Formatter {
 
 class PercentCompleteBarFormatter extends Formatter {
 
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, core.ItemBase dataContext) {
     if (value == null || value == "") {
       //target.text = '';
       value = 0;
@@ -81,7 +81,7 @@ class YesNoFormatter extends Formatter {
 }
 
 class CheckmarkFormatter extends Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if(value != null && value is bool && value) {
       target.append(new dom.ImageElement(src:'packages/bwu_datagrid/asset/images/tick.png'));

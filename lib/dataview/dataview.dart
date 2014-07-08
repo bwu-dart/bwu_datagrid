@@ -3,11 +3,9 @@ library bwu_dart.bwu_datagrid.dataview;
 import 'dart:math' as math;
 import 'dart:async' as async;
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
-import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/bwu_datagrid.dart' as grid;
-
 
 part 'aggregators.dart';
 part 'helpers.dart';
@@ -229,7 +227,7 @@ class DataView extends DataProvider {
 
   List<GroupingInfo> get getGrouping => groupingInfos;
 
-  void setGrouping(GroupingInfo groupingInfo) {
+  void setGrouping(List<GroupingInfo> groupingInfo) {
     if (options.groupItemMetadataProvider == null) {
       options.groupItemMetadataProvider = new GroupItemMetadataProvider();
     }
@@ -240,19 +238,17 @@ class DataView extends DataProvider {
     groupingInfos = (groupingInfo is List) ? groupingInfo : [groupingInfo];
 
     for (var i = 0; i < groupingInfos.length; i++) {
-      var gi = groupingInfos[i] = $.extend(true, {}, groupingInfoDefaults, groupingInfos[i]);
+      GroupingInfo gi = groupingInfos[i];
       gi.getterIsAFn = gi.getter is Function;
 
       // pre-compile accumulator loops
-      gi.compiledAccumulators = [];
-      int idx = gi.aggregators.length;
-      while (idx-- != 0) {
-        gi.compiledAccumulators[idx] = compileAccumulatorLoop(gi.aggregators[idx]);
-      }
-
-      toggledGroupsByLevel[i] = {};
+//      gi.compiledAccumulators = [];
+//      int idx = gi.aggregators.length;
+//      while (idx-- != 0) {
+//        gi.compiledAccumulators[idx] = compileAccumulatorLoop(gi.aggregators[idx]);
+//      }
+      toggledGroupsByLevel.add({});
     }
-
     refresh();
   }
 
@@ -378,7 +374,7 @@ class DataView extends DataProvider {
 
   int get length => rows.length;
 
-  DataItem getItem(int i) {
+  core.ItemBase getItem(int i) {
     core.ItemBase item = rows[i];
 
     // if this is a group row, make sure totals are calculated and update the title
@@ -457,8 +453,8 @@ class DataView extends DataProvider {
    *     example, calling collapseGroup('high', '10%') will collapse the '10%' subgroup of
    *     the 'high' group.
    */
-  void collapseGroup(List<int> varArgs) {
-    var args = Array.prototype.slice.call(arguments); // TODO select elements from an array, arguments is an array of args passed to this function
+  void collapseGroup(List<String> varArgs) {
+    var args = varArgs.toList(); //Array.prototype.slice.call(arguments); // TODO select elements from an array, arguments is an array of args passed to this function
     var arg0 = args[0];
     if (args.length == 1 && arg0.indexOf(groupingDelimiter) != -1) {
       expandCollapseGroup(arg0.split(groupingDelimiter).length - 1, arg0, true);
@@ -473,8 +469,8 @@ class DataView extends DataProvider {
    *     example, calling expandGroup('high', '10%') will expand the '10%' subgroup of
    *     the 'high' group.
    */
-  void expandGroup(List<int> varArgs) {
-    var args = Array.prototype.slice.call(arguments); // TODO
+  void expandGroup(List<String> varArgs) {
+    var args = varArgs.toList(); //Array.prototype.slice.call(arguments); // TODO
     var arg0 = args[0];
     if (args.length == 1 && arg0.indexOf(groupingDelimiter) != -1) {
       expandCollapseGroup(arg0.split(groupingDelimiter).length - 1, arg0, false);
@@ -501,8 +497,8 @@ class DataView extends DataProvider {
         group = new core.Group();
         group.value = val;
         group.level = level;
-        group.groupingKey = (parentGroup != null ? parentGroup.groupingKey + groupingDelimiter : '') + val;
-        groups[groups.length] = group;
+        group.groupingKey = '${(parentGroup != null ? '${parentGroup.groupingKey}${groupingDelimiter}' : '')}${val}';
+        groups.add(group);
         groupsByVal[val] = group;
       }
     }
@@ -511,16 +507,16 @@ class DataView extends DataProvider {
       r = rows[i];
       val = gi.getterIsAFn ? gi.getter(r) : r[gi.getter];
       group = groupsByVal[val];
-      if (group != null) {
+      if (group == null) {
         group = new core.Group();
         group.value = val;
         group.level = level;
-        group.groupingKey = (parentGroup != null ? parentGroup.groupingKey + groupingDelimiter : '') + val;
-        groups[groups.length] = group;
+        group.groupingKey = '${(parentGroup != null ? '${parentGroup.groupingKey}${groupingDelimiter}' : '')}${val}';
+        groups.add(group);
         groupsByVal[val] = group;
       }
 
-      group.rows[group.count++] = r;
+      group.rows.add(r);
     }
 
     if (level < groupingInfos.length - 1) {
@@ -556,9 +552,11 @@ class DataView extends DataProvider {
       agg = gi.aggregators[idx];
       agg.init();
       if (!isLeafLevel && gi.doAggregateChildGroups) {
-        gi.compiledAccumulators[idx].call(agg, group.groups);
+        //gi.compiledAccumulators[idx].call(agg, group.groups);
+        gi.aggregators[idx](group.groups); // TODO
       } else {
-        gi.compiledAccumulators[idx].call(agg, group.rows);
+        //gi.compiledAccumulators[idx].call(agg, group.rows);
+        gi.aggregators[idx](group.rows); // TODO
       }
       agg.storeResult(totals);
     }
@@ -613,17 +611,17 @@ class DataView extends DataProvider {
     core.Group g;
     for (int i = 0; i < groups.length; i++) {
       g = groups[i];
-      groupedRows[gl++] = g;
+      groupedRows.add(g); //[gl++] = g;
 
       if (!g.isCollapsed) {
         rows = g.groups != null ? flattenGroupedRows(g.groups, level + 1) : g.rows;
         for (int j = 0; j < rows.length; j++) {
-          groupedRows[gl++] = rows[j];
+          groupedRows.add(rows[j]); //[gl++] = rows[j];
         }
       }
 
       if (g.totals != null && gi.isDisplayTotalsRow && (!g.isCollapsed || gi.doAggregateCollapsed)) {
-        groupedRows[gl++] = g.totals;
+        groupedRows.add(g.totals); //[gl++] = g.totals;
       }
     }
     return groupedRows;
