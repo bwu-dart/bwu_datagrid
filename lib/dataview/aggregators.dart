@@ -4,8 +4,12 @@ abstract class Aggregator {
   void init() {}
   void storeResult(core.GroupTotals groupTotals);
   void accumulate(core.ItemBase item);
+  bool _isCalculated = false;
   void call(List<core.ItemBase> rows) {
-    rows.forEach((r) => accumulate(r));
+    if(!_isCalculated) { // TODO not sure if this still works right when rows are added/removed/edited
+      rows.forEach((r) => accumulate(r));
+      _isCalculated = true;
+    }
   }
 }
 
