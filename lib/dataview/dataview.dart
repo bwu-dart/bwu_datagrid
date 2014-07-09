@@ -415,7 +415,7 @@ class DataView extends DataProvider {
     return null;
   }
 
-  void expandCollapseAllGroups(level, collapse) {
+  void expandCollapseAllGroups(bool collapse, [int level]) {
     if (level == null) {
       for (var i = 0; i < groupingInfos.length; i++) {
         toggledGroupsByLevel[i] = {};
@@ -431,15 +431,15 @@ class DataView extends DataProvider {
   /**
    * @param level {Number} Optional level to collapse.  If not specified, applies to all levels.
    */
-  void  collapseAllGroups(int level) {
-    expandCollapseAllGroups(level, true);
+  void  collapseAllGroups([int level]) {
+    expandCollapseAllGroups(true, level);
   }
 
   /**
    * @param level {Number} Optional level to expand.  If not specified, applies to all levels.
    */
-  void expandAllGroups(int level) {
-    expandCollapseAllGroups(level, false);
+  void expandAllGroups([int level]) {
+    expandCollapseAllGroups(false, level);
   }
 
   void expandCollapseGroup(int level, String groupingKey, bool collapse) {
@@ -483,7 +483,7 @@ class DataView extends DataProvider {
 
   List<core.Group> extractGroups(List<core.ItemBase> rows, [core.Group parentGroup]) {
     core.Group group;
-    int val;
+    var val;
     List<core.Group> groups = [];
     Map<int, core.Group> groupsByVal = {};
     core.ItemBase r;

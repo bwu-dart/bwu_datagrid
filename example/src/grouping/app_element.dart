@@ -43,7 +43,7 @@ class SumTotalsFormatter extends core.GroupTotalsFormatter  {
       val = totals['sum'][columnDef.field];
     }
     if (val != null) {
-      target.appendHtml("total: ${(val * 100).round() / 100}%");
+      target.appendHtml("total: ${(val * 100).round() / 100}");
     } else {
       target.children.clear();
     }
@@ -76,7 +76,7 @@ class BooleanGroupTitleFormatter extends core.GroupTitleFormatter {
         ..append(
             new dom.SpanElement()
                 ..style.color = 'green'
-                ..appendText('(${group.count} items)'));
+                ..appendText(' (${group.count} items)'));
   }
 }
 
@@ -278,7 +278,15 @@ class AppElement extends PolymerElement {
     )]);
   }
 
-  void groupByDurationOrderByCount(bool doAggregateCollapsed) {
+  void groupByDurationOrderByCountHandler() {
+    groupByDurationOrderByCount();
+  }
+
+  void groupByDurationOrderByCountDoAggregateHandler() {
+    groupByDurationOrderByCount(true);
+  }
+
+  void groupByDurationOrderByCount([bool doAggregateCollapsed = false]) {
     dataView.setGrouping(<GroupingInfo>[new GroupingInfo(
       getter: "duration",
       formatter: new GroupTitleFormatter('Duration'),
@@ -352,12 +360,16 @@ class AppElement extends PolymerElement {
     ]);
   }
 
+  void loadDataHandler(dom.Event e) {
+    int count = int.parse((e.target as dom.Element).dataset['count']);
+    loadData(count);
+  }
+
   void loadData(int count) {
     var someDates = ["01/01/2009", "02/02/2009", "03/03/2009"];
-    data = [];
-    // prepare the data
-    for (var i = 0; i < count; i++) {
-      data.add(new MapDataItem({
+    var timer = new Stopwatch()..start();
+    data = new List<MapDataItem>.generate(count, (int i){
+      return new MapDataItem({
         "id": "id_${i}",
         "num": i,
         "title": "Task ${i}",
@@ -367,8 +379,23 @@ class AppElement extends PolymerElement {
         "finish" : someDates[ (rnd.nextDouble() * 2).floor()],
         "cost" : (rnd.nextDouble() * 10000).round() / 100,
         "effortDriven" : (i % 5 == 0)
-      }));
-    }
+      });
+    }, growable: true);
+    print(timer.elapsed);
     dataView.setItems(data);
+    print(timer.elapsed);
+    timer.stop();
+  }
+
+  void groupClearHandler() {
+    dataView.setGrouping([]);
+  }
+
+  void collapseAllGroupsHandler() {
+    dataView.collapseAllGroups();
+  }
+
+  void expandAllGroupsHandler() {
+    dataView.expandAllGroups();
   }
 }

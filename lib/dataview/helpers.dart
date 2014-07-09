@@ -29,7 +29,12 @@ class GroupingInfo {
         this.isDisplayTotalsRow : true, this.isLazyTotalsCalculation: false}) {
     if(predefinedValues == null) predefinedValues = [];
     if(aggregators == null) aggregators = [];
-    if(comparer == null) comparer  =(a, b) => a.value - b.value;
+    if(comparer == null) comparer = (a, b) {
+      if(a.value is bool && b.value is bool) {
+        return (a.value ? 1 : 0) - (b.value ? 1 : 0);
+      }
+      return a.value - b.value;
+    };
   }
 }
 

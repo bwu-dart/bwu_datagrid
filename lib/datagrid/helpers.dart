@@ -99,28 +99,13 @@ abstract class FormatterFactory {
   Formatter getFormatter(Column column);
 }
 
-//class ItemMetadata {
-//  String cssClasses;
-//  bool focusable;
-//  bool selectable;
-//  final columns = <ColumnMetadata>[];
-//}
-//
-//class RowMetadata {
-//  final Map<String,Column> columns = {};
-//
-//}
-
 abstract class DataItem extends ItemBase {
   bool collapsed;
 }
 
 class MapDataItem extends DelegatingMap implements DataItem {
-//  String title;
-//  int level;
   bool collapsed = false;
 
-  //Map operator [](String idx) => data[idx];
   MapDataItem([Map base]) : super(base != null ? base : new Map());
 
   void extend(MapDataItem update) {

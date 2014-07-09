@@ -33,7 +33,7 @@ class DefaultGroupCellFormatter extends fm.Formatter {
             new dom.SpanElement()
                 ..classes.add('${giMetadataProvider.toggleCssClass}')
                 ..classes.add('${item.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
-                ..style.marginLeft = '${indentation}px')
+                ..style.marginLeft = indentation)
         ..append(
             new dom.SpanElement()
                 ..classes.add('${giMetadataProvider.groupTitleCssClass}')
