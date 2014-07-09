@@ -64,7 +64,7 @@ class DataView extends DataProvider {
   List<core.ItemBase> filteredItems = [];
   FilterFn compiledFilter;
   FilterFn compiledFilterWithCaching;
-  List<String> filterCache = [];
+  Map<int,bool> filterCache = {};
 
   List<GroupingInfo> groupingInfos = [];
   List<core.Group> groups = [];
@@ -734,17 +734,17 @@ class DataView extends DataProvider {
     return retval;
   }
 
-  List<core.ItemBase> uncompiledFilterWithCaching(List<core.ItemBase> items, String args, List<bool> cache) {
+  List<core.ItemBase> uncompiledFilterWithCaching(List<core.ItemBase> items, Map args, Map<int,bool> cache) {
     List<core.ItemBase> retval = [];
     int idx = 0;
     core.ItemBase item;
 
     for (int i = 0; i < items.length; i++) {
       item = items[i];
-      if (cache[i]) {
-        retval[idx++] = item;
+      if (cache[i] == true) {
+        retval.add(item);
       } else if (filter(item, args)) {
-        retval[idx++] = item;
+        retval.add(item);
         cache[i] = true;
       }
     }
@@ -835,7 +835,7 @@ class DataView extends DataProvider {
 
     if (refreshHints['isFilterNarrowing'] != prevRefreshHints['isFilterNarrowing'] ||
         refreshHints['isFilterExpanding'] != prevRefreshHints['isFilterExpanding']) {
-      filterCache = [];
+      filterCache = {};
     }
 
     Map filteredItems = getFilteredAndPagedItems(items);

@@ -2,6 +2,7 @@ library app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
+import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
 
@@ -83,6 +84,9 @@ class BooleanGroupTitleFormatter extends core.GroupTitleFormatter {
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
+
+  @observable String threshold = '0';
+
   AppElement.created() : super.created();
 
   List<Column> columns = [
@@ -118,14 +122,6 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-
-      // prepare the data
-//      data = new MapDataItemProvider();
-//      for (var i = 0; i < 100; i++) {
-//        data.items.add(new MapDataItem({
-//        'num': i,
-//        }));
-//      }
 
       var groupItemMetadataProvider = new GroupItemMetadataProvider();
       dataView = new DataView(options: new DataViewOptions(
@@ -164,22 +160,6 @@ class AppElement extends PolymerElement {
           grid.render();
         });
 
-        var h_runfilters = null;
-
-//        // wire up the slider to apply the filter to the model
-//        $("#pcSlider,#pcSlider2").slider({
-//          "range": "min",
-//          "slide": function (event, ui) {
-//            Slick.GlobalEditorLock.cancelCurrentEdit();
-//
-//            if (percentCompleteThreshold != ui.value) {
-//              window.clearTimeout(h_runfilters);
-//              h_runfilters = window.setTimeout(filterAndUpdate, 10);
-//              percentCompleteThreshold = ui.value;
-//            }
-//          }
-//        });
-
         // initialize the model after all the events have been hooked up
         dataView.beginUpdate();
         dataView.setFilter(myFilter);
@@ -203,6 +183,20 @@ class AppElement extends PolymerElement {
       print('$e');
     }
   }
+
+  async.Timer _pendingUpdateFilter;
+  void thresholdChanged(old) {
+    core.globalEditorLock.cancelCurrentEdit();
+
+    if(_pendingUpdateFilter != null) {
+      _pendingUpdateFilter.cancel();
+    }
+    _pendingUpdateFilter = new async.Timer(new Duration(milliseconds: 20), () {
+      percentCompleteThreshold = int.parse(threshold);
+      filterAndUpdate();
+    });
+  }
+
 
   void filterAndUpdate() {
     bool isNarrowing = percentCompleteThreshold > prevPercentCompleteThreshold;
@@ -231,11 +225,6 @@ class AppElement extends PolymerElement {
   int percentCompleteSort(Map a, Map b) {
     return a["percentComplete"] - b["percentComplete"];
   }
-
-//  int comparer(a, b) {
-//    var x = a[sortcol], y = b[sortcol];
-//    return (x == y ? 0 : (x > y ? 1 : -1));
-//  }
 
   int comparer(DataItem a, DataItem b) {
 
@@ -367,7 +356,7 @@ class AppElement extends PolymerElement {
 
   void loadData(int count) {
     var someDates = ["01/01/2009", "02/02/2009", "03/03/2009"];
-    var timer = new Stopwatch()..start();
+    //var timer = new Stopwatch()..start();
     data = new List<MapDataItem>.generate(count, (int i){
       return new MapDataItem({
         "id": "id_${i}",
@@ -381,10 +370,10 @@ class AppElement extends PolymerElement {
         "effortDriven" : (i % 5 == 0)
       });
     }, growable: true);
-    print(timer.elapsed);
+    //print(timer.elapsed);
     dataView.setItems(data);
-    print(timer.elapsed);
-    timer.stop();
+    //print(timer.elapsed);
+    //timer.stop();
   }
 
   void groupClearHandler() {

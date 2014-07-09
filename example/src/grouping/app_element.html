@@ -39,6 +39,17 @@
       * /deep/ .bwu-datagrid-group-title[level='2'] {
         font-style: italic;
       }
+
+      #slider {
+        -webkit-appearance: none;
+        -moz-apperance: none;
+        width: 100px;
+        display: inline-block;"
+        padding-top: 0px;
+        padding-bottom: 0px;
+        height: 5px;
+        background-color: #fff;
+      }
     </style>
 
     <div style='position:relative'>
@@ -57,13 +68,14 @@
         <div style="padding:6px;">
           <label style="width:200px;float:left">Show tasks with % at least: </label>
 
-          <div style="padding:2px;">
+          <input id='slider' type='range' value='{{threshold}}' min='0' max='100'>
+<!--          <div style="padding:2px;">
             <div style="width:100px;display:inline-block;" id="pcSlider"></div>
-          </div>
+          </div>-->
           <br/><br/>
             <button on-click="{{loadDataHandler}}" data-count='50'>50 rows</button>
             <button on-click="{{loadDataHandler}}" data-count='50000'>50k rows</button>
-            <button on-click="{{loadDataHandler}}" data-count='500000'>500k rows</button>
+            <button on-click="{{loadDataHandler}}" data-count='500000'>500k rows (TODO: perf improvement)</button>
           <hr/>
             <button on-click="{{groupClearHandler}}">Clear grouping</button> <!-- dataView.setGrouping([]) -->
           <br/>
