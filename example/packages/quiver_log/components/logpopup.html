@@ -1,0 +1,33 @@
+<polymer-element name="log-popup">
+  <template>
+    <style scoped>
+      #logToggle {
+        color: white;
+        background-color: #a00;
+        padding: 0.3em;
+        z-index: 9999;
+        border-top-left-radius: 0.2em;
+        border-top-right-radius: 0.2em;
+      }
+
+      #logView {
+        background-color: white;
+        z-index: 10000;
+        border: 1px solid gray;
+      }
+    </style>
+    <div
+      id="logToggle"
+      style="border-bottom-left-radius: {{buttonBottomRadius}};
+             border-bottom-right-radius: {{buttonBottomRadius}};"
+      on-click="{{toggle}}">
+      {{title}}
+    </div>
+    <div id="logView"
+      style="width: {{windowWidth}}; height: {{windowHeight}};
+             display: {{logDisplay}};">
+      <log-viewer appender="{{appender}}" style="width: 100%; height: 100%"></log-viewer>
+    </div>
+  </template>
+  <script type="application/dart" src="logpopup.dart"></script>
+</polymer-element>

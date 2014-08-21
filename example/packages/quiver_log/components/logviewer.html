@@ -1,0 +1,59 @@
+<polymer-element name="log-viewer" attributes="log">
+<template>
+  <style scoped>
+    #logMessages {
+      overflow: auto;
+      position: relative;
+      left: 0.2em;
+      right: 0.2em;
+      top: 0.2em;
+      bottom: 0.2em;
+      padding: 0.2em;
+      font-family: 'Droid Sans Mono', Consolas, monospace;
+      font-size: 9pt;
+    }
+
+    .logMessage:nth-child(odd) {
+      background-color: #e0efe0;
+    }
+
+    .filter {
+      background-color: #a3e0ff;
+      border-radius: 0.2em;
+      margin-right: 0.4em;
+      padding: 0.2em
+    }
+    
+    .closeFilter {
+      curser: pointer;
+      margin-right: 0.2em;
+    }
+
+    #newFilter {
+      width: 99.5%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+
+  <div style="width: 100%">
+    <div style="width: 99%; margin-left: auto; margin-right: auto">
+      <input type="text" id="newFilter" on-keyup="{{newFilterKeyUp}}" placeholder="Filter (ex: /some-regex/)">
+    </div>
+    <div id="filterList" style="width: 100%; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: 0.4em" display="{{filterDisplay}}">
+      <template repeat="{{filter in filters}}">
+        <span class="filter">{{filter}} <span class="closeFilter" on-click="{{killFilter}}" id="{{filter.id}}" style="font-weight: bold;">&#xd7;</span>
+        </span>
+      </template>
+    </div>
+  </div>
+
+  <div id="logMessages">
+    <template repeat="{{message in messages}}">
+    <div class="logMessage">{{format(message)}}</div>
+    </template>
+  </div>
+
+</template>
+<script type="application/dart" src="logviewer.dart"></script>
+</polymer-element>
