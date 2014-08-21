@@ -1,3 +1,6 @@
+## 0.0.13
+* remove the blue background added for debugging purposes only
+
 ## 0.0.12
 
 * looks much better in Firefox (haven't changed anything - 
