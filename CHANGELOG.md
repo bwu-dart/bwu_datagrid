@@ -1,5 +1,10 @@
 ## 0.0.12
 
+* looks much better in Firefox (haven't changed anything - 
+maybe the new Firefox (31) has better custom element/shadow DOM support
+or the Polymer polyfills work better on Firefox now (or both)  
+There are still a few issues with Firefox though. 
+* updated to Polymer 0.12.1
 * add example 11 auto-height
 * add example 12 fill-browser
 * add example 13 getItem-sorting

@@ -1,15 +1,11 @@
+build/
 packages
-build
-out
-deploy
-_from_packages
+.pub/
+
 #pubspec.lock
 .project
 .buildlog
 .settings
 *.exe
 *.*~
-*.dart.js
-*.dart.js.deps
-*.dart.js.map
 

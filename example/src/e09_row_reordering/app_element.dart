@@ -152,7 +152,7 @@ class AppElement extends PolymerElement {
 
   void moveRowsHandler(core.MoveRows e) {
     var extractedRows = [];
-    List<MapDataItem> left, right;
+    List<core.ItemBase> left, right;
     var rows = e.rows;
     var insertBefore = e.insertBefore;
     if(insertBefore < 0) {
@@ -179,7 +179,7 @@ class AppElement extends PolymerElement {
       }
     }
 
-    data.items = new List<MapDataItem>()
+    data.items = new List<core.ItemBase>()
         ..addAll(left)
         ..addAll(extractedRows)
         ..addAll(right);
