@@ -1,8 +1,9 @@
 library bwu_dart.bwu_datagrid.dataview.test;
 
-import 'package:polymer/polymer.dart';
+import 'dart:async' as async;
+
 import 'package:unittest/unittest.dart';
-import 'package:unittest/html_enhanced_config.dart';
+import 'package:unittest/html_config.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 //import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
@@ -14,7 +15,7 @@ import 'package:quiver_log/log.dart';
 var _log = new Logger('bwu_datagrid.dataview_test');
 
 void assertEmpty(DataView dv) {
-  expect(0, equals(dv.getLength), reason: ".rows is initialized to an empty array");
+  expect(0, equals(dv.length), reason: ".rows is initialized to an empty array");
   expect(dv.getItems().length, equals(0), reason: "getItems().length");
   expect(dv.getIdxById("id"), isNull, reason: "getIdxById should return undefined if not found");
   expect(dv.getRowById("id"), isNull, reason: "getRowById should return undefined if not found");
@@ -32,11 +33,10 @@ void assertConsistency(DataView dv, [String idProperty]) {
       int row;
       String id;
 
-  for (var i=0; i < items.length; i++) {
-    _log.fine(items[i][idProperty]);
-      id = items[i][idProperty];
+  for (var i = 0; i < items.length; i++) {
+      id = '${items[i][idProperty]}';
       expect(dv.getItemByIdx(i), equals(items[i]), reason: "getItemByIdx");
-      expect(dv.getItemById(id), equals([i]), reason: "getItemById");
+      expect(dv.getItemById(id), equals(items[i]), reason: "getItemById");
       expect(dv.getIdxById(id), equals(i), reason: "getIdxById");
 
       row = dv.getRowById(id);
@@ -47,15 +47,14 @@ void assertConsistency(DataView dv, [String idProperty]) {
       }
   }
 
-  expect(items.length-dv.getLength, equals(filteredOut), reason: "filtered rows");
+  expect(items.length - dv.length, equals(filteredOut), reason: "filtered rows");
 }
 
 void main() {
   Logger.root.level = Level.ALL;
   new PrintAppender(BASIC_LOG_FORMATTER).attachLogger(_log);
 
-  //useHtmlEnhancedConfiguration();
-  //initPolymer().run(() {
+  useHtmlConfiguration();
 
     group('basic', () {
       test("initial setup", () {
@@ -81,158 +80,144 @@ void main() {
       test("basic", () {
           var dv = new DataView();
           dv.setItems([new MapDataItem({'id':0}), new MapDataItem({'id':1})]);
-          expect(dv.getLength, equals(2), reason: "rows.length");
+          expect(dv.length, equals(2), reason: "rows.length");
           expect(dv.getItems().length, equals(2), reason: "getItems().length");
           assertConsistency(dv);
       });
 
       test("alternative idProperty", () {
           var dv = new DataView();
-          dv.setItems([{'uid':0},{'uid':1}], "uid");
+          dv.setItems([new MapDataItem({'uid':0}),new MapDataItem({'uid':1})], "uid");
           assertConsistency(dv,"uid");
       });
 
-      test("requires an id on objects", () {
+      // TODO a bug makes the debugger stop at caught exceptions, this is annoying
+      skip_test("requires an id on objects", () {
           var dv = new DataView();
-          //try {
-          expect(dv.setItems([1,2,3]), throws, reason:  "exception expected");
-  //            ok(false, "exception expected")
-  //        }
-  //        catch (ex) {}
+          expect(() => dv.setItems([1,2,3]), throwsNoSuchMethodError,
+              reason:  "exception expected");
       });
 
-      test("requires a unique id on objects", () {
+// TODO a bug makes the debugger stop at caught exceptions, this is annoying
+      skip_test("requires a unique id on objects", () {
           var dv = new DataView();
-  //        try {
-              expect(dv.setItems([{'id':0},{'id':0}]), throws, reason: "exception expected");
-  //            ok(false, "exception expected")
-  //        }
-  //        catch (ex) {}
+              expect(() => dv.setItems([new MapDataItem({'id':0}), new MapDataItem({'id':0})]),
+                  throwsA(new isInstanceOf<String>()), reason: "exception expected");
+      });
+
+// TODO a bug makes the debugger stop at caught exceptions, this is annoying
+      skip_test("requires a unique id on objects (alternative idProperty)", () {
+          var dv = new DataView();
+              expect(() => dv.setItems([{'uid':0},{'uid':0}], "uid"), throwsA(new isInstanceOf<String>())); //ok(false, "exception expected")
+      });
+
+      test("events fired on setItems", () {
+        var dv = new DataView();
+        var done = expectAsync((){}, count: 3);
+
+        dv.onBwuRowsChanged.listen((e) {
+          done();
+        });
+        dv.onBwuRowCountChanged.listen((e) {
+          expect(e.oldCount, equals(0), reason: "previous arg");
+          expect(e.newCount, equals(2), reason: "current arg");
+          done();
+        });
+        dv.onBwuPagingInfoChanged.listen((e) {
+          expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
+          expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
+          expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
+          done();
+        });
+        dv.setItems([new MapDataItem({'id': 0}), new MapDataItem({'id': 1})]);
+        dv.refresh();
+      });
+
+      test("no events on setItems([])", () {
+        var dv = new DataView();
+        dv.onBwuRowsChanged.listen((_) => fail("onRowsChanged called"));
+        dv.onBwuRowCountChanged.listen((_) => fail("onRowCountChanged called"));
+        dv.onBwuPagingInfoChanged.listen((_) => fail("onPagingInfoChanged called"));
+        dv.setItems([]);
+        dv.refresh();
+        return new async.Future((){});
+      });
+
+      test("no events on setItems followed by refresh", () {
+        var dv = new DataView();
+        dv.setItems([new MapDataItem({'id':0}), new MapDataItem({'id':1})]);
+        dv.onBwuRowsChanged.listen((_) => fail("onRowsChanged called"));
+        dv.onBwuRowCountChanged.listen((_) => fail("onRowCountChanged called"));
+        dv.onBwuPagingInfoChanged.listen((_) => ("onPagingInfoChanged called"));
+        dv.refresh();
+        return new async.Future((){});
+      });
+
+      test("no refresh while suspended", () {
+        var dv = new DataView();
+        dv.beginUpdate();
+        dv.onBwuRowsChanged.listen((_) => fail("onRowsChanged called"));
+        dv.onBwuRowCountChanged.listen((_) => fail("onRowCountChanged called"));
+        dv.onBwuPagingInfoChanged.listen((_) => fail("onPagingInfoChanged called"));
+        dv.setItems([new MapDataItem({'id':0}),new MapDataItem({'id':1})]);
+        dv.setFilter((a, b) => true);
+        dv.refresh();
+        expect(dv.length, equals(0), reason: "rows aren't updated until resumed");
+      });
+
+      test("refresh fires after resume", () {
+        var dv = new DataView();
+        dv.beginUpdate();
+        dv.setItems([new MapDataItem({'id':0}), new MapDataItem({'id':1})]);
+        expect(dv.items.length, equals(2), reason: "items updated immediately");
+        dv.setFilter((a, b) => true);
+        dv.refresh();
+
+        var done = expectAsync((){}, count: 3);
+        dv.onBwuRowsChanged.listen((e) {
+          expect(e.changedRows, equals([0,1]), reason: "args");
+          done();
+        });
+        dv.onBwuRowCountChanged.listen((e) {
+          expect(e.oldCount, equals(0), reason: "previous arg");
+          expect(e.newCount, equals(2), reason: "current arg");
+          done();
+        });
+        dv.onBwuPagingInfoChanged.listen((e) {
+          expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
+          expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
+          expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
+          done();
+        });
+        dv.endUpdate();
+        expect(dv.items.length, equals(2), reason: "items are the same");
+        expect(dv.length, equals(2), reason: "rows updated");
       });
 
     });
-  //});
-}
 
 
+    group("sort", () {
 
-//test("requires a unique id on objects (alternative idProperty)", function() {
-//    var dv = new Slick.Data.DataView();
-//    try {
-//        dv.setItems([{uid:0},{uid:0}], "uid");
-//        ok(false, "exception expected")
-//    }
-//    catch (ex) {}
-//});
-//
-//test("events fired on setItems", function() {
-//    var count = 0;
-//    var dv = new Slick.Data.DataView();
-//    dv.onRowsChanged.subscribe(function(e,args) {
-//        ok(true, "onRowsChanged called");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function(e,args) {
-//        ok(true, "onRowCountChanged called");
-//        same(args.previous, 0, "previous arg");
-//        same(args.current, 2, "current arg");
-//        count++;
-//    });
-//    dv.onPagingInfoChanged.subscribe(function(e,args) {
-//        ok(true, "onPagingInfoChanged called");
-//        same(args.pageSize, 0, "pageSize arg");
-//        same(args.pageNum, 0, "pageNum arg");
-//        same(args.totalRows, 2, "totalRows arg");
-//        count++;
-//    });
-//    dv.setItems([{id:0},{id:1}]);
-//    dv.refresh();
-//    same(3, count, "3 events should have been called");
-//});
-//
-//test("no events on setItems([])", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.onRowsChanged.subscribe(function() { ok(false, "onRowsChanged called") });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.setItems([]);
-//    dv.refresh();
-//});
-//
-//test("no events on setItems followed by refresh", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems([{id:0},{id:1}]);
-//    dv.onRowsChanged.subscribe(function() { ok(false, "onRowsChanged called") });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.refresh();
-//});
-//
-//test("no refresh while suspended", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.beginUpdate();
-//    dv.onRowsChanged.subscribe(function() { ok(false, "onRowsChanged called") });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.setItems([{id:0},{id:1}]);
-//    dv.setFilter(function(o) { return true });
-//    dv.refresh();
-//    same(dv.getLength(), 0, "rows aren't updated until resumed");
-//});
-//
-//test("refresh fires after resume", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.beginUpdate();
-//    dv.setItems([{id:0},{id:1}]);
-//    same(dv.getItems().length, 2, "items updated immediately");
-//    dv.setFilter(function(o) { return true; });
-//    dv.refresh();
-//
-//    var count = 0;
-//    dv.onRowsChanged.subscribe(function(e,args) {
-//        ok(true, "onRowsChanged called");
-//        same(args, {rows:[0,1]}, "args");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function(e,args) {
-//        ok(true, "onRowCountChanged called");
-//        same(args.previous, 0, "previous arg");
-//        same(args.current, 2, "current arg");
-//        count++;
-//    });
-//    dv.onPagingInfoChanged.subscribe(function(e,args) {
-//        ok(true, "onPagingInfoChanged called");
-//        same(args.pageSize, 0, "pageSize arg");
-//        same(args.pageNum, 0, "pageNum arg");
-//        same(args.totalRows, 2, "totalRows arg");
-//        count++;
-//    });
-//    dv.endUpdate();
-//    equal(count, 3, "events fired");
-//    same(dv.getItems().length, 2, "items are the same");
-//    same(dv.getLength(), 2, "rows updated");
-//});
-//
-//module("sort");
-//
-//test("happy path", function() {
-//    var count = 0;
-//    var items = [{id:2,val:2},{id:1,val:1},{id:0,val:0}];
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems(items);
-//    dv.onRowsChanged.subscribe(function() {
-//        ok(true, "onRowsChanged called");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.sort(function(x,y) { return x.val-y.val }, true);
-//    equal(count, 1, "events fired");
-//    same(dv.getItems(), items, "original array should get sorted");
-//    same(items, [{id:0,val:0},{id:1,val:1},{id:2,val:2}], "sort order");
-//    assertConsistency(dv);
-//});
-//
+      test("happy path", () {
+        var items = [new MapDataItem({'id': 2,'val': 2}), new MapDataItem({'id': 1, 'val': 1}), new MapDataItem({'id': 0, 'val':0})];
+        var dv = new DataView();
+        dv.setItems(items);
+        var done = expectAsync((){});
+        dv.onBwuRowsChanged.listen((_) {
+          print('x');
+          done();
+        });
+        dv.onBwuRowCountChanged.listen((e) => fail("onRowCountChanged called"));
+        dv.onBwuPagingInfoChanged.listen((e) => fail("onPagingInfoChanged called"));
+        dv.sort((x,y) {
+          return x['val'] - y['val'];
+        }, true);
+        expect(dv.items, equals(items), reason: "original array should get sorted");
+        expect(items, equals([new MapDataItem({'id': 0, 'val': 0}), new MapDataItem({'id': 1, 'val': 1}), new MapDataItem({'id': 2, 'val': 2})]), reason: "sort order");
+        assertConsistency(dv);
+      });
+
 //test("asc by default", function() {
 //    var items = [{id:2,val:2},{id:1,val:1},{id:0,val:0}];
 //    var dv = new Slick.Data.DataView();
@@ -871,3 +856,5 @@ void main() {
 //
 //
 //})(jQuery);
+  });
+}

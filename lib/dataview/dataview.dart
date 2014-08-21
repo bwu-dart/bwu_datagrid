@@ -112,7 +112,7 @@ class DataView extends DataProvider {
     startingIndex = startingIndex != null ? startingIndex : 0;
     var id;
     for (int i = startingIndex; i < items.length; i++) {
-      id = items[i][idProperty];
+      id = '${items[i][idProperty]}';
       if (id == null) {
         throw "Each data element must implement a unique 'id' property";
       }
@@ -123,7 +123,7 @@ class DataView extends DataProvider {
   void ensureIdUniqueness() {
     var id;
     for (int i = 0; i < items.length; i++) {
-      id = items[i][idProperty];
+      id = '${items[i][idProperty]}';
       if (id == null || idxById[id] != i) {
         throw "Each data element must implement a unique 'id' property";
       }
@@ -164,11 +164,13 @@ class DataView extends DataProvider {
     return new PagingInfo(pageSize: pagesize, pageNum: pagenum, totalRows: totalRows, totalPages: totalPages);
   }
 
-  void sort(SortComparerFunc comparer, bool ascending) {
+  void sort(SortComparerFunc comparer, [bool ascending = true]) {
+    assert(ascending is bool && ascending != null);
+
     sortAsc = ascending;
     sortComparer = comparer;
     fastSortField = null;
-    if (ascending == false) {
+    if (ascending == false) { // TODO why would it make sense to revers before sorting?
       items = items.reversed.toList();
     }
     items.sort(comparer);
@@ -297,7 +299,7 @@ class DataView extends DataProvider {
     if (rowsById == null) {
       rowsById = {};
       for (int i = 0; i < rows.length; i++) {
-        rowsById[rows[i][idProperty]] = i;
+        rowsById['${rows[i][idProperty]}'] = i;
       }
     }
   }
