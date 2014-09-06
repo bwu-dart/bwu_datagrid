@@ -1,3 +1,6 @@
+## 0.0.15
+possible fix of #97
+
 ## 0.0.14
 upgrade to Polymer 0.13.0
 
