@@ -4,7 +4,7 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.22.3"
+    version: "0.22.4"
   args:
     description: args
     source: hosted
@@ -32,11 +32,11 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.1"
+    version: "0.2.2"
   collection:
     description: collection
     source: hosted
-    version: "0.9.4"
+    version: "1.0.0"
   csslib:
     description: csslib
     source: hosted
@@ -68,7 +68,7 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.13.0"
+    version: "0.13.0+3"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -124,8 +124,8 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.6.0"
+    version: "0.6.0+1"
   yaml:
     description: yaml
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1+1"

@@ -38,6 +38,7 @@ class BwuDatagrid extends PolymerElement {
         _init();
         render();
   //      _unveilElement();
+        _isPendingInit = false;
         _setupCompleter.complete();
       }
     }catch(e) {
