@@ -10,6 +10,8 @@ abstract class Events {
 
   static const ADD_NEW_ROW = const EventType<AddNewRow>('bwu-add-new-row');
 
+  static const ATTACHED = const EventType<Attached>('bwu-attached');
+
   static const BEFORE_CELL_EDITOR_DESTROY =
       const EventType<BeforeCellEditorDestroy>('bwu-before-cell-editor-destroy');
 
@@ -203,6 +205,9 @@ class EventData {
   EventData({this.sender, this.causedBy});
 }
 
+class Attached extends EventData {
+  Attached(sender) : super(sender: sender);
+}
 
 class ActiveCellChanged extends EventData {
   final Cell cell;

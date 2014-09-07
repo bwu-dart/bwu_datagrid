@@ -1,3 +1,6 @@
+## 0.0.16
+Add BwuAttached event to simplify remove an re-attach. See also #97
+
 ## 0.0.15
 possible fix of #97
 

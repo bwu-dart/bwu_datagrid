@@ -41,6 +41,8 @@ class BwuDatagrid extends PolymerElement {
         _isPendingInit = false;
         _setupCompleter.complete();
       }
+
+      _eventBus.fire(core.Events.ATTACHED, new core.Attached(this));
     }catch(e) {
 //      _unveilElement();
     }
@@ -3696,6 +3698,9 @@ class BwuDatagrid extends PolymerElement {
 
   async.Stream<core.AddNewRow> get onBwuAddNewRow =>
       _eventBus.onEvent(core.Events.ADD_NEW_ROW);
+
+  async.Stream<core.Attached> get onBwuAttached =>
+      _eventBus.onEvent(core.Events.ATTACHED);
 
   async.Stream<core.BeforeCellEditorDestroy> get onBwuBeforeCellEditorDestroy =>
       _eventBus.onEvent(core.Events.BEFORE_CELL_EDITOR_DESTROY);
