@@ -1,7 +1,7 @@
 build/
 packages
 .pub/
-
+.idea/
 #pubspec.lock
 .project
 .buildlog
