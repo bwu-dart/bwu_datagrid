@@ -2,13 +2,13 @@
 
 .ui-state-default {
   border: 1px solid #d3d3d3;
-  border-bottom: 0px; /* to fix higher selectibility of this outer style */
+  border-bottom: 0; /* to fix higher selectibility of this outer style */
   background: #e6e6e6 url('smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png') 50% 50% repeat-x;
   font-weight: normal;
   color: #555555;
 
 /* from example.css */
-  font-family: arial;
+  font-family: arial,sans-serif;
   font-size: 8pt;
 }
 
@@ -30,7 +30,7 @@ classes should alter those!
 .bwu-datagrid-header.ui-state-default/*, .bwu-datagrid-headerrow.ui-state-default*/ {
   width: 100%;
   overflow: hidden;
-  border-left: 0px;
+  border-left: 0;
 }
 
 .bwu-datagrid-header-columns, .bwu-datagrid-headerrow-columns {
@@ -63,7 +63,7 @@ classes should alter those!
   display: block;
   cursor: col-resize;
   width: 4px;
-  right: 0px;
+  right: 0;
   top: 0;
   height: 100%;
 }
@@ -79,7 +79,7 @@ classes should alter those!
 
 .bwu-datagrid-row.ui-widget-content, .bwu-datagrid-row.ui-state-active {
   position: absolute;
-  border: 0px;
+  border: 0;
   width: 100%;
 }
 
@@ -124,8 +124,7 @@ classes should alter those!
   z-index: 11;
   overflow: visible;
   background: white;
-  border-color: black;
-  border-style: solid;
+  border: solid black;
 }
 
 .bwu-datagrid-cell:focus {

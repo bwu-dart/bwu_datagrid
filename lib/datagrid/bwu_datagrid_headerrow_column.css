@@ -5,7 +5,7 @@
 /*.bwu-datagrid-header.ui-state-default, .bwu-datagrid-headerrow.ui-state-default */
 /*  width: 100%; */
   overflow: hidden;
-  border-left: 0px;
+  border-left: 0;
 }
 
 :host {
