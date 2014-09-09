@@ -540,7 +540,7 @@ class DataView extends DataProvider {
 
     if (!isLeafLevel && gi.doAggregateChildGroups) {
       // make sure all the subgroups are calculated
-      int i = group.groups.length;
+      int i = group.groups != null ? group.groups.length : 0;
       while (i-- > 0) {
         if (group.groups[i].totals != null && !group.groups[i].totals.isInitialized) {
           calculateTotals(group.groups[i].totals);
@@ -553,9 +553,9 @@ class DataView extends DataProvider {
       agg.init();
       if (!isLeafLevel && gi.doAggregateChildGroups) {
         agg(group.groups);
-      } else {
+      } //else {
         agg(group.rows);
-      }
+      //}
       agg.storeResult(totals);
     }
     totals.isInitialized = true;

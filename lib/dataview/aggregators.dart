@@ -1,12 +1,14 @@
 part of bwu_dart.bwu_datagrid.dataview;
 
 abstract class Aggregator {
-  void init();
+  void init() {}
   void storeResult(core.GroupTotals groupTotals);
   void accumulate(core.ItemBase item);
   bool _isCalculated = false;
   void call(List<core.ItemBase> rows) {
-    rows.forEach((r) => accumulate(r));
+    if(rows != null) {
+      rows.forEach((r) => accumulate(r));
+    }
     _isCalculated = true;
   }
 }
