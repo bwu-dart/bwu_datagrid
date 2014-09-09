@@ -1,15 +1,13 @@
 part of bwu_dart.bwu_datagrid.dataview;
 
 abstract class Aggregator {
-  void init() {}
+  void init();
   void storeResult(core.GroupTotals groupTotals);
   void accumulate(core.ItemBase item);
   bool _isCalculated = false;
   void call(List<core.ItemBase> rows) {
-    if(!_isCalculated) { // TODO not sure if this still works right when rows are added/removed/edited
-      rows.forEach((r) => accumulate(r));
-      _isCalculated = true;
-    }
+    rows.forEach((r) => accumulate(r));
+    _isCalculated = true;
   }
 }
 
@@ -21,6 +19,13 @@ class AvgAggregator extends Aggregator {
   double _sum = 0.0;
 
   AvgAggregator(this._field);
+
+  @override
+  void init() {
+    _count = 0;
+    _nonNullCount = 0;
+    _sum= 0;
+  }
 
   @override
   void accumulate(core.ItemBase item) {
@@ -53,6 +58,11 @@ class MinAggregator extends Aggregator {
   MinAggregator(this._field);
 
   @override
+  void init() {
+    _min = null;
+  }
+
+  @override
   void accumulate(core.ItemBase item) {
     num val = item[_field];
     if (val != null && val != '' && val is num) {
@@ -77,6 +87,11 @@ class MaxAggregator extends Aggregator {
   MaxAggregator(this._field);
 
   @override
+  void init() {
+    _max = null;
+  }
+
+  @override
   void accumulate(core.ItemBase item) {
     num val = item[_field];
     if (val != null && val != '' && val is num) {
@@ -99,6 +114,11 @@ class SumAggregator extends Aggregator {
   String _field;
   double _sum = 0.0;
   SumAggregator(this._field);
+
+  @override
+  void init() {
+    _sum = 0.0;
+  }
 
   @override
   void accumulate(core.ItemBase item) {

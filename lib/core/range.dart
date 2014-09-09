@@ -130,7 +130,7 @@ class Group extends NonDataItem {
    * A unique key used to identify the group.  This key can be used in calls to DataView
    * collapseGroup() or expandGroup().
    */
-  String groupingKey; // TODO should it be made generic?
+  String groupingKey;
 
   @override
   bool operator ==(other) {
