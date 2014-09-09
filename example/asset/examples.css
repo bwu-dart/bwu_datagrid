@@ -18,7 +18,7 @@
 }
 
 * /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
-  border: 0x;
+  border: 0;
   border-right: 1px solid silver;
 }
 
