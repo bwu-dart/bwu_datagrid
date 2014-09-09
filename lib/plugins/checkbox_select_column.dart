@@ -33,11 +33,17 @@ class CheckboxSelectColumn extends Column implements Plugin {
   //var _handler = new Slick.EventHandler();
   List<async.StreamSubscription> _subscriptions = [];
   Map<int,bool>_selectedRowsLookup = {};
-  CheckboxSelectColumn({String id: '_checkbox_selector', String cssClass, toolTip: 'Select/Deselect All', int width: 30})
+  CheckboxSelectColumn({String id: '_checkbox_selector', String cssClass,
+                       toolTip: 'Select/Deselect All', int width: 30,
+Formatter formatter})
   : super(id: id, cssClass: cssClass, toolTip: toolTip, width: width,
       name: 'Column selector', nameElement: new dom.CheckboxInputElement() , field: 'sel', resizable: false,
       sortable: false) {
-    formatter = new CheckboxSelectionFormatter(_selectedRowsLookup);
+    if(formatter != null) {
+      this.formatter = formatter;
+    } else {
+      this.formatter = new CheckboxSelectionFormatter(_selectedRowsLookup);
+    }
   }
 
   void init(BwuDatagrid grid) {
