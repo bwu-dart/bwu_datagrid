@@ -14,7 +14,7 @@ classes should alter those!
 .bwu-datagrid-row {
   position: absolute;
   background: white;
-  border: 0px;
+  border: 0;
   line-height: 20px;
 }
 

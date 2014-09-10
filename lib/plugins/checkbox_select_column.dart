@@ -11,14 +11,21 @@ import 'package:bwu_datagrid/plugins/plugin.dart';
 
 
 class CheckboxSelectionFormatter extends Formatter {
-  Map<int, bool> selectedRowsLookup;
-  CheckboxSelectionFormatter(this.selectedRowsLookup);
+  final CheckboxSelectColumn selectColumn;
+  CheckboxSelectionFormatter(this.selectColumn) {
+    assert(selectColumn != null);
+  }
+
+  /// The added element (click target) must have the `selectColumn` attribute set
+  /// to be recognized by the [CheckboxSelectColumn] click handler.
   @override
   void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
     target.children.clear();
 
     if (dataContext != null) {
-      target.append(new dom.CheckboxInputElement()..checked = selectedRowsLookup.containsKey(row));
+      target.append(new dom.CheckboxInputElement()
+        ..checked = selectColumn.isRowSelected(row)
+        ..attributes['selectColumn']='true');
     }
   }
 }
@@ -33,11 +40,16 @@ class CheckboxSelectColumn extends Column implements Plugin {
   //var _handler = new Slick.EventHandler();
   List<async.StreamSubscription> _subscriptions = [];
   Map<int,bool>_selectedRowsLookup = {};
-  CheckboxSelectColumn({String id: '_checkbox_selector', String cssClass, toolTip: 'Select/Deselect All', int width: 30})
+  CheckboxSelectColumn({String id: '_checkbox_selector', String cssClass,
+                       toolTip: 'Select/Deselect All', int width: 30})
   : super(id: id, cssClass: cssClass, toolTip: toolTip, width: width,
       name: 'Column selector', nameElement: new dom.CheckboxInputElement() , field: 'sel', resizable: false,
       sortable: false) {
-    formatter = new CheckboxSelectionFormatter(_selectedRowsLookup);
+    if(formatter != null) {
+      this.formatter = formatter;
+    } else {
+      this.formatter = new CheckboxSelectionFormatter(this);
+    }
   }
 
   void init(BwuDatagrid grid) {
@@ -71,7 +83,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
       _grid.invalidateRow(i);
     }
     _selectedRowsLookup = lookup;
-    (formatter as CheckboxSelectionFormatter).selectedRowsLookup = _selectedRowsLookup;
+    //(formatter as CheckboxSelectionFormatter)._selectedRowsLookup = _selectedRowsLookup;
     _grid.render();
 
     if (selectedRows.length > 0 && selectedRows.length == _grid.getDataLength) {
@@ -96,7 +108,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
   void handleClick(core.Click e) {
     // clicking on a row select checkbox
-    if (_grid.getColumns[e.cell.cell].id == id && e.causedBy.target is dom.CheckboxInputElement) {
+    if (_grid.getColumns[e.cell.cell].id == id && (e.causedBy.target as dom.Element).attributes.containsKey('selectColumn')) {
       // if editing, try to commit
       if (_grid.getEditorLock.isActive && !_grid.getEditorLock.commitCurrentEdit()) {
         e.preventDefault();
@@ -116,6 +128,11 @@ class CheckboxSelectColumn extends Column implements Plugin {
     } else {
       _grid.setSelectedRows(_grid.getSelectedRows()..add(row));
     }
+  }
+
+  /// Check whether the [row] is currently selected.
+  bool isRowSelected(int row) {
+    return _selectedRowsLookup.containsKey(row);
   }
 
   void handleHeaderClick(core.HeaderClick e) {

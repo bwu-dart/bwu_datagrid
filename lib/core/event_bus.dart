@@ -12,7 +12,7 @@ class EventBus {
    * A [StreamController] is maintained for each event type.
    */
   final Map<EventType, async.StreamController> streamControllers =
-      new Map<EventType, async.StreamController>();
+      <EventType, async.StreamController>{};
 
   //StreamController _historyStreamController = new StreamController();
 
@@ -22,7 +22,7 @@ class EventBus {
    * Constructs an [EventBus] and allows to specify if the events should be
    * send synchroniously or asynchroniously by setting [isSync].
    */
-  const EventBus({this.isSync: true});
+  EventBus({this.isSync: true});
 
   /**
    * [onEvent] allows to access an stream for the specified [eventType].

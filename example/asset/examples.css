@@ -18,12 +18,12 @@
 }
 
 * /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
-  border: 0px;
+  border: 0;
   border-right: 1px solid silver;
 }
 
 * /deep/ * {
-  font-family: arial;
+  font-family: arial,sans-serif;
   font-size: 8pt;
 }
 
@@ -101,7 +101,7 @@ li {
   margin-bottom: 20px;
   width: 320px;
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 650px;
 }
 
@@ -201,7 +201,7 @@ bwu-datagrid /deep/ .editor-percentcomplete-helper,
   position: absolute;
   top: -2px;
   left: -9px;
-  background: url('../packages/bwu_datagrid/asset/images/editor-helper-bg.gif'') no-repeat top left;
+  background: url('../packages/bwu_datagrid/asset/images/editor-helper-bg.gif') no-repeat top left;
   padding-left: 9px;
 
   width: 120px;

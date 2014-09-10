@@ -33,6 +33,12 @@ class GroupingInfo {
       if(a.value is bool && b.value is bool) {
         return (a.value ? 1 : 0) - (b.value ? 1 : 0);
       }
+      if(a.value is String) {
+        return (a.value as String).compareTo('${b.value}');
+      }
+      if(a.value == null) {
+        return b.value == null ? 0 : -1;
+      }
       return a.value - b.value;
     };
   }

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
-<link rel="import" href="../../packages/polymer/polymer.html">
-<link rel='import' href='../../packages/bwu_datagrid/bwu_datagrid.html'>
-<link rel='import' href='../../packages/bwu_sparkline/bwu_sparkline.html'>
+<link rel="import" href="../../../packages/polymer/polymer.html">
+<link rel='import' href='../../../packages/bwu_datagrid/bwu_datagrid.html'>
+<link rel='import' href='../../../packages/bwu_sparkline/bwu_sparkline.html'>
 
 <polymer-element name='app-element'>
   <template>
@@ -45,7 +45,7 @@
             With BWU Datagrid, you can still have rich, complex cells rendered against the actual DOM nodes while still preserving
             the speed and responsiveness.
             This is achieved through async background post-rendering.
-            BWU Datagrid exposes a <u>asyncPostRender</u> property on a column which you can use to set your own function that will
+            BWU Datagrid exposes a <strong>asyncPostRender</strong> property on a column which you can use to set your own function that will
             manipulate the cell DOM node directly.
             The event is fired one by one for all visible rows in the viewport on a timer so it doesn't impact the UI
             responsiveness.

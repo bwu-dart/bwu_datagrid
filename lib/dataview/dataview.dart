@@ -542,10 +542,10 @@ class DataView extends DataProvider {
 
     if (!isLeafLevel && gi.doAggregateChildGroups) {
       // make sure all the subgroups are calculated
-      int i = group.groups.length;
+      int i = group.groups != null ? group.groups.length : 0;
       while (i-- > 0) {
-        if (!(group.groups[i] as core.GroupTotals).isInitialized) {
-          calculateTotals(group.groups[i] as core.GroupTotals);
+        if (group.groups[i].totals != null && !group.groups[i].totals.isInitialized) {
+          calculateTotals(group.groups[i].totals);
         }
       }
     }
@@ -554,12 +554,10 @@ class DataView extends DataProvider {
       agg = gi.aggregators[idx];
       agg.init();
       if (!isLeafLevel && gi.doAggregateChildGroups) {
-        //gi.compiledAccumulators[idx].call(agg, group.groups);
-        gi.aggregators[idx](group.groups); // TODO
-      } else {
-        //gi.compiledAccumulators[idx].call(agg, group.rows);
-        gi.aggregators[idx](group.rows); // TODO
-      }
+        agg(group.groups);
+      } //else {
+        agg(group.rows);
+      //}
       agg.storeResult(totals);
     }
     totals.isInitialized = true;
