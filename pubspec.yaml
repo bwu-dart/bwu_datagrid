@@ -19,6 +19,8 @@ dependencies:
 
 dev_dependencies:
   unittest: any
+  bwu_testrunner:
+    path: ../bwu_testrunner
 
 transformers:
 - polymer:
@@ -45,3 +47,4 @@ transformers:
     - example/spreadsheet.html
     - example/grouping.html
     - example/autotooltips.html
+    - test/dataview/dataview_test.html
