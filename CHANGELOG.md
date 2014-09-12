@@ -1,3 +1,7 @@
+## 0.0.17
+update to Polymer 0.14.0
+change DataView row id from String to dynamic
+
 ## 0.0.16
 Add BwuAttached event to simplify remove an re-attach. See also #97
 
