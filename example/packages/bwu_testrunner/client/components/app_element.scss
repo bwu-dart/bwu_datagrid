@@ -1,0 +1,325 @@
+/*$even-row-background-color:#f4f4f4;*/
+$button-icon-color:darkgray;
+$selected-radio-button-color:$button-icon-color;
+
+$header-background-color:#f5f5f5;
+$grid-border-color:#d8d8d8;
+$grid-text-color:#333;
+$caption-color: $grid-text-color;
+
+$row-border-color:#eee;
+$odd-row-background-color:#fcfcfc;
+//$cell-delimiter-color:white;
+$even-row-cell-border-color:white;
+$odd-row-cell-border-color:$odd-row-background-color;
+$active-row-background-color: #f8f48f;
+$active-row-border-color:#ffd42a;
+$selected-row-background-color:$grid-border-color;
+$active-selected-row-background-color:darken($active-row-background-color,30); //#CDC978;
+$active-selected-row-border-color:darken($active-row-border-color, 30);//#CD903D;
+
+$group-level-0-color:#002451;
+$group-level-1-color:#643820;
+/*$group-level-2-color:;*/
+
+$result-icon-size:18px;
+$success-icon-color:#1db34f;
+$fail-icon-color:red;
+
+/* font
+----------------------------------*/
+* /deep/ * {
+  font-family: arial, sans-serif;
+  font-size: 8pt;
+  color: $grid-text-color;
+}
+
+/* wrap grid and pager
+----------------------------------*/
+div.grid-wrapper  {
+  margin: 8px 8px 0 8px;
+  height: calc(100vh - 125px);
+  border: 1px solid $grid-border-color;
+  border-radius: 3px;
+}
+
+
+/* grid
+----------------------------------*/
+#pager {
+  border: none;
+}
+
+#grid {
+  height: 100%;
+
+  /deep/ {
+    .bwu-datagrid-cell {
+      // nothing yet
+    }
+
+    /* group headers */
+    .bwu-datagrid-group-title {
+      &[level='0'] {
+        font-style: italic;
+        color: $group-level-0-color;
+      }
+
+      &[level='1'] {
+        color: $group-level-1-color;
+
+      }
+
+      &[level='2'] {
+        font-style: italic;
+      }
+    }
+
+    /* result icons */
+    core-icon {
+      &.test-result {
+        width: $result-icon-size;
+        height: $result-icon-size;
+      }
+
+      &.result-error,
+      &.result-fail,
+      &.result-timeout {
+        fill: $fail-icon-color;
+      }
+
+      &.result-pass {
+        fill: $success-icon-color;
+      }
+
+      &.prev-result-error,
+      &.prev-result-fail,
+      &.prev-result-timeout {
+        fill: #fcc;
+      }
+
+      &.prev-result-pass {
+        fill: #aca;
+      }
+    }
+
+    /* grid header
+    ----------------------------------*/
+    #headerScroller {
+      &.bwu-datagrid-header {
+        border: none;
+        background: none;
+        background-color: $header-background-color;
+      }
+    }
+
+    #bwuDatagridHeaders.bwu-datagrid-header-columns {
+      border: none;
+      border-bottom: 1px solid $grid-border-color;
+      background: none;
+    }
+
+    bwu-datagrid-header-column.bwu-datagrid-header-column {
+      background: $header-background-color none;
+      border: 1px solid $odd-row-background-color;
+      border-top-color: $header-background-color;
+      border-right-color: $header-background-color;
+      border-bottom: none;
+      font-weight: bold;
+
+      &:first-of-type {
+        border-left-color: $header-background-color;
+      }
+
+      /deep/ .bwu-datagrid-resizable-handle:hover {
+        color: $grid-border-color; //$grid-border-color;
+        background-color: $grid-border-color;
+      }
+    }
+
+    /* rows and cells
+    ----------------------------------*/
+    .bwu-datagrid-row {
+      border: solid $row-border-color;
+      border-width: 1px 1px 1px 0;
+      background: none; // TODO(zoechi) override default style
+
+      &.even {
+        background-color: white;
+        .bwu-datagrid-cell {
+          border-left-color: $even-row-cell-border-color;
+        }
+      }
+
+      &.odd {
+        background-color: $odd-row-background-color;
+        .bwu-datagrid-cell {
+          border-left-color: $odd-row-cell-border-color;
+        }
+      }
+
+      .bwu-datagrid-cell {
+        border: 1px solid transparent;
+        background-color: transparent;
+
+        &:first-of-type {
+          border-left: none;
+        }
+
+        &.selected {
+          background-color: $selected-row-background-color;
+          border-left-color: $selected-row-background-color;
+        }
+      }
+
+      &.active {
+        .bwu-datagrid-cell {
+          background-color: $active-row-background-color;
+          border-left-color: $active-row-background-color;
+          border-top-color: $active-row-border-color;
+          border-bottom-color: $active-row-border-color;
+
+          &.selected {
+            border-top-color: $active-selected-row-border-color;
+            border-bottom-color: $active-selected-row-border-color;
+            background-color: $active-selected-row-background-color;
+            border-left-color: $active-selected-row-background-color;
+          }
+        }
+      }
+    }
+
+    .bwu-datagrid-cell-checkboxsel {
+      core-icon {
+        fill: $grid-border-color;
+        width: $result-icon-size;
+        height: $result-icon-size;
+
+        &.selected {
+          fill: gray;
+        }
+      }
+    }
+
+    .bwu-datagrid-group-toggle {
+      &.expanded {
+
+      }
+    }
+
+    .allow-tooltip {
+      overflow: visible;
+
+      [tip] {
+        color: white;
+        font-family: monospace;
+        line-height: 15px;
+      }
+    }
+  }
+}
+
+
+/* header
+----------------------------------*/
+#header {
+  padding: 5px 8px 0 8px;
+  margin: 0;
+  height: 100px;
+
+  .caption {
+    margin: 0 0 4px 4px;
+    font-style: italic;
+    font-weight: bold;
+    color: darkgrey;
+    border-width: 0 0 2px 0;
+    border-bottom: solid lightgray;
+    -webkit-border-image:
+    -webkit-gradient(linear, 100% 0, 0 0, from(white), to(lightgray), color-stop( 20%, lightgray)) 100% 1;
+  }
+
+  /* make the radio-buttons smaller
+  ----------------------------------*/
+  paper-radio-button {
+    padding: 6px;
+
+    &::shadow {
+      paper-ripple#ink {
+        top: -8px;
+        left: -8px;
+        width: 32px;
+        height: 32px;
+      }
+
+      #onRadio {
+        background-color:$selected-radio-button-color;
+      }
+    }
+  }
+
+  .v-splitter {
+    width: 16px;
+  }
+}
+
+/* run buttons
+----------------------------------*/
+paper-icon-button.run-tests {
+  $button-width: 75px;
+  margin: 5px;
+  background-color: white;
+  width: $button-width;
+
+  /deep/ #clip #content span {
+    width: $button-width - 15px;
+  }
+
+  &::shadow {
+    core-icon svg {
+      fill: darkgray;
+    }
+  }
+
+  &:hover::shadow {
+    core-icon svg {
+      fill: #1db34f;
+    }
+  }
+
+  &.running::shadow {
+    core-icon svg {
+      fill: red;
+    }
+  }
+
+  &.running:hover {
+    background-color: lightgray;
+    &::shadow core-icon svg {
+      fill: darkgray;
+    }
+  }
+}
+
+/* progress bar
+----------------------------------*/
+#progress {
+  margin: 6px 4px 0 8px;
+  //width: 276px;
+
+  &::shadow {
+    #progressContainer {
+      background-color: white;
+    }
+    //  #secondaryProgress {
+    //    background-color: #06b6ef;
+    //  }
+  }
+
+  &.active::shadow {
+    #progressContainer {
+      background-color: button-icon-color;
+    }
+  }
+}
+
+

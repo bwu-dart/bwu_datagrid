@@ -18,7 +18,7 @@
 
 
 
-<!-- unminfied for debugging:
+<!-- unminified for debugging:
 <link rel="import" href="src/js/polymer/layout.html">
 <script src="src/js/polymer/polymer.concat.js"></script>
 -->
@@ -354,9 +354,9 @@ html /deep/ [segment], html /deep/ segment {
   margin: 0;
   padding: 4px;
   border-right: 1px solid silver;
-  border-left: 0px;
-  border-top: 0px;
-  border-bottom: 0px;
+  border-left: 0;
+  border-top: 0;
+  border-bottom: 0;
   float: left;
 }
 
@@ -370,7 +370,8 @@ html /deep/ [segment], html /deep/ segment {
   top: 0;
   height: 100%;
 }
-*/</style>
+*/
+</style>
     <style>/*.bwu-datagrid-header-column*/
 :host {
   background: url(packages/bwu_datagrid/asset/images/header-columns-bg.gif) repeat-x center bottom;
@@ -404,7 +405,7 @@ html /deep/ [segment], html /deep/ segment {
 /*.bwu-datagrid-header.ui-state-default, .bwu-datagrid-headerrow.ui-state-default */
 /*  width: 100%; */
   overflow: hidden;
-  border-left: 0px;
+  border-left: 0;
 }
 
 :host {
@@ -855,13 +856,13 @@ body /deep/ .ui-datepicker-cover {
 
 .ui-state-default {
   border: 1px solid #d3d3d3;
-  border-bottom: 0px; /* to fix higher selectibility of this outer style */
+  border-bottom: 0; /* to fix higher selectibility of this outer style */
   background: #e6e6e6 url(packages/bwu_datagrid/asset/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x;
   font-weight: normal;
   color: #555555;
 
 /* from example.css */
-  font-family: arial;
+  font-family: arial,sans-serif;
   font-size: 8pt;
 }
 
@@ -883,7 +884,7 @@ classes should alter those!
 .bwu-datagrid-header.ui-state-default/*, .bwu-datagrid-headerrow.ui-state-default*/ {
   width: 100%;
   overflow: hidden;
-  border-left: 0px;
+  border-left: 0;
 }
 
 .bwu-datagrid-header-columns, .bwu-datagrid-headerrow-columns {
@@ -916,7 +917,7 @@ classes should alter those!
   display: block;
   cursor: col-resize;
   width: 4px;
-  right: 0px;
+  right: 0;
   top: 0;
   height: 100%;
 }
@@ -932,7 +933,7 @@ classes should alter those!
 
 .bwu-datagrid-row.ui-widget-content, .bwu-datagrid-row.ui-state-active {
   position: absolute;
-  border: 0px;
+  border: 0;
   width: 100%;
 }
 
@@ -977,8 +978,8 @@ classes should alter those!
   z-index: 11;
   overflow: visible;
   background: white;
-  border-color: black;
-  border-style: solid;
+  border-color: solid
+  border-style: black;
 }
 
 .bwu-datagrid-cell:focus {
@@ -1023,7 +1024,7 @@ classes should alter those!
 .bwu-datagrid-row {
   position: absolute;
   background: white;
-  border: 0px;
+  border: 0;
   line-height: 20px;
 }
 
@@ -1102,7 +1103,8 @@ classes should alter those!
 @-webkit-keyframes bwu-datagrid-invalid-hilite {
   from { box-shadow: 0 0 6px red; }
   to { box-shadow: none; }
-}</style>
+}
+</style>
     <style>
       :host {
         display: block;
@@ -1113,7 +1115,7 @@ classes should alter those!
 
     <content select="[grid-target=&quot;popup&quot;]"></content>
 
-    <div id="focusSink" tabindex="0" hidefocus=""></div>
+    <div id="focusSink" tabindex="0" hidefocus="true"></div>
     <div id="headerScroller" class="bwu-datagrid-header ui-state-default">
       <bwu-datagrid-headers id="bwuDatagridHeaders" class="bwu-datagrid-header-columns">
       </bwu-datagrid-headers>
@@ -1136,6 +1138,7 @@ classes should alter those!
   </template>
   
 </polymer-element>
+
 
 <polymer-element name="composite-editor-view">
   <template>
@@ -1570,12 +1573,12 @@ body /deep/ .ui-datepicker-cover {
 }
 
 * /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
-  border: 0px;
+  border: 0;
   border-right: 1px solid silver;
 }
 
 * /deep/ * {
-  font-family: arial;
+  font-family: arial,sans-serif;
   font-size: 8pt;
 }
 
@@ -1653,7 +1656,7 @@ li {
   margin-bottom: 20px;
   width: 320px;
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 650px;
 }
 
@@ -1820,17 +1823,16 @@ input.editor-checkbox {
 
     <style>
       :host {
-        display : 'block';
-        visibility: 'hidden';
+        visibility: hidden;
         z-index: 10000;
         display: inline-block;
         border: 1px solid black;
         margin: 8px;
         padding: 10px;
         background: #efefef;
-        -moz-box-shadow: 0px 0px 15px black;
-        -webkit-box-shadow: 0px 0px 15px black;
-        box-shadow: 0px 0px 15px black;
+        -moz-box-shadow: 0 0 15px black;
+        -webkit-box-shadow: 0x 0x 15px black;
+        box-shadow: 0 0 15px black;
 
         position: absolute;
         top: 10px;
@@ -1854,11 +1856,8 @@ input.editor-checkbox {
         border: 1px solid silver;
         background: white;
         display: block;
-        margin: 10px;
-        margin-top: 4px;
-        padding: 0;
-        padding-left: 4px;
-        padding-right: 4px;
+        margin: 4px 10px 10px;
+        padding: 0 4px;
       }
     </style>
 
@@ -1904,12 +1903,12 @@ input.editor-checkbox {
 }
 
 * /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
-  border: 0px;
+  border: 0;
   border-right: 1px solid silver;
 }
 
 * /deep/ * {
-  font-family: arial;
+  font-family: arial,sans-serif;
   font-size: 8pt;
 }
 
@@ -1987,7 +1986,7 @@ li {
   margin-bottom: 20px;
   width: 320px;
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 650px;
 }
 
@@ -2211,12 +2210,12 @@ input.editor-checkbox {
 }
 
 * /deep/ bwu-datagrid-headers bwu-datagrid-header-column.ui-state-default {
-  border: 0px;
+  border: 0;
   border-right: 1px solid silver;
 }
 
 * /deep/ * {
-  font-family: arial;
+  font-family: arial,sans-serif;
   font-size: 8pt;
 }
 
@@ -2294,7 +2293,7 @@ li {
   margin-bottom: 20px;
   width: 320px;
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 650px;
 }
 
