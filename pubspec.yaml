@@ -8,7 +8,7 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
-  polymer: '>=0.12.1 <0.14.0'
+  polymer: '>=0.14.0 <0.15.0'
   quiver: '>=0.18.2 <0.19.0'
   quiver_log: '>=1.0.1 <2.0.0'
 
@@ -19,10 +19,14 @@ dependencies:
 
 dev_dependencies:
   unittest: any
-  bwu_testrunner:
-    path: ../bwu_testrunner
+#  bwu_testrunner:
+#    path: ../bwu_testrunner
+#  bwu_testrunner_transformer:
+#    path: ../bwu_testrunner_transformer
 
 transformers:
+#- bwu_testrunner_transformer
+
 - polymer:
     entry_points:
     - example/e01_simple.html
@@ -48,3 +52,5 @@ transformers:
     - example/grouping.html
     - example/autotooltips.html
     - test/dataview/dataview_test.html
+
+

@@ -10,7 +10,8 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 import 'package:logging/logging.dart';
-import 'package:bwu_testrunner/server/browser_testrunner.dart';
+
+import 'package:bwu_testrunner/server/browser_testrunner.dart'; // TODO remove
 
 import 'package:quiver_log/log.dart';
 
@@ -53,10 +54,10 @@ void assertConsistency(DataView dv, [String idProperty]) {
   expect(items.length - dv.length, equals(filteredOut), reason: "filtered rows");
 }
 
-const port = 18070;
+//const port = 18070;
 
 void main() {
-  new BrowserTestrunner(mainx, ['ws://localhost:${port}', 'test/dataview/dataview_test.dart']);
+  new BrowserTestrunner(mainx);
 }
 
 void mainx() {
