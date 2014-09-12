@@ -50,15 +50,15 @@ class DataView extends DataProvider {
   String idProperty = "id";  // property holding a unique row id
   //List<core.ItemBase> items = [];         // data by index
   List<core.ItemBase> rows = [];          // data by row
-  Map<String,int> idxById = {};       // indexes by id
-  Map<String,int> rowsById = null;    // rows by id; lazy-calculated
+  Map<dynamic,int> idxById = {};       // indexes by id - the id needs to be a valid map key
+  Map<dynamic,int> rowsById = null;    // rows by id; lazy-calculated - the id needs to be a valid map key
   FilterFn filter = null;      // filter function
-  Map<String,bool> updated = null;     // updated item ids
+  Map<dynamic,bool> updated = null;     // updated item ids - the id needs to be a valid map key
   bool suspend = false;    // suspends the recalculation
   bool sortAsc = true;
   String fastSortField;
   SortComparerFunc sortComparer;
-  Map<String,int> refreshHints = {}; // TODO make class
+  Map<String,int> refreshHints = {}; // TODO make class, if this String stores ids it should be dynamic
   Map<String,int> prevRefreshHints = {};
   Map filterArgs;
   List<core.ItemBase> filteredItems = [];
@@ -164,11 +164,13 @@ class DataView extends DataProvider {
     return new PagingInfo(pageSize: pagesize, pageNum: pagenum, totalRows: totalRows, totalPages: totalPages);
   }
 
-  void sort(SortComparerFunc comparer, bool ascending) {
+  void sort(SortComparerFunc comparer, [bool ascending = true]) {
+    assert(ascending is bool && ascending != null);
+
     sortAsc = ascending;
     sortComparer = comparer;
     fastSortField = null;
-    if (ascending == false) {
+    if (ascending == false) { // TODO why would it make sense to revers before sorting?
       items = items.reversed.toList();
     }
     items.sort(comparer);
@@ -297,17 +299,19 @@ class DataView extends DataProvider {
     if (rowsById == null) {
       rowsById = {};
       for (int i = 0; i < rows.length; i++) {
-        rowsById[rows[i][idProperty]] = i;
+        rowsById['${rows[i][idProperty]}'] = i;
       }
     }
   }
 
-  int getRowById(String id) {
+  // the id needs to be a valid map key
+  int getRowById(id) {
     ensureRowsByIdCache();
     return rowsById[id];
   }
 
-  DataItem getItemById(String id) {
+  // the id needs to be a valid map key
+  DataItem getItemById(id) {
     var idx = idxById[id];
     if(idx == null) {
       return null;
@@ -315,7 +319,8 @@ class DataView extends DataProvider {
     return items[idx];
   }
 
-  List<int> mapIdsToRows(List<String> idArray) {
+  // the id needs to be a valid map key
+  List<int> mapIdsToRows(List idArray) {
     List<int> rows = [];
     ensureRowsByIdCache();
     for (int i = 0; i < idArray.length; i++) {
@@ -327,8 +332,9 @@ class DataView extends DataProvider {
     return rows;
   }
 
-  List<String> mapRowsToIds(List<int> rowArray) {
-    List<String> ids = [];
+  // the id needs to be a valid map key
+  List mapRowsToIds(List<int> rowArray) {
+    List ids = [];
     for (int i = 0; i < rowArray.length; i++) {
       if (rowArray[i] < rows.length) {
         ids.add(rows[rowArray[i]][idProperty]);
@@ -337,7 +343,8 @@ class DataView extends DataProvider {
     return ids;
   }
 
-  void updateItem(String id, core.ItemBase item) {
+  // the id needs to be a valid map key
+  void updateItem(id, core.ItemBase item) {
     if (idxById[id] == null || id != item[idProperty]) {
       throw "Invalid or non-matching id";
     }
@@ -361,7 +368,8 @@ class DataView extends DataProvider {
     refresh();
   }
 
-  void deleteItem(String id) {
+  // the id needs to be a valid map key
+  void deleteItem(id) {
     int idx = idxById[id];
     if (idx == null) {
       throw "Invalid id";
@@ -912,10 +920,12 @@ class DataView extends DataProvider {
    */
   async.Stream syncGridSelection(grid.BwuDatagrid grid, bool preserveHidden, {bool preserveHiddenOnSelectionChange: false}) {
     bool inHandler = false;
-    List<String> selectedRowIds = mapRowsToIds(grid.getSelectedRows());
+    // the id needs to be a valid map key
+    List selectedRowIds = mapRowsToIds(grid.getSelectedRows());
     //var onSelectedRowIdsChanged = new Event();
 
     void setSelectedRowIds(rowIds) {
+      // TODO(zoechi) check how this join works with non-String values
       if (selectedRowIds.join(",") == rowIds.join(",")) {
         return;
       }
@@ -958,6 +968,7 @@ class DataView extends DataProvider {
     return onBwuSelectedRowIdsChanged;
   }
 
+  // TODO(zoechi) set type annotations
   void syncGridCellCssStyles(grid, key) {
     var hashById;
     var inHandler;
@@ -980,7 +991,8 @@ class DataView extends DataProvider {
         inHandler = true;
         ensureRowsByIdCache();
         Map newHash = {};
-        for (final String id in hashById) {
+        // the id needs to be a valid map key
+        for (final id in hashById) {
           int row = rowsById[id];
           if (row != null) {
             newHash[row] = hashById[id];

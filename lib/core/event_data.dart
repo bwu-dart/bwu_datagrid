@@ -586,7 +586,8 @@ class SelectedRangesChanged extends EventData {
 
 class SelectedRowIdsChanged extends EventData {
   final BwuDatagrid grid; // TODO isn't this the sender (probably not when sent from DataView)
-  final List<String> ids;
+  // the id needs to be a valid map key
+  final List ids;
 
   SelectedRowIdsChanged(sender, this.grid, this.ids) : super(sender: sender);
 }
