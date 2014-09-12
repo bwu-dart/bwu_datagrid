@@ -18,7 +18,7 @@ class AvgAggregator extends Aggregator {
 
   int _count = 0;
   int _nonNullCount = 0;
-  double _sum = 0.0;
+  num _sum = 0.0;
 
   AvgAggregator(this._field);
 
