@@ -9320,7 +9320,7 @@ if(w==null)w=""
 v=this.ys
 return z.$2(this.Fi,z.$2(this.ku,z.$2(y,z.$2(x,z.$2(this.Ee,z.$2(w,z.$2(v==null?"":v,1)))))))},
 $isiD:true,
-static:{"^":"y2,q7,tvi,ux,vI,IE,UId,fd,cT,hO,zS,om,fC,O5,Ic,j3,ML,k0,r5,R1,YD,mA,WT,t2,H5,Vf,eK,Vc,Sp,aJ,uj,d2,tm,wo,xd,Nu,Th",jM:function(a){if(a==="http")return 80
+static:{"^":"y2,q7,tvi,ux,vI,IE,UId,fd,cT,hO,zS,om,fC,O5,Ic,j3,ML,k0,r5,R1,YD,mA,WT,t2,H5,Vf,eK,Vc,Sp,aJ,JA7,d2,tm,wo,xd,Nu,Th",jM:function(a){if(a==="http")return 80
 if(a==="https")return 443
 return 0},hK:function(a){var z,y,x,w,v,u,t,s,r,q,p,o,n
 z={}
@@ -13162,24 +13162,25 @@ z.setAttribute("name","auto-binding-dart")
 z.setAttribute("extends","template")
 J.UQ($.JD(),"init").qP([],z)
 for(y=H.VM(new H.a7(a,6,0,null),[H.Kp(a,0)]);y.G();)y.lo.$0()},
-JP:function(){var z,y,x,w
-z=$.LX()
-if(J.UQ(z,"Platform")==null)throw H.b(P.w("platform.js, dart_support.js must be loaded at the top of your application, before any other scripts or HTML imports that use polymer. Putting these two script tags at the top of your <head> element should address this issue: <script src=\"packages/web_components/platform.js\"></script> and  <script src=\"packages/web_components/dart_support.js\"></script>."))
-y=J.UQ(z,"Polymer")
-if(y==null)throw H.b(P.w("polymer.js must be loaded before polymer.dart, please add <link rel=\"import\" href=\"packages/polymer/polymer.html\"> to your <head> before any Dart scripts. Alternatively you can get a different version of polymer.js by following the instructions at http://www.polymer-project.org."))
-x=$.X3
-y.V7("whenPolymerReady",[x.ce(new A.XR())])
-w=J.UQ($.JD(),"register")
-if(w==null)throw H.b(P.w("polymer.js must expose \"register\" function on polymer-element to enable polymer.dart to interoperate."))
-J.qQ($.JD(),"register",P.mt(new A.k2(x,w)))},
-ou:function(){var z,y,x
+JP:function(){var z,y,x
+z=J.UQ($.LX(),"Polymer")
+if(z==null)throw H.b(P.w("polymer.js must be loaded before polymer.dart, please add <link rel=\"import\" href=\"packages/polymer/polymer.html\"> to your <head> before any Dart scripts. Alternatively you can get a different version of polymer.js by following the instructions at http://www.polymer-project.org."))
+y=$.X3
+z.V7("whenPolymerReady",[y.ce(new A.XR())])
+x=J.UQ($.JD(),"register")
+if(x==null)throw H.b(P.w("polymer.js must expose \"register\" function on polymer-element to enable polymer.dart to interoperate."))
+J.qQ($.JD(),"register",P.mt(new A.k2(y,x)))},
+ou:function(){var z,y,x,w
+z={}
 $.RL=!0
-z=J.UQ($.LX(),"logFlags")
-y=[$.yk(),$.BY(),$.P5(),$.pc(),$.Im(),$.xP()]
-x=N.Jx("polymer")
-if(!H.Ck(y,new A.MZ(z))){x.sQG(C.oO)
-return}H.VM(new H.U5(y,new A.mq(z)),[H.Kp(H.VM(new H.TN(),[H.Kp(y,0)]),0)]).aN(0,new A.ue())
-x.gYH().Qr(new A.zj())},
+y=J.UQ($.LX(),"logFlags")
+z.a=y
+if(y==null)z.a=P.Fl(null,null)
+x=[$.yk(),$.BY(),$.P5(),$.pc(),$.Im(),$.xP()]
+w=N.Jx("polymer")
+if(!H.Ck(x,new A.MZ(z))){w.sQG(C.oO)
+return}H.VM(new H.U5(x,new A.mq(z)),[H.Kp(H.VM(new H.TN(),[H.Kp(x,0)]),0)]).aN(0,new A.ue())
+w.gYH().Qr(new A.zj())},
 XP:{
 "^":"a;FL>,t5>,P1<,oc>,Na<,DB<,eJ>,P2<,yN<,ix<,OZ,G9,Ye>,jg<,de,aU",
 gZf:function(){var z,y
@@ -13191,7 +13192,7 @@ Ba:function(a){var z,y,x
 for(z=null,y=this;y!=null;){z=J.Vs(J.nq(y)).dA.getAttribute("extends")
 y=y.gP1()}x=document
 W.wi(window,x,a,this.t5,z)},
-RH:function(a){var z=$.Kc()
+RH:function(a){var z=$.uj()
 if(z==null)return
 J.UQ(z,"urlResolver").V7("resolveDom",[a])},
 Zw:function(a){var z,y,x,w,v,u,t,s,r,q
@@ -13497,6 +13498,7 @@ if(w==null)return
 a.ze.u(0,w,x)}},
 TH:function(a,b){var z,y,x,w,v,u
 z=this.er(a)
+M.Ky(b).Jh(null)
 y=this.gYe(a)
 x=!!J.x(b).$isTU?b:M.Ky(b)
 w=J.SA(x,a,y==null&&J.ZL(x)==null?J.ry(a.LB):y)
@@ -13600,7 +13602,7 @@ y=z.t(0,b)
 if(y==null)return
 if(!!J.x(d).$isGt){$.yk().Ny(new A.xf(a,b))
 this.iQ(a,H.d(b)+"__array")}if(!!J.x(c).$isGt){$.yk().Ny(new A.Y0(a,b))
-x=c.gvp().k0(new A.K8(a,d,y),null,null,!1)
+x=c.gvp().k0(new A.K8(a,y),null,null,!1)
 w=H.d(b)+"__array"
 v=a.TJ
 if(v==null){v=P.L5(null,null,null,P.qU,P.MO)
@@ -13756,10 +13758,10 @@ Y0:{
 $0:[function(){return"["+H.d(J.HS(this.c))+"] observeArrayValue: register "+H.d(this.d)},"$0",null,0,0,null,"call"],
 $isEH:true},
 K8:{
-"^":"Tp:45;e,f,UI",
-$1:[function(a){var z,y,x,w
-for(z=J.GP(this.UI),y=this.e,x=this.f;z.G();){w=z.gl()
-$.al().Ol(y,w,[x],!0,null)}},"$1",null,2,0,null,158,"call"],
+"^":"Tp:45;e,f",
+$1:[function(a){var z,y,x
+for(z=J.GP(this.f),y=this.e;z.G();){x=z.gl()
+$.al().Ol(y,x,[a],!0,null)}},"$1",null,2,0,null,158,"call"],
 $isEH:true},
 aM:{
 "^":"Tp:79;a,b,c",
@@ -13927,11 +13929,11 @@ return!!J.x(z).$isKV?P.kW(z):z},
 $isEH:true},
 MZ:{
 "^":"Tp:45;a",
-$1:function(a){return J.xC(J.UQ(this.a,J.O6(a)),!0)},
+$1:function(a){return J.xC(J.UQ(this.a.a,J.O6(a)),!0)},
 $isEH:true},
 mq:{
-"^":"Tp:45;b",
-$1:function(a){return!J.xC(J.UQ(this.b,J.O6(a)),!0)},
+"^":"Tp:45;a",
+$1:function(a){return!J.xC(J.UQ(this.a.a,J.O6(a)),!0)},
 $isEH:true},
 ue:{
 "^":"Tp:45;",
@@ -17330,6 +17332,7 @@ I.$lazy($,"_sheetLog","dz","Es",function(){return N.Jx("polymer.stylesheet")})
 I.$lazy($,"_changedMethodQueryOptions","pY","Jp",function(){return new A.Wq(!1,!1,!0,C.rc,!1,!0,null,A.Xm())})
 I.$lazy($,"_ATTRIBUTES_REGEX","TS","FF",function(){return new H.VR("\\s|,",H.Vq("\\s|,",!1,!0,!1),null,null)})
 I.$lazy($,"_Platform","WF","Kc",function(){return J.UQ($.LX(),"Platform")})
+I.$lazy($,"_Polymer","kz","uj",function(){return J.UQ($.LX(),"Polymer")})
 I.$lazy($,"bindPattern","ZA","iB",function(){return new H.VR("\\{\\{([^{}]*)}}",H.Vq("\\{\\{([^{}]*)}}",!1,!0,!1),null,null)})
 I.$lazy($,"_onReady","R9","ye",function(){return H.VM(new P.Zf(P.Vv(null)),[null])})
 I.$lazy($,"_observeLog","VY","yk",function(){return N.Jx("polymer.observe")})
@@ -24142,9 +24145,8 @@ if(!"name" in Y0)Y0.name="Y0"
 $desc=$collectedClasses.Y0
 if($desc instanceof Array)$desc=$desc[1]
 Y0.prototype=$desc
-function K8(e,f,UI){this.e=e
-this.f=f
-this.UI=UI}K8.builtin$cls="K8"
+function K8(e,f){this.e=e
+this.f=f}K8.builtin$cls="K8"
 if(!"name" in K8)K8.name="K8"
 $desc=$collectedClasses.K8
 if($desc instanceof Array)$desc=$desc[1]
@@ -24246,7 +24248,7 @@ if(!"name" in MZ)MZ.name="MZ"
 $desc=$collectedClasses.MZ
 if($desc instanceof Array)$desc=$desc[1]
 MZ.prototype=$desc
-function mq(b){this.b=b}mq.builtin$cls="mq"
+function mq(a){this.a=a}mq.builtin$cls="mq"
 if(!"name" in mq)mq.name="mq"
 $desc=$collectedClasses.mq
 if($desc instanceof Array)$desc=$desc[1]

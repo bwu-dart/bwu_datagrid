@@ -12818,7 +12818,7 @@ HC:{
 kK:{
 "^":"d5;fg:height=,R:width=,x=,y=",
 "%":"SVGFEDisplacementMapElement"},
-uj:{
+ihH:{
 "^":"d5;fg:height=,R:width=,x=,y=",
 "%":"SVGFEFloodElement"},
 Ob:{
@@ -14604,24 +14604,25 @@ z.setAttribute("name","auto-binding-dart")
 z.setAttribute("extends","template")
 J.UQ($.JD(),"init").qP([],z)
 for(y=H.VM(new H.a7(a,7,0,null),[H.Kp(a,0)]);y.G();)y.lo.$0()},
-JP:function(){var z,y,x,w
-z=$.LX()
-if(J.UQ(z,"Platform")==null)throw H.b(P.w("platform.js, dart_support.js must be loaded at the top of your application, before any other scripts or HTML imports that use polymer. Putting these two script tags at the top of your <head> element should address this issue: <script src=\"packages/web_components/platform.js\"></script> and  <script src=\"packages/web_components/dart_support.js\"></script>."))
-y=J.UQ(z,"Polymer")
-if(y==null)throw H.b(P.w("polymer.js must be loaded before polymer.dart, please add <link rel=\"import\" href=\"packages/polymer/polymer.html\"> to your <head> before any Dart scripts. Alternatively you can get a different version of polymer.js by following the instructions at http://www.polymer-project.org."))
-x=$.X3
-y.V7("whenPolymerReady",[x.ce(new A.XR())])
-w=J.UQ($.JD(),"register")
-if(w==null)throw H.b(P.w("polymer.js must expose \"register\" function on polymer-element to enable polymer.dart to interoperate."))
-J.qQ($.JD(),"register",P.mt(new A.k2(x,w)))},
-ou:function(){var z,y,x
+JP:function(){var z,y,x
+z=J.UQ($.LX(),"Polymer")
+if(z==null)throw H.b(P.w("polymer.js must be loaded before polymer.dart, please add <link rel=\"import\" href=\"packages/polymer/polymer.html\"> to your <head> before any Dart scripts. Alternatively you can get a different version of polymer.js by following the instructions at http://www.polymer-project.org."))
+y=$.X3
+z.V7("whenPolymerReady",[y.ce(new A.XR())])
+x=J.UQ($.JD(),"register")
+if(x==null)throw H.b(P.w("polymer.js must expose \"register\" function on polymer-element to enable polymer.dart to interoperate."))
+J.qQ($.JD(),"register",P.mt(new A.k2(y,x)))},
+ou:function(){var z,y,x,w
+z={}
 $.RL=!0
-z=J.UQ($.LX(),"logFlags")
-y=[$.yk(),$.BY(),$.P5(),$.ZH(),$.ve(),$.xP()]
-x=N.Jx("polymer")
-if(!H.Ck(y,new A.MZ(z))){x.sQG(C.oO)
-return}H.VM(new H.U5(y,new A.mq(z)),[H.Kp(H.VM(new H.TN(),[H.Kp(y,0)]),0)]).aN(0,new A.zj())
-x.gYH().Qr(new A.Oh())},
+y=J.UQ($.LX(),"logFlags")
+z.a=y
+if(y==null)z.a=P.Fl(null,null)
+x=[$.yk(),$.BY(),$.P5(),$.ZH(),$.ve(),$.xP()]
+w=N.Jx("polymer")
+if(!H.Ck(x,new A.MZ(z))){w.sQG(C.oO)
+return}H.VM(new H.U5(x,new A.mq(z)),[H.Kp(H.VM(new H.TN(),[H.Kp(x,0)]),0)]).aN(0,new A.zj())
+w.gYH().Qr(new A.Oh())},
 XP:{
 "^":"a;FL>,t5>,P1<,oc>,Na<,DB<,eJ>,Gl<,yN<,ix<,OZ,G9,Ye>,jg<,m2,aU",
 gZf:function(){var z,y
@@ -14633,7 +14634,7 @@ Ba:function(a){var z,y,x
 for(z=null,y=this;y!=null;){z=J.Vs(J.nq(y)).dA.getAttribute("extends")
 y=y.gP1()}x=document
 W.wi(window,x,a,this.t5,z)},
-RH:function(a){var z=$.Kc()
+RH:function(a){var z=$.uj()
 if(z==null)return
 J.UQ(z,"urlResolver").V7("resolveDom",[a])},
 Zw:function(a){var z,y,x,w,v,u,t,s,r,q
@@ -14939,6 +14940,7 @@ if(w==null)return
 a.ze.u(0,w,x)}},
 TH:function(a,b){var z,y,x,w,v,u
 z=this.er(a)
+M.Ky(b).Jh(null)
 y=this.gYe(a)
 x=!!J.x(b).$isTU?b:M.Ky(b)
 w=J.Yb(x,a,y==null&&J.ZL(x)==null?J.ry(a.LB):y)
@@ -15185,10 +15187,10 @@ kMK:{
 $0:[function(){return"["+H.d(J.HS(this.c))+"] observeArrayValue: register "+H.d(this.d)},"$0",null,0,0,null,"call"],
 $isEH:true},
 xfo:{
-"^":"Tp:49;e,f,UI",
-$1:function(a){var z,y,x,w
-for(z=J.GP(this.UI),y=this.e,x=this.f;z.G();){w=z.gl()
-$.cp().Ol(y,w,[x],!0,null)}},
+"^":"Tp:49;e,f",
+$1:function(a){var z,y,x
+for(z=J.GP(this.f),y=this.e;z.G();){x=z.gl()
+$.cp().Ol(y,x,[a],!0,null)}},
 $isEH:true},
 aM:{
 "^":"Tp:79;a,b,c",
@@ -15356,11 +15358,11 @@ return!!J.x(z).$isKV?P.kW(z):z},
 $isEH:true},
 MZ:{
 "^":"Tp:49;a",
-$1:function(a){return J.xC(J.UQ(this.a,J.O6(a)),!0)},
+$1:function(a){return J.xC(J.UQ(this.a.a,J.O6(a)),!0)},
 $isEH:true},
 mq:{
-"^":"Tp:49;b",
-$1:function(a){return!J.xC(J.UQ(this.b,J.O6(a)),!0)},
+"^":"Tp:49;a",
+$1:function(a){return!J.xC(J.UQ(this.a.a,J.O6(a)),!0)},
 $isEH:true},
 zj:{
 "^":"Tp:49;",
@@ -18739,6 +18741,7 @@ I.$lazy($,"_sheetLog","dz","Es",function(){return N.Jx("polymer.stylesheet")})
 I.$lazy($,"_changedMethodQueryOptions","pY","Jp",function(){return new A.Wq(!1,!1,!0,C.rc,!1,!0,null,A.Xm())})
 I.$lazy($,"_ATTRIBUTES_REGEX","TS","FF",function(){return new H.VR("\\s|,",H.Vq("\\s|,",!1,!0,!1),null,null)})
 I.$lazy($,"_Platform","WF","Kc",function(){return J.UQ($.LX(),"Platform")})
+I.$lazy($,"_Polymer","kz","uj",function(){return J.UQ($.LX(),"Polymer")})
 I.$lazy($,"bindPattern","ZA","iB",function(){return new H.VR("\\{\\{([^{}]*)}}",H.Vq("\\{\\{([^{}]*)}}",!1,!0,!1),null,null)})
 I.$lazy($,"_onReady","R9","ye",function(){return H.VM(new P.Zf(P.Dt(null)),[null])})
 I.$lazy($,"_observeLog","VY","yk",function(){return N.Jx("polymer.observe")})

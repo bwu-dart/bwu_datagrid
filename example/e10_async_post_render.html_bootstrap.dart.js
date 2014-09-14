@@ -6415,12 +6415,12 @@ y=new N.JE(P.Fl(null,null),["formats"],P.EF(["formats",[new E.bT("\\{\\{([\\w.]+
 y.q2()
 return new G.uT(z,["type","tooltip","spotColor","highlightSpotColor","highlightLineColor","spotRadius","minSpotColor","maxSpotColor","lineWidth","normalRangeMin","normalRangeMax","normalRangeColor","drawNormalOnTop","chartRangeMin","chartRangeMax","chartRangeMinX","chartRangeMaxX","chartRangeClip","chartRangeClipX","xValues","valueSpots"],P.EF(["type","line","spotColor","#f80","highlightSpotColor","#5f5","highlightLineColor","#f22","spotRadius",1.5,"minSpotColor","#f80","maxSpotColor","#f80","lineWidth",1,"normalRangeColor","#ccc","drawNormalOnTop",!1,"tooltip",y],null,null),P.Fl(null,null),["type","lineColor","fillColor","defaultPixelsPerValue","width","height","composite","tagValuesAttribute","tagOptionsPrefix","enableTagOptions","enableHighlight","highlightColor","highlightLighten","disableHiddenCheck","numberFormatter","numberDigitGroupCount","numberDigitGroupSep","numberDecimalMark","disableTooltips","disableInteraction","tooltip","values"],P.EF(["type","line","lineColor","#00f","fillColor","#cdf","defaultPixelsPerValue",3,"composite",!1,"tagValuesAttribute","values","tagOptionsPrefix","spark","enableTagOptions",!1,"enableHighlight",!0,"highlightLighten",1.4,"disableHiddenCheck",!1,"numberDigitGroupCount",3,"numberDigitGroupSep",",","numberDecimalMark",".","disableTooltips",!1,"disableInteraction",!1],null,null))
 case"pie":if(b){z=P.Fl(null,null)
-y=new N.Tb(P.Fl(null,null),["formats"],P.EF(["formats",[new E.bT("\\{\\{([\\w.]+?)(:(.+?))?\\}\\}","(\\w+)\\.(\\d+)","<span style=\"color: {{color}}\">&#9679;</span> {{value}} ({{percent.1}}%)",null)]],null,null),P.Fl(null,null),["skipNull","prefix","suffix","cssClass","container","formats","offsetX","offsetY","formatter","chartTitle"],P.EF(["skipNull",!0,"prefix","","suffix","","cssClass","jqstooltip","offsetX",10,"offsetY",12],null,null))
+y=new N.ZL(P.Fl(null,null),["formats"],P.EF(["formats",[new E.bT("\\{\\{([\\w.]+?)(:(.+?))?\\}\\}","(\\w+)\\.(\\d+)","<span style=\"color: {{color}}\">&#9679;</span> {{value}} ({{percent.1}}%)",null)]],null,null),P.Fl(null,null),["skipNull","prefix","suffix","cssClass","container","formats","offsetX","offsetY","formatter","chartTitle"],P.EF(["skipNull",!0,"prefix","","suffix","","cssClass","jqstooltip","offsetX",10,"offsetY",12],null,null))
 y.q2()
 y=new G.kQ(z,["type","tooltip","offset","sliceColors","borderWidth","borderColor"],P.EF(["type","pie","offset",0,"sliceColors",C.f3,"borderWidth",0,"borderColor","#000","tooltip",y],null,null),P.Fl(null,null),["type","lineColor","fillColor","defaultPixelsPerValue","width","height","composite","tagValuesAttribute","tagOptionsPrefix","enableTagOptions","enableHighlight","highlightColor","highlightLighten","disableHiddenCheck","numberFormatter","numberDigitGroupCount","numberDigitGroupSep","numberDecimalMark","disableTooltips","disableInteraction","tooltip","values"],P.EF(["type","line","lineColor","#00f","fillColor","#cdf","defaultPixelsPerValue",3,"composite",!1,"tagValuesAttribute","values","tagOptionsPrefix","spark","enableTagOptions",!1,"enableHighlight",!0,"highlightLighten",1.4,"disableHiddenCheck",!1,"numberDigitGroupCount",3,"numberDigitGroupSep",",","numberDecimalMark",".","disableTooltips",!1,"disableInteraction",!1],null,null))
 y.q2()
 return y}z=P.Fl(null,null)
-y=new N.Tb(P.Fl(null,null),["formats"],P.EF(["formats",[new E.bT("\\{\\{([\\w.]+?)(:(.+?))?\\}\\}","(\\w+)\\.(\\d+)","<span style=\"color: {{color}}\">&#9679;</span> {{value}} ({{percent.1}}%)",null)]],null,null),P.Fl(null,null),["skipNull","prefix","suffix","cssClass","container","formats","offsetX","offsetY","formatter","chartTitle"],P.EF(["skipNull",!0,"prefix","","suffix","","cssClass","jqstooltip","offsetX",10,"offsetY",12],null,null))
+y=new N.ZL(P.Fl(null,null),["formats"],P.EF(["formats",[new E.bT("\\{\\{([\\w.]+?)(:(.+?))?\\}\\}","(\\w+)\\.(\\d+)","<span style=\"color: {{color}}\">&#9679;</span> {{value}} ({{percent.1}}%)",null)]],null,null),P.Fl(null,null),["skipNull","prefix","suffix","cssClass","container","formats","offsetX","offsetY","formatter","chartTitle"],P.EF(["skipNull",!0,"prefix","","suffix","","cssClass","jqstooltip","offsetX",10,"offsetY",12],null,null))
 y.q2()
 return new G.kQ(z,["type","tooltip","offset","sliceColors","borderWidth","borderColor"],P.EF(["type","pie","offset",0,"sliceColors",C.f3,"borderWidth",0,"borderColor","#000","tooltip",y],null,null),P.Fl(null,null),["type","lineColor","fillColor","defaultPixelsPerValue","width","height","composite","tagValuesAttribute","tagOptionsPrefix","enableTagOptions","enableHighlight","highlightColor","highlightLighten","disableHiddenCheck","numberFormatter","numberDigitGroupCount","numberDigitGroupSep","numberDecimalMark","disableTooltips","disableInteraction","tooltip","values"],P.EF(["type","line","lineColor","#00f","fillColor","#cdf","defaultPixelsPerValue",3,"composite",!1,"tagValuesAttribute","values","tagOptionsPrefix","spark","enableTagOptions",!1,"enableHighlight",!0,"highlightLighten",1.4,"disableHiddenCheck",!1,"numberDigitGroupCount",3,"numberDigitGroupSep",",","numberDecimalMark",".","disableTooltips",!1,"disableInteraction",!1],null,null))
 case"tristate":if(b){z=P.Fl(null,null)
@@ -7017,7 +7017,7 @@ t:function(a,b){if(!C.Nm.tg(this.mA,b))return N.e5.prototype.t.call(this,this,b)
 return this.wI.t(0,b)},
 u:function(a,b,c){if(!C.Nm.tg(this.mA,b))N.e5.prototype.u.call(this,this,b,c)
 this.wI.u(0,b,c)}},
-Tb:{
+ZL:{
 "^":"e5;wI,mA,uj,yJ,kW,oI",
 q2:function(){N.e5.prototype.q2.call(this)
 this.wI.FV(0,this.uj)},
@@ -7072,7 +7072,7 @@ return x}if(typeof a==="string"){w=C.xB.hc(a)
 if(w==="null")return[null]
 if(w==="true")return[1]
 if(w==="false")return[0]
-return[P.C1(a,new F.kz())]}return[null]},
+return[P.C1(a,new F.Tb())]}return[null]},
 cI:function(a){var z,y
 z=[]
 for(y=0;y<a.length;++y)z.push(F.BK(a[y]))
@@ -7115,7 +7115,7 @@ E7:{
 "^":"Tp:50;",
 $1:function(a){return},
 $isEH:true},
-kz:{
+Tb:{
 "^":"Tp:50;",
 $1:function(a){return},
 $isEH:true},
@@ -10778,7 +10778,7 @@ if(w==null)w=""
 v=this.ys
 return z.$2(this.Fi,z.$2(this.ku,z.$2(y,z.$2(x,z.$2(this.Ee,z.$2(w,z.$2(v==null?"":v,1)))))))},
 $isiD:true,
-static:{"^":"y2,q7,jH,ux,wm,IE,Me,fd,Ii,hO,zS,G9,pk,Yz,Ic,j3,ML,Th,r5,OP,ai,vT,WT,t2,H5,Vf,VFG,Vc,Sp,aJ,uj,d2,Kw,dc,Ai,uv,fbQ",jM:function(a){if(a==="http")return 80
+static:{"^":"y2,q7,jH,ux,wm,IE,Me,fd,Ii,hO,zS,G9,pk,Yz,Ic,j3,ML,Th,r5,OP,ai,vT,WT,t2,H5,Vf,VFG,Vc,Sp,aJ,JA7,d2,Kw,dc,Ai,uv,fbQ",jM:function(a){if(a==="http")return 80
 if(a==="https")return 443
 return 0},hK:function(a){var z,y,x,w,v,u,t,s,r,q,p,o,n
 z={}
@@ -14489,24 +14489,25 @@ z.setAttribute("name","auto-binding-dart")
 z.setAttribute("extends","template")
 J.UQ($.JD(),"init").qP([],z)
 for(y=H.VM(new H.a7(a,7,0,null),[H.Kp(a,0)]);y.G();)y.lo.$0()},
-JP:function(){var z,y,x,w
-z=$.LX()
-if(J.UQ(z,"Platform")==null)throw H.b(P.w("platform.js, dart_support.js must be loaded at the top of your application, before any other scripts or HTML imports that use polymer. Putting these two script tags at the top of your <head> element should address this issue: <script src=\"packages/web_components/platform.js\"></script> and  <script src=\"packages/web_components/dart_support.js\"></script>."))
-y=J.UQ(z,"Polymer")
-if(y==null)throw H.b(P.w("polymer.js must be loaded before polymer.dart, please add <link rel=\"import\" href=\"packages/polymer/polymer.html\"> to your <head> before any Dart scripts. Alternatively you can get a different version of polymer.js by following the instructions at http://www.polymer-project.org."))
-x=$.X3
-y.V7("whenPolymerReady",[x.ce(new A.XR())])
-w=J.UQ($.JD(),"register")
-if(w==null)throw H.b(P.w("polymer.js must expose \"register\" function on polymer-element to enable polymer.dart to interoperate."))
-J.qQ($.JD(),"register",P.mt(new A.k2(x,w)))},
-ou:function(){var z,y,x
+JP:function(){var z,y,x
+z=J.UQ($.LX(),"Polymer")
+if(z==null)throw H.b(P.w("polymer.js must be loaded before polymer.dart, please add <link rel=\"import\" href=\"packages/polymer/polymer.html\"> to your <head> before any Dart scripts. Alternatively you can get a different version of polymer.js by following the instructions at http://www.polymer-project.org."))
+y=$.X3
+z.V7("whenPolymerReady",[y.ce(new A.XR())])
+x=J.UQ($.JD(),"register")
+if(x==null)throw H.b(P.w("polymer.js must expose \"register\" function on polymer-element to enable polymer.dart to interoperate."))
+J.qQ($.JD(),"register",P.mt(new A.k2(y,x)))},
+ou:function(){var z,y,x,w
+z={}
 $.RL=!0
-z=J.UQ($.LX(),"logFlags")
-y=[$.yk(),$.BY(),$.P5(),$.ZH(),$.ve(),$.xP()]
-x=N.Jx("polymer")
-if(!H.Ck(y,new A.MZ(z))){x.sQG(C.oO)
-return}H.VM(new H.U5(y,new A.mq(z)),[H.Kp(H.VM(new H.TN(),[H.Kp(y,0)]),0)]).aN(0,new A.zj())
-x.gYH().Qr(new A.Oh())},
+y=J.UQ($.LX(),"logFlags")
+z.a=y
+if(y==null)z.a=P.Fl(null,null)
+x=[$.yk(),$.BY(),$.P5(),$.ZH(),$.ve(),$.xP()]
+w=N.Jx("polymer")
+if(!H.Ck(x,new A.MZ(z))){w.sQG(C.oO)
+return}H.VM(new H.U5(x,new A.mq(z)),[H.Kp(H.VM(new H.TN(),[H.Kp(x,0)]),0)]).aN(0,new A.zj())
+w.gYH().Qr(new A.Oh())},
 XP:{
 "^":"a;FL>,t5>,P1<,oc>,Na<,DB<,eJ>,Gl<,yN<,ix<,OZ,G9,Ye>,jg<,de,aU",
 gZf:function(){var z,y
@@ -14518,7 +14519,7 @@ Ba:function(a){var z,y,x
 for(z=null,y=this;y!=null;){z=J.Vs(J.nq(y)).dA.getAttribute("extends")
 y=y.gP1()}x=document
 W.wi(window,x,a,this.t5,z)},
-RH:function(a){var z=$.Kc()
+RH:function(a){var z=$.uj()
 if(z==null)return
 J.UQ(z,"urlResolver").V7("resolveDom",[a])},
 Zw:function(a){var z,y,x,w,v,u,t,s,r,q
@@ -14824,9 +14825,10 @@ if(w==null)return
 a.ze.u(0,w,x)}},
 TH:function(a,b){var z,y,x,w,v,u
 z=this.er(a)
+M.Ky(b).Jh(null)
 y=this.gYe(a)
 x=!!J.x(b).$isTU?b:M.Ky(b)
-w=J.Yb(x,a,y==null&&J.ZL(x)==null?J.ry(a.LB):y)
+w=J.Yb(x,a,y==null&&J.Xp(x)==null?J.ry(a.LB):y)
 v=a.Fq
 u=$.It().t(0,w)
 C.Nm.FV(v,u!=null?u.gdn():u)
@@ -15070,10 +15072,10 @@ kMK:{
 $0:[function(){return"["+H.d(J.HS(this.c))+"] observeArrayValue: register "+H.d(this.d)},"$0",null,0,0,null,"call"],
 $isEH:true},
 xfo:{
-"^":"Tp:50;e,f,UI",
-$1:function(a){var z,y,x,w
-for(z=J.GP(this.UI),y=this.e,x=this.f;z.G();){w=z.gl()
-$.cp().Ol(y,w,[x],!0,null)}},
+"^":"Tp:50;e,f",
+$1:function(a){var z,y,x
+for(z=J.GP(this.f),y=this.e;z.G();){x=z.gl()
+$.cp().Ol(y,x,[a],!0,null)}},
 $isEH:true},
 aM:{
 "^":"Tp:80;a,b,c",
@@ -15241,11 +15243,11 @@ return!!J.x(z).$isKV?P.kW(z):z},
 $isEH:true},
 MZ:{
 "^":"Tp:50;a",
-$1:function(a){return J.xC(J.UQ(this.a,J.O6(a)),!0)},
+$1:function(a){return J.xC(J.UQ(this.a.a,J.O6(a)),!0)},
 $isEH:true},
 mq:{
-"^":"Tp:50;b",
-$1:function(a){return!J.xC(J.UQ(this.b,J.O6(a)),!0)},
+"^":"Tp:50;a",
+$1:function(a){return!J.xC(J.UQ(this.a.a,J.O6(a)),!0)},
 $isEH:true},
 zj:{
 "^":"Tp:50;",
@@ -15278,10 +15280,10 @@ return"["+H.d(new H.cu(H.dJ(this),null))+": "+J.AG(this.K3)+"."+H.d(z)+": "+H.d(
 q6:{
 "^":"kj;Hf,MP,bSE,z6,LB,TJ,Fq,eY,ru,xH,tC,ux,vA,ze,OM,VR,aj",
 gk8:function(a){return J.qe(a.Hf)},
-gzH:function(a){return J.ZL(a.Hf)},
+gzH:function(a){return J.Xp(a.Hf)},
 szH:function(a,b){J.Co(a.Hf,b)},
 V1:function(a){return J.U2(a.Hf)},
-gYe:function(a){return J.ZL(a.Hf)},
+gYe:function(a){return J.Xp(a.Hf)},
 ZK:function(a,b,c){return J.Yb(a.Hf,b,c)},
 Lr:function(a,b,c,d){return A.zs.prototype.Lr.call(this,a,b===a?J.qe(a.Hf):b,c,d)},
 uo:function(a){var z
@@ -17376,7 +17378,7 @@ return}s=this.QU
 Q.Y5(s,this.yG,a)
 z=u.Rc
 if(!this.z1){this.z1=!0
-r=J.ZL(!!J.x(u.KB).$isDT?u.KB:u)
+r=J.Xp(!!J.x(u.KB).$isDT?u.KB:u)
 if(r!=null){this.iz=r.iA.CE(t)
 this.iC=null}}q=P.Py(P.Jr(),null,null,null,null)
 for(p=H.VM(new H.a7(a,a.length,0,null),[H.Kp(a,0)]),o=0;p.G();){n=p.lo
@@ -18029,10 +18031,10 @@ J.Wk=function(a,b){return J.YE(a).sbZ(a,b)}
 J.X8=function(a){return J.YE(a).gls(a)}
 J.XH=function(a){return J.Wx(a).yu(a)}
 J.XS=function(a,b){return J.w1(a).zV(a,b)}
+J.Xp=function(a){return J.YE(a).gzH(a)}
 J.YS=function(a){return J.w1(a).grh(a)}
 J.YT=function(a){return J.YE(a).gJZ(a)}
 J.Yb=function(a,b,c){return J.YE(a).ZK(a,b,c)}
-J.ZL=function(a){return J.YE(a).gzH(a)}
 J.ZP=function(a,b){return J.YE(a).Tk(a,b)}
 J.ZW=function(a,b,c,d){return J.YE(a).MS(a,b,c,d)}
 J.Zv=function(a){return J.YE(a).gWO(a)}
@@ -18611,6 +18613,7 @@ I.$lazy($,"_sheetLog","dz","Es",function(){return N.Jx("polymer.stylesheet")})
 I.$lazy($,"_changedMethodQueryOptions","pY","Jp",function(){return new A.Wq(!1,!1,!0,C.rc,!1,!0,null,A.Xm())})
 I.$lazy($,"_ATTRIBUTES_REGEX","TS","FF",function(){return new H.VR("\\s|,",H.Vq("\\s|,",!1,!0,!1),null,null)})
 I.$lazy($,"_Platform","WF","Kc",function(){return J.UQ($.LX(),"Platform")})
+I.$lazy($,"_Polymer","kz","uj",function(){return J.UQ($.LX(),"Polymer")})
 I.$lazy($,"bindPattern","ZA","iB",function(){return new H.VR("\\{\\{([^{}]*)}}",H.Vq("\\{\\{([^{}]*)}}",!1,!0,!1),null,null)})
 I.$lazy($,"_onReady","R9","ye",function(){return H.VM(new P.Zf(P.Dt(null)),[null])})
 I.$lazy($,"_observeLog","VY","yk",function(){return N.Jx("polymer.observe")})
