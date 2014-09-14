@@ -1,5 +1,6 @@
 library app_element;
 
+import 'dart:html' as dom;
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
@@ -73,6 +74,8 @@ class AppElement extends PolymerElement {
           'c17': 'C17-${i}',
           }));
       }
+
+      dom.window.onResize.listen((e) => grid.resizeCanvas(e));
 
       grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
 
