@@ -8,4 +8,5 @@ packages
 .settings
 *.exe
 *.*~
+atlassian-ide-plugin.xml
 

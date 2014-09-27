@@ -1,3 +1,8 @@
+## 0.0.18
+widen dependency constraints on Polymer
+!! Polymer 0.15.0 or some Dart update broke drag-n-drop for range selection and
+ row reordering. Drag-n-drop for column reordering still works (doesn't use HTML5
+ drag-n-drop) I'll have yet to investigate to find the cause.
 ## 0.0.17
 update to Polymer 0.14.0
 change DataView row id from String to dynamic

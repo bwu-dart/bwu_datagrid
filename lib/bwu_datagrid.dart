@@ -1765,7 +1765,7 @@ class BwuDatagrid extends PolymerElement {
       var value = _getDataItemValueForColumn(item, m);  // TODO this distinction is already made in DefaultTotalsCellFormatter - so remove it here and make DefaultTotalsCellFormatter work with the signature of the default formatter
       FormatterBase fm = _getFormatter(row, m);
       if(fm is Formatter) {
-      /*cellElement.append(new dom.Text(*/fm.call(cellElement, row, cell, value, m, item); //));
+        fm.call(cellElement, row, cell, value, m, item);
       } else if(fm is core.GroupTotalsFormatter) {
         fm.call(cellElement, item, m);
       }

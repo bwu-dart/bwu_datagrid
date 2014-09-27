@@ -12,7 +12,7 @@ packages:
   barback:
     description: barback
     source: hosted
-    version: "0.15.2+1"
+    version: "0.15.2+2"
   browser:
     description: browser
     source: hosted
@@ -20,7 +20,7 @@ packages:
   bwu_sparkline:
     description: bwu_sparkline
     source: hosted
-    version: "0.0.6"
+    version: "0.0.7"
   bwu_utils:
     description: bwu_utils
     source: hosted
@@ -32,7 +32,7 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.3"
+    version: "0.2.3+1"
   collection:
     description: collection
     source: hosted
@@ -48,7 +48,7 @@ packages:
   intl:
     description: intl
     source: hosted
-    version: "0.11.7"
+    version: "0.11.9"
   logging:
     description: logging
     source: hosted
@@ -72,7 +72,7 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.14.0"
+    version: "0.15.0"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -92,7 +92,7 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.2.1"
+    version: "0.2.1+1"
   source_maps:
     description: source_maps
     source: hosted
@@ -104,7 +104,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.0.2"
+    version: "1.1.1"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -128,7 +128,7 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1"
   yaml:
     description: yaml
     source: hosted

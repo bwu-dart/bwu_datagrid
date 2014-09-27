@@ -98,7 +98,7 @@ class GroupItemMetadataProvider extends Plugin {
     _gridKeyDownSubscription = grid.onBwuKeyDown.listen(_handleGridKeyDown);
   }
 
-  fm.Formatter _getGroupFormatter() {
+  fm.Formatter getGroupFormatter() {
     if(_groupFormatter != null) {
       return _groupFormatter;
     }
@@ -189,7 +189,7 @@ class GroupItemMetadataProvider extends Plugin {
       columns: {
         '0': new Column(
             colspan: "*",
-            formatter: _getGroupFormatter(),
+            formatter: getGroupFormatter(),
             editor: null
           )
         });

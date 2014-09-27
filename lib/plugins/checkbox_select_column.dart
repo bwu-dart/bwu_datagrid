@@ -39,7 +39,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
   //var _handler = new Slick.EventHandler();
   List<async.StreamSubscription> _subscriptions = [];
-  Map<int,bool>_selectedRowsLookup = {};
+  Map<int,bool> selectedRowsLookup = {};
   CheckboxSelectColumn({String id: '_checkbox_selector', String cssClass,
                        toolTip: 'Select/Deselect All', int width: 30})
   : super(id: id, cssClass: cssClass, toolTip: toolTip, width: width,
@@ -74,15 +74,15 @@ class CheckboxSelectColumn extends Column implements Plugin {
     for (int i = 0; i < selectedRows.length; i++) {
       row = selectedRows[i];
       lookup[row] = true;
-      if (lookup[row] != _selectedRowsLookup[row]) {
+      if (lookup[row] != selectedRowsLookup[row]) {
         _grid.invalidateRow(row);
-        _selectedRowsLookup.remove(row);
+        selectedRowsLookup.remove(row);
       }
     }
-    for (final i in _selectedRowsLookup.keys) {
+    for (final i in selectedRowsLookup.keys) {
       _grid.invalidateRow(i);
     }
-    _selectedRowsLookup = lookup;
+    selectedRowsLookup = lookup;
     //(formatter as CheckboxSelectionFormatter)._selectedRowsLookup = _selectedRowsLookup;
     _grid.render();
 
@@ -123,7 +123,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
   }
 
   void toggleRowSelection(int row) {
-    if (_selectedRowsLookup.containsKey(row)) {
+    if (selectedRowsLookup.containsKey(row)) {
       _grid.setSelectedRows(_grid.getSelectedRows()..remove(row));
     } else {
       _grid.setSelectedRows(_grid.getSelectedRows()..add(row));
@@ -132,7 +132,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
   /// Check whether the [row] is currently selected.
   bool isRowSelected(int row) {
-    return _selectedRowsLookup.containsKey(row);
+    return selectedRowsLookup.containsKey(row);
   }
 
   void handleHeaderClick(core.HeaderClick e) {

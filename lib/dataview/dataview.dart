@@ -299,7 +299,7 @@ class DataView extends DataProvider {
     if (rowsById == null) {
       rowsById = {};
       for (int i = 0; i < rows.length; i++) {
-        rowsById['${rows[i][idProperty]}'] = i;
+        rowsById[rows[i][idProperty]] = i;
       }
     }
   }
