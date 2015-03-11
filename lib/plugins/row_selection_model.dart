@@ -24,7 +24,7 @@ class RowSelectionModel extends SelectionModel {
   RowSelectionModelOptions _options;
 
   RowSelectionModel([RowSelectionModelOptions options]) {
-    if(options != null) {
+    if (options != null) {
       _options = options;
     } else {
       _options = new RowSelectionModelOptions();
@@ -36,7 +36,8 @@ class RowSelectionModel extends SelectionModel {
   void init(BwuDatagrid grid) {
     //_options = $.extend(true, {}, _defaults, options);
     _grid = grid;
-    _subscriptions.add(_grid.onBwuActiveCellChanged.listen(_handleActiveCellChange));
+    _subscriptions
+        .add(_grid.onBwuActiveCellChanged.listen(_handleActiveCellChange));
     _subscriptions.add(_grid.onBwuKeyDown.listen(_handleKeyDown));
     _subscriptions.add(_grid.onBwuClick.listen(_handleClick));
   }
@@ -75,7 +76,8 @@ class RowSelectionModel extends SelectionModel {
   }
 
   List<int> _getRowsRange(int from, int to) {
-    var i, rows = [];
+    var i,
+        rows = [];
     for (i = from; i <= to; i++) {
       rows.add(i);
     }
@@ -95,7 +97,8 @@ class RowSelectionModel extends SelectionModel {
 
   void setSelectedRanges(List<core.Range> ranges) {
     _ranges = ranges;
-    _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED, new SelectedRangesChanged(this, _ranges));
+    _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED,
+        new SelectedRangesChanged(this, _ranges));
     //_self.onSelectedRangesChanged.notify(_ranges);
   }
 
@@ -105,13 +108,22 @@ class RowSelectionModel extends SelectionModel {
 
   void _handleActiveCellChange(ActiveCellChanged e) {
     if (_options.selectActiveRow && e.cell != null && e.cell.row != null) {
-      setSelectedRanges([new core.Range(e.cell.row, 0, toRow: e.cell.row, toCell: _grid.getColumns.length - 1)]);
+      setSelectedRanges([
+        new core.Range(e.cell.row, 0,
+            toRow: e.cell.row, toCell: _grid.getColumns.length - 1)
+      ]);
     }
   }
 
   void _handleKeyDown(core.KeyDown e) {
     Cell activeRow = _grid.getActiveCell();
-    if (activeRow != null && e.causedBy.shiftKey && !e.causedBy.ctrlKey && !e.causedBy.altKey && !e.causedBy.metaKey && (e.causedBy.which == dom.KeyCode.UP || e.causedBy.which == dom.KeyCode.DOWN)) {
+    if (activeRow != null &&
+        e.causedBy.shiftKey &&
+        !e.causedBy.ctrlKey &&
+        !e.causedBy.altKey &&
+        !e.causedBy.metaKey &&
+        (e.causedBy.which == dom.KeyCode.UP ||
+            e.causedBy.which == dom.KeyCode.DOWN)) {
       List<int> selectedRows = getSelectedRows();
       selectedRows.sort((x, y) {
         return x - y;
@@ -148,8 +160,8 @@ class RowSelectionModel extends SelectionModel {
       return; // TODO is this needed? false;
     }
 
-    if (!_grid.getGridOptions.multiSelect || (
-        !e.causedBy.ctrlKey && !e.causedBy.shiftKey && !e.causedBy.metaKey)) {
+    if (!_grid.getGridOptions.multiSelect ||
+        (!e.causedBy.ctrlKey && !e.causedBy.shiftKey && !e.causedBy.metaKey)) {
       return; // TODO is this needed? false;
     }
 

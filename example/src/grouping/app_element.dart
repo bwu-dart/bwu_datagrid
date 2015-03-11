@@ -18,12 +18,11 @@ import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart
 import 'package:bwu_datagrid/core/core.dart' as core;
 
 class AvgTotalsFormatter extends core.GroupTotalsFormatter {
-
   @override
   void call(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
-    if(totals['avg'] != null && totals['avg'][columnDef.field] != null) {
+    if (totals['avg'] != null && totals['avg'][columnDef.field] != null) {
       val = totals['avg'][columnDef.field];
     }
     if (val != null) {
@@ -34,13 +33,12 @@ class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   }
 }
 
-class SumTotalsFormatter extends core.GroupTotalsFormatter  {
-
+class SumTotalsFormatter extends core.GroupTotalsFormatter {
   @override
   void call(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
-    if(totals['sum'] != null && totals['sum'][columnDef.field] != null) {
+    if (totals['sum'] != null && totals['sum'][columnDef.field] != null) {
       val = totals['sum'][columnDef.field];
     }
     if (val != null) {
@@ -58,11 +56,10 @@ class GroupTitleFormatter extends core.GroupTitleFormatter {
   @override
   dom.Node call(core.Group group) {
     return new dom.SpanElement()
-        ..appendText('${name}: ${group.value} ')
-        ..append(
-            new dom.SpanElement()
-                ..style.color = 'green'
-                ..appendText('(${group.count} items)'));
+      ..appendText('${name}: ${group.value} ')
+      ..append(new dom.SpanElement()
+        ..style.color = 'green'
+        ..appendText('(${group.count} items)'));
   }
 }
 
@@ -73,18 +70,15 @@ class BooleanGroupTitleFormatter extends core.GroupTitleFormatter {
   @override
   dom.Node call(core.Group group) {
     return new dom.DocumentFragment()
-        ..appendText("Effort-Driven: ${group.value != null ? 'True' : 'False'}")
-        ..append(
-            new dom.SpanElement()
-                ..style.color = 'green'
-                ..appendText(' (${group.count} items)'));
+      ..appendText("Effort-Driven: ${group.value != null ? 'True' : 'False'}")
+      ..append(new dom.SpanElement()
+        ..style.color = 'green'
+        ..appendText(' (${group.count} items)'));
   }
 }
 
-
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
-
   @observable String threshold = '0';
 
   AppElement.created() : super.created();
@@ -100,10 +94,7 @@ class AppElement extends PolymerElement {
     new Column(id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: new fm.CheckmarkFormatter(), sortable: true)
   ];
 
-  var gridOptions = new GridOptions(
-      enableCellNavigation: true,
-      editable: true
-  );
+  var gridOptions = new GridOptions(enableCellNavigation: true, editable: true);
 
   math.Random rnd = new math.Random();
 
@@ -124,20 +115,26 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       var groupItemMetadataProvider = new GroupItemMetadataProvider();
-      dataView = new DataView(options: new DataViewOptions(
-        groupItemMetadataProvider: groupItemMetadataProvider,
-        inlineFilters: true
-      ));
+      dataView = new DataView(
+          options: new DataViewOptions(
+              groupItemMetadataProvider: groupItemMetadataProvider,
+              inlineFilters: true));
 
-      grid.setup(dataProvider: dataView, columns: columns, gridOptions: gridOptions).then((_) {
+      grid
+          .setup(
+              dataProvider: dataView,
+              columns: columns,
+              gridOptions: gridOptions)
+          .then((_) {
         grid.registerPlugin(new GroupItemMetadataProvider());
         grid.setSelectionModel = new CellSelectionModel();
 
         ($['pager'] as BwuPager).init(dataView, grid);
 
-        BwuColumnPicker columnPicker = (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
-            ..columns = columns
-            ..grid = grid;
+        BwuColumnPicker columnPicker =
+            (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
+          ..columns = columns
+          ..grid = grid;
         dom.document.body.append(columnPicker);
 
         grid.onBwuSort.listen((e) {
@@ -163,23 +160,20 @@ class AppElement extends PolymerElement {
         // initialize the model after all the events have been hooked up
         dataView.beginUpdate();
         dataView.setFilter(myFilter);
-        dataView.setFilterArgs({
-          'percentComplete': percentCompleteThreshold
-        });
+        dataView.setFilterArgs({'percentComplete': percentCompleteThreshold});
         loadData(50);
         groupByDuration();
         dataView.endUpdate();
 
         //$("#gridContainer").resizable();
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
@@ -188,7 +182,7 @@ class AppElement extends PolymerElement {
   void thresholdChanged(old) {
     core.globalEditorLock.cancelCurrentEdit();
 
-    if(_pendingUpdateFilter != null) {
+    if (_pendingUpdateFilter != null) {
       _pendingUpdateFilter.cancel();
     }
     _pendingUpdateFilter = new async.Timer(new Duration(milliseconds: 20), () {
@@ -197,15 +191,12 @@ class AppElement extends PolymerElement {
     });
   }
 
-
   void filterAndUpdate() {
     bool isNarrowing = percentCompleteThreshold > prevPercentCompleteThreshold;
     bool isExpanding = percentCompleteThreshold < prevPercentCompleteThreshold;
     Range renderedRange = grid.getRenderedRange();
 
-    dataView.setFilterArgs({
-      'percentComplete': percentCompleteThreshold
-    });
+    dataView.setFilterArgs({'percentComplete': percentCompleteThreshold});
     dataView.setRefreshHints({
       'ignoreDiffsBefore': renderedRange.top,
       'ignoreDiffsAfter': renderedRange.bottom + 1,
@@ -217,7 +208,6 @@ class AppElement extends PolymerElement {
     prevPercentCompleteThreshold = percentCompleteThreshold;
   }
 
-
   bool myFilter(DataItem item, Map args) {
     return item["percentComplete"] >= args['percentComplete'];
   }
@@ -227,44 +217,44 @@ class AppElement extends PolymerElement {
   }
 
   int comparer(DataItem a, DataItem b) {
-
-    var x = a[sortcol], y = b[sortcol];
-    if(x == y ) {
+    var x = a[sortcol],
+        y = b[sortcol];
+    if (x == y) {
       return 0;
     }
 
-    if(x is Comparable) {
+    if (x is Comparable) {
       return x.compareTo(y);
     }
 
-    if(y is Comparable) {
+    if (y is Comparable) {
       return 1;
     }
 
-    if(x == null && y != null) {
+    if (x == null && y != null) {
       return -1;
     } else if (x != null && y == null) {
       return 1;
     }
 
-    if(x is bool) {
+    if (x is bool) {
       return x == true ? 1 : 0;
     }
     return (x == y ? 0 : (x > y ? 1 : -1));
   }
 
-
   void groupByDuration() {
-    dataView.setGrouping(<GroupingInfo>[new GroupingInfo(
-      getter: "duration",
-      formatter: new GroupTitleFormatter('Duration'),
-      aggregators: [
+    dataView.setGrouping(<GroupingInfo>[
+      new GroupingInfo(
+          getter: "duration",
+          formatter: new GroupTitleFormatter('Duration'),
+          aggregators: [
         new AvgAggregator("percentComplete"),
         new SumAggregator("cost")
       ],
-      doAggregateCollapsed: false,
-      isLazyTotalsCalculation: true
-    )]);
+          doAggregateCollapsed: false,
+          isLazyTotalsCalculation: true)
+    ]);
   }
 
   void groupByDurationOrderByCountHandler() {
@@ -276,76 +266,71 @@ class AppElement extends PolymerElement {
   }
 
   void groupByDurationOrderByCount([bool doAggregateCollapsed = false]) {
-    dataView.setGrouping(<GroupingInfo>[new GroupingInfo(
-      getter: "duration",
-      formatter: new GroupTitleFormatter('Duration'),
-      comparer: (a, b) {
+    dataView.setGrouping(<GroupingInfo>[
+      new GroupingInfo(
+          getter: "duration",
+          formatter: new GroupTitleFormatter('Duration'),
+          comparer: (a, b) {
         return a.count - b.count;
       },
-      aggregators: [
+          aggregators: [
         new AvgAggregator("percentComplete"),
         new SumAggregator("cost")
       ],
-      doAggregateCollapsed: doAggregateCollapsed,
-      isLazyTotalsCalculation: true
-    )]);
+          doAggregateCollapsed: doAggregateCollapsed,
+          isLazyTotalsCalculation: true)
+    ]);
   }
 
   void groupByDurationEffortDriven() {
-    dataView.setGrouping(<GroupingInfo>[new GroupingInfo(
-        getter: "duration",
-        formatter : new GroupTitleFormatter('Duration'),
-        aggregators: [
-          new SumAggregator("duration"),
-          new SumAggregator("cost")
-        ],
-        doAggregateCollapsed: true,
-        isLazyTotalsCalculation: true
-      ),
+    dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
-        getter: "effortDriven",
-        formatter : new BooleanGroupTitleFormatter('Effort-Driven'),
-        aggregators: [
-          new AvgAggregator("percentComplete"),
-          new SumAggregator("cost")
-        ],
-        isCollapsed: true,
-        isLazyTotalsCalculation: true
-      )
+          getter: "duration",
+          formatter: new GroupTitleFormatter('Duration'),
+          aggregators: [
+        new SumAggregator("duration"),
+        new SumAggregator("cost")
+      ],
+          doAggregateCollapsed: true,
+          isLazyTotalsCalculation: true),
+      new GroupingInfo(
+          getter: "effortDriven",
+          formatter: new BooleanGroupTitleFormatter('Effort-Driven'),
+          aggregators: [
+        new AvgAggregator("percentComplete"),
+        new SumAggregator("cost")
+      ],
+          isCollapsed: true,
+          isLazyTotalsCalculation: true)
     ]);
   }
 
   void groupByDurationEffortDrivenPercent() {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
-        getter: "duration",
-        formatter: new GroupTitleFormatter('Duration'),
-        aggregators: [
-          new SumAggregator("duration"),
-          new SumAggregator("cost")
-        ],
-        doAggregateCollapsed: true,
-        isLazyTotalsCalculation: true
-      ),
+          getter: "duration",
+          formatter: new GroupTitleFormatter('Duration'),
+          aggregators: [
+        new SumAggregator("duration"),
+        new SumAggregator("cost")
+      ],
+          doAggregateCollapsed: true,
+          isLazyTotalsCalculation: true),
       new GroupingInfo(
-        getter: "effortDriven",
-        formatter: new BooleanGroupTitleFormatter('Effort-Driven'),
-        aggregators :[
-          new SumAggregator("duration"),
-          new SumAggregator("cost")
-        ],
-        isLazyTotalsCalculation: true
-      ),
+          getter: "effortDriven",
+          formatter: new BooleanGroupTitleFormatter('Effort-Driven'),
+          aggregators: [
+        new SumAggregator("duration"),
+        new SumAggregator("cost")
+      ],
+          isLazyTotalsCalculation: true),
       new GroupingInfo(
-        getter: "percentComplete",
-        formatter: new GroupTitleFormatter('% Complete'),
-        aggregators: [
-          new AvgAggregator("percentComplete")
-        ],
-        doAggregateCollapsed: true,
-        isCollapsed: true,
-        isLazyTotalsCalculation: true
-      )
+          getter: "percentComplete",
+          formatter: new GroupTitleFormatter('% Complete'),
+          aggregators: [new AvgAggregator("percentComplete")],
+          doAggregateCollapsed: true,
+          isCollapsed: true,
+          isLazyTotalsCalculation: true)
     ]);
   }
 
@@ -357,17 +342,17 @@ class AppElement extends PolymerElement {
   void loadData(int count) {
     var someDates = ["01/01/2009", "02/02/2009", "03/03/2009"];
     //var timer = new Stopwatch()..start();
-    data = new List<MapDataItem>.generate(count, (int i){
+    data = new List<MapDataItem>.generate(count, (int i) {
       return new MapDataItem({
         "id": "id_${i}",
         "num": i,
         "title": "Task ${i}",
-        "duration" : rnd.nextInt(30),
+        "duration": rnd.nextInt(30),
         "percentComplete": rnd.nextInt(100),
-        "start" : someDates[ (rnd.nextDouble() * 2).floor()],
-        "finish" : someDates[ (rnd.nextDouble() * 2).floor()],
-        "cost" : (rnd.nextDouble() * 10000).round() / 100,
-        "effortDriven" : (i % 5 == 0)
+        "start": someDates[(rnd.nextDouble() * 2).floor()],
+        "finish": someDates[(rnd.nextDouble() * 2).floor()],
+        "cost": (rnd.nextDouble() * 10000).round() / 100,
+        "effortDriven": (i % 5 == 0)
       });
     }, growable: true);
     //print(timer.elapsed);

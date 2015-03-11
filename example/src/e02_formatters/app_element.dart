@@ -9,7 +9,8 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
 class Formatter extends fm.Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+      Column columnDef, DataItem dataContext) {
     target.appendHtml(value);
   }
 }
@@ -29,10 +30,7 @@ class AppElement extends PolymerElement {
   ];
 
   var gridOptions = new GridOptions(
-    editable: false,
-    enableAddRow: false,
-    enableCellNavigation: true
-  );
+      editable: false, enableAddRow: false, enableCellNavigation: true);
 
   @override
   void attached() {
@@ -45,22 +43,23 @@ class AppElement extends PolymerElement {
         data.items.add(new MapDataItem({
           'title': "<a href='#' tabindex='0'>Task</a> ${i}",
           'duration': "5 days",
-          'percentComplete': math.min(100, (new math.Random().nextDouble() * 110).round()),
+          'percentComplete':
+              math.min(100, (new math.Random().nextDouble() * 110).round()),
           'start': "01/01/2009",
           'finish': "01/05/2009",
           'effortDriven': (i % 5 == 0)
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
-
+      grid.setup(
+          dataProvider: data, columns: columns, gridOptions: gridOptions);
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

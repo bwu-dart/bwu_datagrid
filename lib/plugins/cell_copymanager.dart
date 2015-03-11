@@ -36,27 +36,32 @@ class CellCopyManager extends Plugin {
         if (_copiedRanges != null) {
           e.preventDefault();
           clearCopySelection();
-          eventBus.fire(core.Events.COPY_CANCELLED, new core.CopyCancelled(this, _copiedRanges));
+          eventBus.fire(core.Events.COPY_CANCELLED,
+              new core.CopyCancelled(this, _copiedRanges));
           _copiedRanges = null;
         }
       }
 
-      if (e.causedBy.which == 67 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
+      if (e.causedBy.which == 67 &&
+          (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
         ranges = grid.getSelectionModel.getSelectedRanges();
         if (ranges.length != 0) {
           e.preventDefault();
           _copiedRanges = ranges;
           _markCopySelection(ranges);
-          eventBus.fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
+          eventBus
+              .fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
         }
       }
 
-      if (e.causedBy.which == 86 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
+      if (e.causedBy.which == 86 &&
+          (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
         if (_copiedRanges != null) {
           e.preventDefault();
           clearCopySelection();
           ranges = grid.getSelectionModel.getSelectedRanges();
-          eventBus.fire(core.Events.PASTE_CELLS, new core.PasteCells(this, _copiedRanges, ranges));
+          eventBus.fire(core.Events.PASTE_CELLS,
+              new core.PasteCells(this, _copiedRanges, ranges));
           _copiedRanges = null;
         }
       }

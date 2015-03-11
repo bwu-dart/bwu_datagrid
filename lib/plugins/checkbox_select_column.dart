@@ -9,7 +9,6 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/plugins/plugin.dart';
 
-
 class CheckboxSelectionFormatter extends Formatter {
   final CheckboxSelectColumn selectColumn;
   CheckboxSelectionFormatter(this.selectColumn) {
@@ -19,33 +18,39 @@ class CheckboxSelectionFormatter extends Formatter {
   /// The added element (click target) must have the `selectColumn` attribute set
   /// to be recognized by the [CheckboxSelectColumn] click handler.
   @override
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+      Column columnDef, DataItem dataContext) {
     target.children.clear();
 
     if (dataContext != null) {
       target.append(new dom.CheckboxInputElement()
         ..checked = selectColumn.isRowSelected(row)
-        ..attributes['selectColumn']='true');
+        ..attributes['selectColumn'] = 'true');
     }
   }
 }
 
-
 class CheckboxSelectColumn extends Column implements Plugin {
-
   bool isSuspended;
   BwuDatagrid _grid;
   BwuDatagrid get grid => _grid;
 
   //var _handler = new Slick.EventHandler();
   List<async.StreamSubscription> _subscriptions = [];
-  Map<int,bool> selectedRowsLookup = {};
+  Map<int, bool> selectedRowsLookup = {};
   CheckboxSelectColumn({String id: '_checkbox_selector', String cssClass,
-                       toolTip: 'Select/Deselect All', int width: 30})
-  : super(id: id, cssClass: cssClass, toolTip: toolTip, width: width,
-      name: 'Column selector', nameElement: new dom.CheckboxInputElement() , field: 'sel', resizable: false,
-      sortable: false) {
-    if(formatter != null) {
+      toolTip: 'Select/Deselect All', int width: 30})
+      : super(
+          id: id,
+          cssClass: cssClass,
+          toolTip: toolTip,
+          width: width,
+          name: 'Column selector',
+          nameElement: new dom.CheckboxInputElement(),
+          field: 'sel',
+          resizable: false,
+          sortable: false) {
+    if (formatter != null) {
       this.formatter = formatter;
     } else {
       this.formatter = new CheckboxSelectionFormatter(this);
@@ -87,9 +92,11 @@ class CheckboxSelectColumn extends Column implements Plugin {
     _grid.render();
 
     if (selectedRows.length > 0 && selectedRows.length == _grid.getDataLength) {
-      _grid.updateColumnHeader(id, null, toolTip, nameElement: new dom.CheckboxInputElement()..checked = true);
+      _grid.updateColumnHeader(id, null, toolTip,
+          nameElement: new dom.CheckboxInputElement()..checked = true);
     } else {
-      _grid.updateColumnHeader(id, null, toolTip, nameElement: new dom.CheckboxInputElement());
+      _grid.updateColumnHeader(id, null, toolTip,
+          nameElement: new dom.CheckboxInputElement());
     }
   }
 
@@ -97,7 +104,8 @@ class CheckboxSelectColumn extends Column implements Plugin {
     if (e.causedBy.which == 32) {
       if (_grid.getColumns[e.cell.cell].id == id) {
         // if editing, try to commit
-        if (!_grid.getEditorLock.isActive || _grid.getEditorLock.commitCurrentEdit()) {
+        if (!_grid.getEditorLock.isActive ||
+            _grid.getEditorLock.commitCurrentEdit()) {
           toggleRowSelection(e.cell.row);
         }
         e.preventDefault();
@@ -108,9 +116,12 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
   void handleClick(core.Click e) {
     // clicking on a row select checkbox
-    if (_grid.getColumns[e.cell.cell].id == id && (e.causedBy.target as dom.Element).attributes.containsKey('selectColumn')) {
+    if (_grid.getColumns[e.cell.cell].id == id &&
+        (e.causedBy.target as dom.Element).attributes
+            .containsKey('selectColumn')) {
       // if editing, try to commit
-      if (_grid.getEditorLock.isActive && !_grid.getEditorLock.commitCurrentEdit()) {
+      if (_grid.getEditorLock.isActive &&
+          !_grid.getEditorLock.commitCurrentEdit()) {
         e.preventDefault();
         e.stopImmediatePropagation();
         return;
@@ -138,7 +149,8 @@ class CheckboxSelectColumn extends Column implements Plugin {
   void handleHeaderClick(core.HeaderClick e) {
     if (e.column.id == id && e.causedBy.target is dom.CheckboxInputElement) {
       // if editing, try to commit
-      if (_grid.getEditorLock.isActive && !_grid.getEditorLock.commitCurrentEdit()) {
+      if (_grid.getEditorLock.isActive &&
+          !_grid.getEditorLock.commitCurrentEdit()) {
         e.preventDefault();
         e.stopImmediatePropagation();
         return;

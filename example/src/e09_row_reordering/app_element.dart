@@ -21,46 +21,40 @@ class AppElement extends PolymerElement {
 
   List<Column> columns = [
     new Column(
-      id: "#",
-      name: "",
-      width: 40,
-      behavior: ["select", 'move'], //AndMove",
-      selectable: false,
-      resizable: false,
-      isDraggable: true,
-      cssClass: "cell-reorder dnd"
-    ),
+        id: "#", name: "", width: 40, behavior: ["select", 'move'], //AndMove",
+        selectable: false,
+        resizable: false,
+        isDraggable: true,
+        cssClass: "cell-reorder dnd"),
     new Column(
-      id: "name",
-      name: "Name",
-      field: "name",
-      width: 500,
-      cssClass: "cell-title",
-      editor: new TextEditor(),
-      validator: new RequiredFieldValidator(),
-      isDraggable: true,
-      behavior: ['drag']
-    ),
+        id: "name",
+        name: "Name",
+        field: "name",
+        width: 500,
+        cssClass: "cell-title",
+        editor: new TextEditor(),
+        validator: new RequiredFieldValidator(),
+        isDraggable: true,
+        behavior: ['drag']),
     new Column(
-      id: "complete",
-      name: "Complete",
-      width: 60,
-      cssClass: "cell-effort-driven",
-      field: "complete",
-      cannotTriggerInsert: true,
-      formatter: new fm.CheckmarkFormatter(),
-      editor: new CheckboxEditor(),
-      isDraggable: true,
-      behavior: ['drag']
-    )];
+        id: "complete",
+        name: "Complete",
+        width: 60,
+        cssClass: "cell-effort-driven",
+        field: "complete",
+        cannotTriggerInsert: true,
+        formatter: new fm.CheckmarkFormatter(),
+        editor: new CheckboxEditor(),
+        isDraggable: true,
+        behavior: ['drag'])
+  ];
 
   var gridOptions = new GridOptions(
-    editable: true,
-    enableAddRow: true,
-    enableCellNavigation: true,
-    forceFitColumns: true,
-    autoEdit: false
-  );
+      editable: true,
+      enableAddRow: true,
+      enableCellNavigation: true,
+      forceFitColumns: true,
+      autoEdit: false);
 
   math.Random rnd = new math.Random();
 
@@ -76,25 +70,31 @@ class AppElement extends PolymerElement {
 
       // prepare the data
       data = new MapDataItemProvider();
-      data.items.add(new MapDataItem({ 'name': "Make a list", 'complete': true}));
-      data.items.add(new MapDataItem({ 'name': "Check it twice", 'complete': false}));
-      data.items.add(new MapDataItem({ 'name': "Find out who's naughty", 'complete': false}));
-      data.items.add(new MapDataItem({ 'name': "Find out who's nice", 'complete': false}));
+      data.items
+          .add(new MapDataItem({'name': "Make a list", 'complete': true}));
+      data.items
+          .add(new MapDataItem({'name': "Check it twice", 'complete': false}));
+      data.items.add(new MapDataItem(
+          {'name': "Find out who's naughty", 'complete': false}));
+      data.items.add(
+          new MapDataItem({'name': "Find out who's nice", 'complete': false}));
 
-
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) {
+      grid
+          .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
+          .then((_) {
         grid.setSelectionModel = new RowSelectionModel();
 
         var moveRowsPlugin = new RowMoveManager(grid, cancelEditOnDrag: true);
 
         moveRowsPlugin.onBwuBeforeMoveRows.listen((e) {
           for (var i = 0; i < e.rows.length; i++) {
-             // no point in moving before or after itself
-             if (e.rows[i] == e.insertBefore || e.rows[i] == e.insertBefore - 1) {
-               e.retVal = false;
-             }
-           }
-           return;
+            // no point in moving before or after itself
+            if (e.rows[i] == e.insertBefore ||
+                e.rows[i] == e.insertBefore - 1) {
+              e.retVal = false;
+            }
+          }
+          return;
         });
 
         moveRowsPlugin.onBwuMoveRows.listen(moveRowsHandler);
@@ -109,8 +109,8 @@ class AppElement extends PolymerElement {
             return;
           }
           (dt.getData('helper') as dom.HtmlElement)
-              ..style.top = '${e.causedBy.page.y + 5}px'
-              ..style.left = '${e.causedBy.page.x + 5}px';
+            ..style.top = '${e.causedBy.page.y + 5}px'
+            ..style.left = '${e.causedBy.page.x + 5}px';
         });
 
         grid.onBwuAddNewRow.listen((e) {
@@ -124,11 +124,11 @@ class AppElement extends PolymerElement {
       });
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
@@ -144,7 +144,7 @@ class AppElement extends PolymerElement {
     selectedRows.forEach((r) {
       rowsToDelete.add(data.items[r]);
     });
-    rowsToDelete.forEach((r) =>  data.items.remove(r));
+    rowsToDelete.forEach((r) => data.items.remove(r));
 
     grid.invalidate();
     grid.setSelectedRows([]);
@@ -155,14 +155,13 @@ class AppElement extends PolymerElement {
     List<core.ItemBase> left, right;
     var rows = e.rows;
     var insertBefore = e.insertBefore;
-    if(insertBefore < 0) {
+    if (insertBefore < 0) {
       return;
     }
     left = data.items.getRange(0, insertBefore).toList();
     right = data.items.getRange(insertBefore, data.length).toList();
 
-
-    rows.sort((a,b) => a-b);
+    rows.sort((a, b) => a - b);
 
     for (var i = 0; i < rows.length; i++) {
       extractedRows.add(data.items[rows[i]]);
@@ -180,13 +179,12 @@ class AppElement extends PolymerElement {
     }
 
     data.items = new List<core.ItemBase>()
-        ..addAll(left)
-        ..addAll(extractedRows)
-        ..addAll(right);
+      ..addAll(left)
+      ..addAll(extractedRows)
+      ..addAll(right);
 
     var selectedRows = [];
-    for (var i = 0; i < rows.length; i++)
-      selectedRows.add(left.length + i);
+    for (var i = 0; i < rows.length; i++) selectedRows.add(left.length + i);
 
     grid.resetActiveCell();
     grid.setData(data);
@@ -197,14 +195,16 @@ class AppElement extends PolymerElement {
   void dragStartHandler(core.DragStart e) {
     Cell cell = grid.getCellFromEvent(e.causedBy);
 
-    if (cell == null || columns[cell.cell].behavior == null || !columns[cell.cell].behavior.contains('drag')) {
+    if (cell == null ||
+        columns[cell.cell].behavior == null ||
+        !columns[cell.cell].behavior.contains('drag')) {
       return;
     }
 
     Map dragData = new Map();
     dragData['row'] = cell.row;
 
-    if (cell.row >= data.items.length  ) {
+    if (cell.row >= data.items.length) {
       return;
     }
 
@@ -227,17 +227,18 @@ class AppElement extends PolymerElement {
     var r = grid.getCanvasNode.getBoundingClientRect();
 
     var proxy = new dom.SpanElement()
-        ..style.position = "absolute"
-        ..style.left = '${r.left}px'
-        ..style.top = '${r.top}px'
-        ..style.display = "inline-block"
-        ..style.padding = "4px 10px"
-        ..style.background = "#e0e0e0"
-        ..style.border = "1px solid gray"
-        ..style.zIndex = '-99999'
-        ..style.borderRadius = "8px"
-        ..style.boxShadow = "2px 2px 6px silver"
-        ..text = "Drag to Recycle Bin to delete ${selectedRows.length} selected row(s)";
+      ..style.position = "absolute"
+      ..style.left = '${r.left}px'
+      ..style.top = '${r.top}px'
+      ..style.display = "inline-block"
+      ..style.padding = "4px 10px"
+      ..style.background = "#e0e0e0"
+      ..style.border = "1px solid gray"
+      ..style.zIndex = '-99999'
+      ..style.borderRadius = "8px"
+      ..style.boxShadow = "2px 2px 6px silver"
+      ..text =
+      "Drag to Recycle Bin to delete ${selectedRows.length} selected row(s)";
     dom.document.body.append(proxy);
 
     e.causedBy.dataTransfer.setDragImage(proxy, 0, 0);

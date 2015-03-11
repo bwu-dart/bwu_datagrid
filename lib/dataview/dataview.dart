@@ -25,7 +25,6 @@ part 'helpers.dart';
 //    }
 //  });
 
-
 typedef bool FilterFn(a, b);
 
 class DataView extends DataProvider {
@@ -41,34 +40,38 @@ class DataView extends DataProvider {
   GroupingInfo groupingInfo = new GroupingInfo();
 
   DataView({DataViewOptions options, List<DataItem> items}) : super(items) {
-    if(options != null) {
+    if (options != null) {
       this.options = options;
     }
   }
 
   // private
-  String idProperty = "id";  // property holding a unique row id
+  String idProperty = "id"; // property holding a unique row id
   //List<core.ItemBase> items = [];         // data by index
-  List<core.ItemBase> rows = [];          // data by row
-  Map<dynamic,int> idxById = {};       // indexes by id - the id needs to be a valid map key
-  Map<dynamic,int> rowsById = null;    // rows by id; lazy-calculated - the id needs to be a valid map key
-  FilterFn filter = null;      // filter function
-  Map<dynamic,bool> updated = null;     // updated item ids - the id needs to be a valid map key
-  bool suspend = false;    // suspends the recalculation
+  List<core.ItemBase> rows = []; // data by row
+  Map<dynamic, int> idxById = {
+  }; // indexes by id - the id needs to be a valid map key
+  Map<dynamic, int> rowsById =
+      null; // rows by id; lazy-calculated - the id needs to be a valid map key
+  FilterFn filter = null; // filter function
+  Map<dynamic, bool> updated =
+      null; // updated item ids - the id needs to be a valid map key
+  bool suspend = false; // suspends the recalculation
   bool sortAsc = true;
   String fastSortField;
   SortComparerFunc sortComparer;
-  Map<String,int> refreshHints = {}; // TODO make class, if this String stores ids it should be dynamic
-  Map<String,int> prevRefreshHints = {};
+  Map<String, int> refreshHints = {
+  }; // TODO make class, if this String stores ids it should be dynamic
+  Map<String, int> prevRefreshHints = {};
   Map filterArgs;
   List<core.ItemBase> filteredItems = [];
   FilterFn compiledFilter;
   FilterFn compiledFilterWithCaching;
-  Map<int,bool> filterCache = {};
+  Map<int, bool> filterCache = {};
 
   List<GroupingInfo> groupingInfos = [];
   List<core.Group> groups = [];
-  List<Map<String,core.Group>> toggledGroupsByLevel = [];
+  List<Map<String, core.Group>> toggledGroupsByLevel = [];
   String groupingDelimiter = ':|:';
 
   int pagesize = 0;
@@ -90,7 +93,6 @@ class DataView extends DataProvider {
   async.Stream<core.SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
       _eventBus.onEvent(core.Events.SELECTED_ROW_IDS_CHANGED);
 
-
   void beginUpdate() {
     suspend = true;
   }
@@ -100,7 +102,7 @@ class DataView extends DataProvider {
     refresh();
   }
 
-  void setRefreshHints(Map<String,int> hints) {
+  void setRefreshHints(Map<String, int> hints) {
     refreshHints = hints;
   }
 
@@ -148,20 +150,30 @@ class DataView extends DataProvider {
   void setPagingOptions(PagingInfo args) {
     if (args.pageSize != null) {
       pagesize = args.pageSize;
-      pagenum = pagesize != null && pagesize != 0? math.min(pagenum, math.max(0, (totalRows / pagesize).ceil() - 1)) : 0;
+      pagenum = pagesize != null && pagesize != 0
+          ? math.min(pagenum, math.max(0, (totalRows / pagesize).ceil() - 1))
+          : 0;
     }
 
     if (args.pageNum != null) {
-      pagenum = math.min(args.pageNum, math.max(0, (totalRows / pagesize).ceil() - 1));
+      pagenum = math.min(
+          args.pageNum, math.max(0, (totalRows / pagesize).ceil() - 1));
     }
 
-    eventBus.fire(core.Events.PAGING_INFO_CHANGED, new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
+    eventBus.fire(core.Events.PAGING_INFO_CHANGED,
+        new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
     refresh();
   }
 
   PagingInfo getPagingInfo() {
-    var totalPages = pagesize != null && pagesize != 0 ? math.max(1, (totalRows / pagesize).ceil()) : 1;
-    return new PagingInfo(pageSize: pagesize, pageNum: pagenum, totalRows: totalRows, totalPages: totalPages);
+    var totalPages = pagesize != null && pagesize != 0
+        ? math.max(1, (totalRows / pagesize).ceil())
+        : 1;
+    return new PagingInfo(
+        pageSize: pagesize,
+        pageNum: pagenum,
+        totalRows: totalRows,
+        totalPages: totalPages);
   }
 
   void sort(SortComparerFunc comparer, [bool ascending = true]) {
@@ -170,7 +182,8 @@ class DataView extends DataProvider {
     sortAsc = ascending;
     sortComparer = comparer;
     fastSortField = null;
-    if (ascending == false) { // TODO why would it make sense to revers before sorting?
+    if (ascending == false) {
+      // TODO why would it make sense to revers before sorting?
       items = items.reversed.toList();
     }
     items.sort(comparer);
@@ -215,7 +228,7 @@ class DataView extends DataProvider {
       sort(sortComparer, sortAsc);
 //      } else if (fastSortField != null) {
 //        fastSort(fastSortField, sortAsc);
-      }
+    }
   }
 
   void setFilter(FilterFn filterFn) {
@@ -285,7 +298,7 @@ class DataView extends DataProvider {
 //    }
 
   DataItem getItemByIdx(int i) {
-    if(i < 0 || i >= items.length) {
+    if (i < 0 || i >= items.length) {
       return null;
     }
     return items[i];
@@ -313,7 +326,7 @@ class DataView extends DataProvider {
   // the id needs to be a valid map key
   DataItem getItemById(id) {
     var idx = idxById[id];
-    if(idx == null) {
+    if (idx == null) {
       return null;
     }
     return items[idx];
@@ -386,7 +399,10 @@ class DataView extends DataProvider {
     core.ItemBase item = rows[i];
 
     // if this is a group row, make sure totals are calculated and update the title
-    if (item != null && item is core.Group && item.totals != null && !item.totals.isInitialized) {
+    if (item != null &&
+        item is core.Group &&
+        item.totals != null &&
+        !item.totals.isInitialized) {
       GroupingInfo gi = groupingInfos[item.level];
       if (!gi.isDisplayTotalsRow) {
         calculateTotals(item.totals);
@@ -402,7 +418,7 @@ class DataView extends DataProvider {
   }
 
   RowMetadata getItemMetadata(int i) {
-    if(rows.length <= i) {
+    if (rows.length <= i) {
       return null;
     }
     var item = rows[i];
@@ -439,7 +455,7 @@ class DataView extends DataProvider {
   /**
    * @param level {Number} Optional level to collapse.  If not specified, applies to all levels.
    */
-  void  collapseAllGroups([int level]) {
+  void collapseAllGroups([int level]) {
     expandCollapseAllGroups(true, level);
   }
 
@@ -451,7 +467,10 @@ class DataView extends DataProvider {
   }
 
   void expandCollapseGroup(int level, String groupingKey, bool collapse) {
-    toggledGroupsByLevel[level][groupingKey] = groupingInfos[level].isCollapsed != collapse ? groupingInfos[level].isCollapsed : null;
+    toggledGroupsByLevel[level][groupingKey] =
+        groupingInfos[level].isCollapsed != collapse
+            ? groupingInfos[level].isCollapsed
+            : null;
     refresh();
   }
 
@@ -462,7 +481,8 @@ class DataView extends DataProvider {
    *     the 'high' group.
    */
   void collapseGroup(List<String> varArgs) {
-    var args = varArgs.toList(); //Array.prototype.slice.call(arguments); // TODO select elements from an array, arguments is an array of args passed to this function
+    var args = varArgs
+        .toList(); //Array.prototype.slice.call(arguments); // TODO select elements from an array, arguments is an array of args passed to this function
     var arg0 = args[0];
     if (args.length == 1 && arg0.indexOf(groupingDelimiter) != -1) {
       expandCollapseGroup(arg0.split(groupingDelimiter).length - 1, arg0, true);
@@ -478,10 +498,12 @@ class DataView extends DataProvider {
    *     the 'high' group.
    */
   void expandGroup(List<String> varArgs) {
-    var args = varArgs.toList(); //Array.prototype.slice.call(arguments); // TODO
+    var args =
+        varArgs.toList(); //Array.prototype.slice.call(arguments); // TODO
     var arg0 = args[0];
     if (args.length == 1 && arg0.indexOf(groupingDelimiter) != -1) {
-      expandCollapseGroup(arg0.split(groupingDelimiter).length - 1, arg0, false);
+      expandCollapseGroup(
+          arg0.split(groupingDelimiter).length - 1, arg0, false);
     } else {
       expandCollapseGroup(args.length - 1, args.join(groupingDelimiter), false);
     }
@@ -489,7 +511,8 @@ class DataView extends DataProvider {
 
   List<core.Group> get getGroups => groups;
 
-  List<core.Group> extractGroups(List<core.ItemBase> rows, [core.Group parentGroup]) {
+  List<core.Group> extractGroups(List<core.ItemBase> rows,
+      [core.Group parentGroup]) {
     core.Group group;
     var val;
     List<core.Group> groups = [];
@@ -505,7 +528,8 @@ class DataView extends DataProvider {
         group = new core.Group();
         group.value = val;
         group.level = level;
-        group.groupingKey = '${(parentGroup != null ? '${parentGroup.groupingKey}${groupingDelimiter}' : '')}${val}';
+        group.groupingKey =
+            '${(parentGroup != null ? '${parentGroup.groupingKey}${groupingDelimiter}' : '')}${val}';
         groups.add(group);
         groupsByVal[val] = group;
       }
@@ -519,7 +543,8 @@ class DataView extends DataProvider {
         group = new core.Group();
         group.value = val;
         group.level = level;
-        group.groupingKey = '${(parentGroup != null ? '${parentGroup.groupingKey}${groupingDelimiter}' : '')}${val}';
+        group.groupingKey =
+            '${(parentGroup != null ? '${parentGroup.groupingKey}${groupingDelimiter}' : '')}${val}';
         groups.add(group);
         groupsByVal[val] = group;
       }
@@ -550,7 +575,8 @@ class DataView extends DataProvider {
       // make sure all the subgroups are calculated
       int i = group.groups != null ? group.groups.length : 0;
       while (i-- > 0) {
-        if (group.groups[i].totals != null && !group.groups[i].totals.isInitialized) {
+        if (group.groups[i].totals != null &&
+            !group.groups[i].totals.isInitialized) {
           calculateTotals(group.groups[i].totals);
         }
       }
@@ -562,7 +588,7 @@ class DataView extends DataProvider {
       if (!isLeafLevel && gi.doAggregateChildGroups) {
         agg(group.groups);
       } //else {
-        agg(group.rows);
+      agg(group.rows);
       //}
       agg.storeResult(totals);
     }
@@ -583,7 +609,7 @@ class DataView extends DataProvider {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
     bool groupCollapsed = gi.isCollapsed;
-    Map<String,core.Group> toggledGroups = toggledGroupsByLevel[level];
+    Map<String, core.Group> toggledGroups = toggledGroupsByLevel[level];
     int idx = groups.length;
     core.Group g;
     while (idx-- > 0) {
@@ -598,8 +624,10 @@ class DataView extends DataProvider {
         addTotals(g.groups, level + 1);
       }
 
-      if (gi.aggregators.length > 0 && (
-          gi.doAggregateEmpty || g.rows.length > 0 || (g.groups != null && g.groups.length > 0))) {
+      if (gi.aggregators.length > 0 &&
+          (gi.doAggregateEmpty ||
+              g.rows.length > 0 ||
+              (g.groups != null && g.groups.length > 0))) {
         addGroupTotals(g);
       }
 
@@ -612,7 +640,7 @@ class DataView extends DataProvider {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
     List<core.ItemBase> groupedRows = [];
-    List<core.ItemBase>rows;
+    List<core.ItemBase> rows;
     int gl = 0;
     core.Group g;
     for (int i = 0; i < groups.length; i++) {
@@ -620,13 +648,16 @@ class DataView extends DataProvider {
       groupedRows.add(g); //[gl++] = g;
 
       if (!g.isCollapsed) {
-        rows = g.groups != null ? flattenGroupedRows(g.groups, level + 1) : g.rows;
+        rows =
+            g.groups != null ? flattenGroupedRows(g.groups, level + 1) : g.rows;
         for (int j = 0; j < rows.length; j++) {
           groupedRows.add(rows[j]); //[gl++] = rows[j];
         }
       }
 
-      if (g.totals != null && gi.isDisplayTotalsRow && (!g.isCollapsed || gi.doAggregateCollapsed)) {
+      if (g.totals != null &&
+          gi.isDisplayTotalsRow &&
+          (!g.isCollapsed || gi.doAggregateCollapsed)) {
         groupedRows.add(g.totals); //[gl++] = g.totals;
       }
     }
@@ -653,7 +684,6 @@ class DataView extends DataProvider {
 //      return fn;
 //  }
 
-
 //  FilterFn compileFilter() {
 //    var filterInfo = getFunctionInfo(filter);
 
@@ -663,8 +693,8 @@ class DataView extends DataProvider {
 //          .replace(/return ([^;}]+?)\s*([;}]|$)/gi,
 //          "{ if ($1) { _retval[_idx++] = $item$; }; continue _coreloop; }$2");
 
-      // This preserves the function template code after JS compression,
-      // so that replace() commands still work as expected.
+  // This preserves the function template code after JS compression,
+  // so that replace() commands still work as expected.
 //      var tpl = [
 //        //"function(_items, _args) { ",
 //        "var _retval = [], _idx = 0; ",
@@ -695,8 +725,8 @@ class DataView extends DataProvider {
 //          .replace(/return ([^;}]+?)\s*([;}]|$)/gi,
 //          "{ if ((_cache[_i] = $1)) { _retval[_idx++] = $item$; }; continue _coreloop; }$2");
 
-      // This preserves the function template code after JS compression,
-      // so that replace() commands still work as expected.
+  // This preserves the function template code after JS compression,
+  // so that replace() commands still work as expected.
 //      var tpl = [
 //        //"function(_items, _args, _cache) { ",
 //        "var _retval = [], _idx = 0; ",
@@ -722,7 +752,7 @@ class DataView extends DataProvider {
 //    return fn;
 //  }
 
-  List<core.ItemBase> uncompiledFilter(List<core.ItemBase>items, Map args) {
+  List<core.ItemBase> uncompiledFilter(List<core.ItemBase> items, Map args) {
     List<core.ItemBase> retval = [];
     int idx = 0;
 
@@ -732,7 +762,7 @@ class DataView extends DataProvider {
           retval.add(items[i]);
         }
       }
-    }catch(e, s) {
+    } catch (e, s) {
       print(e);
       print(s);
     }
@@ -740,7 +770,8 @@ class DataView extends DataProvider {
     return retval;
   }
 
-  List<core.ItemBase> uncompiledFilterWithCaching(List<core.ItemBase> items, Map args, Map<int,bool> cache) {
+  List<core.ItemBase> uncompiledFilterWithCaching(
+      List<core.ItemBase> items, Map args, Map<int, bool> cache) {
     List<core.ItemBase> retval = [];
     int idx = 0;
     core.ItemBase item;
@@ -774,7 +805,8 @@ class DataView extends DataProvider {
       // special case:  if not filtering and not paging, the resulting
       // rows collection needs to be a copy so that changes due to sort
       // can be caught
-      filteredItems = pagesize != null ? items : new List<core.ItemBase>.from(items);
+      filteredItems =
+          pagesize != null ? items : new List<core.ItemBase>.from(items);
     }
 
     // get the current page
@@ -783,7 +815,10 @@ class DataView extends DataProvider {
       if (filteredItems.length < pagenum * pagesize) {
         pagenum = (filteredItems.length / pagesize).floor();
       }
-      paged = filteredItems.getRange(pagesize * pagenum, math.min(pagesize * pagenum + pagesize, filteredItems.length)).toList();
+      paged = filteredItems
+          .getRange(pagesize * pagenum,
+              math.min(pagesize * pagenum + pagesize, filteredItems.length))
+          .toList();
     } else {
       paged = filteredItems;
     }
@@ -800,13 +835,13 @@ class DataView extends DataProvider {
     int to = newRows != null ? newRows.length : 0;
 
     if (refreshHints != null && refreshHints['ignoreDiffsBefore'] == true) {
-      from = math.max(0,
-          math.min(newRows.length, refreshHints['ignoreDiffsBefore']));
+      from = math.max(
+          0, math.min(newRows.length, refreshHints['ignoreDiffsBefore']));
     }
 
     if (refreshHints != null && refreshHints['ignoreDiffsAfter'] == true) {
-      to = math.min(newRows.length,
-          math.max(0, refreshHints['ignoreDiffsAfter']));
+      to = math.min(
+          newRows.length, math.max(0, refreshHints['ignoreDiffsAfter']));
     }
 
     final rl = rows.length;
@@ -818,17 +853,17 @@ class DataView extends DataProvider {
         r = rows[i];
 
         eitherIsNonData = (item is core.NonDataItem);
-        if ((groupingInfos.length > 0 && (eitherIsNonData || (r is core.NonDataItem)) &&
-            item is core.Group != r is core.Group ||
-            item is core.Group && item != r)
-            || (eitherIsNonData &&
-            // no good way to compare totals since they are arbitrary DTOs
-            // deep object comparison is pretty expensive
-            // always considering them 'dirty' seems easier for the time being
-            (item is core.GroupTotals || r is core.GroupTotals))
-            || item[idProperty] != r[idProperty]
-            || (updated != null && updated[item[idProperty]] != null)
-            ) {
+        if ((groupingInfos.length > 0 &&
+                    (eitherIsNonData || (r is core.NonDataItem)) &&
+                    item is core.Group != r is core.Group ||
+                item is core.Group && item != r) ||
+            (eitherIsNonData &&
+                // no good way to compare totals since they are arbitrary DTOs
+                // deep object comparison is pretty expensive
+                // always considering them 'dirty' seems easier for the time being
+                (item is core.GroupTotals || r is core.GroupTotals)) ||
+            item[idProperty] != r[idProperty] ||
+            (updated != null && updated[item[idProperty]] != null)) {
           diff.add(i);
         }
       }
@@ -839,8 +874,10 @@ class DataView extends DataProvider {
   List<int> recalc(List<core.ItemBase> items) {
     rowsById = null;
 
-    if (refreshHints['isFilterNarrowing'] != prevRefreshHints['isFilterNarrowing'] ||
-        refreshHints['isFilterExpanding'] != prevRefreshHints['isFilterExpanding']) {
+    if (refreshHints['isFilterNarrowing'] !=
+            prevRefreshHints['isFilterNarrowing'] ||
+        refreshHints['isFilterExpanding'] !=
+            prevRefreshHints['isFilterExpanding']) {
       filterCache = {};
     }
 
@@ -872,7 +909,8 @@ class DataView extends DataProvider {
     int countBefore = rows.length;
     int totalRowsBefore = totalRows;
 
-    List<int> diff = recalc(items /*, filter*/); //  pass as direct refs to avoid closure perf hit // TODO seems to be a bug. The receiving method has no filter param
+    List<int> diff = recalc(
+        items /*, filter*/); //  pass as direct refs to avoid closure perf hit // TODO seems to be a bug. The receiving method has no filter param
 
     // if the current page is no longer valid, go to last page and recalc
     // we suffer a performance penalty here, but the main loop (recalc) remains highly optimized
@@ -886,15 +924,18 @@ class DataView extends DataProvider {
     refreshHints = {};
 
     if (totalRowsBefore != totalRows) {
-      eventBus.fire(core.Events.PAGING_INFO_CHANGED, new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
+      eventBus.fire(core.Events.PAGING_INFO_CHANGED,
+          new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
       //onPagingInfoChanged.notify(getPagingInfo(), null, self);
     }
     if (countBefore != rows.length) {
-      eventBus.fire(core.Events.ROW_COUNT_CHANGED, new core.RowCountChanged(this, oldCount: countBefore, newCount: rows.length));
+      eventBus.fire(core.Events.ROW_COUNT_CHANGED, new core.RowCountChanged(
+          this, oldCount: countBefore, newCount: rows.length));
       //onRowCountChanged.notify({previous: countBefore, current: rows.length}, null, self);
     }
     if (diff.length > 0) {
-      eventBus.fire(core.Events.ROWS_CHANGED, new core.RowsChanged(this, changedRows: diff));
+      eventBus.fire(core.Events.ROWS_CHANGED,
+          new core.RowsChanged(this, changedRows: diff));
       //onRowsChanged.notify({rows: diff}, null, self);
     }
   }
@@ -918,7 +959,8 @@ class DataView extends DataProvider {
    *     access to the full list selected row ids, and not just the ones visible to the grid.
    * @method syncGridSelection
    */
-  async.Stream syncGridSelection(grid.BwuDatagrid grid, bool preserveHidden, {bool preserveHiddenOnSelectionChange: false}) {
+  async.Stream syncGridSelection(grid.BwuDatagrid grid, bool preserveHidden,
+      {bool preserveHiddenOnSelectionChange: false}) {
     bool inHandler = false;
     // the id needs to be a valid map key
     List selectedRowIds = mapRowsToIds(grid.getSelectedRows());
@@ -932,8 +974,8 @@ class DataView extends DataProvider {
 
       selectedRowIds = rowIds;
 
-      eventBus.fire(core.Events.SELECTED_ROW_IDS_CHANGED, new core.SelectedRowIdsChanged(
-        this, grid, selectedRowIds));
+      eventBus.fire(core.Events.SELECTED_ROW_IDS_CHANGED,
+          new core.SelectedRowIdsChanged(this, grid, selectedRowIds));
     }
 
     void update(e) {
@@ -949,13 +991,17 @@ class DataView extends DataProvider {
     }
 
     grid.onBwuSelectedRowsChanged.listen((e) {
-      if (inHandler) { return; }
+      if (inHandler) {
+        return;
+      }
       var newSelectedRowIds = mapRowsToIds(grid.getSelectedRows());
-      if (!preserveHiddenOnSelectionChange || !grid.getGridOptions.multiSelect) {
+      if (!preserveHiddenOnSelectionChange ||
+          !grid.getGridOptions.multiSelect) {
         setSelectedRowIds(newSelectedRowIds);
       } else {
         // keep the ones that are hidden
-        List<String> existing = selectedRowIds.where((id) => getRowById(id) == null).toList();
+        List<String> existing =
+            selectedRowIds.where((id) => getRowById(id) == null).toList();
         // add the newly selected ones
         setSelectedRowIds(existing.addAll(newSelectedRowIds));
       }
@@ -985,7 +1031,6 @@ class DataView extends DataProvider {
     // get the existing ones right away
     storeCellCssStyles(grid.getCellCssStyles(key));
 
-
     void update(dynamic e) {
       if (hashById) {
         inHandler = true;
@@ -1004,8 +1049,12 @@ class DataView extends DataProvider {
     }
 
     grid.onCellCssStylesChanged.subscribe((e, args) {
-      if (inHandler) { return; }
-      if (key != args.key) { return; }
+      if (inHandler) {
+        return;
+      }
+      if (key != args.key) {
+        return;
+      }
       if (args.hash) {
         storeCellCssStyles(args.hash);
       }

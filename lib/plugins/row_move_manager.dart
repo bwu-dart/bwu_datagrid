@@ -58,8 +58,11 @@ class RowMoveManager extends Plugin {
       grid.getEditorLock.cancelCurrentEdit();
     }
 
-    if(cell == null || grid.getColumns[cell.cell] == null || grid.getColumns[cell.cell].behavior == null ||
-        grid.getEditorLock.isActive || !(grid.getColumns[cell.cell].behavior.contains('move'))) {
+    if (cell == null ||
+        grid.getColumns[cell.cell] == null ||
+        grid.getColumns[cell.cell].behavior == null ||
+        grid.getEditorLock.isActive ||
+        !(grid.getColumns[cell.cell].behavior.contains('move'))) {
       e.retVal = false;
       return;
     }
@@ -91,7 +94,7 @@ class RowMoveManager extends Plugin {
         ..classes.add('bwu-datagrid-reorder-proxy')
         ..style.position = "absolute"
         ..style.zIndex = "99999"
-        ..style.width ='${tools.innerWidth(_canvas)}px'
+        ..style.width = '${tools.innerWidth(_canvas)}px'
         ..style.height = '${rowHeight * selectedRows.length}px';
       _canvas.append(_selectionProxy);
 
@@ -116,9 +119,12 @@ class RowMoveManager extends Plugin {
 
     _selectionProxy.style.top = '${top - 5}px';
 
-    var insertBefore = math.max(0, math.min((top / grid.getGridOptions.rowHeight).round(), grid.getDataLength));
+    var insertBefore = math.max(0, math.min(
+        (top / grid.getGridOptions.rowHeight).round(), grid.getDataLength));
     if (insertBefore != _insertBefore) {
-      if (eventBus.fire(core.Events.BEFORE_MOVE_ROWS, new core.BeforeMoveRows(this, rows: _selectedRows, insertBefore: insertBefore)).retVal == false) {
+      if (eventBus.fire(core.Events.BEFORE_MOVE_ROWS, new core.BeforeMoveRows(
+              this, rows: _selectedRows, insertBefore: insertBefore)).retVal ==
+          false) {
         _guide.style.top = '-1000px';
         _canMove = false;
       } else {
@@ -140,7 +146,8 @@ class RowMoveManager extends Plugin {
 
     if (_canMove) {
       // TODO:  _grid.remapCellCssClasses ?
-      eventBus.fire(core.Events.MOVE_ROWS, new core.MoveRows(this, rows: _selectedRows, insertBefore: _insertBefore));
+      eventBus.fire(core.Events.MOVE_ROWS, new core.MoveRows(this,
+          rows: _selectedRows, insertBefore: _insertBefore));
     }
   }
 

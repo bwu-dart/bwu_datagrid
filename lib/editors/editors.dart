@@ -36,7 +36,7 @@ abstract class Editor {
   void focus();
   void show() {}
   void hide() {}
-  void position(NodeBox position){}
+  void position(NodeBox position) {}
 
   ValidationResult validate();
 }
@@ -55,10 +55,11 @@ class ValidationErrorSource {
   dom.HtmlElement container;
   String message;
 
-  ValidationErrorSource({this.index, this.editor, this.container, this.message});
+  ValidationErrorSource(
+      {this.index, this.editor, this.container, this.message});
 }
 
-abstract class Validator  {
+abstract class Validator {
   ValidationResult call(dynamic value);
 }
 
@@ -77,7 +78,8 @@ class EditorArgs {
   CommitChangesFn commitChanges;
   CancelChangesFn cancelChanges;
 
-  EditorArgs({this.grid, this.gridPosition, this.position, this.container, this.column, this.item, this.commitChanges, this.cancelChanges});
+  EditorArgs({this.grid, this.gridPosition, this.position, this.container,
+      this.column, this.item, this.commitChanges, this.cancelChanges});
 
 //  void extend(EditorArgs c) {
 //      if(c.grid != null) grid = c.grid;
@@ -104,13 +106,13 @@ class TextEditor extends Editor {
     $input = new dom.TextInputElement()..classes.add('editor-text');
     args.container.append($input);
     $input
-        ..onKeyDown.listen((dom.KeyboardEvent e) {
-          if (e.keyCode == dom.KeyCode.LEFT || e.keyCode == dom.KeyCode.RIGHT) {
-            e.stopImmediatePropagation();
-          }
-        })
-        ..focus()
-        ..select();
+      ..onKeyDown.listen((dom.KeyboardEvent e) {
+        if (e.keyCode == dom.KeyCode.LEFT || e.keyCode == dom.KeyCode.RIGHT) {
+          e.stopImmediatePropagation();
+        }
+      })
+      ..focus()
+      ..select();
   }
 
   dom.InputElement $input;
@@ -134,14 +136,15 @@ class TextEditor extends Editor {
 
   @override
   void loadValue(DataItem item) {
-    defaultValue = item[args.column.field] != null ? item[args.column.field] : "";
-    $input.value =  defaultValue;
+    defaultValue =
+        item[args.column.field] != null ? item[args.column.field] : "";
+    $input.value = defaultValue;
     $input.defaultValue = defaultValue;
     $input.select();
   }
 
   @override
-  String serializeValue () => $input.value;
+  String serializeValue() => $input.value;
 
   @override
   void applyValue(DataItem item, String state) {
@@ -150,11 +153,12 @@ class TextEditor extends Editor {
 
   @override
   bool get isValueChanged {
-    return (!($input.value == "" && defaultValue == null)) && ($input.value != defaultValue);
+    return (!($input.value == "" && defaultValue == null)) &&
+        ($input.value != defaultValue);
   }
 
   @override
-  ValidationResult validate () {
+  ValidationResult validate() {
     if (args.column.validator != null) {
       var validationResults = args.column.validator($input.value);
       if (!validationResults.isValid) {
@@ -187,21 +191,23 @@ class IntegerEditor extends Editor {
     });
 
     args.container.append($input);
-    $input..focus()..select();
+    $input
+      ..focus()
+      ..select();
   }
 
   @override
-  void destroy () {
+  void destroy() {
     $input.remove();
   }
 
   @override
-  void focus () {
+  void focus() {
     $input.focus();
   }
 
   @override
-  void loadValue (DataItem item) {
+  void loadValue(DataItem item) {
     defaultValue = item[args.column.field].toString();
     $input.value = defaultValue;
     $input.defaultValue = defaultValue;
@@ -209,18 +215,18 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  String serializeValue () {
+  String serializeValue() {
     return tools.parseInt($input.value).toString(); // || 0; // TODO default 0
   }
 
   @override
-  void applyValue (DataItem item, dynamic state) {
+  void applyValue(DataItem item, dynamic state) {
     int val;
-    if(state is int) {
+    if (state is int) {
       val = state;
     } else if (state is String) {
       val = tools.parseInt(state, onErrorDefault: 0);
-    } else if (state == null){
+    } else if (state == null) {
       val = 0;
     } else {
       throw 'not supported data type for "state" (${state})';
@@ -230,11 +236,12 @@ class IntegerEditor extends Editor {
 
   @override
   bool get isValueChanged {
-    return (!($input.value == '' && defaultValue == null)) && ($input.value != defaultValue);
+    return (!($input.value == '' && defaultValue == null)) &&
+        ($input.value != defaultValue);
   }
 
   @override
-  ValidationResult validate () {
+  ValidationResult validate() {
     if (!tools.isInt($input.value)) {
       return new ValidationResult(false, "Please enter a valid integer");
     }
@@ -243,7 +250,7 @@ class IntegerEditor extends Editor {
   }
 }
 
-class DateEditor extends Editor  {
+class DateEditor extends Editor {
   dom.InputElement $input;
   String defaultValue;
   bool calendarOpen = false;
@@ -274,7 +281,7 @@ class DateEditor extends Editor  {
   }
 
   @override
-  void destroy () {
+  void destroy() {
 //    datepicker.dpDiv.stop(true, true);
 //    $input.datepicker("hide");
 //    $input.datepicker("destroy");
@@ -282,7 +289,7 @@ class DateEditor extends Editor  {
   }
 
   @override
-  void show () {
+  void show() {
     if (calendarOpen) {
 //      print('show, calendarOpen');
 //      datepicker.dpDiv.stop(true, true).show();
@@ -290,7 +297,7 @@ class DateEditor extends Editor  {
   }
 
   @override
-  void hide () {
+  void hide() {
     if (calendarOpen) {
 //      print('hide, calendarOpen');
 //      datepicker.dpDiv.stop(true, true).hide();
@@ -298,7 +305,7 @@ class DateEditor extends Editor  {
   }
 
   @override
-  void position (NodeBox position) {
+  void position(NodeBox position) {
     if (!calendarOpen) {
       return null;
     }
@@ -308,40 +315,43 @@ class DateEditor extends Editor  {
   }
 
   @override
-  void focus () {
+  void focus() {
     $input.focus();
   }
 
   @override
-  void loadValue (DataItem item) {
-    defaultValue = item[args.column.field] != null ? item[args.column.field].toString() : '';
+  void loadValue(DataItem item) {
+    defaultValue = item[args.column.field] != null
+        ? item[args.column.field].toString()
+        : '';
     $input.value = defaultValue;
     $input.defaultValue = defaultValue;
     $input.select();
   }
 
   @override
-  String serializeValue () {
+  String serializeValue() {
     return $input.value;
   }
 
   @override
-  void applyValue (DataItem item, String state) {
+  void applyValue(DataItem item, String state) {
     item[args.column.field] = state;
   }
 
   @override
   bool get isValueChanged {
-    return (!($input.value == "" && defaultValue == null)) && ($input.value != defaultValue);
+    return (!($input.value == "" && defaultValue == null)) &&
+        ($input.value != defaultValue);
   }
 
   @override
-  ValidationResult validate () {
+  ValidationResult validate() {
     return new ValidationResult(true);
   }
 }
 
-class YesNoSelectEditor extends Editor{
+class YesNoSelectEditor extends Editor {
   dom.SelectElement $select;
   String defaultValue;
   EditorArgs args;
@@ -354,42 +364,42 @@ class YesNoSelectEditor extends Editor{
 
   YesNoSelectEditor._(this.args) {
     $select = new dom.SelectElement()
-      ..tabIndex=0
+      ..tabIndex = 0
       ..classes.add('editor-yesno')
       ..append(new dom.OptionElement()
-          ..value='yes'
-          ..text ='Yes')
+        ..value = 'yes'
+        ..text = 'Yes')
       ..append(new dom.OptionElement()
-          ..value='no'
-          ..text='No');
+        ..value = 'no'
+        ..text = 'No');
     args.container.append($select);
     $select..focus();
   }
 
   @override
-  void destroy () {
+  void destroy() {
     $select.remove();
   }
 
   @override
-  void focus () {
+  void focus() {
     $select.focus();
   }
 
   @override
-  void loadValue (DataItem item) {
+  void loadValue(DataItem item) {
     defaultValue = item[args.column.field];
     $select.value = defaultValue != null ? "yes" : "no";
     //$select.select();
   }
 
   @override
-  String serializeValue () {
+  String serializeValue() {
     return ($select.value == "yes").toString();
   }
 
   @override
-  void applyValue (/*Map/Item*/ dynamic item, int state) {
+  void applyValue(/*Map/Item*/ dynamic item, int state) {
     item[args.column.field] = state;
   }
 
@@ -399,7 +409,7 @@ class YesNoSelectEditor extends Editor{
   }
 
   @override
-  ValidationResult validate () {
+  ValidationResult validate() {
     return new ValidationResult(true);
   }
 }
@@ -417,7 +427,7 @@ class CheckboxEditor extends Editor {
 
   CheckboxEditor._(this.args) {
     $select = new dom.CheckboxInputElement()
-      ..value='true'
+      ..value = 'true'
       ..classes.add('editor-checkbox')
       ..attributes['hidefocus'] = 'true';
     args.container.append($select);
@@ -425,19 +435,22 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void destroy () {
+  void destroy() {
     $select.remove();
   }
 
   @override
-  void focus () {
+  void focus() {
     $select.focus();
   }
 
   @override
-  void loadValue (DataItem item) {
+  void loadValue(DataItem item) {
     var val = item[args.column.field];
-    defaultValue =  (val is bool && val) || (val is String && (val.toLowerCase() == 'true' || val.toLowerCase() == 'yes')) || (val is int && val != 0) ;
+    defaultValue = (val is bool && val) ||
+        (val is String &&
+            (val.toLowerCase() == 'true' || val.toLowerCase() == 'yes')) ||
+        (val is int && val != 0);
     if (defaultValue) {
       $select.checked = true;
     } else {
@@ -446,12 +459,12 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  String serializeValue () {
+  String serializeValue() {
     return $select.checked.toString();
   }
 
   @override
-  void applyValue (DataItem item, String state) {
+  void applyValue(DataItem item, String state) {
     item[args.column.field] = state.toLowerCase() == 'true' ? true : false;
   }
 
@@ -461,7 +474,7 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  ValidationResult validate () {
+  ValidationResult validate() {
     return new ValidationResult(true);
   }
 }
@@ -485,52 +498,53 @@ class PercentCompleteEditor extends Editor {
     args.container.append($input);
 
     $picker = new dom.DivElement()
-        ..classes.add('editor-percentcomplete-picker');
-        // TODO ..style.zIndex = '10000'; it seems it needs to be added to the body to make it display above the elements border
-        // workaround would be to show it above the field when it is near the border
+      ..classes.add('editor-percentcomplete-picker');
+    // TODO ..style.zIndex = '10000'; it seems it needs to be added to the body to make it display above the elements border
+    // workaround would be to show it above the field when it is near the border
     args.container.append($picker);
     $picker.append(new dom.DivElement()
-        ..classes.add('editor-percentcomplete-helper')
+      ..classes.add('editor-percentcomplete-helper')
+      ..append(new dom.DivElement()
+        ..classes.add('editor-percentcomplete-wrapper')
         ..append(new dom.DivElement()
-            ..classes.add('editor-percentcomplete-wrapper')
-            ..append(new dom.DivElement()
-                ..classes.add('editor-percentcomplete-slider')
-                ..append(new dom.DivElement()
-                      ..classes.add('editor-percentcomplete-buttons')))));
+          ..classes.add('editor-percentcomplete-slider')
+          ..append(new dom.DivElement()
+            ..classes.add('editor-percentcomplete-buttons')))));
 
     $picker.querySelector(".editor-percentcomplete-buttons")
-        ..append(new dom.ButtonElement()
-            ..attributes['val']='0'
-            ..text= 'Not started')
-        ..append(new dom.BRElement())
-        ..append(new dom.ButtonElement()
-            ..attributes['val']='50'
-            ..text='In Progress')
-        ..append(new dom.BRElement())
-        ..append(new dom.ButtonElement()
-            ..attributes['val']='100'
-            ..text='Complete');
+      ..append(new dom.ButtonElement()
+        ..attributes['val'] = '0'
+        ..text = 'Not started')
+      ..append(new dom.BRElement())
+      ..append(new dom.ButtonElement()
+        ..attributes['val'] = '50'
+        ..text = 'In Progress')
+      ..append(new dom.BRElement())
+      ..append(new dom.ButtonElement()
+        ..attributes['val'] = '100'
+        ..text = 'Complete');
 
     $input
-        ..focus()
-        ..select();
+      ..focus()
+      ..select();
 
-
-    var $sliderWrapper = $picker.querySelector(".editor-percentcomplete-slider");
+    var $sliderWrapper =
+        $picker.querySelector(".editor-percentcomplete-slider");
     $slider = new dom.RangeInputElement();
     $slider
-        ..min = '0'
-        ..max = '100'
-        ..step = '1'
-        ..value = _invertedRangeValueInt(defaultValue)
-        ..style.width = '25px'
-        ..style.height = '100px'
-        ..attributes['orient'] = 'vertical' // http://stackoverflow.com/questions/15935837
-        ..attributes['writing-mode'] = 'bt-lr'
-        ..style.appearance = 'slider-vertical'
-        ..onChange.listen((e) {
-          $input.value = _invertedRangeValue($slider.value);
-        });
+      ..min = '0'
+      ..max = '100'
+      ..step = '1'
+      ..value = _invertedRangeValueInt(defaultValue)
+      ..style.width = '25px'
+      ..style.height = '100px'
+      ..attributes['orient'] =
+      'vertical' // http://stackoverflow.com/questions/15935837
+      ..attributes['writing-mode'] = 'bt-lr'
+      ..style.appearance = 'slider-vertical'
+      ..onChange.listen((e) {
+        $input.value = _invertedRangeValue($slider.value);
+      });
     $sliderWrapper.append($slider);
 //    $picker.querySelector(".editor-percentcomplete-slider").slider({
 //      'orientation': "vertical",
@@ -541,29 +555,29 @@ class PercentCompleteEditor extends Editor {
 //      }
 //    });
 
-    $picker.querySelectorAll(".editor-percentcomplete-buttons button").forEach((e) => e.onClick.listen((e) {
+    $picker.querySelectorAll(".editor-percentcomplete-buttons button").forEach(
+        (e) => e.onClick.listen((e) {
       $input.value = (e.target.attributes['val']);
       $slider.value = _invertedRangeValue($input.value);
       //$picker.querySelector(".editor-percentcomplete-slider").slider("value", e.target.attributes['val']);
     }));
   }
 
-
   @override
-  void destroy () {
+  void destroy() {
     $input.remove();
     $picker.remove();
   }
 
   @override
-  void focus () {
+  void focus() {
     $input.focus();
   }
 
   @override
-  void loadValue (DataItem item) {
+  void loadValue(DataItem item) {
     var val = item[args.column.field];
-    if(val == null) val = 0;
+    if (val == null) val = 0;
     $input.value = (defaultValue = val).toString();
     $slider.value = _invertedRangeValueInt(defaultValue);
     $input.select();
@@ -574,31 +588,35 @@ class PercentCompleteEditor extends Editor {
   }
 
   String _invertedRangeValueInt(int val) {
-    if(val == null)  {
+    if (val == null) {
       val = 0;
     }
     return '${100-val}';
   }
 
   @override
-  String serializeValue () {
-    return tools.parseInt($input.value, onErrorDefault: 0).toString(); // || 0; // todo default 0
+  String serializeValue() {
+    return tools
+        .parseInt($input.value, onErrorDefault: 0)
+        .toString(); // || 0; // todo default 0
   }
 
   @override
-  void applyValue (DataItem item, String state) {
+  void applyValue(DataItem item, String state) {
     item[args.column.field] = tools.parseInt(state);
   }
 
   @override
   bool get isValueChanged {
-    return (!($input.value == '' && defaultValue == null)) && (tools.parseInt($input.value, onErrorDefault: 0) != defaultValue);
+    return (!($input.value == '' && defaultValue == null)) &&
+        (tools.parseInt($input.value, onErrorDefault: 0) != defaultValue);
   }
 
   @override
   ValidationResult validate() {
     if (!tools.isInt($input.value)) {
-      return new ValidationResult(false, "Please enter a valid positive number");
+      return new ValidationResult(
+          false, "Please enter a valid positive number");
     }
 
     return new ValidationResult(true);
@@ -628,29 +646,27 @@ class LongTextEditor extends Editor {
 
     $wrapper = new dom.DivElement()
       ..style.zIndex = '10000'
-      ..style.position='absolute'
-      ..style.background='white'
-      ..style.padding='5px'
-      ..style.border='3px solid gray'
-      ..style.borderRadius ='10px';
+      ..style.position = 'absolute'
+      ..style.background = 'white'
+      ..style.padding = '5px'
+      ..style.border = '3px solid gray'
+      ..style.borderRadius = '10px';
     $container.append($wrapper);
 
     $input = new dom.TextAreaElement()
       ..attributes['hidefocus'] = 'true'
-      ..rows=5
-      ..style.background ='white'
-      ..style.width ='250px'
-      ..style.height='80px'
-      ..style.border ='0'
-      ..style.outline='0';
+      ..rows = 5
+      ..style.background = 'white'
+      ..style.width = '250px'
+      ..style.height = '80px'
+      ..style.border = '0'
+      ..style.outline = '0';
     $wrapper.append($input);
 
     $wrapper.append(new dom.DivElement()
-      ..style.textAlign='right'
-      ..append(new dom.ButtonElement()
-          ..text = 'Save')
-      ..append(new dom.ButtonElement()
-          ..text = 'Cancel'));
+      ..style.textAlign = 'right'
+      ..append(new dom.ButtonElement()..text = 'Save')
+      ..append(new dom.ButtonElement()..text = 'Cancel'));
 
     $wrapper.querySelectorAll("button").first.onClick.listen(this.save);
     $wrapper.querySelectorAll("button").last.onClick.listen(this.cancel);
@@ -658,11 +674,11 @@ class LongTextEditor extends Editor {
 
     position(args.position);
     $input
-        ..focus()
-        ..select();
+      ..focus()
+      ..select();
   }
 
-  void handleKeyDown (dom.KeyboardEvent e) {
+  void handleKeyDown(dom.KeyboardEvent e) {
     if (e.which == dom.KeyCode.ENTER && e.ctrlKey) {
       save();
     } else if (e.which == dom.KeyCode.ESC) {
@@ -677,67 +693,68 @@ class LongTextEditor extends Editor {
     }
   }
 
-  void save ([dom.Event e]) {
+  void save([dom.Event e]) {
     args.commitChanges();
   }
 
-  void cancel ([dom.Event e]) {
+  void cancel([dom.Event e]) {
     $input.value = defaultValue;
     args.cancelChanges();
   }
 
   String _defaultDisplay = 'auto';
   @override
-  void hide () {
+  void hide() {
     _defaultDisplay = $wrapper.style.display;
     $wrapper.style.display = 'none'; //.hide();
   }
 
   @override
-  void show () {
+  void show() {
     $wrapper.style.display = _defaultDisplay;
   }
 
   @override
-  void position (NodeBox position) {
+  void position(NodeBox position) {
     $wrapper
-        ..style.top = '${position.top - 5}px'
-        ..style.left = '${position.left - 5}px';
+      ..style.top = '${position.top - 5}px'
+      ..style.left = '${position.left - 5}px';
   }
 
   @override
-  void destroy () {
+  void destroy() {
     $wrapper.remove();
   }
 
   @override
-  void focus () {
+  void focus() {
     $input.focus();
   }
 
   @override
-  void loadValue (DataItem item) {
+  void loadValue(DataItem item) {
     $input.value = (defaultValue = item[args.column.field]);
     $input.select();
   }
 
   @override
-  String serializeValue () {
+  String serializeValue() {
     return $input.value;
   }
 
   @override
-  void applyValue (DataItem item, String state) {
+  void applyValue(DataItem item, String state) {
     item[args.column.field] = state;
   }
 
   @override
   bool get isValueChanged {
-    return (!($input.value == '' && defaultValue == null)) && ($input.value != defaultValue);
+    return (!($input.value == '' && defaultValue == null)) &&
+        ($input.value != defaultValue);
   }
 
   @override
-  ValidationResult validate () {
+  ValidationResult validate() {
     return new ValidationResult(true);
   }
 }

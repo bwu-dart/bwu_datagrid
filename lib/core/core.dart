@@ -16,4 +16,3 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 part 'event_data.dart';
 part 'event_bus.dart';
 part 'range.dart';
-

@@ -58,4 +58,3 @@ class CompositeEditorView extends PolymerElement {
     this.remove();
   }
 }
-

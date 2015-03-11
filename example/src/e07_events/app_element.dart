@@ -23,8 +23,7 @@ class AppElement extends PolymerElement {
       enableAddRow: false,
       enableCellNavigation: true,
       asyncEditorLoading: false,
-      rowHeight: 30
-  );
+      rowHeight: 30);
 
   @override
   void attached() {
@@ -34,22 +33,22 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
       var data = new MapDataItemProvider();
       for (var i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem({
-          'title': 'Task ${i}',
-          'priority': 'Medium'
-        }));
+        data.items
+            .add(new MapDataItem({'title': 'Task ${i}', 'priority': 'Medium'}));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) {
+      grid
+          .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
+          .then((_) {
 
         // setup context menu handler
         grid.onBwuContextMenu.listen((e) {
           e.stopImmediatePropagation();
           e.preventDefault();
           ($['contextMenu'] as ContextMenu)
-              ..cell = e.cell
-              ..setPosition(e.causedBy.page.x, e.causedBy.page.y)
-              ..show();
+            ..cell = e.cell
+            ..setPosition(e.causedBy.page.x, e.causedBy.page.y)
+            ..show();
         });
 
         // setup context menu select handler
@@ -70,21 +69,21 @@ class AppElement extends PolymerElement {
               return;
             }
 
-            var states = { 'Low': 'Medium', 'Medium': 'High', 'High': 'Low' };
-            data.items[e.cell.row]['priority'] = states[data.items[e.cell.row]['priority']];
+            var states = {'Low': 'Medium', 'Medium': 'High', 'High': 'Low'};
+            data.items[e.cell.row]['priority'] =
+                states[data.items[e.cell.row]['priority']];
             grid.updateRow(e.cell.row);
             e.stopPropagation();
           }
         });
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

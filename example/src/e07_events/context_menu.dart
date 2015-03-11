@@ -28,7 +28,8 @@ class ContextMenu extends PolymerElement {
       if (!(e.target is dom.LIElement)) {
         return;
       }
-      fire(CONTEXT_MENU_SELECT, detail: ((e.target as dom.LIElement).attributes['value']));
+      fire(CONTEXT_MENU_SELECT,
+          detail: ((e.target as dom.LIElement).attributes['value']));
     });
   }
 

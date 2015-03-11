@@ -19,12 +19,11 @@ class AppElement extends PolymerElement {
   List<Column> columns = [];
 
   var gridOptions = new GridOptions(
-    editable: true,
-    enableAddRow: true,
-    enableCellNavigation: true,
-    asyncEditorLoading: false,
-    autoEdit: false
-  );
+      editable: true,
+      enableAddRow: true,
+      enableCellNavigation: true,
+      asyncEditorLoading: false,
+      autoEdit: false);
 
   math.Random rnd = new math.Random();
 
@@ -33,7 +32,7 @@ class AppElement extends PolymerElement {
 
   String numToChars(int i) {
     String result = '';
-    if(i >= 26) {
+    if (i >= 26) {
       result = '${numToChars(i ~/ 26 - 1)}${numToChars(i % 26)}';
     } else {
       result = '${new String.fromCharCode('A'.codeUnits[0] + i)}';
@@ -54,23 +53,22 @@ class AppElement extends PolymerElement {
 
       for (int i = 0; i < 100; i++) {
         columns.add(new Column(
-          id: i.toString(),
-          name: numToChars(i),
-          field: i.toString(),
-          width: 60,
-          editor: formulaEditor
-        ));
+            id: i.toString(),
+            name: numToChars(i),
+            field: i.toString(),
+            width: 60,
+            editor: formulaEditor));
       }
 
       // prepare the data
       data = new MapDataItemProvider();
       for (var i = 0; i < 100; i++) {
-        data.items.add(new MapDataItem({
-        'num': i,
-        }));
+        data.items.add(new MapDataItem({'num': i,}));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) {
+      grid
+          .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
+          .then((_) {
         grid.setSelectionModel = (new CellSelectionModel());
         grid.registerPlugin(new AutoTooltips());
 
@@ -91,8 +89,10 @@ class AppElement extends PolymerElement {
           for (var i = 0; i <= from.toRow - from.fromRow; i++) {
             for (var j = 0; j <= from.toCell - from.fromCell; j++) {
               if (i <= to.toRow - to.fromRow && j <= to.toCell - to.fromCell) {
-                val = data.items[from.fromRow + i][columns[from.fromCell + j].field];
-                data.items[to.fromRow + i][columns[to.fromCell + j].field] = val;
+                val = data.items[from.fromRow + i][
+                    columns[from.fromCell + j].field];
+                data.items[to.fromRow + i][columns[to.fromCell + j].field] =
+                    val;
                 grid.invalidateRow(to.fromRow + i);
               }
             }
@@ -109,14 +109,13 @@ class AppElement extends PolymerElement {
           grid.render();
         });
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

@@ -21,7 +21,8 @@ class DropZone extends PolymerElement {
   void dropzoneChanged(old) {
     String s = 'move s:text/bwu-datagrid-recycle file:text/blajflaskjfd';
     var match = new RegExp(r'^(?:copy|link|move)(.*)').firstMatch(s);
-    var matches = new RegExp(r'(?: +[a-z]*:)([^ ]*)').allMatches(match.group(1));
+    var matches =
+        new RegExp(r'(?: +[a-z]*:)([^ ]*)').allMatches(match.group(1));
 
     List<String> results = [];
     matches.forEach((e) {
@@ -35,9 +36,8 @@ class DropZone extends PolymerElement {
     super.attached();
 
     try {
-
       dom.document.onDragStart.listen((e) {
-        if(_doAccept(e)) {
+        if (_doAccept(e)) {
           _isAcceptedDragStarted = true;
           this.classes.add('drag-valid');
         }
@@ -48,7 +48,7 @@ class DropZone extends PolymerElement {
       });
 
       this.onDragEnter.listen((e) {
-        if(_isAcceptedDragStarted) {
+        if (_isAcceptedDragStarted) {
           this.classes.add('drag-over');
           e.preventDefault();
         }
@@ -58,9 +58,8 @@ class DropZone extends PolymerElement {
         this.classes.remove('drag-over');
       });
 
-
       this.onDragOver.listen((e) {
-        if(_isAcceptedDragStarted) {
+        if (_isAcceptedDragStarted) {
           e.preventDefault();
         }
       });
@@ -68,8 +67,7 @@ class DropZone extends PolymerElement {
       this.onDrop.listen((e) {
         _dragEnded();
       });
-
-    } catch(e, s) {
+    } catch (e, s) {
       print(e);
       print(s);
     }
@@ -84,9 +82,9 @@ class DropZone extends PolymerElement {
   bool _doAccept(dom.MouseEvent e) {
     bool result = false;
 
-    if(_accept != null) {
+    if (_accept != null) {
       _accept.forEach((k) {
-        if(e.dataTransfer.types.contains(k)) {
+        if (e.dataTransfer.types.contains(k)) {
           result = true;
         }
       });

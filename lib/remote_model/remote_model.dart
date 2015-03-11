@@ -25,10 +25,7 @@ class RemoteModel {
   var onDataLoading = new Event();
   var onDataLoaded = new Event();
 
-
-  void init() {
-  }
-
+  void init() {}
 
   bool isDataLoaded(int from, int to) {
     for (var i = from; i <= to; i++) {
@@ -40,7 +37,6 @@ class RemoteModel {
     return true;
   }
 
-
   void clear() {
     for (final key in data) {
       data.remove(key);
@@ -48,12 +44,12 @@ class RemoteModel {
     data['length'] = 0;
   }
 
-
   void ensureData(int from, int to) {
     if (req != null) {
       req.abort();
-      for (var i = req.fromPage; i <= req.toPage; i++)
-        data[i * PAGESIZE] = null;
+      for (var i = req.fromPage;
+          i <= req.toPage;
+          i++) data[i * PAGESIZE] = null;
     }
 
     if (from < 0) {
@@ -67,22 +63,27 @@ class RemoteModel {
     var fromPage = (from / PAGESIZE).floor();
     var toPage = (to / PAGESIZE).floor();
 
-    while (data[fromPage * PAGESIZE] != null && fromPage < toPage)
-      fromPage++;
+    while (data[fromPage * PAGESIZE] != null && fromPage < toPage) fromPage++;
 
-    while (data[toPage * PAGESIZE] != null && fromPage < toPage)
-      toPage--;
+    while (data[toPage * PAGESIZE] != null && fromPage < toPage) toPage--;
 
-    if (fromPage > toPage || ((fromPage == toPage) && data[fromPage * PAGESIZE] != null)) {
+    if (fromPage > toPage ||
+        ((fromPage == toPage) && data[fromPage * PAGESIZE] != null)) {
       // TODO:  look-ahead
       onDataLoaded.notify({from: from, to: to});
       return;
     }
 
-    var url = "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" + searchstr + "&start=" + (fromPage * PAGESIZE) + "&limit=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+    var url =
+        "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" +
+            searchstr +
+            "&start=" +
+            (fromPage * PAGESIZE) +
+            "&limit=" +
+            (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
 
     if (sortcol != null) {
-        url += ("&sortby=${sortcol}${sortdir > 0 ? '+asc' : '+desc'}");
+      url += ("&sortby=${sortcol}${sortdir > 0 ? '+asc' : '+desc'}");
     }
 
     if (h_request != null) {
@@ -91,8 +92,8 @@ class RemoteModel {
     }
 
     h_request = new async.Timer(new Duration(milliseconds: 50), () {
-      for (var i = fromPage; i <= toPage; i++)
-        data[i * PAGESIZE] = null; // null indicates a 'requested but not available yet'
+      for (var i = fromPage; i <= toPage; i++) data[i * PAGESIZE] =
+          null; // null indicates a 'requested but not available yet'
 
       onDataLoading.notify({from: from, to: to});
 
@@ -110,20 +111,23 @@ class RemoteModel {
     });
   }
 
-
   void onError(fromPage, toPage) {
     dom.window.alert("error loading pages ${fromPage} to ${toPage}");
   }
 
   void onSuccess(int resp) {
-    var from = resp.request.start, to = from + resp.results.length;
-    data['length'] = math.min(int.parse(resp.hits),1000); // limitation of the API
+    var from = resp.request.start,
+        to = from + resp.results.length;
+    data['length'] =
+        math.min(int.parse(resp.hits), 1000); // limitation of the API
 
     for (var i = 0; i < resp.results.length; i++) {
       var item = resp.results[i].item;
 
       // Old IE versions can't parse ISO dates, so change to universally-supported format.
-      item.create_ts = item.create_ts.replace(new RegExp(r"^(\d+)-(\d+)-(\d+)T(\d+:\d+:\d+)Z$"), "\$2/\$3/\$1 \$4 UTC"); // TODO
+      item.create_ts = item.create_ts.replace(
+          new RegExp(r"^(\d+)-(\d+)-(\d+)T(\d+:\d+:\d+)Z$"),
+          "\$2/\$3/\$1 \$4 UTC"); // TODO
       item.create_ts = new DateTime(item.create_ts);
 
       data[from + i] = item;
@@ -135,14 +139,11 @@ class RemoteModel {
     onDataLoaded.notify({from: from, to: to});
   }
 
-
   void reloadData(int from, int to) {
-    for (var i = from; i <= to; i++)
-      data.remove(i); // TODO was delete data[i]
+    for (var i = from; i <= to; i++) data.remove(i); // TODO was delete data[i]
 
     ensureData(from, to);
   }
-
 
   void setSort(int column, int dir) {
     sortcol = column;
@@ -154,7 +155,6 @@ class RemoteModel {
     searchstr = str;
     clear();
   }
-
 
 //  return {
 //    // properties
@@ -174,5 +174,5 @@ class RemoteModel {
 //  };
 }
 
-  // Slick.Data.RemoteModel
+// Slick.Data.RemoteModel
 //  $.extend(true, window, { Slick: { Data: { RemoteModel: RemoteModel }}});

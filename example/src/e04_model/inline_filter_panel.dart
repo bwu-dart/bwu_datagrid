@@ -11,7 +11,7 @@ class InlineFilterPanel extends PolymerElement {
   @published String searchString = '';
 
   void clearSearch(dom.KeyboardEvent e, detail, dom.HtmlElement target) {
-    if(e.which == dom.KeyCode.ESC) {
+    if (e.which == dom.KeyCode.ESC) {
       searchString = '';
     }
   }

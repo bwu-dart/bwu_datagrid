@@ -53,8 +53,10 @@ class Range {
    * Returns whether a range contains a given cell.
    */
   bool contains(int row, int cell) {
-    return row >= _fromRow && row <= _toRow && cell >= _fromCell && cell <=
-        _toCell;
+    return row >= _fromRow &&
+        row <= _toRow &&
+        cell >= _fromCell &&
+        cell <= _toCell;
   }
 
   @override
@@ -69,10 +71,10 @@ class Range {
 
 abstract class ItemBase {
   Map _values = {};
-  dynamic operator[](String key) {
+  dynamic operator [](String key) {
     return _values[key];
   }
-  void operator[]=(String key, value) {
+  void operator []=(String key, value) {
     _values[key] = value;
   }
 }
@@ -191,7 +193,9 @@ class EditorLock {
    * If the parameter is not specified, returns true if any edit controller is active.
    */
   bool get isActive {
-    return editController != null ? activeEditController == editController : activeEditController != null;
+    return editController != null
+        ? activeEditController == editController
+        : activeEditController != null;
   }
 
   /***
@@ -199,7 +203,8 @@ class EditorLock {
    * If another edit controller is already active, and exception will be thrown.
    */
   void activate(EditController editController) {
-    if (editController == activeEditController) { // already activated?
+    if (editController == activeEditController) {
+      // already activated?
       return;
     }
     if (activeEditController != null) {
@@ -232,7 +237,9 @@ class EditorLock {
    * and false otherwise.  If no edit controller is active, returns true.
    */
   bool commitCurrentEdit() {
-    return (activeEditController != null ? activeEditController.commitCurrentEdit() : true);
+    return (activeEditController != null
+        ? activeEditController.commitCurrentEdit()
+        : true);
   }
 
   /***
@@ -241,6 +248,8 @@ class EditorLock {
    * active, returns true.
    */
   bool cancelCurrentEdit() {
-    return (activeEditController != null ? activeEditController.cancelCurrentEdit() : true);
+    return (activeEditController != null
+        ? activeEditController.cancelCurrentEdit()
+        : true);
   }
 }

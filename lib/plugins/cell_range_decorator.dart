@@ -11,14 +11,17 @@ abstract class Decorator {
 
 class CellRangeDecoratorOptions {
   String selectionCssClass;
-  Map<String,String> selectionCss;
+  Map<String, String> selectionCss;
 
-  CellRangeDecoratorOptions({this.selectionCssClass : 'bwu-datagrid-range-decorator',
-    this.selectionCss : const { 'z-index': '9999', 'border': '2px dashed red'} });
+  CellRangeDecoratorOptions(
+      {this.selectionCssClass: 'bwu-datagrid-range-decorator',
+      this.selectionCss: const {
+    'z-index': '9999',
+    'border': '2px dashed red'
+  }});
 }
 
 class CellRangeDecorator extends Decorator {
-
   dom.HtmlElement _elem;
 
   BwuDatagrid _grid;
@@ -36,7 +39,7 @@ class CellRangeDecorator extends Decorator {
    * @param {Object} options
    */
   CellRangeDecorator(this._grid, {CellRangeDecoratorOptions options}) {
-    if(options != null) {
+    if (options != null) {
       _options = options;
     } else {
       _options = new CellRangeDecoratorOptions();
@@ -47,9 +50,9 @@ class CellRangeDecorator extends Decorator {
   dom.HtmlElement show(Range range) {
     if (_elem == null) {
       _elem = new dom.DivElement()
-          ..classes.add(_options.selectionCssClass)
-          ..style.position= 'absolute';
-      for(var k in _options.selectionCss.keys) {
+        ..classes.add(_options.selectionCssClass)
+        ..style.position = 'absolute';
+      for (var k in _options.selectionCss.keys) {
         _elem.style.setProperty(k, _options.selectionCss[k]);
       }
       _grid.getCanvasNode.append(_elem);

@@ -5,8 +5,10 @@ import 'dart:math' as math;
 import 'dart:async' as async;
 //import 'package:collection/equality.dart' as collEqu;
 
-typedef void SortableStartFn(dom.HtmlElement element, dom.HtmlElement helper, dom.HtmlElement placeholder);
-typedef void SortableBeforeStopFn(dom.HtmlElement element, dom.HtmlElement helper);
+typedef void SortableStartFn(dom.HtmlElement element, dom.HtmlElement helper,
+    dom.HtmlElement placeholder);
+typedef void SortableBeforeStopFn(
+    dom.HtmlElement element, dom.HtmlElement helper);
 typedef void SortableStopFn(dom.MouseEvent e);
 
 class Sortable {
@@ -41,7 +43,9 @@ class Sortable {
   async.StreamSubscription _mouseMoveSubscr;
   List<async.StreamSubscription> _mouseDownSubscr = [];
 
-  Sortable({this.sortable, this.containment : 'parent', this.distance, this.axis, this.cursor, this.tolerance, this.helper, this.placeholderCssClass, this.start, this.beforeStop, this.stop}) {
+  Sortable({this.sortable, this.containment: 'parent', this.distance, this.axis,
+      this.cursor, this.tolerance, this.helper, this.placeholderCssClass,
+      this.start, this.beforeStop, this.stop}) {
     init();
 //    _mObserver = new dom.MutationObserver((mutations, _) {
 //      if(!_isDragActive && !const collEqu.IterableEquality().equals(sortable.children.where((e) => e.attributes['isMovable'] == 'true'), _items)) {
@@ -52,8 +56,8 @@ class Sortable {
 
     // every mouse-up stops a drag operation
     dom.document.onMouseUp.listen((e) {
-      if(_isDragActive) {
-        if(e.which != 1) {
+      if (_isDragActive) {
+        if (e.which != 1) {
           cancel();
         } else {
           _dragEnd(e);
@@ -64,7 +68,7 @@ class Sortable {
   }
 
   void _dragEnd(dom.MouseEvent e) {
-    if(beforeStop != null) {
+    if (beforeStop != null) {
       beforeStop(_draggedElement, _draggedHelper);
     }
     _mouseMoveSubscr.cancel();
@@ -86,28 +90,28 @@ class Sortable {
     _draggedElementIndex = null;
     _draggedElementStartPos = null;
 
-    if(stop != null) {
+    if (stop != null) {
       stop(e);
     }
   }
 
   void cancel() {
-    if(_mouseMoveSubscr != null) {
+    if (_mouseMoveSubscr != null) {
       _mouseMoveSubscr.cancel();
       _mouseMoveSubscr = null;
     }
     _isDragActive = false;
     _isDragStartPending = false;
     _dragStartPos = null;
-    if(_draggedHelper != null) {
+    if (_draggedHelper != null) {
       _draggedHelper.remove();
       _draggedHelper = null;
     }
-    if(_placeholder != null) {
+    if (_placeholder != null) {
       _placeholder.remove();
       _placeholder = null;
     }
-    if(_draggedElement != null && _draggedElementIndex != null) {
+    if (_draggedElement != null && _draggedElementIndex != null) {
       sortable.children.insert(_draggedElementIndex, _draggedElement);
       _draggedElement = null;
     }
@@ -116,26 +120,30 @@ class Sortable {
   }
 
   void init() {
-    _items = sortable.children.where((e) => e.attributes['ismovable'] == 'true').toList();
+    _items = sortable.children
+        .where((e) => e.attributes['ismovable'] == 'true')
+        .toList();
     _mouseDownSubscr.clear();
     _items.forEach((e) {
       _mouseDownSubscr.add(e.onMouseDown.listen((e) {
-        if(e.which == 1) {
+        if (e.which == 1) {
           _draggedElement = e.target as dom.HtmlElement;
-          if(_draggedElement.attributes.containsKey('draggable')) {
+          if (_draggedElement.attributes.containsKey('draggable')) {
             return;
           }
 
           _isDragStartPending = true;
-          while(_draggedElement != null && !_items.contains(_draggedElement)) {
+          while (_draggedElement != null && !_items.contains(_draggedElement)) {
             _draggedElement = _draggedElement.parent;
           }
-          if(_draggedElement == null) {
+          if (_draggedElement == null) {
             return;
           }
 
           _dragStartPos = new math.Point<int>(e.client.x, e.client.y);
-          _draggedElementStartPos = new math.Point<int>(_draggedElement.offsetLeft.round(), _draggedElement.offsetTop.round());
+          _draggedElementStartPos = new math.Point<int>(
+              _draggedElement.offsetLeft.round(),
+              _draggedElement.offsetTop.round());
 
           _subscribeMouseMove();
         }
@@ -145,10 +153,12 @@ class Sortable {
 
   void _subscribeMouseMove() {
     _mouseMoveSubscr = dom.document.onMouseMove.listen((e) {
-      if(_dragStartPos != null && _isDragStartPending) { // seems we still receive events after _mouseMoveSubscr.cancel()
-        if(!_isDragActive) {
-          if((((e.client.x - _dragStartPos.x) as int).abs() > distance) ||
-              (((e.client.y - _dragStartPos.y) as int).abs() > distance) && !_isDragActive) {
+      if (_dragStartPos != null && _isDragStartPending) {
+        // seems we still receive events after _mouseMoveSubscr.cancel()
+        if (!_isDragActive) {
+          if ((((e.client.x - _dragStartPos.x) as int).abs() > distance) ||
+              (((e.client.y - _dragStartPos.y) as int).abs() > distance) &&
+                  !_isDragActive) {
             _dragStart();
           }
         } else {
@@ -181,29 +191,29 @@ class Sortable {
       ..clear()
       ..add(placeholderCssClass);
 
-    if(start != null) {
+    if (start != null) {
       start(_draggedElement, _draggedHelper, _placeholder);
     }
     int dIdx = sortable.children.indexOf(_draggedElement);
 
-    if(axis.contains('x')) {
+    if (axis.contains('x')) {
       _minLeft = _draggedElement.offsetLeft.round();
-      _maxLeft = (_draggedElement.offsetLeft + _draggedElement.offsetWidth).round();
-      for(int i = dIdx - 1; i >= 0; i--) {
+      _maxLeft =
+          (_draggedElement.offsetLeft + _draggedElement.offsetWidth).round();
+      for (int i = dIdx - 1; i >= 0; i--) {
         var elm = sortable.children[i];
-        if(elm.attributes['ismovable'] != 'true') {
+        if (elm.attributes['ismovable'] != 'true') {
           break;
         }
         _minLeft = elm.offsetLeft.round();
-
       }
 
-      for(int i = dIdx + 1; i < sortable.children.length; i++) {
+      for (int i = dIdx + 1; i < sortable.children.length; i++) {
         var elm = sortable.children[i];
-        if(elm.attributes['ismovable'] != 'true') {
+        if (elm.attributes['ismovable'] != 'true') {
           break;
         }
-        if(elm == _draggedHelper) {
+        if (elm == _draggedHelper) {
           continue;
         }
         _maxLeft = (elm.offsetLeft + elm.offsetWidth).round();
@@ -212,23 +222,24 @@ class Sortable {
       _maxLeft += (_draggedHelper.offsetWidth / 2).round();
     }
 
-    if(axis.contains('y')) {
+    if (axis.contains('y')) {
       _minTop = _draggedElement.offsetTop.round();
-      _maxTop = (_draggedElement.offsetTop + _draggedElement.offsetHeight).round();
-      for(int i = dIdx - 1; i >= 0; i--) {
+      _maxTop =
+          (_draggedElement.offsetTop + _draggedElement.offsetHeight).round();
+      for (int i = dIdx - 1; i >= 0; i--) {
         var elm = sortable.children[i];
-        if(elm.attributes['ismovable'] != 'true') {
+        if (elm.attributes['ismovable'] != 'true') {
           break;
         }
         _minTop = elm.offsetTop.round();
       }
 
-      for(int i = dIdx + 1; i < sortable.children.length; i++) {
+      for (int i = dIdx + 1; i < sortable.children.length; i++) {
         var elm = sortable.children[i];
-        if(elm.attributes['ismovable'] != 'true') {
+        if (elm.attributes['ismovable'] != 'true') {
           break;
         }
-        if(elm == _draggedHelper) {
+        if (elm == _draggedHelper) {
           continue;
         }
         _maxTop = (elm.offsetTop + elm.offsetHeight).round();
@@ -244,21 +255,23 @@ class Sortable {
     math.Point<int> _newPos = new math.Point<int>(
         _draggedElementStartPos.x + e.client.x - _dragStartPos.x,
         _draggedElementStartPos.y + e.client.y - _dragStartPos.y);
-    if(axis == null || axis.isEmpty || axis == 'x') {
-      if(_newPos.x < _minLeft) {
+    if (axis == null || axis.isEmpty || axis == 'x') {
+      if (_newPos.x < _minLeft) {
         _newPos = new math.Point(_minLeft, _newPos.y);
       }
-      if(_newPos.x + _placeholder.offsetWidth > _maxLeft) {
-        _newPos = new math.Point((_maxLeft - _placeholder.offsetWidth).round(), _newPos.y);
+      if (_newPos.x + _placeholder.offsetWidth > _maxLeft) {
+        _newPos = new math.Point(
+            (_maxLeft - _placeholder.offsetWidth).round(), _newPos.y);
       }
       _draggedHelper.style.left = '${_newPos.x}px';
     }
-    if(axis == null || axis.isEmpty || axis == 'y') {
-      if(_newPos.y < _minTop) {
+    if (axis == null || axis.isEmpty || axis == 'y') {
+      if (_newPos.y < _minTop) {
         _newPos = new math.Point(_newPos.x, _minTop);
       }
-      if(_newPos.y + _placeholder.offsetHeight > _maxTop) {
-        _newPos = new math.Point(_newPos.x, (_maxTop - _placeholder.offsetHeight).round());
+      if (_newPos.y + _placeholder.offsetHeight > _maxTop) {
+        _newPos = new math.Point(
+            _newPos.x, (_maxTop - _placeholder.offsetHeight).round());
       }
       _draggedHelper.style.top = '${_newPos.y}px';
     }
@@ -280,30 +293,33 @@ class Sortable {
 
       int overIdx = sortable.children.indexOf(elm);
 
-      if(axis != null && axis.contains('x')) {
-        if(elm != _placeholder && elm != _draggedHelper &&
-            elm.attributes['ismovable'] == 'true'
-            && e.client.x > left && e.client.x < right) {
-          if(e.client.x > midX && placeholderIdx < overIdx) {
+      if (axis != null && axis.contains('x')) {
+        if (elm != _placeholder &&
+            elm != _draggedHelper &&
+            elm.attributes['ismovable'] == 'true' &&
+            e.client.x > left &&
+            e.client.x < right) {
+          if (e.client.x > midX && placeholderIdx < overIdx) {
             sortable.children.insert(overIdx + 1, _placeholder);
-          } else if(e.client.x < midX && placeholderIdx > overIdx) {
+          } else if (e.client.x < midX && placeholderIdx > overIdx) {
             sortable.children.insert(overIdx, _placeholder);
           }
         }
       }
 
-      if(axis != null && axis.contains('y')) {
-        if(elm != _placeholder && elm != _draggedHelper &&
-            elm.attributes['ismovable'] == 'true'
-            && e.client.y > top && e.client.y < bottom) {
-          if(e.client.y > midY && placeholderIdx < overIdx) {
+      if (axis != null && axis.contains('y')) {
+        if (elm != _placeholder &&
+            elm != _draggedHelper &&
+            elm.attributes['ismovable'] == 'true' &&
+            e.client.y > top &&
+            e.client.y < bottom) {
+          if (e.client.y > midY && placeholderIdx < overIdx) {
             sortable.children.insert(overIdx + 1, _placeholder);
-          } else if(e.client.y < midY && placeholderIdx > overIdx) {
+          } else if (e.client.y < midY && placeholderIdx > overIdx) {
             sortable.children.insert(overIdx, _placeholder);
           }
         }
       }
-
     });
   }
 

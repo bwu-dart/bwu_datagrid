@@ -8,12 +8,13 @@ import 'package:bwu_datagrid/editors/editors.dart';
 
 class CompositeEditorOptions {
   String validationFailedMsg;
-  Function show ;
+  Function show;
   Function hide;
   Function position;
   Function destroy;
 
-  CompositeEditorOptions({this.validationFailedMsg : 'Some of the fields have failed validation',
+  CompositeEditorOptions(
+      {this.validationFailedMsg: 'Some of the fields have failed validation',
       this.show, this.hide, this.position, this.destroy});
 }
 
@@ -42,7 +43,7 @@ class CompositeEditorOptions {
 class CompositeEditor extends Editor {
   List<Column> columns;
   CompositeEditorOptions options;
-  Map<String,dom.HtmlElement> containers;
+  Map<String, dom.HtmlElement> containers;
 
   CompositeEditor.prepare(this.columns, this.containers, this.options);
   CompositeEditor(this.args);
@@ -53,21 +54,20 @@ class CompositeEditor extends Editor {
   List<Editor> editors;
 
   NodeBox getContainerBox(String id) {
-      var c = containers[id];
-      math.Rectangle<int> offset = c.offset;
-      var w = c.offsetWidth.round();
-      var h = c.offsetHeight.round();
+    var c = containers[id];
+    math.Rectangle<int> offset = c.offset;
+    var w = c.offsetWidth.round();
+    var h = c.offsetHeight.round();
 
-      return new NodeBox(
+    return new NodeBox(
         top: offset.top.round(),
         left: offset.left.round(),
         bottom: offset.top.round() + h,
         right: offset.left.round() + w,
         width: w,
         height: h,
-        visible: true
-      );
-    }
+        visible: true);
+  }
 
   void init() {
     var idx = columns.length;
@@ -77,28 +77,27 @@ class CompositeEditor extends Editor {
       if (columns[idx].editor != null) {
         //newArgs = $.extend({}, args);
         newArgs = new EditorArgs(
-          container : containers[columns[idx].id],
-          column : columns[idx],
-          position : getContainerBox(columns[idx].id)
-        );
+            container: containers[columns[idx].id],
+            column: columns[idx],
+            position: getContainerBox(columns[idx].id));
 
         editors[idx] = columns[idx].editor.newInstance(newArgs);
       }
     }
   }
 
-  void destroy () {
+  void destroy() {
     var idx = editors.length;
     while (idx-- > 0) {
       editors[idx].destroy();
     }
 
-    if(options.destroy != null) options.destroy();
+    if (options.destroy != null) options.destroy();
   }
 
-  void focus () {
+  void focus() {
     // if validation has failed, set the focus to the first invalid editor
-    if(firstInvalidEditor != null) {
+    if (firstInvalidEditor != null) {
       firstInvalidEditor.focus();
     } else {
       editors[0].focus();
@@ -115,7 +114,7 @@ class CompositeEditor extends Editor {
     return false;
   }
 
-  dynamic serializeValue () {
+  dynamic serializeValue() {
     var serializedValue = new List(columns.length);
     var idx = editors.length;
     while (idx-- > 0) {
@@ -124,14 +123,14 @@ class CompositeEditor extends Editor {
     return serializedValue;
   }
 
-  void applyValue (/*Item/Map*/item, state) {
+  void applyValue(/*Item/Map*/ item, state) {
     var idx = editors.length;
     while (idx-- > 0) {
       editors[idx].applyValue(item, state[idx]);
     }
   }
 
-  void loadValue (/*Item/Map*/item) {
+  void loadValue(/*Item/Map*/ item) {
     var idx = editors.length;
     while (idx-- > 0) {
       editors[idx].loadValue(item);
@@ -150,43 +149,38 @@ class CompositeEditor extends Editor {
       if (!validationResults.isValid) {
         firstInvalidEditor = editors[idx];
         errors.add(new ValidationErrorSource(
-          index: idx,
-          editor: editors[idx],
-          container: containers[idx],
-          message: validationResults.message
-        ));
+            index: idx,
+            editor: editors[idx],
+            container: containers[idx],
+            message: validationResults.message));
       }
     }
 
     if (errors.length > 0) {
-      return new ValidationResult(
-        false,
-        options.validationFailedMsg,
-        errors
-      );
+      return new ValidationResult(false, options.validationFailedMsg, errors);
     } else {
       return new ValidationResult(true);
     }
   }
 
-  void hide () {
+  void hide() {
     var idx = editors.length;
     while (idx-- > 0) {
-      if(editors[idx].hide != null) editors[idx].hide();
+      if (editors[idx].hide != null) editors[idx].hide();
     }
-    if(options.hide != null) options.hide();
+    if (options.hide != null) options.hide();
   }
 
-  void show () {
+  void show() {
     var idx = editors.length;
     while (idx-- > 0) {
-      if(editors[idx].show != null) editors[idx].show();
+      if (editors[idx].show != null) editors[idx].show();
     }
-    if(options.show != null) options.show();
+    if (options.show != null) options.show();
   }
 
-  void position (NodeBox box) {
-    if(options.position != null) options.position(box);
+  void position(NodeBox box) {
+    if (options.position != null) options.position(box);
   }
 
   @override

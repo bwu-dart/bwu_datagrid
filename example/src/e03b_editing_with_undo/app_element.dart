@@ -11,7 +11,6 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import '../required_field_validator.dart';
 import 'package:bwu_datagrid/core/core.dart';
 
-
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
@@ -32,14 +31,14 @@ class AppElement extends PolymerElement {
       enableAddRow: false,
       enableCellNavigation: true,
       asyncEditorLoading: false,
-      autoEdit: false
-  );
+      autoEdit: false);
 
   List<EditCommand> _commandQueue = <EditCommand>[];
 
   bool get isUndoItem => !_commandQueue.isEmpty;
 
-  void queueAndExecuteCommand(/*Item/Map*/ item, Column column, EditCommand editCommand) {
+  void queueAndExecuteCommand(
+      /*Item/Map*/ item, Column column, EditCommand editCommand) {
     var oldValue = isUndoItem;
     _commandQueue.add(editCommand);
     editCommand.execute();
@@ -68,7 +67,8 @@ class AppElement extends PolymerElement {
       for (var i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
-          "description": 'This is a sample task description.\n  It can be multiline',
+          "description":
+              'This is a sample task description.\n  It can be multiline',
           'duration': '5 days',
           'percentComplete': new math.Random().nextInt(100).round(),
           'start': '2009-01-01',
@@ -77,15 +77,15 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
-
+      grid.setup(
+          dataProvider: data, columns: columns, gridOptions: gridOptions);
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

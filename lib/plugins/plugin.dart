@@ -19,7 +19,6 @@ abstract class Plugin {
 }
 
 abstract class SelectionModel extends Plugin {
-
   SelectionModel();
 
   void setSelectedRanges(List<core.Range> ranges);

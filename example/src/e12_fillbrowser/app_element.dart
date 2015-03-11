@@ -8,7 +8,6 @@ import 'package:polymer/polymer.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 
-
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
@@ -33,10 +32,8 @@ class AppElement extends PolymerElement {
     new Column(id: "c17", name: "C17", field: "c17", width: 120)
   ];
 
-  var gridOptions = new GridOptions(
-      enableCellNavigation: false,
-      enableColumnReorder: false
-  );
+  var gridOptions =
+      new GridOptions(enableCellNavigation: false, enableColumnReorder: false);
 
   math.Random rnd = new math.Random();
 
@@ -53,7 +50,7 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new MapDataItemProvider();
 
-      for(int i = 1; i <= 10000; i++) {
+      for (int i = 1; i <= 10000; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'duration': '5 days',
@@ -72,20 +69,20 @@ class AppElement extends PolymerElement {
           'c15': 'C15-${i}',
           'c16': 'C16-${i}',
           'c17': 'C17-${i}',
-          }));
+        }));
       }
 
       dom.window.onResize.listen((e) => grid.resizeCanvas(e));
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
-
+      grid.setup(
+          dataProvider: data, columns: columns, gridOptions: gridOptions);
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

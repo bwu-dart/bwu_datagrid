@@ -23,8 +23,7 @@ class AppElement extends PolymerElement {
       editable: true,
       enableCellNavigation: true,
       asyncEditorLoading: false,
-      autoEdit: false
-  );
+      autoEdit: false);
 
   math.Random rnd = new math.Random();
 
@@ -38,43 +37,48 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      CheckboxSelectColumn checkboxColumn = new CheckboxSelectColumn(cssClass: 'bwu-datagrid-cell-checkboxsel');
+      CheckboxSelectColumn checkboxColumn =
+          new CheckboxSelectColumn(cssClass: 'bwu-datagrid-cell-checkboxsel');
       columns.add(checkboxColumn);
-      for(int i = 0; i < 5; i++) {
-        columns.add(new Column(id: i.toString(), name: new String.fromCharCode('A'.codeUnits[0] + i), field: i.toString(), width: 100, editor: new editors.TextEditor()));
+      for (int i = 0; i < 5; i++) {
+        columns.add(new Column(
+            id: i.toString(),
+            name: new String.fromCharCode('A'.codeUnits[0] + i),
+            field: i.toString(),
+            width: 100,
+            editor: new editors.TextEditor()));
       }
 
       // prepare the data
       data = new MapDataItemProvider();
       for (var i = 0; i < 100; i++) {
-        data.items.add(new MapDataItem({
-        'id': i,
-        '0': 'Row $i'
-        }));
+        data.items.add(new MapDataItem({'id': i, '0': 'Row $i'}));
       }
 
       DataView dataView = new DataView();
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) {
-        grid.setSelectionModel = (new RowSelectionModel(new RowSelectionModelOptions(selectActiveRow: false)));
+      grid
+          .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
+          .then((_) {
+        grid.setSelectionModel = (new RowSelectionModel(
+            new RowSelectionModelOptions(selectActiveRow: false)));
         grid.registerPlugin(checkboxColumn);
         //new ColumnPicker(columns, grid, options);
 
-        BwuColumnPicker columnPicker = (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
-            ..columns = columns
-            ..grid = grid;
+        BwuColumnPicker columnPicker =
+            (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
+          ..columns = columns
+          ..grid = grid;
         dom.document.body.append(columnPicker);
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
 }
-

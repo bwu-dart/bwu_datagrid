@@ -22,19 +22,20 @@ class TaskNameFormatter extends fm.Formatter {
   DataView dataView;
   TaskNameFormatter({this.data, this.dataView});
 
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+      Column columnDef, DataItem dataContext) {
     target.children.clear();
     // TODO value = value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     var spacer = new dom.SpanElement()
-        ..style.display = 'inline-block'
-        ..style.height= '1px'
-        ..style.width = '${(15 * dataContext["indent"])}px';
-        target.append(spacer);
+      ..style.display = 'inline-block'
+      ..style.height = '1px'
+      ..style.width = '${(15 * dataContext["indent"])}px';
+    target.append(spacer);
     int idx = dataView.getIdxById(dataContext['id']);
-    var toggle = new dom.SpanElement()
-    ..classes.add('toggle');
+    var toggle = new dom.SpanElement()..classes.add('toggle');
 
-    if (data[idx + 1] != null && data[idx + 1]['indent'] > data[idx]['indent']) {
+    if (data[idx + 1] != null &&
+        data[idx + 1]['indent'] > data[idx]['indent']) {
       if (dataContext.collapsed) {
         toggle.classes.add('expand');
       } else {
@@ -45,7 +46,6 @@ class TaskNameFormatter extends fm.Formatter {
     target.appendHtml('&nbsp;${value}');
   }
 }
-
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
@@ -67,8 +67,7 @@ class AppElement extends PolymerElement {
       editable: true,
       enableAddRow: true,
       enableCellNavigation: true,
-      asyncEditorLoading: true
-  );
+      asyncEditorLoading: true);
 
   math.Random rnd = new math.Random();
 
@@ -80,7 +79,6 @@ class AppElement extends PolymerElement {
 
   @observable String percentCompleteThreshold;
   @observable String searchString;
-
 
   @override
   void attached() {
@@ -121,14 +119,15 @@ class AppElement extends PolymerElement {
         d['percentComplete'] = rnd.nextInt(100);
         d['start'] = "01/01/2009";
         d['finish'] = "01/05/2009";
-        d['effortDriven'] =  (i % 5 == 0);
+        d['effortDriven'] = (i % 5 == 0);
       }
 
       dataView = new DataView(options: new DataViewOptions(inlineFilters: true))
         ..beginUpdate()
         ..setItems(data)
         ..setFilterArgs({
-          'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+          'percentCompleteThreshold':
+              tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
         })
         ..setFilter(myFilter)
@@ -138,18 +137,33 @@ class AppElement extends PolymerElement {
         ..data = data
         ..dataView = dataView;
 
-      grid.setup(dataProvider: dataView, columns: columns, gridOptions: gridOptions).then((_) {
-
-        grid.onBwuCellChange.listen((e) => dataView.updateItem(e.item['id'], e.item));
+      grid
+          .setup(
+              dataProvider: dataView,
+              columns: columns,
+              gridOptions: gridOptions)
+          .then((_) {
+        grid.onBwuCellChange
+            .listen((e) => dataView.updateItem(e.item['id'], e.item));
 
         grid.onBwuAddNewRow.listen((e) {
-          var item = new MapDataItem({"id": "new_${rnd.nextInt(10000)}", 'indent': 0, "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false});
+          var item = new MapDataItem({
+            "id": "new_${rnd.nextInt(10000)}",
+            'indent': 0,
+            "title": "New task",
+            "duration": "1 day",
+            "percentComplete": 0,
+            "start": "01/01/2009",
+            "finish": "01/01/2009",
+            "effortDriven": false
+          });
           item.extend(e.item);
           dataView.addItem(item);
         });
 
         grid.onBwuClick.listen((e) {
-          if ((e.causedBy.target as dom.HtmlElement).classes.contains("toggle")) {
+          if ((e.causedBy.target as dom.HtmlElement).classes
+              .contains("toggle")) {
             var item = dataView.getItem(e.cell.row);
             if (item != null) {
               item.collapsed = !item.collapsed;
@@ -170,14 +184,13 @@ class AppElement extends PolymerElement {
           grid.render();
         });
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
@@ -188,7 +201,7 @@ class AppElement extends PolymerElement {
 
   async.Timer _pendingUpdateFilter;
   void percentCompleteThresholdChanged(old) {
-    if(_pendingUpdateFilter != null) {
+    if (_pendingUpdateFilter != null) {
       _pendingUpdateFilter.cancel();
     }
 
@@ -201,16 +214,17 @@ class AppElement extends PolymerElement {
   void updateFilter() {
     core.globalEditorLock.cancelCurrentEdit();
 
-    if(searchString == null) {
+    if (searchString == null) {
       searchString = '';
     }
 
-    if(percentCompleteThreshold == null) {
+    if (percentCompleteThreshold == null) {
       percentCompleteThreshold = '0';
     }
 
     dataView.setFilterArgs({
-      'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+      'percentCompleteThreshold':
+          tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString
     });
     dataView.refresh();
@@ -220,7 +234,8 @@ class AppElement extends PolymerElement {
       return false;
     }
 
-    if (args['searchString'] != '' && item['title'].indexOf(args['searchString']) == -1) {
+    if (args['searchString'] != '' &&
+        item['title'].indexOf(args['searchString']) == -1) {
       return false;
     }
 
@@ -228,13 +243,15 @@ class AppElement extends PolymerElement {
       var parent = data[item['parent']];
 
       while (parent != null) {
-        if (parent.collapsed || (parent["percentComplete"]
-            < tools.parseInt(percentCompleteThreshold, onErrorDefault: 0))
-                || (searchString != "" && parent["title"].indexOf(searchString) == -1)) {
+        if (parent.collapsed ||
+            (parent["percentComplete"] <
+                tools.parseInt(percentCompleteThreshold, onErrorDefault: 0)) ||
+            (searchString != "" &&
+                parent["title"].indexOf(searchString) == -1)) {
           return false;
         }
 
-        if(parent['parent'] != null) {
+        if (parent['parent'] != null) {
           parent = data[parent['parent']];
         } else {
           parent = null;

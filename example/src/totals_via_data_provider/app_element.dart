@@ -18,10 +18,7 @@ class AppElement extends PolymerElement {
   List<Column> columns = [];
 
   var gridOptions = new GridOptions(
-      enableCellNavigation: true,
-      headerRowHeight: 30,
-      editable: true
-  );
+      enableCellNavigation: true, headerRowHeight: 30, editable: true);
 
   math.Random rnd = new math.Random();
 
@@ -34,14 +31,12 @@ class AppElement extends PolymerElement {
     try {
       for (int i = 0; i < 10; i++) {
         columns.add(new Column(
-          id: '${i}',
-          name: new String.fromCharCode('A'.codeUnitAt(0) + i),
-          field: '${i}',
-          width: 60,
-          editor: new IntegerEditor()
-        ));
+            id: '${i}',
+            name: new String.fromCharCode('A'.codeUnitAt(0) + i),
+            field: '${i}',
+            width: 60,
+            editor: new IntegerEditor()));
       }
-
 
       grid = $['myGrid'];
 
@@ -49,13 +44,14 @@ class AppElement extends PolymerElement {
       for (var i = 0; i < 10; i++) {
         var d = new MapDataItem({'id': i});
         data.items.add(d);
-        for(int j = 0; j < columns.length; j++) {
+        for (int j = 0; j < columns.length; j++) {
           d['${j}'] = rnd.nextInt(10);
         }
       }
       data.updateTotals();
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(
+          dataProvider: data, columns: columns, gridOptions: gridOptions);
 
       grid.onBwuCellChange.listen((e) {
         // The data has changed - recalculate the totals.
@@ -65,14 +61,13 @@ class AppElement extends PolymerElement {
         grid.invalidateRow(data.length - 1);
         grid.render();
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

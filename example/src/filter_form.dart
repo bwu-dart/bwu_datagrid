@@ -3,7 +3,6 @@ library bwu_datagrid.example.e04_model.filter_form;
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 
-
 @CustomTag('filter-form')
 class FilterForm extends PolymerElement {
   FilterForm.created() : super.created();
@@ -12,7 +11,7 @@ class FilterForm extends PolymerElement {
   @published String searchString = '';
 
   void clearSearch(dom.KeyboardEvent e, detail, dom.HtmlElement target) {
-    if(e.which == dom.KeyCode.ESC) {
+    if (e.which == dom.KeyCode.ESC) {
       searchString = '';
     }
   }

@@ -12,10 +12,12 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'row_item.dart';
 
 class CellFormatter extends fm.Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+      Column columnDef, DataItem dataContext) {
     target.children.clear();
 
-    target.append((new dom.Element.tag('row-item') as RowItem)..data = dataContext);
+    target.append(
+        (new dom.Element.tag('row-item') as RowItem)..data = dataContext);
   }
 }
 
@@ -24,7 +26,12 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   List<Column> columns = [
-    new Column(id: "contact-card", name: "Contacts", formatter: new CellFormatter(), width: 500, cssClass: "contact-card-cell")
+    new Column(
+        id: "contact-card",
+        name: "Contacts",
+        formatter: new CellFormatter(),
+        width: 500,
+        cssClass: "contact-card-cell")
   ];
 
   var gridOptions = new GridOptions(
@@ -32,8 +39,7 @@ class AppElement extends PolymerElement {
       editable: false,
       enableAddRow: false,
       enableCellNavigation: false,
-      enableColumnReorder: false
-  );
+      enableColumnReorder: false);
 
   math.Random rnd = new math.Random();
 
@@ -58,14 +64,15 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(
+          dataProvider: data, columns: columns, gridOptions: gridOptions);
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

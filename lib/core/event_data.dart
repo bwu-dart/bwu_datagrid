@@ -1,58 +1,62 @@
 part of bwu_dart.bwu_datagrid.core;
 
 abstract class Events {
-
-  static const ACTIVE_CELL_CHANGED = const EventType<ActiveCellChanged>(
-      'bwu-active-cell-changed');
+  static const ACTIVE_CELL_CHANGED =
+      const EventType<ActiveCellChanged>('bwu-active-cell-changed');
 
   static const ACTIVE_CELL_POSITION_CHANGED =
-      const EventType<ActiveCellPositionChanged>('bwu-active-cell-position-changed');
+      const EventType<ActiveCellPositionChanged>(
+          'bwu-active-cell-position-changed');
 
   static const ADD_NEW_ROW = const EventType<AddNewRow>('bwu-add-new-row');
 
   static const ATTACHED = const EventType<Attached>('bwu-attached');
 
   static const BEFORE_CELL_EDITOR_DESTROY =
-      const EventType<BeforeCellEditorDestroy>('bwu-before-cell-editor-destroy');
+      const EventType<BeforeCellEditorDestroy>(
+          'bwu-before-cell-editor-destroy');
 
   static const BEFORE_CELL_RANGE_SELECTED =
-      const EventType<BeforeCellRangeSelected>('bwu-before-cell-range-selected');
+      const EventType<BeforeCellRangeSelected>(
+          'bwu-before-cell-range-selected');
 
-  static const BEFORE_DESTROY = const EventType<BeforeDestroy>(
-      'bwu-before-destroy');
+  static const BEFORE_DESTROY =
+      const EventType<BeforeDestroy>('bwu-before-destroy');
 
-  static const BEFORE_EDIT_CELL = const EventType<BeforeEditCell>(
-      'bwu-before-edit-cell');
+  static const BEFORE_EDIT_CELL =
+      const EventType<BeforeEditCell>('bwu-before-edit-cell');
 
   static const BEFORE_HEADER_CELL_DESTROY =
-      const EventType<BeforeHeaderCellDestroy>('bwu-before-header-cell-destroy');
+      const EventType<BeforeHeaderCellDestroy>(
+          'bwu-before-header-cell-destroy');
 
   static const BEFORE_HEADER_ROW_CELL_DESTROY =
-      const EventType<BeforeHeaderRowCellDestroy>('bwu-before-header-row-cell-destroy'
-      );
+      const EventType<BeforeHeaderRowCellDestroy>(
+          'bwu-before-header-row-cell-destroy');
 
-  static const BEFORE_MOVE_ROWS = const EventType<BeforeMoveRows>('bwu-before-move-rows');
+  static const BEFORE_MOVE_ROWS =
+      const EventType<BeforeMoveRows>('bwu-before-move-rows');
 
   static const CELL_CHANGE = const EventType<CellChange>('bwu-cell-changed');
 
-  static const CELL_RANGE_SELECTED = const EventType<CellRangeSelected>(
-      'bwu-cell-range-selected');
+  static const CELL_RANGE_SELECTED =
+      const EventType<CellRangeSelected>('bwu-cell-range-selected');
 
-  static const CELL_CSS_STYLES_CHANGED = const EventType<CellCssStylesChanged>(
-      'bwu-cell-css-styles-changed');
+  static const CELL_CSS_STYLES_CHANGED =
+      const EventType<CellCssStylesChanged>('bwu-cell-css-styles-changed');
 
   static const CLICK = const EventType<Click>('bwu-click');
 
-  static const COLUMNS_REORDERED = const EventType<ColumnsReordered>(
-      'bwu-columns-reordered');
+  static const COLUMNS_REORDERED =
+      const EventType<ColumnsReordered>('bwu-columns-reordered');
 
-  static const COLUMNS_RESIZED = const EventType<ColumnsResized>(
-      'bwu-columns-resized');
+  static const COLUMNS_RESIZED =
+      const EventType<ColumnsResized>('bwu-columns-resized');
 
   static const CONTEXT_MENU = const EventType<ContextMenu>('bwu-context-menu');
 
-  static const COPY_CANCELLED = const EventType<CopyCancelled>(
-      'bwu-copy-cancelled');
+  static const COPY_CANCELLED =
+      const EventType<CopyCancelled>('bwu-copy-cancelled');
 
   static const COPY_CELLS = const EventType<CopyCells>('bwu-copy-cells');
 
@@ -81,19 +85,19 @@ abstract class Events {
 
   static const DRAG_START = const EventType<DragStart>('bwu-drag-start');
 
-  static const HEADER_CELL_RENDERED = const EventType<HeaderCellRendered>(
-      'bwu-header-cell-rendered');
+  static const HEADER_CELL_RENDERED =
+      const EventType<HeaderCellRendered>('bwu-header-cell-rendered');
 
   static const HEADER_CLICK = const EventType<HeaderClick>('bwu-header-click');
 
-  static const HEADER_CONTEX_MENU = const EventType<HeaderContextMenu>(
-      'bwu-header-context-menu');
+  static const HEADER_CONTEX_MENU =
+      const EventType<HeaderContextMenu>('bwu-header-context-menu');
 
-  static const HEADER_MOUSE_ENTER = const EventType<HeaderMouseEnter>(
-      'bwu-header-mouse-enter');
+  static const HEADER_MOUSE_ENTER =
+      const EventType<HeaderMouseEnter>('bwu-header-mouse-enter');
 
-  static const HEADER_MOUSE_LEAVE = const EventType<HeaderMouseLeave>(
-      'bwu-header-mouse-leave');
+  static const HEADER_MOUSE_LEAVE =
+      const EventType<HeaderMouseLeave>('bwu-header-mouse-leave');
 
   static const HEADER_ROW_CELL_RENDERED =
       const EventType<HeaderRowCellRendered>('bwu-header-row-cell-rendered');
@@ -106,34 +110,34 @@ abstract class Events {
 
   static const MOVE_ROWS = const EventType<MoveRows>('bwu-move-rows');
 
-  static const PAGING_INFO_CHANGED = const EventType<PagingInfoChanged>(
-      'bwu-paging-info-changed');
+  static const PAGING_INFO_CHANGED =
+      const EventType<PagingInfoChanged>('bwu-paging-info-changed');
 
   static const PASTE_CELLS = const EventType<PasteCells>('bwu-paste-cells');
 
   static const ROWS_CHANGED = const EventType<RowsChanged>('bwu-rows-changed');
 
-  static const ROW_COUNT_CHANGED = const EventType<RowCountChanged>(
-      'bwu-row-count-changed');
+  static const ROW_COUNT_CHANGED =
+      const EventType<RowCountChanged>('bwu-row-count-changed');
 
   static const SCROLL = const EventType<Scroll>('bwu-scroll');
 
-  static const SELECTED_RANGES_CHANGED = const EventType<SelectedRangesChanged>(
-      'bwu-selected-ranges-changed');
+  static const SELECTED_RANGES_CHANGED =
+      const EventType<SelectedRangesChanged>('bwu-selected-ranges-changed');
 
-  static const SELECTED_ROW_IDS_CHANGED = const EventType<SelectedRowIdsChanged>(
-      'selected-row-ids-changed');
+  static const SELECTED_ROW_IDS_CHANGED =
+      const EventType<SelectedRowIdsChanged>('selected-row-ids-changed');
 
-  static const SELECTED_ROWS_CHANGED = const EventType<SelectedRowsChanged>(
-      'bwu-selected-rows-changed');
+  static const SELECTED_ROWS_CHANGED =
+      const EventType<SelectedRowsChanged>('bwu-selected-rows-changed');
 
   static const SORT = const EventType<Sort>('bwu-sort');
 
-  static const VALIDATION_ERROR = const EventType<ValidationError>(
-      'bwu-validation-error');
+  static const VALIDATION_ERROR =
+      const EventType<ValidationError>('bwu-validation-error');
 
-  static const VIEWPORT_CHANGED = const EventType<ViewportChanged>(
-      'bwu-viewport-changed');
+  static const VIEWPORT_CHANGED =
+      const EventType<ViewportChanged>('bwu-viewport-changed');
 }
 
 /***
@@ -216,7 +220,6 @@ class ActiveCellChanged extends EventData {
 }
 
 class ActiveCellPositionChanged extends EventData {
-
   ActiveCellPositionChanged(sender) : super(sender: sender);
 }
 
@@ -263,8 +266,8 @@ class BeforeHeaderCellDestroy extends EventData {
   final dom.HtmlElement node;
   final Column columnDef;
 
-  BeforeHeaderCellDestroy(sender, this.node, this.columnDef) : super(sender:
-      sender);
+  BeforeHeaderCellDestroy(sender, this.node, this.columnDef)
+      : super(sender: sender);
 }
 
 // TODO which properties are really needed for this event
@@ -272,24 +275,24 @@ class BeforeHeaderRowCellDestroy extends EventData {
   final dom.HtmlElement node;
   final Column columnDef;
 
-  BeforeHeaderRowCellDestroy(sender, this.node, this.columnDef) : super(sender:
-      sender);
+  BeforeHeaderRowCellDestroy(sender, this.node, this.columnDef)
+      : super(sender: sender);
 }
 
 class BeforeMoveRows extends EventData {
   List<int> rows;
   int insertBefore;
 
-  BeforeMoveRows(sender, {this.rows, this.insertBefore}) : super(sender:
-      sender);
+  BeforeMoveRows(sender, {this.rows, this.insertBefore})
+      : super(sender: sender);
 }
 
 class CellCssStylesChanged extends EventData {
   final String key;
   final Map<int, Map<String, String>> hash;
 
-  CellCssStylesChanged(sender, this.key, {this.hash: null}) : super(sender:
-      sender);
+  CellCssStylesChanged(sender, this.key, {this.hash: null})
+      : super(sender: sender);
 }
 
 class CellRangeSelected extends EventData {
@@ -302,8 +305,8 @@ class Click extends EventData {
   final Cell cell;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  Click(sender, this.cell, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  Click(sender, this.cell, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class ColumnsResized extends EventData {
@@ -318,8 +321,8 @@ class ContextMenu extends EventData {
   final Cell cell;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  ContextMenu(sender, this.cell, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy);
+  ContextMenu(sender, this.cell, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class CopyCancelled extends EventData {
@@ -338,8 +341,8 @@ class DoubleClick extends EventData {
   final Cell cell;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  DoubleClick(sender, this.cell, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy);
+  DoubleClick(sender, this.cell, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 //// TODO do we really need different event data containers for DragXxx and CustomDragXxx events?
@@ -395,7 +398,6 @@ class DoubleClick extends EventData {
 //      }
 //}
 
-
 class Drag extends EventData {
 //  final Map dd;
   dom.MouseEvent get causedBy => super.causedBy;
@@ -407,8 +409,8 @@ class Drag extends EventData {
   String mode;
 
   Drag(sender, {/*this.dd,*/ this.guide, this.selectionProxy, this.insertBefore,
-    this.selectedRows, this.canMove, this.mode, dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+      this.selectedRows, this.canMove, this.mode, dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class DragEnd extends EventData {
@@ -420,41 +422,40 @@ class DragEnd extends EventData {
   bool canMove;
   List<int> selectedRows;
   int insertBefore;
-  String mode ;
+  String mode;
 
   DragEnd(sender, {this.selectedRows, this.insertBefore,
       /*this.dd,*/ this.guide, this.selectionProxy, this.canMove, this.mode,
-        dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+      dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
-
 
 class DragEnter extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
-  DragEnter(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  DragEnter(sender, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class DragLeave extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
-  DragLeave(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  DragLeave(sender, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class DragOver extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
-  DragOver(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  DragOver(sender, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class Drop extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
-  Drop(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  Drop(sender, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 // TODO this was for a jQuery specific event we don't have
@@ -473,10 +474,9 @@ class DragStart extends EventData {
   dom.HtmlElement selectionProxy;
   dom.HtmlElement guide;
 
-  DragStart(sender, {this.selectedRows, this.insertBefore,
-    this.selectionProxy, this.guide, dom.MouseEvent causedBy})
-    : super(sender: sender,
-      causedBy: causedBy);
+  DragStart(sender, {this.selectedRows, this.insertBefore, this.selectionProxy,
+      this.guide, dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class HeaderCellRendered extends EventData {
@@ -490,61 +490,62 @@ class HeaderClick extends EventData {
   final Column column;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  HeaderClick(sender, this.column, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy);
+  HeaderClick(sender, this.column, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class HeaderContextMenu extends EventData {
   final Column column;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  HeaderContextMenu(sender, this.column, {dom.MouseEvent causedBy}) : super(
-      sender: sender, causedBy: causedBy);
+  HeaderContextMenu(sender, this.column, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class HeaderMouseEnter extends EventData {
   final Column data;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  HeaderMouseEnter(sender, this.data, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy);
+  HeaderMouseEnter(sender, this.data, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class HeaderMouseLeave extends EventData {
   final String data;
   dom.MouseEvent get causedBy => super.causedBy;
 
-  HeaderMouseLeave(sender, this.data, {dom.MouseEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy);
+  HeaderMouseLeave(sender, this.data, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class HeaderRowCellRendered extends EventData {
   final dom.HtmlElement node;
   final Column columnDef;
 
-  HeaderRowCellRendered(sender,this.node, this.columnDef) : super(sender: sender);
+  HeaderRowCellRendered(sender, this.node, this.columnDef)
+      : super(sender: sender);
 }
 
 class KeyDown extends EventData {
   final Cell cell;
   dom.KeyboardEvent get causedBy => super.causedBy;
 
-  KeyDown(sender, this.cell, {dom.KeyboardEvent causedBy}) : super(sender:
-      sender, causedBy: causedBy);
+  KeyDown(sender, this.cell, {dom.KeyboardEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class MouseEnter extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
-  MouseEnter(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  MouseEnter(sender, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class MouseLeave extends EventData {
   dom.MouseEvent get causedBy => super.causedBy;
 
-  MouseLeave(sender, {dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  MouseLeave(sender, {dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class MoveRows extends EventData {
@@ -553,8 +554,8 @@ class MoveRows extends EventData {
   List<int> rows;
   int insertBefore;
 
-  MoveRows(sender, {this.rows, this.insertBefore, dom.MouseEvent causedBy}) : super(sender: sender,
-      causedBy: causedBy);
+  MoveRows(sender, {this.rows, this.insertBefore, dom.MouseEvent causedBy})
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class PagingInfoChanged extends EventData {
@@ -574,8 +575,8 @@ class Scroll extends EventData {
   final int scrollLeft;
   final int scrollTop;
 
-  Scroll(sender, {this.scrollLeft: 0, this.scrollTop: 0}) : super(sender: sender
-      );
+  Scroll(sender, {this.scrollLeft: 0, this.scrollTop: 0})
+      : super(sender: sender);
 }
 
 class SelectedRangesChanged extends EventData {
@@ -596,8 +597,8 @@ class SelectedRowsChanged extends EventData {
   final List<int> rows;
   dom.CustomEvent get causedBy => super.causedBy;
 
-  SelectedRowsChanged(sender, this.rows, dom.CustomEvent causedBy) : super(
-      sender: sender, causedBy: causedBy);
+  SelectedRowsChanged(sender, this.rows, dom.CustomEvent causedBy)
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class Sort extends EventData {
@@ -607,14 +608,15 @@ class Sort extends EventData {
   final bool sortAsc;
 
   Sort(sender, this.multiColumnSort, this.sortColumn, this.sortColumns,
-      this.sortAsc, dom.Event causedBy) : super(sender: sender,
-          causedBy: causedBy);
+      this.sortAsc, dom.Event causedBy)
+      : super(sender: sender, causedBy: causedBy);
 }
 
 class RowCountChanged extends EventData {
   final int oldCount;
   final int newCount;
-  RowCountChanged(sender, {this.oldCount, this.newCount}) : super(sender: sender);
+  RowCountChanged(sender, {this.oldCount, this.newCount})
+      : super(sender: sender);
 }
 
 class RowsChanged extends EventData {
@@ -630,8 +632,8 @@ class ValidationError extends EventData {
   final Cell cell;
   final Column column;
 
-
-  ValidationError(sender, {this.editor, this.cellNode, this.validationResults, this.cell, this.column})
+  ValidationError(sender, {this.editor, this.cellNode, this.validationResults,
+      this.cell, this.column})
       : super(sender: sender);
 }
 

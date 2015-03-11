@@ -18,13 +18,12 @@ class AppElement extends PolymerElement {
     new Column(id: "%", name: "% Complete", field: "percentComplete"),
     new Column(id: "start", name: "Start", field: "start"),
     new Column(id: "finish", name: "Finish", field: "finish"),
-    new Column(id: "effort-driven", name: "Effort Driven", field: "effortDriven")
+    new Column(
+        id: "effort-driven", name: "Effort Driven", field: "effortDriven")
   ];
 
-  var gridOptions = new GridOptions(
-    enableCellNavigation: true,
-    enableColumnReorder: false
-  );
+  var gridOptions =
+      new GridOptions(enableCellNavigation: true, enableColumnReorder: false);
 
   @override
   void attached() {
@@ -44,16 +43,17 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) =>
-      grid.registerPlugin(new AutoTooltips(new AutoTooltipsOptions(enableForHeaderCells: true))));
-
+      grid
+          .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
+          .then((_) => grid.registerPlugin(new AutoTooltips(
+              new AutoTooltipsOptions(enableForHeaderCells: true))));
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

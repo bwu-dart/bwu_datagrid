@@ -14,7 +14,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 class CellSelectionModelOptions {
   bool selectActiveCell;
 
-  CellSelectionModelOptions({this.selectActiveCell : true});
+  CellSelectionModelOptions({this.selectActiveCell: true});
 }
 
 class CellSelectionModel extends SelectionModel {
@@ -22,15 +22,12 @@ class CellSelectionModel extends SelectionModel {
   dom.HtmlElement _canvas;
   List<core.Range> _ranges = <core.Range>[];
   var _selector = new CellRangeSelector(new CellRangeDecoratorOptions(
-    selectionCss: {'border': '2px solid black', 'z-index': '9999'}
-  ));
+      selectionCss: {'border': '2px solid black', 'z-index': '9999'}));
   CellSelectionModelOptions _options;
-  var _defaults = {
-    'selectActiveCell': true
-  };
+  var _defaults = {'selectActiveCell': true};
 
   CellSelectionModel([CellSelectionModelOptions options]) {
-    if(_options != null) {
+    if (_options != null) {
       this._options = options;
     } else {
       this._options = new CellSelectionModelOptions();
@@ -46,13 +43,15 @@ class CellSelectionModel extends SelectionModel {
     // TODO _options = $.extend(true, {}, _defaults, options);
     _grid = grid;
     _canvas = _grid.getCanvasNode;
-    _subscriptions.add(_grid.onBwuActiveCellChanged.listen(handleActiveCellChange));
+    _subscriptions
+        .add(_grid.onBwuActiveCellChanged.listen(handleActiveCellChange));
     _subscriptions.add(_grid.onBwuKeyDown.listen(handleKeyDown));
     grid.registerPlugin(_selector);
-    _subscriptions.add(_selector.onBwuCellRangeSelected.listen(handleCellRangeSelected));
-    _subscriptions.add(_selector.onBwuBeforeCellRangeSelected.listen(handleBeforeCellRangeSelected));
+    _subscriptions
+        .add(_selector.onBwuCellRangeSelected.listen(handleCellRangeSelected));
+    _subscriptions.add(_selector.onBwuBeforeCellRangeSelected
+        .listen(handleBeforeCellRangeSelected));
   }
-
 
   void destroy() {
     _subscriptions.forEach((e) => e.cancel());
@@ -64,7 +63,8 @@ class CellSelectionModel extends SelectionModel {
 
     for (var i = 0; i < ranges.length; i++) {
       var r = ranges[i];
-      if (_grid.canCellBeSelected(r.fromRow, r.fromCell) && _grid.canCellBeSelected(r.toRow, r.toCell)) {
+      if (_grid.canCellBeSelected(r.fromRow, r.fromCell) &&
+          _grid.canCellBeSelected(r.toRow, r.toCell)) {
         result.add(r);
       }
     }
@@ -74,7 +74,8 @@ class CellSelectionModel extends SelectionModel {
 
   void setSelectedRanges(ranges) {
     _ranges = removeInvalidRanges(ranges);
-    _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED, new core.SelectedRangesChanged(this, _ranges));
+    _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED,
+        new core.SelectedRangesChanged(this, _ranges));
 //    _self.onSelectedRangesChanged.notify(_ranges);
   }
 
@@ -94,7 +95,9 @@ class CellSelectionModel extends SelectionModel {
   }
 
   void handleActiveCellChange(ActiveCellChanged e) {
-    if (_options.selectActiveCell != null && e.cell.row != null && e.cell != null) {
+    if (_options.selectActiveCell != null &&
+        e.cell.row != null &&
+        e.cell != null) {
       setSelectedRanges([new core.Range(e.cell.row, e.cell.cell)]);
     }
   }
@@ -104,19 +107,24 @@ class CellSelectionModel extends SelectionModel {
     core.Range last;
     Cell active = _grid.getActiveCell();
 
-    if ( active != null && e.causedBy.shiftKey && !e.causedBy.ctrlKey && !e.causedBy.altKey &&
-        (e.causedBy.which == dom.KeyCode.LEFT || e.causedBy.which == dom.KeyCode.RIGHT || e.causedBy.which == dom.KeyCode.UP || e.causedBy.which == dom.KeyCode.DOWN) ) {
-
+    if (active != null &&
+        e.causedBy.shiftKey &&
+        !e.causedBy.ctrlKey &&
+        !e.causedBy.altKey &&
+        (e.causedBy.which == dom.KeyCode.LEFT ||
+            e.causedBy.which == dom.KeyCode.RIGHT ||
+            e.causedBy.which == dom.KeyCode.UP ||
+            e.causedBy.which == dom.KeyCode.DOWN)) {
       ranges = getSelectedRanges();
-      if (ranges.length == 0)
-       ranges.add(new core.Range(active.row, active.cell));
+      if (ranges.length == 0) ranges
+          .add(new core.Range(active.row, active.cell));
 
       // keyboard can work with last range only
       last = ranges.removeLast();
 
       // can't handle selection out of active cell
-      if (!last.contains(active.row, active.cell))
-        last = new core.Range(active.row, active.cell);
+      if (!last.contains(active.row, active.cell)) last =
+          new core.Range(active.row, active.cell);
 
       var dRow = last.toRow - last.fromRow,
           dCell = last.toCell - last.fromCell,
@@ -127,7 +135,7 @@ class CellSelectionModel extends SelectionModel {
       if (e.causedBy.which == dom.KeyCode.LEFT) {
         dCell -= dirCell;
       } else if (e.causedBy.which == dom.KeyCode.RIGHT) {
-        dCell += dirCell ;
+        dCell += dirCell;
       } else if (e.causedBy.which == dom.KeyCode.UP) {
         dRow -= dirRow;
       } else if (e.causedBy.which == dom.KeyCode.DOWN) {
@@ -135,15 +143,16 @@ class CellSelectionModel extends SelectionModel {
       }
 
       // define new selection range
-      var new_last = new core.Range(active.row, active.cell, toRow: active.row + dirRow * dRow, toCell: active.cell + dirCell * dCell);
+      var new_last = new core.Range(active.row, active.cell,
+          toRow: active.row + dirRow * dRow,
+          toCell: active.cell + dirCell * dCell);
       if (removeInvalidRanges([new_last]).length != 0) {
         ranges.add(new_last);
         var viewRow = dirRow > 0 ? new_last.toRow : new_last.fromRow;
         var viewCell = dirCell > 0 ? new_last.toCell : new_last.fromCell;
-       _grid.scrollRowIntoView(viewRow);
-       _grid.scrollCellIntoView(viewRow, viewCell);
-      }
-      else {
+        _grid.scrollRowIntoView(viewRow);
+        _grid.scrollCellIntoView(viewRow, viewCell);
+      } else {
         ranges.add(last);
       }
 

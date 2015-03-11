@@ -36,8 +36,7 @@ class AppElement extends PolymerElement {
       enableAddRow: true,
       enableCellNavigation: true,
       asyncEditorLoading: false,
-      autoEdit: false
-  );
+      autoEdit: false);
 
   math.Random rnd = new math.Random();
 
@@ -54,7 +53,8 @@ class AppElement extends PolymerElement {
       for (var i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
-          'description': 'This is a sample task description.\n  It can be multiline',
+          'description':
+              'This is a sample task description.\n  It can be multiline',
           'duration': '5 days',
           'percentComplete': rnd.nextInt(100),
           'start': '2009-01-01',
@@ -66,43 +66,45 @@ class AppElement extends PolymerElement {
       grid.onBwuAddNewRow.listen(addNewRowHandler);
       grid.onBwuValidationError.listen(validationErrorHandler);
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) =>
-          grid.setActiveCell(0, 0));
-
+      grid
+          .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
+          .then((_) => grid.setActiveCell(0, 0));
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
 
   void openDetails(dom.MouseEvent e, detail, dom.HtmlElement target) {
-    if (grid.getEditorLock.isActive && !grid.getEditorLock.commitCurrentEdit()) {
+    if (grid.getEditorLock.isActive &&
+        !grid.getEditorLock.commitCurrentEdit()) {
       return;
     }
 
-    var $modal = (new dom.Element.tag('composite-editor-view') as CompositeEditorView) //$("<div class='item-details-form'></div>");
-        ..grid = grid
-        ..columns = columns;
+    var $modal = (new dom.Element.tag(
+        'composite-editor-view') as CompositeEditorView) //$("<div class='item-details-form'></div>");
+      ..grid = grid
+      ..columns = columns;
     dom.document.body.append($modal);
 
     var ceOptions = new CompositeEditorOptions(
-      show: $modal.show,
-      hide: $modal.hide,
-      // position: $modal.position, positions the dialog with it's top/left corner above the current field
-      destroy: $modal.destroy
-    );
+        show: $modal.show, hide: $modal.hide,
+        // position: $modal.position, positions the dialog with it's top/left corner above the current field
+        destroy: $modal.destroy);
 
-    Map<String,dom.HtmlElement >containers = {};
+    Map<String, dom.HtmlElement> containers = {};
 
     new async.Future(() {
-      columns.forEach((c) => containers[c.id] = $modal.shadowRoot.querySelector('[data-editorid="${c.id}"]'));
+      columns.forEach((c) => containers[c.id] =
+          $modal.shadowRoot.querySelector('[data-editorid="${c.id}"]'));
 
-      var compositeEditor = new CompositeEditor.prepare(columns, containers, ceOptions);
+      var compositeEditor =
+          new CompositeEditor.prepare(columns, containers, ceOptions);
       compositeEditor.init();
       grid.editActiveCell(compositeEditor);
     });
@@ -119,7 +121,7 @@ class AppElement extends PolymerElement {
 
   void validationErrorHandler(ValidationError e) {
     // handle validation errors originating from the CompositeEditor
-    if (e.editor != null&& (e.editor is CompositeEditor)) {
+    if (e.editor != null && (e.editor is CompositeEditor)) {
       var err;
       var idx = e.validationResults.errors.length;
       while (idx-- > 0) {

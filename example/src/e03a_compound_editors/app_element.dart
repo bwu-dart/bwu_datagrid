@@ -10,10 +10,10 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'numeric_range_editor.dart';
 
-
 class NumericRangeFormatter extends fm.Formatter {
   @override
-  void call(dom.HtmlElement target, int row, int cell, value, Column columnDef, dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, value, Column columnDef,
+      dataContext) {
     target.children.clear();
     target.text = "${dataContext['from']} - ${dataContext['to']}";
   }
@@ -25,16 +25,26 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", editor: new TextEditor()),
-    new Column(id: "range", name: "Range", width: 120, formatter: new NumericRangeFormatter(), editor: new NumericRangeEditor())
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 120,
+        cssClass: "cell-title",
+        editor: new TextEditor()),
+    new Column(
+        id: "range",
+        name: "Range",
+        width: 120,
+        formatter: new NumericRangeFormatter(),
+        editor: new NumericRangeEditor())
   ];
 
   var gridOptions = new GridOptions(
       editable: true,
       enableAddRow: false,
       enableCellNavigation: true,
-      asyncEditorLoading: false
-  );
+      asyncEditorLoading: false);
 
   @override
   void attached() {
@@ -52,15 +62,15 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
-
+      grid.setup(
+          dataProvider: data, columns: columns, gridOptions: gridOptions);
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

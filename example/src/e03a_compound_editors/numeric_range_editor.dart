@@ -17,26 +17,27 @@ class NumericRangeEditor extends Editor {
   NumericRangeEditor._(this.args) {
     args.container.children.clear();
     $from = new dom.TextInputElement()
-        ..style.width = '40px'
-        ..onKeyDown.listen(handleKeyDown);
+      ..style.width = '40px'
+      ..onKeyDown.listen(handleKeyDown);
     args.container.append($from);
 
     args.container.appendHtml("&nbsp; to &nbsp;");
 
     $to = new dom.TextInputElement()
-        ..style.width='40px'
-        ..onKeyDown.listen(handleKeyDown);
+      ..style.width = '40px'
+      ..onKeyDown.listen(handleKeyDown);
     args.container.append($to);
 
     focus();
   }
 
-  void handleKeyDown (dom.KeyboardEvent e) {
-    if (e.keyCode == dom.KeyCode.LEFT || e.keyCode == dom.KeyCode.RIGHT || e.keyCode == dom.KeyCode.TAB) {
+  void handleKeyDown(dom.KeyboardEvent e) {
+    if (e.keyCode == dom.KeyCode.LEFT ||
+        e.keyCode == dom.KeyCode.RIGHT ||
+        e.keyCode == dom.KeyCode.TAB) {
       e.stopImmediatePropagation();
     }
   }
-
 
   @override
   void applyValue(/*Map/Item*/ item, Map value) {
@@ -54,10 +55,11 @@ class NumericRangeEditor extends Editor {
     $from.focus();
   }
 
-
   @override
   bool get isValueChanged {
-    return args.item['from'] != tools.parseInt($from.value, onErrorDefault: 0) || args.item['to'] != tools.parseInt($from.value, onErrorDefault: 0);
+    return args.item['from'] !=
+            tools.parseInt($from.value, onErrorDefault: 0) ||
+        args.item['to'] != tools.parseInt($from.value, onErrorDefault: 0);
   }
 
   @override
@@ -68,7 +70,10 @@ class NumericRangeEditor extends Editor {
 
   @override
   Map serializeValue() {
-    return {'from': tools.parseInt($from.value, onErrorDefault: 0), 'to': tools.parseInt($to.value, onErrorDefault: 0)};
+    return {
+      'from': tools.parseInt($from.value, onErrorDefault: 0),
+      'to': tools.parseInt($to.value, onErrorDefault: 0)
+    };
   }
 
   @override

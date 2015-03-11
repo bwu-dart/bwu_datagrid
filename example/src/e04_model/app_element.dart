@@ -41,8 +41,7 @@ class AppElement extends PolymerElement {
       enableCellNavigation: true,
       asyncEditorLoading: true,
       forceFitColumns: false,
-      topPanelHeight: 25
-  );
+      topPanelHeight: 25);
 
   math.Random rnd = new math.Random();
 
@@ -54,7 +53,6 @@ class AppElement extends PolymerElement {
   @observable String percentCompleteThreshold;
   @observable String searchString;
 
-
   @override
   void attached() {
     super.attached();
@@ -65,25 +63,32 @@ class AppElement extends PolymerElement {
       data = new List<DataItem>();
       for (var i = 0; i < 50000; i++) {
         data.add(new MapDataItem({
-          "id" : "id_${i}",
-          "num" : i,
-          "title" : 'Task ${i}',
-          "duration" : "5 days",
-          "percentComplete" : rnd.nextInt(100),
-          "start" : "01/01/2009",
-          "finish" : "01/05/2009",
-          "effortDriven" : (i % 5 == 0)
+          "id": "id_${i}",
+          "num": i,
+          "title": 'Task ${i}',
+          "duration": "5 days",
+          "percentComplete": rnd.nextInt(100),
+          "start": "01/01/2009",
+          "finish": "01/05/2009",
+          "effortDriven": (i % 5 == 0)
         }));
       }
 
-      dataView = new DataView(options: new DataViewOptions(inlineFilters: true));
-      grid.setup(dataProvider: dataView, columns: columns, gridOptions: gridOptions).then((_) {
+      dataView =
+          new DataView(options: new DataViewOptions(inlineFilters: true));
+      grid
+          .setup(
+              dataProvider: dataView,
+              columns: columns,
+              gridOptions: gridOptions)
+          .then((_) {
         grid.setSelectionModel = new RowSelectionModel();
 
         ($['pager'] as BwuPager).init(dataView, grid);
-        BwuColumnPicker columnPicker = (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
-            ..columns = columns
-            ..grid = grid;
+        BwuColumnPicker columnPicker =
+            (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
+          ..columns = columns
+          ..grid = grid;
         dom.document.body.append(columnPicker);
         //columnPicker.options = new ColumnPickerOptions(/*gridOptions*/);
 
@@ -92,7 +97,16 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuAddNewRow.listen((e) {
-          var item = new MapDataItem({"num": data.length, "id": "new_${rnd.nextInt(10000)}", "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false});
+          var item = new MapDataItem({
+            "num": data.length,
+            "id": "new_${rnd.nextInt(10000)}",
+            "title": "New task",
+            "duration": "1 day",
+            "percentComplete": 0,
+            "start": "01/01/2009",
+            "finish": "01/01/2009",
+            "effortDriven": false
+          });
           item.extend(e.item);
           dataView.addItem(item);
         });
@@ -118,7 +132,8 @@ class AppElement extends PolymerElement {
           var options = grid.getGridOptions;
 
           if (options.enableAddRow != enableAddRow) {
-            grid.setGridOptions = new GridOptions.unitialized()..enableAddRow = enableAddRow;
+            grid.setGridOptions = new GridOptions.unitialized()
+              ..enableAddRow = enableAddRow;
           }
         });
 
@@ -126,7 +141,8 @@ class AppElement extends PolymerElement {
         dataView.beginUpdate();
         dataView.setItems(data);
         dataView.setFilterArgs({
-          'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+          'percentCompleteThreshold':
+              tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
         });
         dataView.setFilter(myFilter);
@@ -138,14 +154,13 @@ class AppElement extends PolymerElement {
 
         // TODO $("#gridContainer").resizable();
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
@@ -171,7 +186,7 @@ class AppElement extends PolymerElement {
 
   async.Timer _pendingUpdateFilter;
   void percentCompleteThresholdChanged(old) {
-    if(_pendingUpdateFilter != null) {
+    if (_pendingUpdateFilter != null) {
       _pendingUpdateFilter.cancel();
     }
 
@@ -184,16 +199,17 @@ class AppElement extends PolymerElement {
   void updateFilter() {
     core.globalEditorLock.cancelCurrentEdit();
 
-    if(searchString == null) {
+    if (searchString == null) {
       searchString = '';
     }
 
-    if(percentCompleteThreshold == null) {
+    if (percentCompleteThreshold == null) {
       percentCompleteThreshold = '0';
     }
 
     dataView.setFilterArgs({
-      'percentCompleteThreshold': tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+      'percentCompleteThreshold':
+          tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString
     });
     dataView.refresh();
@@ -211,7 +227,8 @@ class AppElement extends PolymerElement {
       return false;
     }
 
-    if (args['searchString'] != '' && item['title'].indexOf(args['searchString']) == -1) {
+    if (args['searchString'] != '' &&
+        item['title'].indexOf(args['searchString']) == -1) {
       return false;
     }
 
@@ -223,27 +240,27 @@ class AppElement extends PolymerElement {
   }
 
   int comparer(DataItem a, DataItem b) {
-
-    var x = a[sortcol], y = b[sortcol];
-    if(x == y ) {
+    var x = a[sortcol],
+        y = b[sortcol];
+    if (x == y) {
       return 0;
     }
 
-    if(x is Comparable) {
+    if (x is Comparable) {
       return x.compareTo(y);
     }
 
-    if(y is Comparable) {
+    if (y is Comparable) {
       return 1;
     }
 
-    if(x == null && y != null) {
+    if (x == null && y != null) {
       return -1;
     } else if (x != null && y == null) {
       return 1;
     }
 
-    if(x is bool) {
+    if (x is bool) {
       return x == true ? 1 : 0;
     }
     return (x == y ? 0 : (x > y ? 1 : -1));

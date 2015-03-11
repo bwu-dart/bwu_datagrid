@@ -28,14 +28,15 @@ class FormulaEditor extends Editor {
     // since events are fired in reverse order (most recently added are executed first),
     // this will override other plugins like moverows or selection model and will
     // not require the grid to not be in the edit mode
-    _selector =  new CellRangeSelector();
-    _cellRangeSelectedSubscr = _selector.onBwuCellRangeSelected.listen(_handleCellRangeSelected);
+    _selector = new CellRangeSelector();
+    _cellRangeSelectedSubscr =
+        _selector.onBwuCellRangeSelected.listen(_handleCellRangeSelected);
     grid.registerPlugin(_selector, suspendOthers: true);
   }
 
   void _handleCellRangeSelected(core.CellRangeSelected e) {
     _editor.value =
-      '${_editor.value}${grid.getColumns[e.range.fromCell].name}${e.range.fromRow}:${grid.getColumns[e.range.toCell].name}${e.range.toRow}';
+        '${_editor.value}${grid.getColumns[e.range.fromCell].name}${e.range.fromRow}:${grid.getColumns[e.range.toCell].name}${e.range.toRow}';
   }
 
   @override
@@ -45,7 +46,7 @@ class FormulaEditor extends Editor {
 
   @override
   void destroy() {
-    if(_cellRangeSelectedSubscr != null) {
+    if (_cellRangeSelectedSubscr != null) {
       _cellRangeSelectedSubscr.cancel();
       _cellRangeSelectedSubscr = null;
     }

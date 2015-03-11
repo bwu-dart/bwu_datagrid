@@ -10,26 +10,24 @@ class TotalsDataProvider extends MapDataItemProvider {
   List<Column> _columns;
 
   RowMetadata totalsMetadata = new RowMetadata(
-    // Style the totals row differently.
-    cssClasses: 'totals',
-    columns: new Map<String,Column>()
-  );
+      // Style the totals row differently.
+      cssClasses: 'totals', columns: new Map<String, Column>());
 
-  TotalsDataProvider(List<MapDataItem> data, this._columns) : super(data){
+  TotalsDataProvider(List<MapDataItem> data, this._columns) : super(data) {
     // Make the totals not editable.
     for (var i = 0; i < _columns.length; i++) {
-      totalsMetadata.columns['${i}'] = new Column( editor: null );
+      totalsMetadata.columns['${i}'] = new Column(editor: null);
     }
 
     updateTotals();
   }
 
   @override
-  DataItem getItem (int index) {
+  DataItem getItem(int index) {
     return (index < items.length) ? items[index] : _totals;
   }
 
-  void updateTotals () {
+  void updateTotals() {
     var columnIdx = _columns.length;
     while (columnIdx-- > 0) {
       var columnId = _columns[columnIdx].id;
@@ -37,11 +35,11 @@ class TotalsDataProvider extends MapDataItemProvider {
       var i = items.length;
       while (i-- > 0) {
         var val = items[i][columnId];
-        if(val != null) {
-          if(val is String) {
+        if (val != null) {
+          if (val is String) {
             total += (tools.parseInt(items[i][columnId], onErrorDefault: 0));
           } else {
-            if(val is int) {
+            if (val is int) {
               total += val;
             }
           }
@@ -52,7 +50,7 @@ class TotalsDataProvider extends MapDataItemProvider {
   }
 
   @override
-  RowMetadata getItemMetadata (int index) {
+  RowMetadata getItemMetadata(int index) {
     return (index != items.length) ? null : totalsMetadata;
   }
 

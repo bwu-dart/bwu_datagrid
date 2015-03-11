@@ -15,14 +15,16 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import '../required_field_validator.dart';
 
 class WaitingFormatter extends fm.Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value, Column columnDef, DataItem dataContext) {
+  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+      Column columnDef, DataItem dataContext) {
     target
-        ..children.clear()
-        ..appendText('wait...');
+      ..children.clear()
+      ..appendText('wait...');
   }
 }
 
-void renderSparkline(dom.HtmlElement target, int row, DataItem dataContext, Column colDef) {
+void renderSparkline(
+    dom.HtmlElement target, int row, DataItem dataContext, Column colDef) {
   var vals = [
     tools.parseNum(dataContext["n1"], onErrorDefault: 0),
     tools.parseNum(dataContext["n2"], onErrorDefault: 0),
@@ -34,8 +36,8 @@ void renderSparkline(dom.HtmlElement target, int row, DataItem dataContext, Colu
   target
     ..children.clear()
     ..append((new dom.Element.tag('bwu-sparkline') as BwuSparkline)
-        ..values = vals
-        ..options = (new LineOptions()..width = '100%'));
+      ..values = vals
+      ..options = (new LineOptions()..width = '100%'));
 }
 
 @CustomTag('app-element')
@@ -53,12 +55,11 @@ class AppElement extends PolymerElement {
     ];
 
   var gridOptions = new GridOptions(
-    editable: true,
-    enableAddRow: false,
-    enableCellNavigation: true,
-    asyncEditorLoading: false,
-    enableAsyncPostRender: true
-  );
+      editable: true,
+      enableAddRow: false,
+      enableCellNavigation: true,
+      asyncEditorLoading: false,
+      enableAsyncPostRender: true);
 
   math.Random rnd = new math.Random();
 
@@ -76,22 +77,23 @@ class AppElement extends PolymerElement {
       data = new MapDataItemProvider();
       for (var i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
-          'title' : 'Record $i',
-          'n1' : rnd.nextInt(10),
-          'n2' : rnd.nextInt(10),
-          'n3' : rnd.nextInt(10),
-          'n4' : rnd.nextInt(10),
-          'n5' : rnd.nextInt(10),
+          'title': 'Record $i',
+          'n1': rnd.nextInt(10),
+          'n2': rnd.nextInt(10),
+          'n3': rnd.nextInt(10),
+          'n4': rnd.nextInt(10),
+          'n5': rnd.nextInt(10),
         }));
       }
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions);
+      grid.setup(
+          dataProvider: data, columns: columns, gridOptions: gridOptions);
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }

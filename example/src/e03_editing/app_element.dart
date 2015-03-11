@@ -32,8 +32,7 @@ class AppElement extends PolymerElement {
       enableAddRow: true,
       enableCellNavigation: true,
       asyncEditorLoading: false,
-      autoEdit: false
-  );
+      autoEdit: false);
 
   MapDataItemProvider data = new MapDataItemProvider();
 
@@ -47,7 +46,8 @@ class AppElement extends PolymerElement {
       for (var i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
-          'description': 'This is a sample task description.\n  It can be multiline',
+          'description':
+              'This is a sample task description.\n  It can be multiline',
           'duration': '5 days',
           'percentComplete': new math.Random().nextInt(100),
           'start': '2009-01-01',
@@ -56,26 +56,29 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.setup(dataProvider: data, columns: columns, gridOptions: gridOptions).then((_) {
+      grid
+          .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
+          .then((_) {
         grid.setSelectionModel = new CellSelectionModel();
         grid.onBwuAddNewRow.listen(addnewRowHandler);
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
 
-  void enableAutoEdit(dom.MouseEvent e, dynamic details, dom.HtmlElement target) {
+  void enableAutoEdit(
+      dom.MouseEvent e, dynamic details, dom.HtmlElement target) {
     grid.setGridOptions = new GridOptions.unitialized()..autoEdit = true;
   }
-  void disableAutoEdit(dom.MouseEvent e, dynamic details, dom.HtmlElement target) {
+  void disableAutoEdit(
+      dom.MouseEvent e, dynamic details, dom.HtmlElement target) {
     grid.setGridOptions = new GridOptions.unitialized()..autoEdit = false;
   }
 

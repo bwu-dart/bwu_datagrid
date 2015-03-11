@@ -19,28 +19,29 @@ class CustomMapDataItemProvider extends DataProvider {
   int get length => _getLength();
 
   @override
-  DataItem getItem (int index) => _getItem(index);
+  DataItem getItem(int index) => _getItem(index);
 
   @override
-  RowMetadata getItemMetadata (int index) => null;
+  RowMetadata getItemMetadata(int index) => null;
 }
-
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 240, sortable: true),
-    new Column(id: "c1", name: "Sort 1", field: "c1", width: 240, sortable: true),
-    new Column(id: "c2", name: "Sort 2", field: "c2", width: 240, sortable: true),
-    new Column(id: "c3", name: "Sort 3", field: "c3", width: 240, sortable: true)
-    ];
+    new Column(
+        id: "title", name: "Title", field: "title", width: 240, sortable: true),
+    new Column(
+        id: "c1", name: "Sort 1", field: "c1", width: 240, sortable: true),
+    new Column(
+        id: "c2", name: "Sort 2", field: "c2", width: 240, sortable: true),
+    new Column(
+        id: "c3", name: "Sort 3", field: "c3", width: 240, sortable: true)
+  ];
 
-  var gridOptions = new GridOptions(
-      enableCellNavigation: false,
-      enableColumnReorder: false
-  );
+  var gridOptions =
+      new GridOptions(enableCellNavigation: false, enableColumnReorder: false);
 
   math.Random rnd = new math.Random();
   static const int NUMBER_OF_ITEMS = 25000;
@@ -62,15 +63,18 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new MapDataItemProvider();
 
-      for(int i = 0; i < NUMBER_OF_ITEMS; i++) {
+      for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
         items[i] = i;
 
-        data.items.add(new MapDataItem({
-          'title': 'Task ${i}'
-        }));
+        data.items.add(new MapDataItem({'title': 'Task ${i}'}));
       }
 
-      indices = { 'title': items, 'c1': randomize(items), 'c2': randomize(items), 'c3': randomize(items) };
+      indices = {
+        'title': items,
+        'c1': randomize(items),
+        'c2': randomize(items),
+        'c3': randomize(items)
+      };
 
       // Assign values to the data.
       for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
@@ -79,25 +83,29 @@ class AppElement extends PolymerElement {
         data.items[indices['c3'][i]]['c3'] = "Value ${i + 1}";
       }
 
-      CustomMapDataItemProvider dataProvider = new CustomMapDataItemProvider(getItem, getLength);
+      CustomMapDataItemProvider dataProvider =
+          new CustomMapDataItemProvider(getItem, getLength);
 
-      grid.setup(dataProvider: dataProvider, columns: columns, gridOptions: gridOptions).then((e) {
+      grid
+          .setup(
+              dataProvider: dataProvider,
+              columns: columns,
+              gridOptions: gridOptions)
+          .then((e) {
         grid.onBwuSort.listen((core.Sort args) {
           currentSortCol = args.sortColumn;
           isAsc = args.sortAsc;
           grid.invalidateAllRows();
           grid.render();
         });
-
       });
-
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    }  on RangeError catch (e) {
+    } on RangeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } on TypeError catch(e) {
+    } on TypeError catch (e) {
       print('$e\n\n${e.stackTrace}');
-    } catch(e) {
+    } catch (e) {
       print('$e');
     }
   }
@@ -121,7 +129,9 @@ class AppElement extends PolymerElement {
 
   // Define function used to get the data and sort it.
   core.ItemBase getItem(int index) {
-    return isAsc ? data.items[indices[currentSortCol.id][index]] : data.items[indices[currentSortCol.id][(data.length - 1) - index]];
+    return isAsc
+        ? data.items[indices[currentSortCol.id][index]]
+        : data.items[indices[currentSortCol.id][(data.length - 1) - index]];
   }
 
   int getLength() {

@@ -11,15 +11,14 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/plugins/plugin.dart';
 
-
 class DefaultGroupCellFormatter extends fm.Formatter {
-
   GroupItemMetadataProvider giMetadataProvider;
 
   DefaultGroupCellFormatter(this.giMetadataProvider);
 
-   @override
-   void call(dom.HtmlElement target, int row, int cell, String value, Column columnDef, /*Item/Map*/ item) {
+  @override
+  void call(dom.HtmlElement target, int row, int cell, String value,
+      Column columnDef, /*Item/Map*/ item) {
     if (!giMetadataProvider.enableExpandCollapse) {
       target.append(item.title);
       return;
@@ -29,16 +28,15 @@ class DefaultGroupCellFormatter extends fm.Formatter {
 
     target.innerHtml = '';
     target
-        ..append(
-            new dom.SpanElement()
-                ..classes.add('${giMetadataProvider.toggleCssClass}')
-                ..classes.add('${item.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
-                ..style.marginLeft = indentation)
-        ..append(
-            new dom.SpanElement()
-                ..classes.add('${giMetadataProvider.groupTitleCssClass}')
-                ..attributes['level']='${item.level}'
-                ..append(item.title));
+      ..append(new dom.SpanElement()
+        ..classes.add('${giMetadataProvider.toggleCssClass}')
+        ..classes.add(
+            '${item.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
+        ..style.marginLeft = indentation)
+      ..append(new dom.SpanElement()
+        ..classes.add('${giMetadataProvider.groupTitleCssClass}')
+        ..attributes['level'] = '${item.level}'
+        ..append(item.title));
   }
 }
 
@@ -47,7 +45,7 @@ class DefaultTotalsCellFormatter extends core.GroupTotalsFormatter {
 
   @override
   void call(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
-    if(columnDef.groupTotalsFormatter != null) {
+    if (columnDef.groupTotalsFormatter != null) {
       columnDef.groupTotalsFormatter(target, totals, columnDef);
     } else {
       target.innerHtml = '';
@@ -75,18 +73,19 @@ class GroupItemMetadataProvider extends Plugin {
   String toggleCssClass;
   String toggleExpandedCssClass;
   String toggleCollapsedCssClass;
-  bool enableExpandCollapse= true;
+  bool enableExpandCollapse = true;
   fm.Formatter _groupFormatter;
   core.GroupTotalsFormatter _totalsFormatter;
 
   GroupItemMetadataProvider({this.groupCssClass: "bwu-datagrid-group",
-    this.groupTitleCssClass: "bwu-datagrid-group-title",
-        this.totalsCssClass: "bwu-datagrid-group-totals",
+      this.groupTitleCssClass: "bwu-datagrid-group-title",
+      this.totalsCssClass: "bwu-datagrid-group-totals",
       this.groupFocusable: true, this.totalsFocusable: false,
-          this.toggleCssClass: "bwu-datagrid-group-toggle",
-              this.toggleExpandedCssClass: "expanded",
-      this.toggleCollapsedCssClass: "collapsed", this.enableExpandCollapse: true,
-          fm.Formatter groupFormatter, core.GroupTotalsFormatter totalsFormatter}) {
+      this.toggleCssClass: "bwu-datagrid-group-toggle",
+      this.toggleExpandedCssClass: "expanded",
+      this.toggleCollapsedCssClass: "collapsed",
+      this.enableExpandCollapse: true, fm.Formatter groupFormatter,
+      core.GroupTotalsFormatter totalsFormatter}) {
     _groupFormatter = groupFormatter = new DefaultGroupCellFormatter(this);
     _totalsFormatter = totalsFormatter = new DefaultTotalsCellFormatter();
   }
@@ -99,14 +98,14 @@ class GroupItemMetadataProvider extends Plugin {
   }
 
   fm.Formatter getGroupFormatter() {
-    if(_groupFormatter != null) {
+    if (_groupFormatter != null) {
       return _groupFormatter;
     }
     return new DefaultGroupCellFormatter(this);
   }
 
   core.GroupTotalsFormatter _getTotalsFormatter() {
-    if(_totalsFormatter != null) {
+    if (_totalsFormatter != null) {
       return _totalsFormatter;
     }
     return new DefaultTotalsCellFormatter();
@@ -117,10 +116,10 @@ class GroupItemMetadataProvider extends Plugin {
 
   @override
   void destroy() {
-    if(_gridClickSubscription != null) {
+    if (_gridClickSubscription != null) {
       _gridClickSubscription.cancel();
     }
-    if(_gridKeyDownSubscription != null) {
+    if (_gridKeyDownSubscription != null) {
       _gridKeyDownSubscription.cancel();
     }
   }
@@ -128,15 +127,15 @@ class GroupItemMetadataProvider extends Plugin {
   void _handleGridClick(core.Click e) {
     BwuDatagrid grid = e.sender;
     core.ItemBase item = grid.getDataItem(e.cell.row);
-    if (item != null && item is core.Group && (e.causedBy.target as dom.HtmlElement).classes.contains(toggleCssClass)) {
+    if (item != null &&
+        item is core.Group &&
+        (e.causedBy.target as dom.HtmlElement).classes
+            .contains(toggleCssClass)) {
       var range = grid.getRenderedRange();
-      if(grid.dataProvider is DataView) {
+      if (grid.dataProvider is DataView) {
         var dp = grid.dataProvider as DataView;
-        dp.setRefreshHints({
-          'ignoreDiffsBefore': range.top,
-          'ignoreDiffsAfter': range.bottom
-        });
-
+        dp.setRefreshHints(
+            {'ignoreDiffsBefore': range.top, 'ignoreDiffsAfter': range.bottom});
 
         if (item.isCollapsed) {
           dp.expandGroup([item.groupingKey]);
@@ -159,7 +158,7 @@ class GroupItemMetadataProvider extends Plugin {
         if (item != null && item is core.Group) {
           var range = grid.getRenderedRange();
 
-          if(grid.dataProvider is DataView) {
+          if (grid.dataProvider is DataView) {
             var dp = grid.dataProvider as DataView;
 
             (grid.dataProvider as DataView).setRefreshHints({
@@ -183,26 +182,22 @@ class GroupItemMetadataProvider extends Plugin {
 
   RowMetadata getGroupRowMetadata(core.ItemBase item) {
     return new RowMetadata(
-      selectable: false,
-      focusable: groupFocusable,
-      cssClasses: groupCssClass,
-      columns: {
-        '0': new Column(
-            colspan: "*",
-            formatter: getGroupFormatter(),
-            editor: null
-          )
-        });
-      }
+        selectable: false,
+        focusable: groupFocusable,
+        cssClasses: groupCssClass,
+        columns: {
+      '0':
+          new Column(colspan: "*", formatter: getGroupFormatter(), editor: null)
+    });
+  }
 
   RowMetadata getTotalsRowMetadata(core.ItemBase item) {
     return new RowMetadata(
-      selectable: false,
-      focusable: totalsFocusable,
-      cssClasses: totalsCssClass,
-      formatter: _getTotalsFormatter(),
-      editor: null
-    );
+        selectable: false,
+        focusable: totalsFocusable,
+        cssClasses: totalsCssClass,
+        formatter: _getTotalsFormatter(),
+        editor: null);
   }
 }
 
@@ -210,9 +205,10 @@ class RowMetadata {
   bool selectable;
   bool focusable;
   String cssClasses;
-  Map<String,Column> columns = <String,Column>{};
+  Map<String, Column> columns = <String, Column>{};
   fm.FormatterBase formatter;
   ed.Editor editor;
 
-  RowMetadata({this.selectable, this.focusable, this.cssClasses, this.columns, this.formatter, this.editor});
+  RowMetadata({this.selectable, this.focusable, this.cssClasses, this.columns,
+      this.formatter, this.editor});
 }

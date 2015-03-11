@@ -17,7 +17,8 @@ class AutoTooltipsOptions {
   bool enableForHeaderCells;
   int maxTooltipLength;
 
-  AutoTooltipsOptions({this.enableForCells : true, this.enableForHeaderCells : false, this.maxTooltipLength});
+  AutoTooltipsOptions({this.enableForCells: true,
+      this.enableForHeaderCells: false, this.maxTooltipLength});
 }
 
 /**
@@ -28,14 +29,13 @@ class AutoTooltipsOptions {
    * @param {number}  [options.maxToolTipLength=null]      - The maximum length for a tooltip
    */
 class AutoTooltips extends Plugin {
-
   AutoTooltipsOptions options;
 
   //tt.CoreTooltip tooltip;
   //dom.DivElement ttText;
 
   AutoTooltips([this.options]) : super() {
-    if(options == null) {
+    if (options == null) {
       options = new AutoTooltipsOptions();
     }
   }
@@ -55,7 +55,8 @@ class AutoTooltips extends Plugin {
       //mouseLeaveSubscription = grid.onBwuMouseLeave.listen(handleMouseLeave);
     }
     if (options.enableForHeaderCells) {
-      headerMouseEnterSubscription = grid.onBwuHeaderMouseEnter.listen(handleHeaderMouseEnter);
+      headerMouseEnterSubscription =
+          grid.onBwuHeaderMouseEnter.listen(handleHeaderMouseEnter);
       //headerMouseLeaveSubscription = grid.onBwuHeaderMouseLeave.listen(handleHeaderMouseLeave);
     }
 
@@ -99,7 +100,8 @@ class AutoTooltips extends Plugin {
       var text;
       if (tools.innerWidth($node) < $node.scrollWidth) {
         text = $node.text.trim();
-        if (options.maxTooltipLength != null && text.length > options.maxTooltipLength) {
+        if (options.maxTooltipLength != null &&
+            text.length > options.maxTooltipLength) {
           text = text.substring(0, options.maxTooltipLength - 3) + "...";
         }
         //showTooltip($node);
@@ -149,13 +151,15 @@ class AutoTooltips extends Plugin {
   void handleHeaderMouseEnter(core.HeaderMouseEnter e) {
     //var detail = e.detail as core.HeaderMouseEnter;
     var column = e.data;
-    var $node = tools.closest((e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
-    if($node == null) {
-      $node = tools.closest((e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
+    var $node = tools.closest(
+        (e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
+    if ($node == null) {
+      $node = tools.closest((e.causedBy.target as dom.HtmlElement),
+          '.bwu-datagrid-header-column');
     }
     if (column.toolTip == null) {
-      $node.attributes["title"] =tools.innerWidth($node) < $node.scrollWidth ? column.name : "";
+      $node.attributes["title"] =
+          tools.innerWidth($node) < $node.scrollWidth ? column.name : "";
     }
   }
 }
-

@@ -42,7 +42,7 @@ class EventBus {
   /**
    * [fire] broadcasts an event of a type [eventType] to all subscribers.
    */
-  EventData fire(EventType /*<T>*/ eventType,  /*<T>*/EventData data) {
+  EventData fire(EventType /*<T>*/ eventType, /*<T>*/ EventData data) {
     _logger.finest('event fired: ${eventType.name}');
 
     if (data != null && !eventType.isTypeT(data)) {
@@ -68,7 +68,6 @@ class EventBus {
  * [T] is the type of data that is provided when an event is fired.
  */
 class EventType<T> {
-
   final String name;
 
   /**
