@@ -1,0 +1,30 @@
+# File set description: lists of patterns to include/exclude
+files:
+  include:
+    - '**/example/**'
+    - '**/lib/**'
+    - '**/test/**'
+    - '**/tool/**'
+  exclude:
+    - lib/remote_model/**
+    - test/.tmp_data/**
+
+# Rule sets; ignore for now rule set inheritance and externally contributed rules
+# Basic format:
+#  [group]:
+#    [name]:
+#      ... config
+rules:
+#  style_guide:
+#    unnecessary_getters: false
+#  pub:
+#    package_names:
+#      enabled: false # longer form of package_names: false
+  lint:
+#    unnecessary_getters: false # TODO(zoechi) remove when #35 is fixed
+#    camel_case_types: false # TODO(zoechi) remove when #52 is fixed
+    non_constant_identifier_names: false # TODO(zoechi) remove when #52 is fixed
+    constant_identifier_names: false # TODO(zoechi) remove when #52 is fixed
+#    one_member_abstracts: false # TODO(zoechi) remove when #64 is fixed
+    unnecessary_brace_in_string_interp: false
+#    lower_camel_case: fales

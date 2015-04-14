@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e07_events.app_element;
 
 import 'package:polymer/polymer.dart';
 

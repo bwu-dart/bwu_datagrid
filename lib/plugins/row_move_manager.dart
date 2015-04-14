@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.plugin.row_move_manager;
+library bwu_datagrid.plugins.row_move_manager;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
@@ -7,7 +7,7 @@ import 'dart:math' as math;
 import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'package:bwu_utils_browser/html/html.dart' as tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 
 class RowMoveManager extends Plugin {
@@ -94,7 +94,7 @@ class RowMoveManager extends Plugin {
         ..classes.add('bwu-datagrid-reorder-proxy')
         ..style.position = "absolute"
         ..style.zIndex = "99999"
-        ..style.width = '${tools.innerWidth(_canvas)}px'
+        ..style.width = '${utils.innerWidth(_canvas)}px'
         ..style.height = '${rowHeight * selectedRows.length}px';
       _canvas.append(_selectionProxy);
 
@@ -102,7 +102,7 @@ class RowMoveManager extends Plugin {
         ..classes.add('bwu-datagrid-reorder-guide')
         ..style.position = "absolute"
         ..style.zIndex = "99998"
-        ..style.width = '${tools.innerWidth(_canvas)}px'
+        ..style.width = '${utils.innerWidth(_canvas)}px'
         ..style.top = '-1000px';
       _canvas.append(_guide);
     });

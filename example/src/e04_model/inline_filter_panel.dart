@@ -1,4 +1,4 @@
-library bwu_datagrid.example.e04_model.inline_filter_panel;
+library bwu_datagrid.example.src.e04_model.inline_filter_panel;
 
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';

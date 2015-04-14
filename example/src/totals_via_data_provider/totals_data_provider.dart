@@ -1,6 +1,6 @@
-library bwu_datagrid.examples.totals_data_provider;
+library bwu_datagrid.example.src.totals_via_data_provider.totals_data_provider;
 
-import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
@@ -37,7 +37,7 @@ class TotalsDataProvider extends MapDataItemProvider {
         var val = items[i][columnId];
         if (val != null) {
           if (val is String) {
-            total += (tools.parseInt(items[i][columnId], onErrorDefault: 0));
+            total += (utils.parseInt(items[i][columnId], onErrorDefault: 0));
           } else {
             if (val is int) {
               total += val;

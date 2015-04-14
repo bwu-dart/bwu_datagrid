@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.remote_model;
+library bwu_datagrid.remote_model;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
@@ -6,11 +6,9 @@ import 'dart:math' as math;
 
 import 'package:bwu_datagrid/dataview/dataview.dart';
 
-/***
- * A sample AJAX data store implementation.
- * Right now, it's hooked up to load Hackernews stories, but can
- * easily be extended to support any JSONP-compatible backend that accepts paging parameters.
- */
+/// A sample AJAX data store implementation.
+/// Right now, it's hooked up to load Hackernews stories, but can
+/// easily be extended to support any JSONP-compatible backend that accepts paging parameters.
 class RemoteModel {
   // private
   int PAGESIZE = 50;

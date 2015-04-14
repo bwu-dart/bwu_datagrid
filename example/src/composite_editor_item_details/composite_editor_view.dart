@@ -1,4 +1,4 @@
-library bwu_datagrid.context_menu;
+library bwu_datagrid.example.src.composite_editor_item_details.composite_editor_view;
 
 import 'dart:html' as dom;
 

@@ -14,4 +14,4 @@ export 'package:bwu_datagrid/plugins/bwu_auto_tooltips.dart';
 export 'package:bwu_datagrid/plugins/cell_copymanager.dart';
 export 'package:bwu_datagrid/plugins/plugin.dart';
 export 'package:bwu_datagrid/remote_model/remote_model.dart';
-export 'package:bwu_utils_browser/html/html.dart';
+export 'package:bwu_utils/bwu_utils_browser.dart';

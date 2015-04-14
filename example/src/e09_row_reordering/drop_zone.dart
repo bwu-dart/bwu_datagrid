@@ -1,4 +1,4 @@
-library bwu_datagrid.example.e09_row_reordering.drop_zone;
+library bwu_datagrid.example.src.e09_row_reordering.drop_zone;
 
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';

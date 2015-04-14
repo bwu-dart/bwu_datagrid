@@ -1,4 +1,4 @@
-library bwu_datagrid.example.composite_editor;
+library bwu_datagrid.example.src.composite_editor;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
@@ -18,28 +18,26 @@ class CompositeEditorOptions {
       this.show, this.hide, this.position, this.destroy});
 }
 
-/***
- * A composite Bwu Datagrid editor factory.
- * Generates an editor that is composed of multiple editors for given columns.
- * Individual editors are provided given containers instead of the original cell.
- * Validation will be performed on all editors individually and the results will be aggregated into one
- * validation result.
- *
- *
- * The returned editor will have its prototype set to CompositeEditor, so you can use the "instanceof" check.
- *
- * NOTE:  This doesn't work for detached editors since they will be created and positioned relative to the
- *        active cell and not the provided container.
- *
- * @param columns {Array} Column definitions from which editors will be pulled.
- * @param containers {Array} Container HTMLElements in which editors will be placed.
- * @param options {Object} Options hash:
- *  validationFailedMsg     -   A generic failed validation message set on the aggregated validation resuls.
- *  hide                    -   A function to be called when the grid asks the editor to hide itself.
- *  show                    -   A function to be called when the grid asks the editor to show itself.
- *  position                -   A function to be called when the grid asks the editor to reposition itself.
- *  destroy                 -   A function to be called when the editor is destroyed.
- */
+/// A composite Bwu Datagrid editor factory.
+/// Generates an editor that is composed of multiple editors for given columns.
+/// Individual editors are provided given containers instead of the original cell.
+/// Validation will be performed on all editors individually and the results will be aggregated into one
+/// validation result.
+///
+///
+/// The returned editor will have its prototype set to CompositeEditor, so you can use the "instanceof" check.
+///
+/// NOTE:  This doesn't work for detached editors since they will be created and positioned relative to the
+///        active cell and not the provided container.
+///
+/// @param columns {Array} Column definitions from which editors will be pulled.
+/// @param containers {Array} Container HTMLElements in which editors will be placed.
+/// @param options {Object} Options hash:
+///  validationFailedMsg     -   A generic failed validation message set on the aggregated validation resuls.
+///  hide                    -   A function to be called when the grid asks the editor to hide itself.
+///  show                    -   A function to be called when the grid asks the editor to show itself.
+///  position                -   A function to be called when the grid asks the editor to reposition itself.
+///  destroy                 -   A function to be called when the editor is destroyed.
 class CompositeEditor extends Editor {
   List<Column> columns;
   CompositeEditorOptions options;

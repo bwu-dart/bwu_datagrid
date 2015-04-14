@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e09_row_reordering.app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
@@ -33,7 +33,7 @@ class AppElement extends PolymerElement {
         width: 500,
         cssClass: "cell-title",
         editor: new TextEditor(),
-        validator: new RequiredFieldValidator(),
+        validator: RequiredFieldValidator,
         isDraggable: true,
         behavior: ['drag']),
     new Column(

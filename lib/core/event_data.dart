@@ -1,4 +1,4 @@
-part of bwu_dart.bwu_datagrid.core;
+part of bwu_datagrid.core;
 
 abstract class Events {
   static const ACTIVE_CELL_CHANGED =
@@ -140,13 +140,10 @@ abstract class Events {
       const EventType<ViewportChanged>('bwu-viewport-changed');
 }
 
-/***
- * An event object for passing data to event handlers and letting them control propagation.
- * <p>This is pretty much identical to how W3C and jQuery implement events.</p>
- * @class EventData
- * @constructor
- */
-
+/// An event object for passing data to event handlers and letting them control propagation.
+/// <p>This is pretty much identical to how W3C and jQuery implement events.</p>
+/// @class EventData
+/// @constructor
 class EventData {
   final sender;
   final dom.Event causedBy;
@@ -157,17 +154,13 @@ class EventData {
   bool _isImmediatePropagationStopped = false;
   bool _isDefaultPrevented = false;
 
-  /***
-   * Returns whether stopPropagation was called on this event object.
-   * @method isPropagationStopped
-   * @return {Boolean}
-   */
+  /// Returns whether stopPropagation was called on this event object.
+  /// @method isPropagationStopped
+  /// @return {Boolean}
   bool get isPropagationStopped => _isPropagationStopped;
 
-  /***
-   * Stops event from propagating up the DOM tree.
-   * @method stopPropagation
-   */
+  /// Stops event from propagating up the DOM tree.
+  /// @method stopPropagation
   void stopPropagation() {
     _isPropagationStopped = true;
     if (causedBy != null) {
@@ -175,10 +168,8 @@ class EventData {
     }
   }
 
-  /***
-   * Stops event from propagating up the DOM tree.
-   * @method stopPropagation
-   */
+  /// Stops event from propagating up the DOM tree.
+  /// @method stopPropagation
   void preventDefault() {
     _isDefaultPrevented = true;
     if (causedBy != null) {
@@ -188,17 +179,13 @@ class EventData {
 
   bool get isDefaultPrevented => _isDefaultPrevented;
 
-  /***
-   * Returns whether stopImmediatePropagation was called on this event object.\
-   * @method isImmediatePropagationStopped
-   * @return {Boolean}
-   */
+  /// Returns whether stopImmediatePropagation was called on this event object.\
+  /// @method isImmediatePropagationStopped
+  /// @return {Boolean}
   bool get isImmediatePropagationStopped => _isImmediatePropagationStopped;
 
-  /***
-   * Prevents the rest of the handlers from being executed.
-   * @method stopImmediatePropagation
-   */
+  /// Prevents the rest of the handlers from being executed.
+  /// @method stopImmediatePropagation
   void stopImmediatePropagation() {
     _isImmediatePropagationStopped = true;
     if (causedBy != null) {

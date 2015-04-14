@@ -1,4 +1,4 @@
-library bwu_datagrid.compponents.bwu_column_picker;
+library bwu_datagrid.components.bwu_column_picker;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;

@@ -1,4 +1,4 @@
-part of bwu_dart.bwu_datagrid.dataview;
+part of bwu_datagrid.dataview;
 
 abstract class Aggregator {
   void init();

@@ -27,17 +27,15 @@ class CellRangeDecorator extends Decorator {
   BwuDatagrid _grid;
   CellRangeDecoratorOptions _options;
 
-  /***
-   * Displays an overlay on top of a given cell range.
-   *
-   * TODO:
-   * Currently, it blocks mouse events to DOM nodes behind it.
-   * Use FF and WebKit-specific "pointer-events" CSS style, or some kind of event forwarding.
-   * Could also construct the borders separately using 4 individual DIVs.
-   *
-   * @param {Grid} grid
-   * @param {Object} options
-   */
+  /// Displays an overlay on top of a given cell range.
+  ///
+  /// TODO:
+  /// Currently, it blocks mouse events to DOM nodes behind it.
+  /// Use FF and WebKit-specific "pointer-events" CSS style, or some kind of event forwarding.
+  /// Could also construct the borders separately using 4 individual DIVs.
+  ///
+  /// @param {Grid} grid
+  /// @param {Object} options
   CellRangeDecorator(this._grid, {CellRangeDecoratorOptions options}) {
     if (options != null) {
       _options = options;

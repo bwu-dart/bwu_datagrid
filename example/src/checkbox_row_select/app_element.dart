@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.checkbox_row_select.app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;

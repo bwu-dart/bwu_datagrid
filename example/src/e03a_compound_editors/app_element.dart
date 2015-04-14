@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e03a_compound_editors.app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
@@ -10,9 +10,9 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'numeric_range_editor.dart';
 
-class NumericRangeFormatter extends fm.Formatter {
+class NumericRangeFormatter extends fm.CellFormatter {
   @override
-  void call(dom.HtmlElement target, int row, int cell, value, Column columnDef,
+  void format(dom.HtmlElement target, int row, int cell, value, Column columnDef,
       dataContext) {
     target.children.clear();
     target.text = "${dataContext['from']} - ${dataContext['to']}";

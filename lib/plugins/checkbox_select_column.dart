@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.checkbox_select_column;
+library bwu_datagrid.plugins.checkbox_select_column;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
@@ -9,7 +9,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/plugins/plugin.dart';
 
-class CheckboxSelectionFormatter extends Formatter {
+class CheckboxSelectionFormatter extends CellFormatter {
   final CheckboxSelectColumn selectColumn;
   CheckboxSelectionFormatter(this.selectColumn) {
     assert(selectColumn != null);
@@ -18,7 +18,7 @@ class CheckboxSelectionFormatter extends Formatter {
   /// The added element (click target) must have the `selectColumn` attribute set
   /// to be recognized by the [CheckboxSelectColumn] click handler.
   @override
-  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+  void format(dom.HtmlElement target, int row, int cell, dynamic value,
       Column columnDef, DataItem dataContext) {
     target.children.clear();
 

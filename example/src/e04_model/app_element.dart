@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e04_model.app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
@@ -16,7 +16,7 @@ import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
-import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import '../required_field_validator.dart';
 
@@ -27,7 +27,7 @@ class AppElement extends PolymerElement {
   BwuDatagrid grid;
   List<Column> columns = [
     new Column(id: "sel", name: "#", field: "num", behavior: ["select"], cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false, isMovable: false),
-    new Column(id: "title", name: "Title", field: "title", width: 120, minWidth: 120, cssClass: "cell-title", editor: new TextEditor(), validator: new RequiredFieldValidator(), sortable: true),
+    new Column(id: "title", name: "Title", field: "title", width: 120, minWidth: 120, cssClass: "cell-title", editor: new TextEditor(), validator: RequiredFieldValidator, sortable: true),
     new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor(), sortable: true),
     new Column(id: "%", defaultSortAsc: false, name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor(), sortable: true),
     new Column(id: "start", name: "Start", field: "start", minWidth: 60, editor: new DateEditor(), sortable: true),
@@ -142,7 +142,7 @@ class AppElement extends PolymerElement {
         dataView.setItems(data);
         dataView.setFilterArgs({
           'percentCompleteThreshold':
-              tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+              utils.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
         });
         dataView.setFilter(myFilter);
@@ -209,7 +209,7 @@ class AppElement extends PolymerElement {
 
     dataView.setFilterArgs({
       'percentCompleteThreshold':
-          tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+          utils.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString
     });
     dataView.refresh();

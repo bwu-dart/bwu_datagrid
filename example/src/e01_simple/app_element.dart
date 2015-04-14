@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e01_simple.app_element;
 
 import 'dart:math' as math;
 import 'package:polymer/polymer.dart';

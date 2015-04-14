@@ -1,4 +1,4 @@
-library bwu_datagrid.example.e07_events.context_menu;
+library bwu_datagrid.example.src.e07_events.context_menu;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;

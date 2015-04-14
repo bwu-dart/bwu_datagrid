@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e08_alternative_display.app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;

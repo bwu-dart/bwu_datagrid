@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.plugin.auto_tooltips;
+library bwu_datagrid.plugins.auto_tooltips;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
@@ -8,7 +8,7 @@ import 'dart:async' as async;
 //import 'package:core_elements/core_tooltip/core_tooltip.dart' as tt;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'package:bwu_utils_browser/html/html.dart' as tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import 'plugin.dart';
 
@@ -21,13 +21,11 @@ class AutoTooltipsOptions {
       this.enableForHeaderCells: false, this.maxTooltipLength});
 }
 
-/**
-   * AutoTooltips plugin to show/hide tooltips when columns are too narrow to fit content.
-   * @constructor
-   * @param {boolean} [options.enableForCells=true]        - Enable tooltip for grid cells
-   * @param {boolean} [options.enableForHeaderCells=false] - Enable tooltip for header cells
-   * @param {number}  [options.maxToolTipLength=null]      - The maximum length for a tooltip
-   */
+  /// AutoTooltips plugin to show/hide tooltips when columns are too narrow to fit content.
+  /// @constructor
+  /// @param {boolean} [options.enableForCells=true]        - Enable tooltip for grid cells
+  /// @param {boolean} [options.enableForHeaderCells=false] - Enable tooltip for header cells
+  /// @param {number}  [options.maxToolTipLength=null]      - The maximum length for a tooltip
 class AutoTooltips extends Plugin {
   AutoTooltipsOptions options;
 
@@ -44,9 +42,8 @@ class AutoTooltips extends Plugin {
   //async.StreamSubscription mouseLeaveSubscription;
   async.StreamSubscription headerMouseEnterSubscription;
   //async.StreamSubscription headerMouseLeaveSubscription;
-  /**
-   * Initialize plugin.
-   */
+
+  /// Initialize plugin.
   @override
   void init(BwuDatagrid grid) {
     super.init(grid);
@@ -76,9 +73,7 @@ class AutoTooltips extends Plugin {
 
   }
 
-  /**
-   * Destroy plugin.
-   */
+  /// Destroy plugin.
   void destroy() {
     if (mouseEnterSubscription != null) {
       mouseEnterSubscription.cancel();
@@ -89,16 +84,14 @@ class AutoTooltips extends Plugin {
     //tooltip.remove();
   }
 
-  /**
-   * Handle mouse entering grid cell to add/remove tooltip.
-   * @param {jQuery.Event} e - The event
-   */
+  /// Handle mouse entering grid cell to add/remove tooltip.
+  /// @param {jQuery.Event} e - The event
   void handleMouseEnter(core.MouseEnter e) {
     var cell = grid.getCellFromEvent(e.causedBy);
     if (cell != null) {
       var $node = grid.getCellNode(cell.row, cell.cell);
       var text;
-      if (tools.innerWidth($node) < $node.scrollWidth) {
+      if (utils.innerWidth($node) < $node.scrollWidth) {
         text = $node.text.trim();
         if (options.maxTooltipLength != null &&
             text.length > options.maxTooltipLength) {
@@ -143,23 +136,21 @@ class AutoTooltips extends Plugin {
 //    hideTooltip();
 //  }
 
-  /**
-   * Handle mouse entering header cell to add/remove tooltip.
-   * @param {jQuery.Event} e     - The event
-   * @param {object} args.column - The column definition
-   */
+  /// Handle mouse entering header cell to add/remove tooltip.
+  /// @param {jQuery.Event} e     - The event
+  /// @param {object} args.column - The column definition
   void handleHeaderMouseEnter(core.HeaderMouseEnter e) {
     //var detail = e.detail as core.HeaderMouseEnter;
     var column = e.data;
-    var $node = tools.closest(
+    var $node = utils.closest(
         (e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
     if ($node == null) {
-      $node = tools.closest((e.causedBy.target as dom.HtmlElement),
+      $node = utils.closest((e.causedBy.target as dom.HtmlElement),
           '.bwu-datagrid-header-column');
     }
     if (column.toolTip == null) {
       $node.attributes["title"] =
-          tools.innerWidth($node) < $node.scrollWidth ? column.name : "";
+          utils.innerWidth($node) < $node.scrollWidth ? column.name : "";
     }
   }
 }

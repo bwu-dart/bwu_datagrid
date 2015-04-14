@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.grouping.app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
@@ -19,7 +19,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 
 class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   @override
-  void call(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+  void format(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['avg'] != null && totals['avg'][columnDef.field] != null) {
@@ -35,7 +35,7 @@ class AvgTotalsFormatter extends core.GroupTotalsFormatter {
 
 class SumTotalsFormatter extends core.GroupTotalsFormatter {
   @override
-  void call(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+  void format(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['sum'] != null && totals['sum'][columnDef.field] != null) {
@@ -49,12 +49,12 @@ class SumTotalsFormatter extends core.GroupTotalsFormatter {
   }
 }
 
-class GroupTitleFormatter extends core.GroupTitleFormatter {
+class GroupTitleFormatter extends fm.GroupTitleFormatter {
   String name;
   GroupTitleFormatter([this.name = '']);
 
   @override
-  dom.Node call(core.Group group) {
+  dom.Node format(core.Group group) {
     return new dom.SpanElement()
       ..appendText('${name}: ${group.value} ')
       ..append(new dom.SpanElement()
@@ -63,12 +63,12 @@ class GroupTitleFormatter extends core.GroupTitleFormatter {
   }
 }
 
-class BooleanGroupTitleFormatter extends core.GroupTitleFormatter {
+class BooleanGroupTitleFormatter extends fm.GroupTitleFormatter {
   String name;
   BooleanGroupTitleFormatter([this.name = '']);
 
   @override
-  dom.Node call(core.Group group) {
+  dom.Node format(core.Group group) {
     return new dom.DocumentFragment()
       ..appendText("Effort-Driven: ${group.value != null ? 'True' : 'False'}")
       ..append(new dom.SpanElement()

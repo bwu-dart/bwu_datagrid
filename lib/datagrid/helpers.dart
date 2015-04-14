@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.datagrid.helpers;
+library bwu_datagrid.datagrid.helpers;
 
 import 'dart:html' as dom;
 import 'dart:collection' as coll;
@@ -11,25 +11,23 @@ import 'package:collection/wrappers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
 abstract class DataProvider {
-  List<core.ItemBase> _items;
+  List<core.ItemBase> items;
   int get length;
   DataItem getItem(int index);
   RowMetadata getItemMetadata(int index);
-  List<core.ItemBase> get items => _items;
-  set items(List<core.ItemBase> items) => _items = items;
 
   DataProvider(List<core.ItemBase> items)
-      : this._items = (items == null ? <core.ItemBase>[] : items);
+      : this.items = (items == null ? <core.ItemBase>[] : items);
 }
 
 class MapDataItemProvider extends DataProvider {
   MapDataItemProvider([List<DataItem> items]) : super(items);
 
   @override
-  int get length => _items.length;
+  int get length => items.length;
 
   @override
-  DataItem getItem(int index) => _items[index];
+  DataItem getItem(int index) => items[index];
 
   @override
   RowMetadata getItemMetadata(int index) => null;
@@ -92,13 +90,9 @@ class Range {
       this.leftPx, this.top, this.bottom});
 }
 
-abstract class EditorFactory {
-  Editor getEditor(Column column);
-}
+typedef Editor EditorFactory (Column column);
 
-abstract class FormatterFactory {
-  Formatter getFormatter(Column column);
-}
+typedef Formatter FormatterFactory(Column column);
 
 abstract class DataItem extends ItemBase {
   bool collapsed;
@@ -126,9 +120,8 @@ class EditCommand {
   int row;
   int cell;
   Editor editor;
-  /**
-   * [serializedValue] and [prevSerializedValue] are normally of type [String] but for example for compound values they are of type [Map]
-   */
+  /// [serializedValue] and [prevSerializedValue] are normally of type [String]
+  /// but for example for compound values they are of type [Map]
   dynamic serializedValue;
   dynamic prevSerializedValue;
   Function execute;

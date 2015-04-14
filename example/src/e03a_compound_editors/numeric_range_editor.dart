@@ -1,8 +1,8 @@
-library bwu_datagrid.example.e03a_compund_editors.numeric_range_editor;
+library bwu_datagrid.example.src.e03a_compound_editors.numeric_range_editor;
 
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/editors/editors.dart';
-import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 class NumericRangeEditor extends Editor {
   EditorArgs args;
@@ -58,8 +58,8 @@ class NumericRangeEditor extends Editor {
   @override
   bool get isValueChanged {
     return args.item['from'] !=
-            tools.parseInt($from.value, onErrorDefault: 0) ||
-        args.item['to'] != tools.parseInt($from.value, onErrorDefault: 0);
+            utils.parseInt($from.value, onErrorDefault: 0) ||
+        args.item['to'] != utils.parseInt($from.value, onErrorDefault: 0);
   }
 
   @override
@@ -71,18 +71,18 @@ class NumericRangeEditor extends Editor {
   @override
   Map serializeValue() {
     return {
-      'from': tools.parseInt($from.value, onErrorDefault: 0),
-      'to': tools.parseInt($to.value, onErrorDefault: 0)
+      'from': utils.parseInt($from.value, onErrorDefault: 0),
+      'to': utils.parseInt($to.value, onErrorDefault: 0)
     };
   }
 
   @override
   ValidationResult validate() {
-    if (!tools.isInt($from.value) || !tools.isInt($to.value)) {
+    if (!utils.isInt($from.value) || !utils.isInt($to.value)) {
       return new ValidationResult(false, 'Please type in valid numbers.');
     }
 
-    if (tools.parseInt($from.value) > tools.parseInt($to.value)) {
+    if (utils.parseInt($from.value) > utils.parseInt($to.value)) {
       return new ValidationResult(false, '"from" cannot be greater than "to"');
     }
 

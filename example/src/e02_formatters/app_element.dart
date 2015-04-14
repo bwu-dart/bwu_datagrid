@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e02_formatters.app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
@@ -8,8 +8,8 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
-class Formatter extends fm.Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+class Formatter extends fm.CellFormatter {
+  void format(dom.HtmlElement target, int row, int cell, dynamic value,
       Column columnDef, DataItem dataContext) {
     target.appendHtml(value);
   }

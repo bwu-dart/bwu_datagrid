@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.dataview;
+library bwu_datagrid.dataview;
 
 import 'dart:math' as math;
 import 'dart:async' as async;
@@ -6,6 +6,7 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/bwu_datagrid.dart' as grid;
+import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
 part 'aggregators.dart';
 part 'helpers.dart';
@@ -29,13 +30,10 @@ typedef bool FilterFn(a, b);
 
 class DataView extends DataProvider {
 
-  /***
-   * A sample Model implementation.
-   * Provides a filtered view of the underlying data.
-   *
-   * Relies on the data item having an "id" property uniquely identifying it.
-   */
-
+  /// A sample Model implementation.
+  /// Provides a filtered view of the underlying data.
+  ///
+  /// Relies on the data item having an "id" property uniquely identifying it.
   DataViewOptions options = new DataViewOptions();
   GroupingInfo groupingInfo = new GroupingInfo();
 
@@ -195,11 +193,9 @@ class DataView extends DataProvider {
     refresh();
   }
 
-//    /***
-//     * Provides a workaround for the extremely slow sorting in IE.
-//     * Does a [lexicographic] sort on a give column by temporarily overriding Object.prototype.toString
-//     * to return the value of that field and then doing a native Array.sort().
-//     */
+//    /// Provides a workaround for the extremely slow sorting in IE.
+//    /// Does a [lexicographic] sort on a give column by temporarily overriding Object.prototype.toString
+//    /// to return the value of that field and then doing a native Array.sort().
 //    void fastSort(String field, bool ascending) {
 //      sortAsc = ascending;
 //      fastSortField = field;
@@ -267,9 +263,7 @@ class DataView extends DataProvider {
     refresh();
   }
 
-//    /**
-//     * @deprecated Please use {@link setGrouping}.
-//     */
+//    /// @deprecated Please use {@link setGrouping}.
 //    function groupBy(valueGetter, valueFormatter, sortComparer) {
 //      if (valueGetter == null) {
 //        setGrouping([]);
@@ -283,9 +277,7 @@ class DataView extends DataProvider {
 //      });
 //    }
 //
-//    /**
-//     * @deprecated Please use {@link setGrouping}.
-//     */
+//    /// @deprecated Please use {@link setGrouping}.
 //    function setAggregators(groupAggregators, includeCollapsed) {
 //      if (!groupingInfos.length) {
 //        throw new Error("At least one grouping must be specified before calling setAggregators().");
@@ -406,7 +398,7 @@ class DataView extends DataProvider {
       GroupingInfo gi = groupingInfos[item.level];
       if (!gi.isDisplayTotalsRow) {
         calculateTotals(item.totals);
-        item.title = gi.formatter != null ? gi.formatter(item) : item.value;
+        item.title = gi.formatter != null ? gi.formatter.format(item) : item.value;
       }
     }
     // if this is a totals row, make sure it's calculated
@@ -452,16 +444,12 @@ class DataView extends DataProvider {
     refresh();
   }
 
-  /**
-   * @param level {Number} Optional level to collapse.  If not specified, applies to all levels.
-   */
+  /// @param level {Number} Optional level to collapse.  If not specified, applies to all levels.
   void collapseAllGroups([int level]) {
     expandCollapseAllGroups(true, level);
   }
 
-  /**
-   * @param level {Number} Optional level to expand.  If not specified, applies to all levels.
-   */
+  /// @param level {Number} Optional level to expand.  If not specified, applies to all levels.
   void expandAllGroups([int level]) {
     expandCollapseAllGroups(false, level);
   }
@@ -474,12 +462,10 @@ class DataView extends DataProvider {
     refresh();
   }
 
-  /**
-   * @param varArgs Either a Group's "groupingKey" property, or a
-   *     variable argument list of grouping values denoting a unique path to the row.  For
-   *     example, calling collapseGroup('high', '10%') will collapse the '10%' subgroup of
-   *     the 'high' group.
-   */
+  /// @param varArgs Either a Group's "groupingKey" property, or a
+  ///     variable argument list of grouping values denoting a unique path to the row.  For
+  ///     example, calling collapseGroup('high', '10%') will collapse the '10%' subgroup of
+  ///     the 'high' group.
   void collapseGroup(List<String> varArgs) {
     var args = varArgs
         .toList(); //Array.prototype.slice.call(arguments); // TODO select elements from an array, arguments is an array of args passed to this function
@@ -491,12 +477,10 @@ class DataView extends DataProvider {
     }
   }
 
-  /**
-   * @param varArgs Either a Group's "groupingKey" property, or a
-   *     variable argument list of grouping values denoting a unique path to the row.  For
-   *     example, calling expandGroup('high', '10%') will expand the '10%' subgroup of
-   *     the 'high' group.
-   */
+  /// @param varArgs Either a Group's "groupingKey" property, or a
+  ///     variable argument list of grouping values denoting a unique path to the row.  For
+  ///     example, calling expandGroup('high', '10%') will expand the '10%' subgroup of
+  ///     the 'high' group.
   void expandGroup(List<String> varArgs) {
     var args =
         varArgs.toList(); //Array.prototype.slice.call(arguments); // TODO
@@ -632,7 +616,7 @@ class DataView extends DataProvider {
       }
 
       g.isCollapsed = groupCollapsed != (toggledGroups[g.groupingKey] != null);
-      g.title = gi.formatter != null ? gi.formatter(g) : g.value;
+      g.title = gi.formatter != null ? gi.formatter.format(g) : g.value;
     }
   }
 
@@ -940,25 +924,23 @@ class DataView extends DataProvider {
     }
   }
 
-  /***
-   * Wires the grid and the DataView together to keep row selection tied to item ids.
-   * This is useful since, without it, the grid only knows about rows, so if the items
-   * move around, the same rows stay selected instead of the selection moving along
-   * with the items.
-   *
-   * NOTE:  This doesn't work with cell selection model.
-   *
-   * @param grid {BwuDatagrid} The grid to sync selection with.
-   * @param preserveHidden {Boolean} Whether to keep selected items that go out of the
-   *     view due to them getting filtered out.
-   * @param preserveHiddenOnSelectionChange {Boolean} Whether to keep selected items
-   *     that are currently out of the view (see preserveHidden) as selected when selection
-   *     changes.
-   * @return {Event} An event that notifies when an internal list of selected row ids
-   *     changes.  This is useful since, in combination with the above two options, it allows
-   *     access to the full list selected row ids, and not just the ones visible to the grid.
-   * @method syncGridSelection
-   */
+  /// Wires the grid and the DataView together to keep row selection tied to item ids.
+  /// This is useful since, without it, the grid only knows about rows, so if the items
+  /// move around, the same rows stay selected instead of the selection moving along
+  /// with the items.
+  ///
+  /// NOTE:  This doesn't work with cell selection model.
+  ///
+  /// @param grid {BwuDatagrid} The grid to sync selection with.
+  /// @param preserveHidden {Boolean} Whether to keep selected items that go out of the
+  ///     view due to them getting filtered out.
+  /// @param preserveHiddenOnSelectionChange {Boolean} Whether to keep selected items
+  ///     that are currently out of the view (see preserveHidden) as selected when selection
+  ///     changes.
+  /// @return {Event} An event that notifies when an internal list of selected row ids
+  ///     changes.  This is useful since, in combination with the above two options, it allows
+  ///     access to the full list selected row ids, and not just the ones visible to the grid.
+  /// @method syncGridSelection
   async.Stream syncGridSelection(grid.BwuDatagrid grid, bool preserveHidden,
       {bool preserveHiddenOnSelectionChange: false}) {
     bool inHandler = false;

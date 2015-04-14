@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.plugin;
+library bwu_datagrid.plugins;
 
 //import 'dart:html' as dom;
 //import 'dart:async' as async;
@@ -24,9 +24,7 @@ abstract class SelectionModel extends Plugin {
   void setSelectedRanges(List<core.Range> ranges);
   List<core.Range> getSelectedRanges();
 
-  /**
-   * on selected-ranges-changed
-   */
+  /// on selected-ranges-changed
 //  static const ON_SELECTED_RANGES_CHANGED = 'selected-ranges-changed';
 //  async.StreamController<dom.CustomEvent> _onSelectedRangesChanged = new async.StreamController<dom.CustomEvent>();
 //  async.Stream<dom.CustomEvent> get onSelectedRangesChanged =>

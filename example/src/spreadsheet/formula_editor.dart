@@ -1,4 +1,4 @@
-library bwu_datagrid.example.spreadsheet.formula_editor;
+library bwu_datagrid.example.src.spreadsheet.formula_editor;
 
 import 'dart:async' as async;
 

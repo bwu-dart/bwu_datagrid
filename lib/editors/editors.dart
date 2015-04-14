@@ -1,17 +1,14 @@
-library bwu_dart.bwu_datagrid.editors;
+library bwu_datagrid.editors;
 
 import 'dart:html' as dom;
 
-import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
-import 'package:bwu_utils_browser/html/html.dart' as dom_tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
-/***
- * Contains basic BwuDatagrid editors.
- * @module Editors
- */
+/// Contains basic BwuDatagrid editors.
+/// @module Editors
 
 abstract class Editor {
   //void call(EditorArgs args);
@@ -26,10 +23,8 @@ abstract class Editor {
 
   void destroy();
   void loadValue(DataItem item);
-  /**
-   * Normally returns [String] but for example for
-   * compound editors it may return [Map]
-   */
+  /// Normally returns [String] but for example for
+  /// compound editors it may return [Map]
   dynamic serializeValue();
   bool get isValueChanged;
   void applyValue(DataItem item, dynamic value);
@@ -59,9 +54,7 @@ class ValidationErrorSource {
       {this.index, this.editor, this.container, this.message});
 }
 
-abstract class Validator {
-  ValidationResult call(dynamic value);
-}
+typedef ValidationResult Validator(dynamic value);
 
 typedef void CommitChangesFn();
 
@@ -216,7 +209,7 @@ class IntegerEditor extends Editor {
 
   @override
   String serializeValue() {
-    return tools.parseInt($input.value).toString(); // || 0; // TODO default 0
+    return utils.parseInt($input.value).toString(); // || 0; // TODO default 0
   }
 
   @override
@@ -225,13 +218,13 @@ class IntegerEditor extends Editor {
     if (state is int) {
       val = state;
     } else if (state is String) {
-      val = tools.parseInt(state, onErrorDefault: 0);
+      val = utils.parseInt(state, onErrorDefault: 0);
     } else if (state == null) {
       val = 0;
     } else {
       throw 'not supported data type for "state" (${state})';
     }
-    item[args.column.field] = state;
+    item[args.column.field] = val;
   }
 
   @override
@@ -242,7 +235,7 @@ class IntegerEditor extends Editor {
 
   @override
   ValidationResult validate() {
-    if (!tools.isInt($input.value)) {
+    if (!utils.isInt($input.value)) {
       return new ValidationResult(false, "Please enter a valid integer");
     }
 
@@ -494,7 +487,7 @@ class PercentCompleteEditor extends Editor {
 
   PercentCompleteEditor._(this.args) {
     $input = new dom.TextInputElement()..classes.add('editor-percentcomplete');
-    $input.style.width = '${dom_tools.innerWidth(args.container) - 25}px';
+    $input.style.width = '${utils.innerWidth(args.container) - 25}px';
     args.container.append($input);
 
     $picker = new dom.DivElement()
@@ -584,7 +577,7 @@ class PercentCompleteEditor extends Editor {
   }
 
   String _invertedRangeValue(String val) {
-    return '${100-tools.parseInt(val)}';
+    return '${100-utils.parseInt(val)}';
   }
 
   String _invertedRangeValueInt(int val) {
@@ -596,25 +589,25 @@ class PercentCompleteEditor extends Editor {
 
   @override
   String serializeValue() {
-    return tools
+    return utils
         .parseInt($input.value, onErrorDefault: 0)
         .toString(); // || 0; // todo default 0
   }
 
   @override
   void applyValue(DataItem item, String state) {
-    item[args.column.field] = tools.parseInt(state);
+    item[args.column.field] = utils.parseInt(state);
   }
 
   @override
   bool get isValueChanged {
     return (!($input.value == '' && defaultValue == null)) &&
-        (tools.parseInt($input.value, onErrorDefault: 0) != defaultValue);
+        (utils.parseInt($input.value, onErrorDefault: 0) != defaultValue);
   }
 
   @override
   ValidationResult validate() {
-    if (!tools.isInt($input.value)) {
+    if (!utils.isInt($input.value)) {
       return new ValidationResult(
           false, "Please enter a valid positive number");
     }
@@ -624,11 +617,10 @@ class PercentCompleteEditor extends Editor {
 }
 
 // TODO make Polymer element
-/*
- * An example of a "detached" editor.
- * The UI is added onto document BODY and .position(), .show() and .hide() are implemented.
- * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
- */
+
+/// An example of a "detached" editor.
+/// The UI is added onto document BODY and .position(), .show() and .hide() are implemented.
+/// KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
 class LongTextEditor extends Editor {
   dom.TextAreaElement $input;
   dom.HtmlElement $wrapper;

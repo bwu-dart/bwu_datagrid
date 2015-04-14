@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.totals_via_data_provider.app_element;
 
 import 'dart:math' as math;
 

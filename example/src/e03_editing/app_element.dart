@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e03_editing.app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
@@ -18,7 +18,7 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", editor: new TextEditor(), validator: new RequiredFieldValidator()),
+    new Column(id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", editor: new TextEditor(), validator: RequiredFieldValidator),
     new Column(id: "desc", name: "Description", field: "description", width: 100, editor: new LongTextEditor()),
     new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor()),
     new Column(id: "%", name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor()),

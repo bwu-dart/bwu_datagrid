@@ -1,4 +1,4 @@
-library bwu_datagrid.example.e04_model.filter_form;
+library bwu_datagrid.example.src.filter_form;
 
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';

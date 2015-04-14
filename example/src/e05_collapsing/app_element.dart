@@ -1,4 +1,4 @@
-library app_element;
+library bwu_datagrid.example.src.e05_collapsing.app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
@@ -13,16 +13,16 @@ import 'package:bwu_datagrid/editors/editors.dart';
 
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
-import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import '../required_field_validator.dart';
 
-class TaskNameFormatter extends fm.Formatter {
+class TaskNameFormatter extends fm.CellFormatter {
   List<DataItem> data;
   DataView dataView;
   TaskNameFormatter({this.data, this.dataView});
 
-  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+  void format(dom.HtmlElement target, int row, int cell, dynamic value,
       Column columnDef, DataItem dataContext) {
     target.children.clear();
     // TODO value = value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -55,7 +55,7 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 220, cssClass: "cell-title", formatter: tnFormatter, editor: new TextEditor(), validator: new RequiredFieldValidator()),
+    new Column(id: "title", name: "Title", field: "title", width: 220, cssClass: "cell-title", formatter: tnFormatter, editor: new TextEditor(), validator: RequiredFieldValidator),
     new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor()),
     new Column(id: "%", name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor()),
     new Column(id: "start", name: "Start", field: "start", minWidth: 60, editor: new DateEditor()),
@@ -127,7 +127,7 @@ class AppElement extends PolymerElement {
         ..setItems(data)
         ..setFilterArgs({
           'percentCompleteThreshold':
-              tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+              utils.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
         })
         ..setFilter(myFilter)
@@ -224,7 +224,7 @@ class AppElement extends PolymerElement {
 
     dataView.setFilterArgs({
       'percentCompleteThreshold':
-          tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
+          utils.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString
     });
     dataView.refresh();
@@ -245,7 +245,7 @@ class AppElement extends PolymerElement {
       while (parent != null) {
         if (parent.collapsed ||
             (parent["percentComplete"] <
-                tools.parseInt(percentCompleteThreshold, onErrorDefault: 0)) ||
+                utils.parseInt(percentCompleteThreshold, onErrorDefault: 0)) ||
             (searchString != "" &&
                 parent["title"].indexOf(searchString) == -1)) {
           return false;

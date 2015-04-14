@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.groupitem_metadata_providers;
+library bwu_datagrid.groupitem_metadata_providers;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
@@ -11,13 +11,13 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/plugins/plugin.dart';
 
-class DefaultGroupCellFormatter extends fm.Formatter {
+class DefaultGroupCellFormatter extends fm.CellFormatter {
   GroupItemMetadataProvider giMetadataProvider;
 
   DefaultGroupCellFormatter(this.giMetadataProvider);
 
   @override
-  void call(dom.HtmlElement target, int row, int cell, String value,
+  void format(dom.HtmlElement target, int row, int cell, String value,
       Column columnDef, /*Item/Map*/ item) {
     if (!giMetadataProvider.enableExpandCollapse) {
       target.append(item.title);
@@ -44,24 +44,21 @@ class DefaultTotalsCellFormatter extends core.GroupTotalsFormatter {
   GroupItemMetadataProvider giMetadataProvider;
 
   @override
-  void call(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+  void format(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     if (columnDef.groupTotalsFormatter != null) {
-      columnDef.groupTotalsFormatter(target, totals, columnDef);
+      columnDef.groupTotalsFormatter.format(target, totals, columnDef);
     } else {
       target.innerHtml = '';
     }
   }
 }
 
-/***
- * Provides item metadata for group (Group) and totals (Totals) rows produced by the DataView.
- * This metadata overrides the default behavior and formatting of those rows so that they appear and function
- * correctly when processed by the grid.
- *
- * This class also acts as a grid plugin providing event handlers to expand & collapse groups.
- * If "grid.registerPlugin(...)" is not called, expand & collapse will not work.
- *
- */
+/// Provides item metadata for group (Group) and totals (Totals) rows produced by the DataView.
+/// This metadata overrides the default behavior and formatting of those rows so that they appear and function
+/// correctly when processed by the grid.
+///
+/// This class also acts as a grid plugin providing event handlers to expand & collapse groups.
+/// If "grid.registerPlugin(...)" is not called, expand & collapse will not work.
 class GroupItemMetadataProvider extends Plugin {
   //BwuDatagrid _grid;
 
@@ -206,7 +203,7 @@ class RowMetadata {
   bool focusable;
   String cssClasses;
   Map<String, Column> columns = <String, Column>{};
-  fm.FormatterBase formatter;
+  fm.Formatter formatter;
   ed.Editor editor;
 
   RowMetadata({this.selectable, this.focusable, this.cssClasses, this.columns,

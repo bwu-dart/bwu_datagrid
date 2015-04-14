@@ -1,9 +1,9 @@
-library bwu_datagrid.compponents.bwu_pager;
+library bwu_datagrid.components.bwu_pager;
 
 import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
-import 'package:bwu_utils_browser/math/parse_num.dart' as tools;
+import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
@@ -102,7 +102,7 @@ class BwuPager extends PolymerElement {
   }
 
   void pageSizeClickHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
-    int pagesize = tools.parseInt(
+    int pagesize = utils.parseInt(
         (e.target as dom.HtmlElement).dataset['value'], onErrorDefault: 0);
     //if (pagesize != 0) {
     if (pagesize == -1) {

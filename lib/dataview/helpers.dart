@@ -1,4 +1,4 @@
-part of bwu_dart.bwu_datagrid.dataview;
+part of bwu_datagrid.dataview;
 
 class DataViewOptions {
   GroupItemMetadataProvider groupItemMetadataProvider; // TODO type
@@ -13,7 +13,7 @@ typedef int SortComparerFunc(a, b);
 class GroupingInfo {
   var getter;
   bool getterIsAFn = false;
-  core.GroupTitleFormatter formatter;
+  fm.GroupTitleFormatter formatter;
   SortComparerFunc comparer;
   List predefinedValues;
   List<Aggregator> aggregators;

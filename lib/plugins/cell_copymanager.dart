@@ -1,4 +1,4 @@
-library bwu_dart.bwu_datagrid.plugin.cell_copymanager;
+library bwu_datagrid.plugins.cell_copymanager;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
