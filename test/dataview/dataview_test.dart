@@ -11,7 +11,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:logging/logging.dart';
 import 'package:quiver_log/log.dart';
 
-var _log = new Logger('bwu_datagrid.dataview_test');
+final _log = new Logger('bwu_datagrid.test.dataview');
 
 void assertEmpty(DataView dv) {
   expect(0, equals(dv.length),
@@ -33,17 +33,15 @@ void assertConsistency(DataView dv, [String idProperty]) {
   }
   List<core.ItemBase> items = dv.getItems();
   int filteredOut = 0;
-  int row;
-  String id;
 
-  for (var i = 0; i < items.length; i++) {
+  for (int i = 0; i < items.length; i++) {
     _log.fine(items[i][idProperty]);
-    id = items[i][idProperty];
+    final id = items[i][idProperty];
     expect(dv.getItemByIdx(i), equals(items[i]), reason: "getItemByIdx");
-    expect(dv.getItemById(id), equals([i]), reason: "getItemById");
+    expect(dv.getItemById(id), equals(items[i]), reason: "getItemById");
     expect(dv.getIdxById(id), equals(i), reason: "getIdxById");
 
-    row = dv.getRowById(id);
+    final row = dv.getRowById(id);
     if (row == null) {
       filteredOut++;
     } else {
@@ -59,17 +57,14 @@ void main() {
   Logger.root.level = Level.ALL;
   new PrintAppender(BASIC_LOG_FORMATTER).attachLogger(_log);
 
-  //useHtmlEnhancedConfiguration();
-  //initPolymer().run(() {
-
   group('basic', () {
     test("initial setup", () {
-      var dv = new DataView();
+      final dv = new DataView();
       assertEmpty(dv);
     });
 
     test("initial setup, refresh", () {
-      var dv = new DataView();
+      final dv = new DataView();
       dv.refresh();
       assertEmpty(dv);
     });
@@ -77,13 +72,13 @@ void main() {
 
   group('setItems', () {
     test("empty", () {
-      var dv = new DataView();
+      final dv = new DataView();
       dv.setItems([]);
       assertEmpty(dv);
     });
 
     test("basic", () {
-      var dv = new DataView();
+      final dv = new DataView();
       dv.setItems([new MapDataItem({'id': 0}), new MapDataItem({'id': 1})]);
       expect(dv.length, equals(2), reason: "rows.length");
       expect(dv.getItems().length, equals(2), reason: "getItems().length");
@@ -91,247 +86,330 @@ void main() {
     });
 
     test("alternative idProperty", () {
-      var dv = new DataView();
-      dv.setItems([{'uid': 0}, {'uid': 1}], "uid");
+      final dv = new DataView();
+      dv.setItems(<DataItem>[
+        new MapDataItem({'uid': 0}),
+        new MapDataItem({'uid': 1})
+      ], "uid");
       assertConsistency(dv, "uid");
     });
 
     test("requires an id on objects", () {
-      var dv = new DataView();
-      //try {
-      expect(dv.setItems([1, 2, 3]), throws, reason: "exception expected");
-      //            ok(false, "exception expected")
-      //        }
-      //        catch (ex) {}
+      final dv = new DataView();
+      expect(() => dv.setItems(<DataItem>[
+        new MapDataItem({'a': 1}),
+        new MapDataItem({'b': 2}),
+        new MapDataItem({'c': 3})
+      ]), throwsA(equals(
+              "Each data element must implement a unique 'id' property")),
+          reason: "exception expected");
     });
 
     test("requires a unique id on objects", () {
-      var dv = new DataView();
+      final dv = new DataView();
       //        try {
-      expect(dv.setItems([{'id': 0}, {'id': 0}]), throws,
+      expect(() => dv.setItems(<DataItem>[
+        new MapDataItem({'id': 0}),
+        new MapDataItem({'id': 0})
+      ]), throwsA(equals(
+              "Each data element must implement a unique 'id' property")),
           reason: "exception expected");
-      //            ok(false, "exception expected")
-      //        }
-      //        catch (ex) {}
+    });
+
+    test("requires a unique id on objects (alternative idProperty)", () {
+      final dv = new DataView();
+      expect(() => dv.setItems(<DataItem>[
+        new MapDataItem({'uid': 0}),
+        new MapDataItem({'uid': 0})
+      ], "uid"), throwsA(
+          equals("Each data element must implement a unique 'id' property")));
+    });
+
+    test("events fired on setItems", () {
+      final dv = new DataView();
+
+      final expectRowsChangedCalled =
+          expectAsync(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then((e) {
+        expectRowsChangedCalled();
+      });
+
+      final expectRowCountChangedCalled =
+          expectAsync(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then((e) {
+        expect(e.oldCount, equals(0), reason: "previous arg");
+        expect(e.newCount, equals(2), reason: "current arg");
+        expectRowCountChangedCalled();
+      });
+
+      final expectPagingInfoChangedCalled =
+          expectAsync(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then((e) {
+        expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
+        expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
+        expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
+        expectPagingInfoChangedCalled();
+      });
+      dv.setItems(
+          <DataItem>[new MapDataItem({'id': 0}), new MapDataItem({'id': 1})]);
+      dv.refresh();
+    });
+
+    test("no events on setItems([])", () {
+      final dv = new DataView();
+      dv.onBwuRowsChanged.first.then((e) => fail("onRowsChanged called"));
+      dv.onBwuRowCountChanged.first
+          .then((e) => fail("onRowCountChanged called"));
+      dv.onBwuPagingInfoChanged.first
+          .then((e) => fail("onPagingInfoChanged called"));
+      dv.setItems([]);
+      dv.refresh();
+    });
+
+    test("no events on setItems followed by refresh", () {
+      final dv = new DataView();
+      dv.setItems(
+          <DataItem>[new MapDataItem({'id': 0}), new MapDataItem({'id': 1})]);
+      dv.onBwuRowsChanged.first.then((e) => fail("onRowsChanged called"));
+      dv.onBwuRowCountChanged.first
+          .then((e) => fail("onRowCountChanged called"));
+      dv.onBwuPagingInfoChanged.first
+          .then((e) => fail("onPagingInfoChanged called"));
+      dv.refresh();
+    });
+
+    test("no refresh while suspended", () {
+      final dv = new DataView();
+      dv.beginUpdate();
+      dv.onBwuRowsChanged.first.then((e) => fail("onRowsChanged called"));
+      dv.onBwuRowCountChanged.first
+          .then((e) => fail("onRowCountChanged called"));
+      dv.onBwuPagingInfoChanged.first
+          .then((e) => fail("onPagingInfoChanged called"));
+      dv.setItems(
+          <DataItem>[new MapDataItem({'id': 0}), new MapDataItem({'id': 1})]);
+      dv.setFilter((a, b) => true);
+      dv.refresh();
+      expect(dv.length, equals(0), reason: "rows aren't updated until resumed");
+    });
+
+    test("refresh fires after resume", () {
+      final dv = new DataView();
+      dv.beginUpdate();
+      dv.setItems(
+          <DataItem>[new MapDataItem({'id': 0}), new MapDataItem({'id': 1})]);
+      expect(dv.getItems().length, equals(2),
+          reason: "items updated immediately");
+      dv.setFilter((o, b) => true);
+      dv.refresh();
+
+      final expectRowsChangedCalled =
+          expectAsync(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then((e) {
+        expect(e.changedRows, equals([0, 1]), reason: "args");
+        expectRowsChangedCalled();
+      });
+
+      final expectRowCountChangedCalled =
+          expectAsync(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then((e) {
+        expect(e.oldCount, equals(0), reason: "previous arg");
+        expect(e.newCount, equals(2), reason: "current arg");
+        expectRowCountChangedCalled();
+      });
+
+      final expectPagingInfoChangedCalled =
+          expectAsync(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then((e) {
+        expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
+        expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
+        expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
+        expectPagingInfoChangedCalled();
+      });
+      dv.endUpdate();
+      expect(dv.getItems().length, equals(2), reason: "items are the same");
+      expect(dv.length, equals(2), reason: "rows updated");
     });
   });
-  //});
+
+  group('sort', () {
+    test("happy path", () {
+      final itemsList = <DataItem>[
+        new MapDataItem({'id': 2, 'val': 2}),
+        new MapDataItem({'id': 1, 'val': 1}),
+        new MapDataItem({'id': 0, 'val': 0})
+      ];
+
+      final items = <DataItem>[itemsList[0], itemsList[1], itemsList[2]];
+      final dv = new DataView();
+      dv.setItems(items);
+
+      dv.onBwuRowsChanged.first.then((e) => fail("onRowsChanged called"));
+
+      dv.onBwuRowCountChanged.first
+          .then((e) => fail("onRowCountChanged called"));
+
+      dv.onBwuPagingInfoChanged.first
+          .then((e) => fail("onPagingInfoChanged called"));
+      dv.sort((x, y) => x['val'] - y['val'], true);
+      expect(dv.getItems(), equals(items),
+          reason: "original array should get sorted");
+      expect(items, orderedEquals([itemsList[2], itemsList[1], itemsList[0]]),
+          reason: "sort order");
+      assertConsistency(dv);
+    });
+
+    test("asc by default", () {
+      final itemsList = <DataItem>[
+        new MapDataItem({'id': 2, 'val': 2}),
+        new MapDataItem({'id': 1, 'val': 1}),
+        new MapDataItem({'id': 0, 'val': 0})
+      ];
+      final items = [itemsList[0], itemsList[1], itemsList[2]];
+      final dv = new DataView();
+      dv.setItems(items);
+      dv.sort((x, y) => x['val'] - y['val']);
+      expect(items, orderedEquals([itemsList[2], itemsList[1], itemsList[0]]),
+          reason: "sort order");
+    });
+
+    test("desc", () {
+      final itemsList = <DataItem>[
+        new MapDataItem({'id': 0, 'val': 0}),
+        new MapDataItem({'id': 2, 'val': 2}),
+        new MapDataItem({'id': 1, 'val': 1}),
+      ];
+      final items = [itemsList[0], itemsList[1], itemsList[2]];
+      final dv = new DataView();
+      dv.setItems(items);
+      dv.sort((x, y) => -1 * (x['val'] - y['val']));
+      expect(items, orderedEquals([itemsList[1], itemsList[2], itemsList[0]]),
+          reason: "sort order");
+    });
+
+    test("sort is stable", () {
+      final itemsList = <DataItem>[
+        new MapDataItem({'id': 0, 'val': 0}),
+        new MapDataItem({'id': 2, 'val': 2}),
+        new MapDataItem({'id': 3, 'val': 2}),
+        new MapDataItem({'id': 1, 'val': 1}),
+      ];
+      final items = [itemsList[0], itemsList[1], itemsList[2], itemsList[3],];
+      final dv = new DataView();
+      dv.setItems(items);
+
+      dv.sort((x, y) => x['val'] - y['val']);
+      expect(items, orderedEquals(
+              [itemsList[0], itemsList[3], itemsList[1], itemsList[2]]),
+          reason: "sort order");
+
+      dv.sort((x, y) => x['val'] - y['val']);
+      expect(items, orderedEquals(
+              [itemsList[0], itemsList[3], itemsList[1], itemsList[2]]),
+          reason: "sorting on the same column again doesn't change the order");
+
+      dv.sort((x, y) => -1 * (x['val'] - y['val']));
+      expect(items, orderedEquals(
+              [itemsList[1], itemsList[2], itemsList[3], itemsList[0]]),
+          reason: "sort order");
+    });
+  });
+
+  group("filtering", () {
+    test("applied immediately", () {
+      final dv = new DataView();
+
+      dv.setItems([
+        new MapDataItem({'id': 0, 'val': 0}),
+        new MapDataItem({'id': 2, 'val': 2}),
+        new MapDataItem({'id': 1, 'val': 1})
+      ]);
+
+      final expectRowsChangedCalled =
+          expectAsync(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then((e) {
+        expectRowsChangedCalled();
+        expect(e.changedRows, equals([0]), reason: "args");
+      });
+
+      final expectRowCountChangedCalled =
+          expectAsync(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then((e) {
+        expectRowCountChangedCalled();
+        expect(e.oldCount, equals(3), reason: "previous arg");
+        expect(e.newCount, equals(1), reason: "current arg");
+      });
+
+      final expectPagingInfoChangedCalled =
+          expectAsync(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then((e) {
+        expectPagingInfoChangedCalled();
+        expect(e.pagingInfo.pageSize, 0, reason: "pageSize arg");
+        expect(e.pagingInfo.pageNum, 0, reason: "pageNum arg");
+        expect(e.pagingInfo.totalRows, 1, reason: "totalRows arg");
+      });
+      dv.setFilter((o, b) => o['val'] == 1);
+      expect(dv.getItems().length, equals(3),
+          reason: "original data is still there");
+      expect(dv.length, equals(1), reason: "rows are filtered");
+      assertConsistency(dv);
+    });
+
+    test("re-applied on refresh", () {
+      final dv = new DataView();
+      dv.setItems([
+        new MapDataItem({'id': 0, 'val': 0}),
+        new MapDataItem({'id': 1, 'val': 1}),
+        new MapDataItem({'id': 2, 'val': 2}),
+      ]);
+      dv.setFilterArgs({'id': 0});
+      dv.setFilter((o, args) => o['val'] >= args['id']);
+      expect(dv.length, equals(3), reason: "nothing is filtered out");
+      assertConsistency(dv);
+
+      final expectRowsChangedCalled =
+          expectAsync(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then((e) {
+        expectRowsChangedCalled();
+        expect(e.changedRows, equals([0]), reason: "args");
+      });
+
+      final expectRowCountChangedCalled =
+          expectAsync(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then((e) {
+        expectRowCountChangedCalled();
+        expect(e.oldCount, equals(3), reason: "previous arg");
+        expect(e.newCount, equals(1), reason: "current arg");
+      });
+
+      final expectPagingInfoChangedCalled =
+          expectAsync(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then((e) {
+        expectPagingInfoChangedCalled();
+        expect(e.pagingInfo.pageSize, 0, reason: "pageSize arg");
+        expect(e.pagingInfo.pageNum, 0, reason: "pageNum arg");
+        expect(e.pagingInfo.totalRows, 1, reason: "totalRows arg");
+      });
+
+      dv.setFilterArgs({'id': 2});
+      dv.refresh();
+      expect(dv.getItems().length, 3, reason: "original data is still there");
+      expect(dv.length, equals(1), reason: "rows are filtered");
+      assertConsistency(dv);
+    });
+  });
 }
 
-//test("requires a unique id on objects (alternative idProperty)", function() {
-//    var dv = new Slick.Data.DataView();
-//    try {
-//        dv.setItems([{uid:0},{uid:0}], "uid");
-//        ok(false, "exception expected")
-//    }
-//    catch (ex) {}
-//});
-//
-//test("events fired on setItems", function() {
-//    var count = 0;
-//    var dv = new Slick.Data.DataView();
-//    dv.onRowsChanged.subscribe(function(e,args) {
-//        ok(true, "onRowsChanged called");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function(e,args) {
-//        ok(true, "onRowCountChanged called");
-//        same(args.previous, 0, "previous arg");
-//        same(args.current, 2, "current arg");
-//        count++;
-//    });
-//    dv.onPagingInfoChanged.subscribe(function(e,args) {
-//        ok(true, "onPagingInfoChanged called");
-//        same(args.pageSize, 0, "pageSize arg");
-//        same(args.pageNum, 0, "pageNum arg");
-//        same(args.totalRows, 2, "totalRows arg");
-//        count++;
-//    });
-//    dv.setItems([{id:0},{id:1}]);
-//    dv.refresh();
-//    same(3, count, "3 events should have been called");
-//});
-//
-//test("no events on setItems([])", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.onRowsChanged.subscribe(function() { ok(false, "onRowsChanged called") });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.setItems([]);
-//    dv.refresh();
-//});
-//
-//test("no events on setItems followed by refresh", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems([{id:0},{id:1}]);
-//    dv.onRowsChanged.subscribe(function() { ok(false, "onRowsChanged called") });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.refresh();
-//});
-//
-//test("no refresh while suspended", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.beginUpdate();
-//    dv.onRowsChanged.subscribe(function() { ok(false, "onRowsChanged called") });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.setItems([{id:0},{id:1}]);
-//    dv.setFilter(function(o) { return true });
-//    dv.refresh();
-//    same(dv.getLength(), 0, "rows aren't updated until resumed");
-//});
-//
-//test("refresh fires after resume", function() {
-//    var dv = new Slick.Data.DataView();
-//    dv.beginUpdate();
-//    dv.setItems([{id:0},{id:1}]);
-//    same(dv.getItems().length, 2, "items updated immediately");
-//    dv.setFilter(function(o) { return true; });
-//    dv.refresh();
-//
-//    var count = 0;
-//    dv.onRowsChanged.subscribe(function(e,args) {
-//        ok(true, "onRowsChanged called");
-//        same(args, {rows:[0,1]}, "args");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function(e,args) {
-//        ok(true, "onRowCountChanged called");
-//        same(args.previous, 0, "previous arg");
-//        same(args.current, 2, "current arg");
-//        count++;
-//    });
-//    dv.onPagingInfoChanged.subscribe(function(e,args) {
-//        ok(true, "onPagingInfoChanged called");
-//        same(args.pageSize, 0, "pageSize arg");
-//        same(args.pageNum, 0, "pageNum arg");
-//        same(args.totalRows, 2, "totalRows arg");
-//        count++;
-//    });
-//    dv.endUpdate();
-//    equal(count, 3, "events fired");
-//    same(dv.getItems().length, 2, "items are the same");
-//    same(dv.getLength(), 2, "rows updated");
-//});
-//
-//module("sort");
-//
-//test("happy path", function() {
-//    var count = 0;
-//    var items = [{id:2,val:2},{id:1,val:1},{id:0,val:0}];
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems(items);
-//    dv.onRowsChanged.subscribe(function() {
-//        ok(true, "onRowsChanged called");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
-//    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
-//    dv.sort(function(x,y) { return x.val-y.val }, true);
-//    equal(count, 1, "events fired");
-//    same(dv.getItems(), items, "original array should get sorted");
-//    same(items, [{id:0,val:0},{id:1,val:1},{id:2,val:2}], "sort order");
-//    assertConsistency(dv);
-//});
-//
-//test("asc by default", function() {
-//    var items = [{id:2,val:2},{id:1,val:1},{id:0,val:0}];
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems(items);
-//    dv.sort(function(x,y) { return x.val-y.val });
-//    same(items, [{id:0,val:0},{id:1,val:1},{id:2,val:2}], "sort order");
-//});
-//
-//test("desc", function() {
-//    var items = [{id:0,val:0},{id:2,val:2},{id:1,val:1}];
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems(items);
-//    dv.sort(function(x,y) { return -1*(x.val-y.val) });
-//    same(items, [{id:2,val:2},{id:1,val:1},{id:0,val:0}], "sort order");
-//});
-//
-//test("sort is stable", function() {
-//    var items = [{id:0,val:0},{id:2,val:2},{id:3,val:2},{id:1,val:1}];
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems(items);
-//
-//    dv.sort(function(x,y) { return x.val-y.val });
-//    same(items, [{id:0,val:0},{id:1,val:1},{id:2,val:2},{id:3,val:2}], "sort order");
-//
-//    dv.sort(function(x,y) { return x.val-y.val });
-//    same(items, [{id:0,val:0},{id:1,val:1},{id:2,val:2},{id:3,val:2}], "sorting on the same column again doesn't change the order");
-//
-//    dv.sort(function(x,y) { return -1*(x.val-y.val) });
-//    same(items, [{id:2,val:2},{id:3,val:2},{id:1,val:1},{id:0,val:0}], "sort order");
-//});
-//
-//
-//module("filtering");
-//
-//test("applied immediately", function() {
-//    var count = 0;
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems([{id:0,val:0},{id:1,val:1},{id:2,val:2}]);
-//    dv.onRowsChanged.subscribe(function(e,args) {
-//        ok(true, "onRowsChanged called");
-//        same(args, {rows:[0]}, "args");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function(e,args) {
-//        ok(true, "onRowCountChanged called");
-//        same(args.previous, 3, "previous arg");
-//        same(args.current, 1, "current arg");
-//        count++;
-//    });
-//    dv.onPagingInfoChanged.subscribe(function(e,args) {
-//        ok(true, "onPagingInfoChanged called");
-//        same(args.pageSize, 0, "pageSize arg");
-//        same(args.pageNum, 0, "pageNum arg");
-//        same(args.totalRows, 1, "totalRows arg");
-//        count++;
-//    });
-//    dv.setFilter(function(o) { return o.val === 1; });
-//    equal(count, 3, "events fired");
-//    same(dv.getItems().length, 3, "original data is still there");
-//    same(dv.getLength(), 1, "rows are filtered");
-//    assertConsistency(dv);
-//});
-//
-//test("re-applied on refresh", function() {
-//    var count = 0;
-//    var dv = new Slick.Data.DataView();
-//    dv.setItems([{id:0,val:0},{id:1,val:1},{id:2,val:2}]);
-//    dv.setFilterArgs(0);
-//    dv.setFilter(function(o, args) { return o.val >= args; });
-//    same(dv.getLength(), 3, "nothing is filtered out");
-//    assertConsistency(dv);
-//
-//    dv.onRowsChanged.subscribe(function(e,args) {
-//        ok(true, "onRowsChanged called");
-//        same(args, {rows:[0]}, "args");
-//        count++;
-//    });
-//    dv.onRowCountChanged.subscribe(function(e,args) {
-//        ok(true, "onRowCountChanged called");
-//        same(args.previous, 3, "previous arg");
-//        same(args.current, 1, "current arg");
-//        count++;
-//    });
-//    dv.onPagingInfoChanged.subscribe(function(e,args) {
-//        ok(true, "onPagingInfoChanged called");
-//        same(args.pageSize, 0, "pageSize arg");
-//        same(args.pageNum, 0, "pageNum arg");
-//        same(args.totalRows, 1, "totalRows arg");
-//        count++;
-//    });
-//    dv.setFilterArgs(2);
-//    dv.refresh();
-//    equal(count, 3, "events fired");
-//    same(dv.getItems().length, 3, "original data is still there");
-//    same(dv.getLength(), 1, "rows are filtered");
-//    assertConsistency(dv);
-//});
+//        final expectRowsChangedCalled =
+//            expectAsync(() {}, reason: "onRowsChanged called");
+
+//        final expectRowCountChangedCalled =
+//        expectAsync(() {}, reason: "onRowCountChanged called");
+
+//        final expectPagingInfoChangedCalled =
+//          expectAsync(() {}, reason: "onPagingInfoChanged called");
+
+
 //
 //test("re-applied on sort", function() {
 //    var dv = new Slick.Data.DataView();

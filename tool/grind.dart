@@ -19,8 +19,11 @@ _main(List<String> args) => grind(args);
 @Task('Run analyzer')
 analyze() => new PubApp.global('tuneup').run(['check']);
 
-@Task('Run command line tests')
-test() => new PubApp.global('test').run([]);
+@Task('Run tests')
+test() => new PubApp.global('test').run(['-pdartium']);
+
+@Task('Run tests headless')
+testHeadless() => new PubApp.global('test').run(['-pcontent-shell']);
 
 @Task('Run all checks (analyze, check-format, lint, test)')
 @Depends(analyze, checkFormat, lint, test)

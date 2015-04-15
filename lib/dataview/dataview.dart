@@ -135,6 +135,7 @@ class DataView extends DataProvider {
   @override set items(List<core.ItemBase> items) => setItems(items);
 
   void setItems(List<DataItem> data, [String objectIdProperty]) {
+    assert(!data.map((d) => d is DataItem).contains(false));
     if (objectIdProperty != null) {
       idProperty = objectIdProperty;
     }
@@ -893,8 +894,9 @@ class DataView extends DataProvider {
     int countBefore = rows.length;
     int totalRowsBefore = totalRows;
 
+    // TODO seems to be a bug. The receiving method has no filter param
     List<int> diff = recalc(
-        items /*, filter*/); //  pass as direct refs to avoid closure perf hit // TODO seems to be a bug. The receiving method has no filter param
+        items /*, filter*/); //  pass as direct refs to avoid closure perf hit
 
     // if the current page is no longer valid, go to last page and recalc
     // we suffer a performance penalty here, but the main loop (recalc) remains highly optimized
