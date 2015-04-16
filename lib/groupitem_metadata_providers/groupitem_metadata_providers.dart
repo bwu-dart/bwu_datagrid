@@ -44,7 +44,8 @@ class DefaultTotalsCellFormatter extends core.GroupTotalsFormatter {
   GroupItemMetadataProvider giMetadataProvider;
 
   @override
-  void format(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+  void format(
+      dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     if (columnDef.groupTotalsFormatter != null) {
       columnDef.groupTotalsFormatter.format(target, totals, columnDef);
     } else {

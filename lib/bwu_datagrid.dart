@@ -695,8 +695,9 @@ class BwuDatagrid extends PolymerElement {
       (e.target as dom.HtmlElement).classes.remove("ui-state-hover");
     };
 
-    _headers.querySelectorAll(".bwu-datagrid-header-column").forEach(
-        (BwuDatagridHeaderColumn e) {
+    _headers
+        .querySelectorAll(".bwu-datagrid-header-column")
+        .forEach((BwuDatagridHeaderColumn e) {
       // TODO check self/this
       Column columnDef = e.column;
       if (columnDef != null) {
@@ -707,8 +708,9 @@ class BwuDatagrid extends PolymerElement {
     _headers.children.clear();
     _headers.style.width = "${_getHeadersWidth()}px";
 
-    _headerRow.querySelectorAll(".bwu-datagrid-headerrow-column").forEach(
-        (BwuDatagridHeaderrowColumn e) {
+    _headerRow
+        .querySelectorAll(".bwu-datagrid-headerrow-column")
+        .forEach((BwuDatagridHeaderrowColumn e) {
       // TODO check self/this
       Column columnDef = e.column;
       if (columnDef != null) {
@@ -883,8 +885,8 @@ class BwuDatagrid extends PolymerElement {
       }
       setColumns = reorderedColumns;
 
-      _eventBus
-          .fire(core.Events.COLUMNS_REORDERED, new core.ColumnsReordered(this));
+      _eventBus.fire(
+          core.Events.COLUMNS_REORDERED, new core.ColumnsReordered(this));
       e.stopPropagation();
       _setupColumnResize();
     };
@@ -897,8 +899,9 @@ class BwuDatagrid extends PolymerElement {
     int minPageX, maxPageX;
     int firstResizable, lastResizable;
     columnElements = new List<BwuDatagridHeaderColumn>.from(_headers.children);
-    _headers.querySelectorAll(".bwu-datagrid-resizable-handle").forEach(
-        (dom.HtmlElement e) {
+    _headers
+        .querySelectorAll(".bwu-datagrid-resizable-handle")
+        .forEach((dom.HtmlElement e) {
       e.remove();
     });
     for (int i = 0; i < columnElements.length; i++) {
@@ -3179,8 +3182,9 @@ class BwuDatagrid extends PolymerElement {
       if (d != null) {
         var column = columns[_activeCell];
         CellFormatter formatter = _getFormatter(_activeRow, column);
-        /*activeCellNode.innerHtml =*/ formatter.format(_activeCellNode, _activeRow,
-            _activeCell, _getDataItemValueForColumn(d, column), column, d);
+        /*activeCellNode.innerHtml =*/ formatter.format(_activeCellNode,
+            _activeRow, _activeCell, _getDataItemValueForColumn(d, column),
+            column, d);
         _invalidatePostProcessingResults(_activeRow);
       }
     }

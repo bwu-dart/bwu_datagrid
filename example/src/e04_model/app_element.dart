@@ -26,13 +26,69 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "sel", name: "#", field: "num", behavior: ["select"], cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false, isMovable: false),
-    new Column(id: "title", name: "Title", field: "title", width: 120, minWidth: 120, cssClass: "cell-title", editor: new TextEditor(), validator: RequiredFieldValidator, sortable: true),
-    new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor(), sortable: true),
-    new Column(id: "%", defaultSortAsc: false, name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor(), sortable: true),
-    new Column(id: "start", name: "Start", field: "start", minWidth: 60, editor: new DateEditor(), sortable: true),
-    new Column(id: "finish", name: "Finish", field: "finish", minWidth: 60, editor: new DateEditor(), sortable: true),
-    new Column(id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: new fm.CheckmarkFormatter(), editor: new CheckboxEditor(), cannotTriggerInsert: true, sortable: true)
+    new Column(
+        id: "sel",
+        name: "#",
+        field: "num",
+        behavior: ["select"],
+        cssClass: "cell-selection",
+        width: 40,
+        cannotTriggerInsert: true,
+        resizable: false,
+        selectable: false,
+        isMovable: false),
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 120,
+        minWidth: 120,
+        cssClass: "cell-title",
+        editor: new TextEditor(),
+        validator: RequiredFieldValidator,
+        sortable: true),
+    new Column(
+        id: "duration",
+        name: "Duration",
+        field: "duration",
+        editor: new TextEditor(),
+        sortable: true),
+    new Column(
+        id: "%",
+        defaultSortAsc: false,
+        name: "% Complete",
+        field: "percentComplete",
+        width: 80,
+        resizable: false,
+        formatter: new fm.PercentCompleteBarFormatter(),
+        editor: new PercentCompleteEditor(),
+        sortable: true),
+    new Column(
+        id: "start",
+        name: "Start",
+        field: "start",
+        minWidth: 60,
+        editor: new DateEditor(),
+        sortable: true),
+    new Column(
+        id: "finish",
+        name: "Finish",
+        field: "finish",
+        minWidth: 60,
+        editor: new DateEditor(),
+        sortable: true),
+    new Column(
+        id: "effort-driven",
+        name: "Effort Driven",
+        width: 80,
+        minWidth: 20,
+        maxWidth: 80,
+        cssClass: "cell-effort-driven",
+        field: "effortDriven",
+        formatter: new fm.CheckmarkFormatter(),
+        editor: new CheckboxEditor(),
+        cannotTriggerInsert: true,
+        sortable: true)
   ];
 
   var gridOptions = new GridOptions(

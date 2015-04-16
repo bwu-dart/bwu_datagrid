@@ -19,7 +19,8 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 
 class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   @override
-  void format(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+  void format(
+      dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['avg'] != null && totals['avg'][columnDef.field] != null) {
@@ -35,7 +36,8 @@ class AvgTotalsFormatter extends core.GroupTotalsFormatter {
 
 class SumTotalsFormatter extends core.GroupTotalsFormatter {
   @override
-  void format(dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+  void format(
+      dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['sum'] != null && totals['sum'][columnDef.field] != null) {
@@ -84,14 +86,68 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   List<Column> columns = [
-    new Column(id: "sel", name: "#", field: "num", cssClass: "cell-selection", width: 40, resizable: false, selectable: false, focusable: false),
-    new Column(id: "title", name: "Title", field: "title", width: 70, minWidth: 50, cssClass: "cell-title", sortable: true, editor: new ed.TextEditor()),
-    new Column(id: "duration", name: "Duration", field: "duration", width: 70, sortable: true, groupTotalsFormatter: new SumTotalsFormatter()),
-    new Column(id: "%", name: "% Complete", field: "percentComplete", width: 80, formatter: new fm.PercentCompleteBarFormatter(), sortable: true, groupTotalsFormatter: new AvgTotalsFormatter()),
-    new Column(id: "start", name: "Start", field: "start", minWidth: 60, sortable: true),
-    new Column(id: "finish", name: "Finish", field: "finish", minWidth: 60, sortable: true),
-    new Column(id: "cost", name: "Cost", field: "cost", width: 90, sortable: true, groupTotalsFormatter: new SumTotalsFormatter()),
-    new Column(id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: new fm.CheckmarkFormatter(), sortable: true)
+    new Column(
+        id: "sel",
+        name: "#",
+        field: "num",
+        cssClass: "cell-selection",
+        width: 40,
+        resizable: false,
+        selectable: false,
+        focusable: false),
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 70,
+        minWidth: 50,
+        cssClass: "cell-title",
+        sortable: true,
+        editor: new ed.TextEditor()),
+    new Column(
+        id: "duration",
+        name: "Duration",
+        field: "duration",
+        width: 70,
+        sortable: true,
+        groupTotalsFormatter: new SumTotalsFormatter()),
+    new Column(
+        id: "%",
+        name: "% Complete",
+        field: "percentComplete",
+        width: 80,
+        formatter: new fm.PercentCompleteBarFormatter(),
+        sortable: true,
+        groupTotalsFormatter: new AvgTotalsFormatter()),
+    new Column(
+        id: "start",
+        name: "Start",
+        field: "start",
+        minWidth: 60,
+        sortable: true),
+    new Column(
+        id: "finish",
+        name: "Finish",
+        field: "finish",
+        minWidth: 60,
+        sortable: true),
+    new Column(
+        id: "cost",
+        name: "Cost",
+        field: "cost",
+        width: 90,
+        sortable: true,
+        groupTotalsFormatter: new SumTotalsFormatter()),
+    new Column(
+        id: "effort-driven",
+        name: "Effort Driven",
+        width: 80,
+        minWidth: 20,
+        maxWidth: 80,
+        cssClass: "cell-effort-driven",
+        field: "effortDriven",
+        formatter: new fm.CheckmarkFormatter(),
+        sortable: true)
   ];
 
   var gridOptions = new GridOptions(enableCellNavigation: true, editable: true);

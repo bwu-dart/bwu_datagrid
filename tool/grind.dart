@@ -20,10 +20,10 @@ _main(List<String> args) => grind(args);
 analyze() => new PubApp.global('tuneup').run(['check']);
 
 @Task('Run tests')
-test() => new PubApp.global('test').run(['-pdartium']);
+test() => new PubApp.local('test').run(['-pdartium']);
 
 @Task('Run tests headless')
-testHeadless() => new PubApp.global('test').run(['-pcontent-shell']);
+testHeadless() => new PubApp.local('test').run(['-pcontent-shell']);
 
 @Task('Run all checks (analyze, check-format, lint, test)')
 @Depends(analyze, checkFormat, lint, test)
@@ -36,5 +36,5 @@ checkFormat() => checkFormatTask(['.']);
 formatAll() => formatAllTask(['.']);
 
 @Task('Run lint checks')
-lint() => new PubApp.global('linter').run(['--stats', '-ctool/lintcfg.yaml', '.']);
-
+lint() =>
+    new PubApp.global('linter').run(['--stats', '-ctool/lintcfg.yaml', '.']);

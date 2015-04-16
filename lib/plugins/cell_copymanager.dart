@@ -49,8 +49,8 @@ class CellCopyManager extends Plugin {
           e.preventDefault();
           _copiedRanges = ranges;
           _markCopySelection(ranges);
-          eventBus
-              .fire(core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
+          eventBus.fire(
+              core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
         }
       }
 

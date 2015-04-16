@@ -14,8 +14,20 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 200, cssClass: "cell-title", editor: new TextEditor()),
-    new Column(id: "priority", name: "Priority", field: "priority", width: 80, selectable: false, resizable: false)
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 200,
+        cssClass: "cell-title",
+        editor: new TextEditor()),
+    new Column(
+        id: "priority",
+        name: "Priority",
+        field: "priority",
+        width: 80,
+        selectable: false,
+        resizable: false)
   ];
 
   var gridOptions = new GridOptions(

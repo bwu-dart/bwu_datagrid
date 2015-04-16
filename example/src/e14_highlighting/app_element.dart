@@ -35,9 +35,8 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
-    new Column(id: "server", name: "Server", field: "server", width: 180),
-  ];
+  List<Column> columns =
+      [new Column(id: "server", name: "Server", field: "server", width: 180),];
 
   var gridOptions = new GridOptions(
       editable: false,

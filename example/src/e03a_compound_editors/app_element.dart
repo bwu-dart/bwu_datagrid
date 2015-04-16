@@ -12,8 +12,8 @@ import 'numeric_range_editor.dart';
 
 class NumericRangeFormatter extends fm.CellFormatter {
   @override
-  void format(dom.HtmlElement target, int row, int cell, value, Column columnDef,
-      dataContext) {
+  void format(dom.HtmlElement target, int row, int cell, value,
+      Column columnDef, dataContext) {
     target.children.clear();
     target.text = "${dataContext['from']} - ${dataContext['to']}";
   }

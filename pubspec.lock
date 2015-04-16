@@ -4,7 +4,7 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.24.3"
+    version: "0.24.5"
   args:
     description: args
     source: hosted
@@ -36,7 +36,7 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.7+2"
+    version: "0.2.8"
   collection:
     description: collection
     source: hosted
@@ -60,7 +60,7 @@ packages:
   grinder:
     description:
       ref: null
-      resolved-ref: "8a0eafccf32e4a6652ce706e55d5144d5f9495f9"
+      resolved-ref: "0d4be9a2463aad2c36bdb7774a02de6e17c7a53c"
       url: "git@github.com:google/grinder.dart.git"
     source: git
     version: "0.7.0-dev.2"
@@ -84,10 +84,6 @@ packages:
     description: intl
     source: hosted
     version: "0.12.2"
-  linter:
-    description: linter
-    source: hosted
-    version: "0.0.2+1"
   logging:
     description: logging
     source: hosted
@@ -175,7 +171,7 @@ packages:
   test:
     description: test
     source: hosted
-    version: "0.12.0-beta.6"
+    version: "0.12.0-beta.7"
   utf:
     description: utf
     source: hosted

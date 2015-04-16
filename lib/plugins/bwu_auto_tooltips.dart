@@ -21,11 +21,11 @@ class AutoTooltipsOptions {
       this.enableForHeaderCells: false, this.maxTooltipLength});
 }
 
-  /// AutoTooltips plugin to show/hide tooltips when columns are too narrow to fit content.
-  /// @constructor
-  /// @param {boolean} [options.enableForCells=true]        - Enable tooltip for grid cells
-  /// @param {boolean} [options.enableForHeaderCells=false] - Enable tooltip for header cells
-  /// @param {number}  [options.maxToolTipLength=null]      - The maximum length for a tooltip
+/// AutoTooltips plugin to show/hide tooltips when columns are too narrow to fit content.
+/// @constructor
+/// @param {boolean} [options.enableForCells=true]        - Enable tooltip for grid cells
+/// @param {boolean} [options.enableForHeaderCells=false] - Enable tooltip for header cells
+/// @param {number}  [options.maxToolTipLength=null]      - The maximum length for a tooltip
 class AutoTooltips extends Plugin {
   AutoTooltipsOptions options;
 

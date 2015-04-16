@@ -23,8 +23,7 @@ class DefaultFormatter extends Formatter {
   }
 }
 
-abstract class Formatter {
-}
+abstract class Formatter {}
 
 abstract class CellFormatter extends Formatter {
   void format(dom.HtmlElement target, int row, int cell, dynamic value,

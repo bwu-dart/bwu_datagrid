@@ -90,7 +90,7 @@ class Range {
       this.leftPx, this.top, this.bottom});
 }
 
-typedef Editor EditorFactory (Column column);
+typedef Editor EditorFactory(Column column);
 
 typedef Formatter FormatterFactory(Column column);
 
