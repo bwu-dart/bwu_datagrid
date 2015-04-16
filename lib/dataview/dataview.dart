@@ -149,9 +149,11 @@ class DataView extends DataProvider {
   void setPagingOptions(PagingInfo args) {
     if (args.pageSize != null) {
       pagesize = args.pageSize;
-      pagenum = pagesize != null && pagesize != 0
-          ? math.min(pagenum, math.max(0, (totalRows / pagesize).ceil() - 1))
-          : 0;
+      pagenum =
+          pagesize != null && pagesize != 0
+              ? math.min(
+                  pagenum, math.max(0, (totalRows / pagesize).ceil() - 1))
+              : 0;
     }
 
     if (args.pageNum != null) {
@@ -399,7 +401,8 @@ class DataView extends DataProvider {
       GroupingInfo gi = groupingInfos[item.level];
       if (!gi.isDisplayTotalsRow) {
         calculateTotals(item.totals);
-        item.title = gi.formatter != null ? gi.formatter.format(item) : item.value;
+        item.title =
+            gi.formatter != null ? gi.formatter.format(item) : item.value;
       }
     }
     // if this is a totals row, make sure it's calculated
@@ -791,7 +794,7 @@ class DataView extends DataProvider {
       // rows collection needs to be a copy so that changes due to sort
       // can be caught
       filteredItems =
-          pagesize != null ? items : new List<core.ItemBase>.from(items);
+          pagesize != null && pagesize != 0 ? items : items.toList();
     }
 
     // get the current page
@@ -837,9 +840,9 @@ class DataView extends DataProvider {
         item = newRows[i];
         r = rows[i];
 
-        eitherIsNonData = (item is core.NonDataItem);
+        eitherIsNonData = item is core.NonDataItem || r is core.NonDataItem;
         if ((groupingInfos.length > 0 &&
-                    (eitherIsNonData || (r is core.NonDataItem)) &&
+                    eitherIsNonData &&
                     item is core.Group != r is core.Group ||
                 item is core.Group && item != r) ||
             (eitherIsNonData &&
