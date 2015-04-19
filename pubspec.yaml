@@ -17,6 +17,8 @@ dev_dependencies:
   test: '>=0.12.0-b <0.13.0'
   bwu_sparkline: #'>=0.0.7 <0.1.0'
     path: ../bwu_sparkline
+  webdriver: ^0.9.0
+  which: ^0.1.0
 
 dependency_overrides:
   analyzer: '>=0.23.0 <0.26.0'
