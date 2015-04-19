@@ -12,8 +12,8 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 /// @module Formatters
 /// @namespace Slick
 
-class DefaultFormatter extends Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+class DefaultFormatter extends CellFormatter {
+  void format(dom.HtmlElement target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value != null) {
