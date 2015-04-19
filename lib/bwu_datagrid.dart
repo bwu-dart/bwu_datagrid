@@ -1107,10 +1107,10 @@ class BwuDatagrid extends PolymerElement {
     ];
     var delta = 0;
     var gcs = $el.getComputedStyle();
-    delta += utils.parseInt(gcs.borderTopWidth) +
-        utils.parseInt(gcs.borderBottomWidth) +
-        utils.parseInt(gcs.paddingTop) +
-        utils.parseInt(gcs.paddingBottom);
+    delta += utils.parseIntDropUnit(gcs.borderTopWidth) +
+        utils.parseIntDropUnit(gcs.borderBottomWidth) +
+        utils.parseIntDropUnit(gcs.paddingTop) +
+        utils.parseIntDropUnit(gcs.paddingBottom);
 
 //    p.forEach((prop) {
 //      delta += tools.parseInt($el.style.getPropertyValue(prop)); // || 0; // TODO
@@ -1134,19 +1134,19 @@ class BwuDatagrid extends PolymerElement {
     var gcs = el.getComputedStyle();
     if (el.style.boxSizing != "border-box") {
       //h.forEach((prop) {
-      _headerColumnWidthDiff = utils.parseInt(gcs.borderLeftWidth) +
-          utils.parseInt(gcs.borderRightWidth) +
-          utils.parseInt(gcs.paddingLeft) +
-          utils.parseInt(gcs.paddingRight);
+      _headerColumnWidthDiff = utils.parseIntDropUnit(gcs.borderLeftWidth) +
+          utils.parseIntDropUnit(gcs.borderRightWidth) +
+          utils.parseIntDropUnit(gcs.paddingLeft) +
+          utils.parseIntDropUnit(gcs.paddingRight);
       // || 0; // TODO
       //});
       //v.forEach((prop) {
       //  headerColumnHeightDiff += tools.parseInt(gcs.getPropertyValue(prop)); //; || 0; // TODO
       //});
-      _headerColumnHeightDiff = utils.parseInt(gcs.borderTopWidth) +
-          utils.parseInt(gcs.borderBottomWidth) +
-          utils.parseInt(gcs.paddingTop) +
-          utils.parseInt(gcs.paddingBottom);
+      _headerColumnHeightDiff = utils.parseIntDropUnit(gcs.borderTopWidth) +
+          utils.parseIntDropUnit(gcs.borderBottomWidth) +
+          utils.parseIntDropUnit(gcs.paddingTop) +
+          utils.parseIntDropUnit(gcs.paddingBottom);
     }
     el.remove();
 
@@ -1166,18 +1166,18 @@ class BwuDatagrid extends PolymerElement {
 //        var val = tools.parseInt(el.getComputedStyle().getPropertyValue(prop));
 //        cellWidthDiff += val != null ? val : 0; // TODO
 //      });
-      _cellWidthDiff = utils.parseInt(gcs.borderLeftWidth) +
-          utils.parseInt(gcs.borderRightWidth) +
-          utils.parseInt(gcs.paddingLeft) +
-          utils.parseInt(gcs.paddingRight);
+      _cellWidthDiff = utils.parseIntDropUnit(gcs.borderLeftWidth) +
+          utils.parseIntDropUnit(gcs.borderRightWidth) +
+          utils.parseIntDropUnit(gcs.paddingLeft) +
+          utils.parseIntDropUnit(gcs.paddingRight);
 //      v.forEach((prop) {
 //        var val = tools.parseInt(el.getComputedStyle().getPropertyValue(prop));
 //        cellHeightDiff += val != null ? val : 0; // TODO
 //      });
-      _cellHeightDiff = utils.parseInt(gcs.borderTopWidth) +
-          utils.parseInt(gcs.borderBottomWidth) +
-          utils.parseInt(gcs.paddingTop) +
-          utils.parseInt(gcs.paddingBottom);
+      _cellHeightDiff = utils.parseIntDropUnit(gcs.borderTopWidth) +
+          utils.parseIntDropUnit(gcs.borderBottomWidth) +
+          utils.parseIntDropUnit(gcs.paddingTop) +
+          utils.parseIntDropUnit(gcs.paddingBottom);
     }
     //var x = r.getComputedStyle();
     r.remove();
@@ -2031,10 +2031,10 @@ class BwuDatagrid extends PolymerElement {
     var containerCs = _container.host.getComputedStyle();
     var headerScrollerCs = _headerScroller.getComputedStyle();
 
-    var x = utils.parseInt(containerCs.height) -
-        utils.parseInt(containerCs.paddingTop) -
-        utils.parseInt(containerCs.paddingBottom) -
-        utils.parseInt(headerScrollerCs.height) -
+    var x = utils.parseIntDropUnit(containerCs.height) -
+        utils.parseIntDropUnit(containerCs.paddingTop) -
+        utils.parseIntDropUnit(containerCs.paddingBottom) -
+        utils.parseIntDropUnit(headerScrollerCs.height) -
         _getVBoxDelta(_headerScroller) -
         (_gridOptions.showTopPanel
             ? _gridOptions.topPanelHeight + _getVBoxDelta(_topPanelScroller)
