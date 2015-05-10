@@ -1,39 +1,44 @@
 @Timeout(const Duration(minutes: 5))
 
-import '../util/webdriver.dart' as wd;
-
 import 'dart:async' show Future, Stream;
-import 'package:test/test.dart';
+import 'package:bwu_utils/testing_server.dart';
 
 main() async {
-  wd.DriverFactory wdFactory = wd.createDriverFactory();
+  DriverFactory wdFactory = createDriverFactory();
   await wdFactory.startFactory();
 
-  wd.WebDriver driver;
-  wd.PubServe server;
   group('x', () {
+    WebDriver driver;
+    PubServe pubServe;
+    int finishedTests;
+
     setUp(() async {
-      print('setUp');
-      server = new wd.PubServe();
-      await server.start(directories: const ['example']);
-      driver = await wdFactory.createDriver();
-      print('driver = $driver');
+      if(pubServe == null) {
+        print('setUp');
+        pubServe = new PubServe();
+        await pubServe.start(directories: const ['example']);
+        driver = await wdFactory.createDriver();
+        print('driver = $driver');
+      }
     });
 
     tearDown(() async {
-      print('closing driver ${wdFactory}');
-      await driver.quit();
+      finishedTests++;
+      //if(finishedTests >= test.length) {
+        print('closing driver ${wdFactory}');
+        await driver.quit();
 
-      print('closing server');
-      server.stop();
-      return wdFactory.stopFactory();
+        print('closing server');
+        pubServe.stop();
+        return wdFactory.stopFactory();
+      //}
     });
 
-
     test('', () async {
-      final examplePubServePort = server.directoryPorts['example'];
-      print('get: http://localhost:${examplePubServePort}/e01_simple.html');
-      await driver.get('http://localhost:${examplePubServePort}/e01_simple.html');
+      final examplePubServePort = pubServe.directoryPorts['example'];
+      final url = 'http://localhost:${examplePubServePort}/e01_simple.html';
+      print('get: ${url}');
+      await driver.get(url);
       await new Future.delayed(new Duration(seconds: 1), () {});
       String title = await driver.title;
       print('title: $title');

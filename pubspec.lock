@@ -4,7 +4,7 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.24.5"
+    version: "0.25.0+1"
   args:
     description: args
     source: hosted
@@ -22,7 +22,7 @@ packages:
       path: "../bwu_sparkline"
       relative: true
     source: path
-    version: "0.0.7+2"
+    version: "0.0.8+1"
   bwu_utils:
     description:
       path: "../bwu_utils"
@@ -36,11 +36,11 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.8"
+    version: "0.2.9"
   collection:
     description: collection
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   crypto:
     description: crypto
     source: hosted
@@ -52,18 +52,11 @@ packages:
   dart_style:
     description: dart_style
     source: hosted
-    version: "0.1.7"
+    version: "0.1.8"
   glob:
     description: glob
     source: hosted
     version: "1.0.4"
-  grinder:
-    description:
-      ref: null
-      resolved-ref: "8a4c13c8036dea6b4a470a188701ce095021cf75"
-      url: "git@github.com:google/grinder.dart.git"
-    source: git
-    version: "0.7.0-dev.2"
   html:
     description: html
     source: hosted
@@ -72,18 +65,14 @@ packages:
     description: http_parser
     source: hosted
     version: "0.0.2+6"
-  http_server:
-    description: http_server
-    source: hosted
-    version: "0.9.5+1"
   initialize:
     description: initialize
     source: hosted
-    version: "0.6.0+4"
+    version: "0.6.1"
   intl:
     description: intl
     source: hosted
-    version: "0.12.2"
+    version: "0.12.3"
   logging:
     description: logging
     source: hosted
@@ -91,7 +80,7 @@ packages:
   matcher:
     description: matcher
     source: hosted
-    version: "0.12.0-alpha.0"
+    version: "0.12.0"
   mime:
     description: mime
     source: hosted
@@ -99,7 +88,7 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.13.0+2"
+    version: "0.13.1"
   path:
     description: path
     source: hosted
@@ -111,7 +100,7 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.16.1+4"
+    version: "0.16.3+1"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -119,7 +108,7 @@ packages:
   polymer_interop:
     description: polymer_interop
     source: hosted
-    version: "0.1.0+2"
+    version: "0.1.1"
   pool:
     description: pool
     source: hosted
@@ -127,7 +116,7 @@ packages:
   pub_semver:
     description: pub_semver
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   quiver:
     description: quiver
     source: hosted
@@ -151,11 +140,11 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.3.2"
+    version: "0.3.3"
   source_maps:
     description: source_maps
     source: hosted
-    version: "0.10.0+2"
+    version: "0.10.1"
   source_span:
     description: source_span
     source: hosted
@@ -163,7 +152,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.3.1"
+    version: "1.3.2"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -175,7 +164,7 @@ packages:
   test:
     description: test
     source: hosted
-    version: "0.12.0-beta.10"
+    version: "0.12.0"
   utf:
     description: utf
     source: hosted
@@ -187,11 +176,11 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.11.2"
+    version: "0.11.4"
   webdriver:
     description: webdriver
     source: hosted
-    version: "0.9.1"
+    version: "0.10.0-pre.8"
   when:
     description: when
     source: hosted
