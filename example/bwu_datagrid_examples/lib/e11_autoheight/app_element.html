@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<link rel="import" href="../../../packages/polymer/polymer.html">
+<link rel='import' href='../../../packages/bwu_datagrid/bwu_datagrid.html'>
+
+<polymer-element name='app-element'>
+  <template>
+    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
+    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
+    <link rel="stylesheet"
+          href='../../../packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
+    <link rel='stylesheet' href='../asset/examples.css'>
+
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+      }
+    </style>
+
+    <div style='position:relative'>
+      <div>
+        <bwu-datagrid id='myGrid' style='width:480px;'></bwu-datagrid>
+      </div>
+
+      <div class='options-panel'>
+        <h2>Demonstrates:</h2>
+        <ul>
+          <li>autoHeight:true grid option</li>
+        </ul>
+        <h2>View Source:</h2>
+        <ul>
+          <li><a
+              href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/bwu_datagrid_examples/web/e11_autoheight/app_element.dart"
+              target="_sourcewindow"> View the source for this example on
+            Github</a></li>
+        </ul>
+      </div>
+    </div>
+  </template>
+  <script type='application/dart' src='app_element.dart'></script>
+</polymer-element>

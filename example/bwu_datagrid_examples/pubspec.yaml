@@ -1,0 +1,60 @@
+name: bwu_datagrid_examples
+version: 0.0.20
+author: Günter Zöchbauer <guenter@gzoechbauer.com>
+description: Examples to demonstrate the capabilities of BWU Datagrid
+homepage: https://github.com/bwu-dart/bwu_datagrid
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+
+dependencies:
+  bwu_datagrid:
+    path: ../bwu_datagrid
+  polymer: '>=0.12.1 <0.17.0'
+  quiver: '>=0.21.3 <0.22.0'
+  quiver_log: '>=1.0.1 <2.0.0'
+  bwu_utils: # '>=0.1.0-dev.1 <0.2.0'
+    path: ../bwu_utils
+  bwu_sparkline: #'>=0.0.7 <0.1.0'
+    path: ../bwu_sparkline
+
+dev_dependencies:
+  test: '>=0.12.0-b <0.13.0'
+  webdriver: ^0.10.0-pre.2
+  which: ^0.1.0
+
+dependency_overrides:
+  analyzer: '>=0.23.0 <0.26.0'
+  args: '>=0.13.0 <0.14.0'
+  matcher: '>=0.12.0 <0.13.0'
+
+transformers:
+- test/pub_serve:
+    $include: test/**_test.dart
+
+- polymer:
+    entry_points:
+    - web/e01_simple.html
+    - web/e02_formatters.html
+    - web/e07_events.html
+    - web/e14_highlighting.html
+    - web/e03_editing.html
+    - web/e03a_compound_editors.html
+    - web/e03b_editing_with_undo.html
+    - web/composite_editor_item_details.html
+    - web/totals_via_data_provider.html
+    - web/e04_model.html
+    - web/e05_collapsing.html
+    - web/e08_alternative_display.html
+    - web/e09_row_reordering.html
+    - web/e10_async_post_render.html
+    - web/e11_autoheight.html
+    - web/e12_fillbrowser.html
+    - web/e13_get_item_sorting.html
+    - web/header_row.html
+    - web/checkbox_row_select.html
+    - web/spreadsheet.html
+    - web/grouping.html
+    - web/autotooltips.html
+    inline_stylesheets:
+      packages/bwu_datagrid_examples/asset/examples.css: false
+      packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css: false

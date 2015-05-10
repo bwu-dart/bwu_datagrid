@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<link rel="import" href="../../../packages/polymer/polymer.html">
+<link rel='import' href='../../../packages/bwu_datagrid/bwu_datagrid.html'>
+
+<polymer-element name='app-element'>
+  <template>
+    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
+    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
+    <link rel="stylesheet"
+          href='../../../packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
+    <link rel='stylesheet' href='../asset/examples.css'>
+
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+      }
+
+      #description {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        width: 25em;
+        background: beige;
+        border: solid 1px gray;
+        z-index: 1000;
+      }
+
+      #description h2 {
+        padding-left: 0.5em;
+      }
+
+      #myGrid {
+        position: absolute;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 0;
+      }
+    </style>
+
+    <!-- <div style='position:relative'>
+      <div style='width:600px;'>-->
+    <bwu-datagrid id='myGrid'></bwu-datagrid>
+    <!--</div> -->
+
+    <div id='description'>
+      <h2>Demonstrates:</h2>
+      <ul>
+        <li>Sorting grid items by an index</li>
+        <li>Using the getItem method to provide data</li>
+      </ul>
+      <h2>View Source:</h2>
+      <ul>
+        <li><a
+            href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/bwu_datagrid_examples/web/e12_get_item_sorting/app_element.dart"
+            target="_sourcewindow"> View the source for this example on
+          Github</a></li>
+      </ul>
+    </div>
+    <!--</div>-->
+  </template>
+  <script type='application/dart' src='app_element.dart'></script>
+</polymer-element>
