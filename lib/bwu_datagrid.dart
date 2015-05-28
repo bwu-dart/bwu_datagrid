@@ -745,8 +745,9 @@ class BwuDatagrid extends PolymerElement {
           ..attributes["id"] = '${m.id}'
           ..attributes["title"] = m.toolTip != null ? m.toolTip : ""
           ..attributes['ismovable'] = '${m.isMovable}'
-          ..column = m
-          ..classes.add(m.headerCssClass != null ? m.headerCssClass : "");
+          ..column = m;
+        if (m.headerCssClass != null) 
+          header.classes.add(m.headerCssClass);
         _headers.append(header);
 
         if (_gridOptions.enableColumnReorder || m.sortable) {
@@ -1816,8 +1817,9 @@ class BwuDatagrid extends PolymerElement {
 
     dom.HtmlElement rowElement = new dom.DivElement()
       ..classes.add('ui-widget-content')
-      ..classes.add(rowCss)
+      ..classes.addAll(rowCss.split(" ").where((s) => s.length > 0))
       ..style.top = '${_getRowTop(row)}px';
+      
     //stringArray.add(rowElement);
 
     String colspan;
@@ -1878,7 +1880,8 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    dom.HtmlElement cellElement = new dom.DivElement()..classes.add(cellCss);
+    dom.HtmlElement cellElement = new dom.DivElement()
+                                    ..classes.addAll(cellCss.split(" ").where((s) => s.length > 0));
 
     if (m.isDraggable) {
       cellElement.attributes['draggable'] = 'true';
