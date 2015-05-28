@@ -8,9 +8,10 @@
 ## BWU Datagrid is an advanced Polymer.dart grid/spreadsheet component
 BWU Datagrid is a Dart port from [SlickGrid](https://github.com/mleibman/SlickGrid)
 
-Find **examples** in [the wiki](https://github.com/bwu-dart/bwu_datagrid/wiki).
+Find **examples** in [the wiki](https://github.com/bwu-dart/bwu_datagrid/wiki).  
+The source code for the examples was moved to https://github.com/bwu-dart/bwu_datagrid_examples
 
-**UPDATE:  May 6th, 2015
+**UPDATE:  May 10th, 2015
 
 ### Status
 

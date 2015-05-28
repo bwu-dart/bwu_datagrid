@@ -17,12 +17,6 @@ packages:
     description: browser
     source: hosted
     version: "0.10.0+2"
-  bwu_sparkline:
-    description:
-      path: "../bwu_sparkline"
-      relative: true
-    source: path
-    version: "0.0.8+1"
   bwu_utils:
     description:
       path: "../bwu_utils"
@@ -48,7 +42,7 @@ packages:
   csslib:
     description: csslib
     source: hosted
-    version: "0.12.0"
+    version: "0.12.0+1"
   dart_style:
     description: dart_style
     source: hosted
@@ -57,6 +51,10 @@ packages:
     description: glob
     source: hosted
     version: "1.0.4"
+  grinder:
+    description: grinder
+    source: hosted
+    version: "0.7.0"
   html:
     description: html
     source: hosted
@@ -65,6 +63,10 @@ packages:
     description: http_parser
     source: hosted
     version: "0.0.2+6"
+  http_server:
+    description: http_server
+    source: hosted
+    version: "0.9.5+1"
   initialize:
     description: initialize
     source: hosted
@@ -76,7 +78,7 @@ packages:
   logging:
     description: logging
     source: hosted
-    version: "0.9.3"
+    version: "0.11.1"
   matcher:
     description: matcher
     source: hosted
@@ -88,7 +90,7 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.13.1"
+    version: "0.13.1+1"
   path:
     description: path
     source: hosted
@@ -100,7 +102,7 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.16.3+1"
+    version: "0.16.3+2"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -120,7 +122,7 @@ packages:
   quiver:
     description: quiver
     source: hosted
-    version: "0.21.3"
+    version: "0.21.3+1"
   quiver_log:
     description: quiver_log
     source: hosted
@@ -128,7 +130,7 @@ packages:
   shelf:
     description: shelf
     source: hosted
-    version: "0.6.1+1"
+    version: "0.6.1+2"
   shelf_static:
     description: shelf_static
     source: hosted
@@ -140,7 +142,7 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.3.3"
+    version: "0.3.3+1"
   source_maps:
     description: source_maps
     source: hosted
@@ -164,7 +166,7 @@ packages:
   test:
     description: test
     source: hosted
-    version: "0.12.0"
+    version: "0.12.1"
   utf:
     description: utf
     source: hosted
@@ -176,11 +178,7 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.11.4"
-  webdriver:
-    description: webdriver
-    source: hosted
-    version: "0.10.0-pre.8"
+    version: "0.11.4+1"
   when:
     description: when
     source: hosted
