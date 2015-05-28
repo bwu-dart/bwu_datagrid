@@ -1,3 +1,9 @@
+## 0.0.22
+- fix for breaking change in Dart 1.10.0 in `classes.add`
+
+## 0.0.21
+- widen dependency constraint on quiver
+
 ## 0.0.20
 - use dartformat
 - extend dependency constraint to allow Polymer 0.16.0
