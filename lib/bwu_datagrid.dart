@@ -24,6 +24,8 @@ import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 class BwuDatagrid extends PolymerElement {
   BwuDatagrid.created() : super.created();
 
+  String _instanceID;
+  
   bool _isAttached = false;
   bool _isPendingInit = false;
 
@@ -201,6 +203,9 @@ class BwuDatagrid extends PolymerElement {
 
   void _init() {
     _container = this.shadowRoot;
+    _instanceID = this.id != null && this.id != ""
+        ? this.id
+        : _generateInstanceID();
 
     // calculate these only once and share between grid instances
     _maxSupportedCssHeight = _maxSupportedCssHeight != null
@@ -264,6 +269,7 @@ class BwuDatagrid extends PolymerElement {
     _headerScroller = $['headerScroller'] //new dom.DivElement()
       //..classes.add('bwu-datagrid-header')
       //..classes.add('ui-state-default')
+      ..classes.add(_instanceID)
       ..style.overflow = 'hidden'
       ..style.position = 'relative';
     //_container.append(_headerScroller);
@@ -324,6 +330,7 @@ class BwuDatagrid extends PolymerElement {
     _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
 
     _canvas = $['canvas']; //new dom.DivElement()..classes.add('grid-canvas');
+    _canvas.classes.add(_instanceID);
     //_viewport.append(_canvas);
 
     _focusSink2 = (_focusSink.clone(true) as dom.DivElement)..id = 'focusSink2';
@@ -332,6 +339,10 @@ class BwuDatagrid extends PolymerElement {
     if (!_gridOptions.explicitInitialization) {
       _finishInitialization();
     }
+  }
+  
+  String _generateInstanceID () {
+    return "bwudatagrid_${new DateTime.now().millisecondsSinceEpoch}";
   }
 
   void _finishInitialization() {
@@ -1190,17 +1201,17 @@ class BwuDatagrid extends PolymerElement {
     this.shadowRoot.append(_style);
     var rowHeight = (_gridOptions.rowHeight - _cellHeightDiff);
     var rules = [
-      ".bwu-datagrid-header-column { left: 1000px; }",
-      ".bwu-datagrid-top-panel { height:${_gridOptions.topPanelHeight}px; }",
-      ".bwu-datagrid-headerrow-columns { height:${_gridOptions.headerRowHeight}px; }",
-      ".bwu-datagrid-cell { height:${rowHeight}px; }",
-      ".bwu-datagrid-row { height:${_gridOptions.rowHeight}px; }"
+      ".${_instanceID} .bwu-datagrid-header-column { left: 1000px; }",
+      ".${_instanceID} .bwu-datagrid-top-panel { height:${_gridOptions.topPanelHeight}px; }",
+      ".${_instanceID} .bwu-datagrid-headerrow-columns { height:${_gridOptions.headerRowHeight}px; }",
+      ".${_instanceID} .bwu-datagrid-cell { height:${rowHeight}px; }",
+      ".${_instanceID} .bwu-datagrid-row { height:${_gridOptions.rowHeight}px; }"
     ];
 
     if (columns != null) {
       for (int i = 0; i < columns.length; i++) {
-        rules.add(".l${i} { }");
-        rules.add(".r${i} { }");
+        rules.add(".${_instanceID} .l${i} { }");
+        rules.add(".${_instanceID} .r${i} { }");
       }
     }
 
