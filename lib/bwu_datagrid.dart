@@ -342,6 +342,8 @@ class BwuDatagrid extends PolymerElement {
   }
   
   String _generateInstanceID () {
+    /* gonzalopezzi: this ID generation method could be improved 
+     * by using the uuid pub package */
     return "bwudatagrid_${new DateTime.now().millisecondsSinceEpoch}";
   }
 
