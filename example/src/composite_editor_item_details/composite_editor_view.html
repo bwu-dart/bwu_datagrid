@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<link rel="import" href="../../../packages/polymer/polymer.html">
+
+<polymer-element name='composite-editor-view'>
+  <template>
+    <link rel="stylesheet" href='packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
+    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
+    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
+    <link rel='stylesheet' href='../../asset/examples.css'>
+
+    <style>
+      :host {
+        visibility: hidden;
+        z-index: 10000;
+        display: inline-block;
+        border: 1px solid black;
+        margin: 8px;
+        padding: 10px;
+        background: #efefef;
+        -moz-box-shadow: 0 0 15px black;
+        -webkit-box-shadow: 0x 0x 15px black;
+        box-shadow: 0 0 15px black;
+
+        position: absolute;
+        top: 10px;
+        left: 150px;
+      }
+
+      .item-details-form-buttons {
+        float: right;
+      }
+
+      .item-details-label {
+        margin-left: 10px;
+        margin-top: 20px;
+        display: block;
+        font-weight: bold;
+      }
+
+      .item-details-editor-container {
+        width: 200px;
+        height: 20px;
+        border: 1px solid silver;
+        background: white;
+        display: block;
+        margin: 4px 10px 10px;
+        padding: 0 4px;
+      }
+    </style>
+
+    <div class='item-details-form'>
+      <template repeat='{{column in columns}}'>
+        <div class='item-details-label'>
+          {{column.name}}
+        </div>
+        <div class='item-details-editor-container' data-editorid='{{column.id}}'></div>
+      </template>
+
+      <hr/>
+      <div class='item-details-form-buttons'>
+        <button data-action='save' on-click='{{btnSaveHandler}}'>Save</button>
+        <button data-action='cancel' on-click='{{btnCancelHandler}}'>Cancel</button>
+      </div>
+    </div>
+  </template>
+  <script type='application/dart' src='composite_editor_view.dart'></script>
+</polymer-element>
+

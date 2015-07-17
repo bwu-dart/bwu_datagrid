@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<link rel="import" href="../../../packages/polymer/polymer.html">
+
+<!-- This element is just a workaround for
+the missing CSS4 :drop(valid) :drop(active) selectors -->
+
+<polymer-element name='drop-zone'>
+  <template>
+    <style>
+      :host {
+        display: block;
+        border: 0;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+
+    <content></content>
+
+  </template>
+  <script type='application/dart' src='drop_zone.dart'></script>
+</polymer-element>
