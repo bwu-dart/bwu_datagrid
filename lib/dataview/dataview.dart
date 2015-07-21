@@ -69,7 +69,7 @@ class DataView extends DataProvider {
 
   List<GroupingInfo> groupingInfos = [];
   List<core.Group> groups = [];
-  List<Map<String, core.Group>> toggledGroupsByLevel = [];
+  List<Map<String, bool>> toggledGroupsByLevel = [];
   String groupingDelimiter = ':|:';
 
   int pagesize = 0;
@@ -597,7 +597,7 @@ class DataView extends DataProvider {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
     bool groupCollapsed = gi.isCollapsed;
-    Map<String, core.Group> toggledGroups = toggledGroupsByLevel[level];
+    Map<String, bool> toggledGroups = toggledGroupsByLevel[level];
     int idx = groups.length;
     core.Group g;
     while (idx-- > 0) {
@@ -629,7 +629,7 @@ class DataView extends DataProvider {
     GroupingInfo gi = groupingInfos[level];
     List<core.ItemBase> groupedRows = [];
     List<core.ItemBase> rows;
-    int gl = 0;
+//    int gl = 0; // TODO(zoechi) why is it unused?
     core.Group g;
     for (int i = 0; i < groups.length; i++) {
       g = groups[i];
@@ -742,7 +742,7 @@ class DataView extends DataProvider {
 
   List<core.ItemBase> uncompiledFilter(List<core.ItemBase> items, Map args) {
     List<core.ItemBase> retval = [];
-    int idx = 0;
+//    int idx = 0; // TODO(zoechi) why is it unused?
 
     try {
       for (int i = 0; i < items.length; i++) {
@@ -761,7 +761,7 @@ class DataView extends DataProvider {
   List<core.ItemBase> uncompiledFilterWithCaching(
       List<core.ItemBase> items, Map args, Map<int, bool> cache) {
     List<core.ItemBase> retval = [];
-    int idx = 0;
+//    int idx = 0; // TODO(zoechi) why is it unused?
     core.ItemBase item;
 
     for (int i = 0; i < items.length; i++) {

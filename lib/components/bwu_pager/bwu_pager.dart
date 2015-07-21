@@ -25,7 +25,7 @@ class NavState extends Observable {
 class BwuPager extends PolymerElement {
   BwuPager.created() : super.created();
 
-  bool _isInitialized = false;
+//  bool _isInitialized = false; // TODO(zoechi) why is it unused?
 
   DataView _dataView;
   BwuDatagrid _grid;

@@ -105,7 +105,7 @@ class BwuColumnPicker extends PolymerElement {
     columnCheckboxes.clear();
     _updateColumnOrder();
 
-    var $li, $input;
+//    var $li, $input; // TODO(zoechi) why is it unused?
     for (var i = 0; i < _columns.length; i++) {
       CbData cb = new CbData(_columns[i].id);
 

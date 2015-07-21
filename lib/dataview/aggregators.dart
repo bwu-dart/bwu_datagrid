@@ -5,6 +5,8 @@ abstract class Aggregator {
   void storeResult(core.GroupTotals groupTotals);
   void accumulate(core.ItemBase item);
   bool _isCalculated = false;
+  bool get isCalculated => _isCalculated;
+
   void call(List<core.ItemBase> rows) {
     if (rows != null) {
       rows.forEach((r) => accumulate(r));
@@ -17,6 +19,8 @@ class AvgAggregator extends Aggregator {
   String _field;
 
   int _count = 0;
+  int get count => _count;
+
   int _nonNullCount = 0;
   num _sum = 0.0;
 

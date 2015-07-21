@@ -106,7 +106,7 @@ class BwuDatagrid extends PolymerElement {
   bool _viewportHasHScroll = false,
       _viewportHasVScroll = false;
   int _headerColumnWidthDiff = 0,
-      _headerColumnHeightDiff = 0, // border+padding
+//      _headerColumnHeightDiff = 0, // border+padding // TODO(zoechi) why is it unused?
       _cellWidthDiff = 0,
       _cellHeightDiff = 0;
   int _absoluteColumnMinWidth;
@@ -748,7 +748,7 @@ class BwuDatagrid extends PolymerElement {
           ..attributes["title"] = m.toolTip != null ? m.toolTip : ""
           ..attributes['ismovable'] = '${m.isMovable}'
           ..column = m;
-        if (m.headerCssClass != null) 
+        if (m.headerCssClass != null)
           header.classes.add(m.headerCssClass);
         _headers.append(header);
 
@@ -1100,12 +1100,12 @@ class BwuDatagrid extends PolymerElement {
   }
 
   int _getVBoxDelta(dom.HtmlElement $el) {
-    var p = [
-      "borderTopWidth",
-      "borderBottomWidth",
-      "paddingTop",
-      "paddingBottom"
-    ];
+//    var p = [ // TODO(zoechi) why is it unused?
+//      "borderTopWidth",
+//      "borderBottomWidth",
+//      "paddingTop",
+//      "paddingBottom"
+//    ];
     var delta = 0;
     var gcs = $el.getComputedStyle();
     delta += utils.parseIntDropUnit(gcs.borderTopWidth) +
@@ -1131,7 +1131,7 @@ class BwuDatagrid extends PolymerElement {
       ..classes.add('bwu-datagrid-header-column')
       ..style.visibility = 'hidden';
     _headers.append(el);
-    _headerColumnWidthDiff = _headerColumnHeightDiff = 0;
+    _headerColumnWidthDiff = /*_headerColumnHeightDiff = TODO(zoechi) why isn't it used? */ 0;
     var gcs = el.getComputedStyle();
     if (el.style.boxSizing != "border-box") {
       //h.forEach((prop) {
@@ -1144,10 +1144,10 @@ class BwuDatagrid extends PolymerElement {
       //v.forEach((prop) {
       //  headerColumnHeightDiff += tools.parseInt(gcs.getPropertyValue(prop)); //; || 0; // TODO
       //});
-      _headerColumnHeightDiff = utils.parseIntDropUnit(gcs.borderTopWidth) +
-          utils.parseIntDropUnit(gcs.borderBottomWidth) +
-          utils.parseIntDropUnit(gcs.paddingTop) +
-          utils.parseIntDropUnit(gcs.paddingBottom);
+//      _headerColumnHeightDiff = utils.parseIntDropUnit(gcs.borderTopWidth) + // TODO(zoechi) why is it unused?
+//          utils.parseIntDropUnit(gcs.borderBottomWidth) +
+//          utils.parseIntDropUnit(gcs.paddingTop) +
+//          utils.parseIntDropUnit(gcs.paddingBottom);
     }
     el.remove();
 
@@ -1822,7 +1822,7 @@ class BwuDatagrid extends PolymerElement {
       ..classes.add('ui-widget-content')
       ..classes.addAll(rowCss.split(" ").where((s) => s.length > 0))
       ..style.top = '${_getRowTop(row)}px';
-      
+
     //stringArray.add(rowElement);
 
     String colspan;
@@ -1957,7 +1957,8 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void invalidateRows(List<int> rows) {
-    var i, rl;
+    var i;
+//    var rl; // TODO(zoechi) why is it unused?
     if (rows == null || rows.length == 0) {
       return;
     }
@@ -2213,7 +2214,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _cleanUpCells(Range range, int row) {
-    var totalCellsRemoved = 0;
+//    var totalCellsRemoved = 0; // TODO(zoechi) why is it unused?
     var cacheEntry = _rowsCache[row];
 
     // Remove cells outside the range.
@@ -2248,7 +2249,7 @@ class BwuDatagrid extends PolymerElement {
       if (_postProcessedRows.containsKey(row)) {
         _postProcessedRows[row].remove(cellToRemove);
       }
-      totalCellsRemoved++;
+//      totalCellsRemoved++; // TODO(zoechi) why is it unused?
     }
   }
 
@@ -2258,7 +2259,7 @@ class BwuDatagrid extends PolymerElement {
     dom.HtmlElement rowElement = new dom.DivElement();
     var processedRows = [];
     int cellsAdded;
-    var totalCellsAdded = 0;
+//    var totalCellsAdded = 0; // TODO(zoechi) why is it unused?
     String colspan;
 
     for (var row = range.top; row <= range.bottom; row++) {
@@ -2323,7 +2324,7 @@ class BwuDatagrid extends PolymerElement {
       }
 
       if (cellsAdded > 0) {
-        totalCellsAdded += cellsAdded;
+//        totalCellsAdded += cellsAdded; // TODO(zoechi) why is it unused?
         processedRows.add(row);
       }
     }
@@ -2357,7 +2358,7 @@ class BwuDatagrid extends PolymerElement {
 
     //stringArray = [],
     //dom.HtmlElement rowElement;
-    List<dom.HtmlElement> rowElements = [];
+//    List<dom.HtmlElement> rowElements = []; // TODO(zoechi) why is it unused?
 
     List<int> rows = [];
     bool needToReselectCell = false;
@@ -2373,7 +2374,7 @@ class BwuDatagrid extends PolymerElement {
       rows.add(i);
 
       // Create an entry right away so that appendRowHtml() can
-      // start populatating it.
+      // start populating it.
       _rowsCache[i] = new RowCache();
 //        rowNode: null,
 //
@@ -2584,7 +2585,7 @@ class BwuDatagrid extends PolymerElement {
       Map<int, Map<String, String>> addedHash,
       Map<int, Map<String, String>> removedHash) {
     dom.HtmlElement node;
-    String columnId;
+//    String columnId; // TODO(zoechi) why is it unused?
     Map addedRowHash;
     Map removedRowHash;
     for (final row in _rowsCache.keys) {

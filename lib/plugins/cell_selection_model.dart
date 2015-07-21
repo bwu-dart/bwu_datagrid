@@ -19,12 +19,12 @@ class CellSelectionModelOptions {
 
 class CellSelectionModel extends SelectionModel {
   BwuDatagrid _grid;
-  dom.HtmlElement _canvas;
+//  dom.HtmlElement _canvas; // TODO(zoechi) why is it unused?
   List<core.Range> _ranges = <core.Range>[];
   var _selector = new CellRangeSelector(new CellRangeDecoratorOptions(
       selectionCss: {'border': '2px solid black', 'z-index': '9999'}));
   CellSelectionModelOptions _options;
-  var _defaults = {'selectActiveCell': true};
+//  var _defaults = {'selectActiveCell': true}; // TODO(zoechi) why is it unused?
 
   CellSelectionModel([CellSelectionModelOptions options]) {
     if (_options != null) {
@@ -34,15 +34,15 @@ class CellSelectionModel extends SelectionModel {
     }
   }
 
-  async.StreamSubscription _cellRangeSelectedSubscription;
-  async.StreamSubscription _beforeCellRangeSelectedSubscription;
+//  async.StreamSubscription _cellRangeSelectedSubscription; // TODO(zoechi) why is it unused?
+//  async.StreamSubscription _beforeCellRangeSelectedSubscription; // TODO(zoechi) why is it unused?
 
   List<async.StreamSubscription> _subscriptions = <async.StreamSubscription>[];
 
   void init(BwuDatagrid grid) {
     // TODO _options = $.extend(true, {}, _defaults, options);
     _grid = grid;
-    _canvas = _grid.getCanvasNode;
+//    _canvas = _grid.getCanvasNode; // TODO(zoechi) why is it unused?
     _subscriptions
         .add(_grid.onBwuActiveCellChanged.listen(handleActiveCellChange));
     _subscriptions.add(_grid.onBwuKeyDown.listen(handleKeyDown));

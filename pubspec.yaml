@@ -10,25 +10,20 @@ dependencies:
   polymer: '>=0.15.0 <0.17.0'
   quiver: '>=0.21.3 <0.22.0'
   quiver_log: '>=1.0.3 <2.0.0'
-  bwu_utils: # '>=0.1.0-dev.1 <0.2.0'
-    path: ../bwu_utils
+  bwu_utils:  '>=0.1.0 <0.2.0'
+#    path: ../bwu_utils
 
 dev_dependencies:
+  bwu_grinder_tasks: '>=0.1.0 <0.2.0'
   grinder: '>=0.7.0 <0.8.0'
   test: '>=0.12.0 <0.13.0'
 #  webdriver: '>=0.10.0-pre.8 <0.11.0'
 #  which: ^0.1.0
 
-
 dependency_overrides:
 
 transformers:
-#- polymer:
-#    entry_points:
-
-#    inline_stylesheets:
-#      example/asset/examples.css: false
-#      lib/asset/smoothness/jquery-ui-1.8.16.custom.css: false
+- polymer
 
 - test/pub_serve:
     $include: test/**_test{.*,}.dart

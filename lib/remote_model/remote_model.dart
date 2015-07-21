@@ -4,7 +4,7 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 import 'dart:math' as math;
 
-import 'package:bwu_datagrid/dataview/dataview.dart';
+//import 'package:bwu_datagrid/dataview/dataview.dart';
 
 /// A sample AJAX data store implementation.
 /// Right now, it's hooked up to load Hackernews stories, but can
@@ -20,8 +20,8 @@ class RemoteModel {
   var req = null; // ajax request
 
   // events
-  var onDataLoading = new Event();
-  var onDataLoaded = new Event();
+  var onDataLoading; // = new Event();
+  var onDataLoaded; // = new Event();
 
   void init() {}
 
@@ -72,16 +72,16 @@ class RemoteModel {
       return;
     }
 
-    var url =
-        "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" +
-            searchstr +
-            "&start=" +
-            (fromPage * PAGESIZE) +
-            "&limit=" +
-            (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+//    var url =
+//        "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" +
+//            searchstr +
+//            "&start=" +
+//            (fromPage * PAGESIZE) +
+//            "&limit=" +
+//            (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
 
     if (sortcol != null) {
-      url += ("&sortby=${sortcol}${sortdir > 0 ? '+asc' : '+desc'}");
+//      url += ("&sortby=${sortcol}${sortdir > 0 ? '+asc' : '+desc'}");
     }
 
     if (h_request != null) {
@@ -95,15 +95,15 @@ class RemoteModel {
 
       onDataLoading.notify({from: from, to: to});
 
-      req = $.jsonp({
-        'url': url,
-        'callbackParameter': "callback",
-        'cache': true,
-        'success': onSuccess,
-        'error': () {
-          onError(fromPage, toPage);
-        }
-      });
+//      req = $.jsonp({
+//        'url': url,
+//        'callbackParameter': "callback",
+//        'cache': true,
+//        'success': onSuccess,
+//        'error': () {
+//          onError(fromPage, toPage);
+//        }
+//      });
       req.fromPage = fromPage;
       req.toPage = toPage;
     });
@@ -113,7 +113,7 @@ class RemoteModel {
     dom.window.alert("error loading pages ${fromPage} to ${toPage}");
   }
 
-  void onSuccess(int resp) {
+  void onSuccess(var resp) {
     var from = resp.request.start,
         to = from + resp.results.length;
     data['length'] =

@@ -276,8 +276,8 @@ class Sortable {
       _draggedHelper.style.top = '${_newPos.y}px';
     }
 
-    int placeholderPos;
-    dom.HtmlElement hoverElement;
+//    int placeholderPos; // TODO(zoechi) why is it not used?
+//    dom.HtmlElement hoverElement; // TODO(zoechi) why is it not used?
     int placeholderIdx = sortable.children.indexOf(_placeholder);
 
     // TODO check only relevant children
