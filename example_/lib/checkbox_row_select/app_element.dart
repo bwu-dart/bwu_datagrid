@@ -1,3 +1,7 @@
+@HtmlImport('app_element.html')
+@HtmlImport('package:bwu_datagrid/bwu_datagrid.html')
+@HtmlImport(
+    'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.html')
 library app_element;
 
 import 'dart:math' as math;
@@ -7,7 +11,6 @@ import 'package:polymer/polymer.dart';
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
-//import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/editors/editors.dart' as editors;
 import 'package:bwu_datagrid/plugins/checkbox_select_column.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
@@ -15,6 +18,8 @@ import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart
 
 @CustomTag('app-element')
 class AppElement extends PolymerElement {
+  factory AppElement() => new dom.Element.tag('app-element');
+
   AppElement.created() : super.created();
 
   List<Column> columns = [];
@@ -55,8 +60,6 @@ class AppElement extends PolymerElement {
         data.items.add(new MapDataItem({'id': i, '0': 'Row $i'}));
       }
 
-//      DataView dataView = new DataView(); // TODO(zoechi) why is it not used?
-
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
           .then((_) {
@@ -67,8 +70,8 @@ class AppElement extends PolymerElement {
 
         BwuColumnPicker columnPicker =
             (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
-          ..columns = columns
-          ..grid = grid;
+              ..columns = columns
+              ..grid = grid;
         dom.document.body.append(columnPicker);
       });
     } on NoSuchMethodError catch (e) {

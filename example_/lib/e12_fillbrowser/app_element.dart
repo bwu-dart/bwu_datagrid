@@ -15,10 +15,15 @@ class AppElement extends PolymerElement {
   List<Column> columns = [
     new Column(id: "title", name: "Title", field: "title", width: 120),
     new Column(id: "duration", name: "Duration", field: "duration", width: 120),
-    new Column(id: "%", name: "% Complete", field: "percentComplete", width: 120),
+    new Column(
+        id: "%", name: "% Complete", field: "percentComplete", width: 120),
     new Column(id: "start", name: "Start", field: "start", width: 120),
     new Column(id: "finish", name: "Finish", field: "finish", width: 120),
-    new Column(id: "effort-driven", name: "Effort Driven", field: "effortDriven", width: 120),
+    new Column(
+        id: "effort-driven",
+        name: "Effort Driven",
+        field: "effortDriven",
+        width: 120),
     new Column(id: "c7", name: "C7", field: "c7", width: 120),
     new Column(id: "c8", name: "C8", field: "c8", width: 120),
     new Column(id: "c9", name: "C9", field: "c9", width: 120),

@@ -1,0 +1,23 @@
+language: dart
+
+dart:
+  - stable
+  - dev
+
+#env:
+#  - PUB=DOWNGRADE
+#  - PUB=UPGRADE
+
+script: dart -c tool/grind.dart travis
+
+# Speed up builds by using containerization. Disable this if you need to use
+# sudo in your scripts.
+sudo: false
+
+#branches:
+#  only:
+#    - master
+
+cache:
+  directories:
+    - $HOME/.pub-cache

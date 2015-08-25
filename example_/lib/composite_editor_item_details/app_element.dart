@@ -11,8 +11,8 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 
-import '../required_field_validator.dart';
-import '../composite_editor.dart';
+import 'package:bwu_datagrid_examples/required_field_validator.dart';
+import 'package:bwu_datagrid_examples/composite_editor.dart';
 import 'composite_editor_view.dart';
 import 'package:bwu_datagrid/core/core.dart';
 
@@ -22,13 +22,55 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", editor: new TextEditor(), validator: new RequiredFieldValidator()),
-    new Column(id: "desc", name: "Description", field: "description", width: 100, editor: new TextEditor()),
-    new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor()),
-    new Column(id: "percent", name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor()),
-    new Column(id: "start", name: "Start", field: "start", minWidth: 60, editor: new DateEditor()),
-    new Column(id: "finish", name: "Finish", field: "finish", minWidth: 60, editor: new DateEditor()),
-    new Column(id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: new fm.CheckmarkFormatter(), editor: new CheckboxEditor())
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 120,
+        cssClass: "cell-title",
+        editor: new TextEditor(),
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "desc",
+        name: "Description",
+        field: "description",
+        width: 100,
+        editor: new TextEditor()),
+    new Column(
+        id: "duration",
+        name: "Duration",
+        field: "duration",
+        editor: new TextEditor()),
+    new Column(
+        id: "percent",
+        name: "% Complete",
+        field: "percentComplete",
+        width: 80,
+        resizable: false,
+        formatter: new fm.PercentCompleteBarFormatter(),
+        editor: new PercentCompleteEditor()),
+    new Column(
+        id: "start",
+        name: "Start",
+        field: "start",
+        minWidth: 60,
+        editor: new DateEditor()),
+    new Column(
+        id: "finish",
+        name: "Finish",
+        field: "finish",
+        minWidth: 60,
+        editor: new DateEditor()),
+    new Column(
+        id: "effort-driven",
+        name: "Effort Driven",
+        width: 80,
+        minWidth: 20,
+        maxWidth: 80,
+        cssClass: "cell-effort-driven",
+        field: "effortDriven",
+        formatter: new fm.CheckmarkFormatter(),
+        editor: new CheckboxEditor())
   ];
 
   var gridOptions = new GridOptions(
@@ -86,14 +128,15 @@ class AppElement extends PolymerElement {
       return;
     }
 
-    var $modal = (new dom.Element.tag(
-        'composite-editor-view') as CompositeEditorView) //$("<div class='item-details-form'></div>");
+    var $modal = (new dom.Element.tag('composite-editor-view')
+        as CompositeEditorView) //$("<div class='item-details-form'></div>");
       ..grid = grid
       ..columns = columns;
     dom.document.body.append($modal);
 
     var ceOptions = new CompositeEditorOptions(
-        show: $modal.show, hide: $modal.hide,
+        show: $modal.show,
+        hide: $modal.hide,
         // position: $modal.position, positions the dialog with it's top/left corner above the current field
         destroy: $modal.destroy);
 

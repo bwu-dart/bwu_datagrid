@@ -19,8 +19,8 @@ class RowSelectionModelOptions {
 class RowSelectionModel extends SelectionModel {
   BwuDatagrid _grid;
   List<core.Range> _ranges = [];
-  //var _handler = new Slick.EventHandler();
-  //int _inHandler;
+  // TODO(zoechi) var _handler = new Slick.EventHandler();
+  // int _inHandler;
   RowSelectionModelOptions _options;
 
   RowSelectionModel([RowSelectionModelOptions options]) {
@@ -34,7 +34,7 @@ class RowSelectionModel extends SelectionModel {
   List<async.StreamSubscription> _subscriptions = [];
 
   void init(BwuDatagrid grid) {
-    //_options = $.extend(true, {}, _defaults, options);
+    // TODO(zoechi) _options = $.extend(true, {}, _defaults, options);
     _grid = grid;
     _subscriptions
         .add(_grid.onBwuActiveCellChanged.listen(_handleActiveCellChange));
@@ -46,6 +46,7 @@ class RowSelectionModel extends SelectionModel {
     _subscriptions.forEach((e) => e.cancel());
   }
 
+// TODO(zoechi)
 //  void wrapHandler(handler) {
 //    return function () {
 //      if (!_inHandler) {
@@ -99,7 +100,7 @@ class RowSelectionModel extends SelectionModel {
     _ranges = ranges;
     _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED,
         new SelectedRangesChanged(this, _ranges));
-    //_self.onSelectedRangesChanged.notify(_ranges);
+    // TODO(zoechi) _self.onSelectedRangesChanged.notify(_ranges);
   }
 
   List<core.Range> getSelectedRanges() {
@@ -157,16 +158,18 @@ class RowSelectionModel extends SelectionModel {
   void _handleClick(Click e) {
     Cell cell = _grid.getCellFromEvent(e.causedBy);
     if (cell == null || !_grid.canCellBeActive(cell.row, cell.cell)) {
-      return; // TODO is this needed? false;
+      e.retVal = false;
+      return;
     }
 
     if (!_grid.getGridOptions.multiSelect ||
         (!e.causedBy.ctrlKey && !e.causedBy.shiftKey && !e.causedBy.metaKey)) {
-      return; // TODO is this needed? false;
+      e.retVal = false;
+      return;
     }
 
     List<int> selection = _rangesToRows(_ranges);
-    var idx = selection.indexOf(cell.row); //$.inArray(cell.row, selection);
+    var idx = selection.indexOf(cell.row);
 
     if (idx == -1 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
       selection.add(cell.row);
@@ -192,6 +195,7 @@ class RowSelectionModel extends SelectionModel {
     setSelectedRanges(_ranges);
     e.stopImmediatePropagation();
 
-    return; // TODO is this needed? true;
+    e.retVal = true;
+    return;
   }
 }

@@ -1,8 +1,9 @@
 library app_element;
 
+import 'dart:async' as async;
+import 'dart:convert' show HtmlEscape;
 import 'dart:html' as dom;
 import 'dart:math' as math;
-import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
 
@@ -26,7 +27,7 @@ class TaskNameFormatter extends fm.CellFormatter {
   void format(dom.HtmlElement target, int row, int cell, dynamic value,
       Column columnDef, DataItem dataContext) {
     target.children.clear();
-    // TODO value = value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    String val = new HtmlEscape().convert(value.toString());
     var spacer = new dom.SpanElement()
       ..style.display = 'inline-block'
       ..style.height = '1px'
@@ -44,7 +45,7 @@ class TaskNameFormatter extends fm.CellFormatter {
       }
     }
     target.append(toggle);
-    target.appendHtml('&nbsp;${value}');
+    target.appendHtml('&nbsp;${val}');
   }
 }
 
@@ -56,12 +57,51 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 220, cssClass: "cell-title", formatter: tnFormatter, editor: new TextEditor(), validator: new RequiredFieldValidator()),
-    new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor()),
-    new Column(id: "%", name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor()),
-    new Column(id: "start", name: "Start", field: "start", minWidth: 60, editor: new DateEditor()),
-    new Column(id: "finish", name: "Finish", field: "finish", minWidth: 60, editor: new DateEditor()),
-    new Column(id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: new fm.CheckmarkFormatter(), editor: new CheckboxEditor(), cannotTriggerInsert: true)
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 220,
+        cssClass: "cell-title",
+        formatter: tnFormatter,
+        editor: new TextEditor(),
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "duration",
+        name: "Duration",
+        field: "duration",
+        editor: new TextEditor()),
+    new Column(
+        id: "%",
+        name: "% Complete",
+        field: "percentComplete",
+        width: 80,
+        resizable: false,
+        formatter: new fm.PercentCompleteBarFormatter(),
+        editor: new PercentCompleteEditor()),
+    new Column(
+        id: "start",
+        name: "Start",
+        field: "start",
+        minWidth: 60,
+        editor: new DateEditor()),
+    new Column(
+        id: "finish",
+        name: "Finish",
+        field: "finish",
+        minWidth: 60,
+        editor: new DateEditor()),
+    new Column(
+        id: "effort-driven",
+        name: "Effort Driven",
+        width: 80,
+        minWidth: 20,
+        maxWidth: 80,
+        cssClass: "cell-effort-driven",
+        field: "effortDriven",
+        formatter: new fm.CheckmarkFormatter(),
+        editor: new CheckboxEditor(),
+        cannotTriggerInsert: true)
   ];
 
   var gridOptions = new GridOptions(
@@ -163,7 +203,8 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuClick.listen((e) {
-          if ((e.causedBy.target as dom.HtmlElement).classes
+          if ((e.causedBy.target as dom.HtmlElement)
+              .classes
               .contains("toggle")) {
             var item = dataView.getItem(e.cell.row);
             if (item != null) {
@@ -230,6 +271,7 @@ class AppElement extends PolymerElement {
     });
     dataView.refresh();
   }
+
   bool myFilter(DataItem item, Map args) {
     if (item["percentComplete"] < args['percentCompleteThreshold']) {
       return false;

@@ -15,11 +15,20 @@ dependencies:
   quiver_log: '>=1.0.1 <2.0.0'
 
 dev_dependencies:
+#  bwu_docker: '>=0.2.1 <0.3.0'
+  bwu_webdriver:
+    path: ../../bwu_webdriver
+  bwu_docker:
+    path: ../../bwu_docker
   bwu_grinder_tasks: '>=0.1.0 <0.2.0'
   bwu_sparkline: '>=0.0.9 <0.1.0'
+#  crypto: '>=0.9.0 <0.10.0' # for Webdriver Firefox profile settings
   grinder: '>=0.7.2 <0.8.0'
      #path: ../bwu_sparkline
-  test: '>=0.12.3+7 <0.13.0'
+  http: '>=0.11.3 <0.12.0'
+  test: '>=0.12.0 <0.13.0'
+  webdriver: '>=0.10.0-pre <0.11.0'
+
 
 transformers:
 - polymer:
@@ -46,6 +55,10 @@ transformers:
     - web/spreadsheet.html
     - web/grouping.html
     - web/autotooltips.html
+
+    - test/checkbox_row_select_test.html
+    - test/checkbox_row_select_testx.html
+
     inline_stylesheets:
       packages/bwu_datagrid_examples/asset/examples.css: false
       packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css: false
@@ -55,3 +68,8 @@ transformers:
 
 - $dart2js:
    commandLineOptions: ['--trust-type-annotations', '--trust-primitives']
+
+
+
+
+

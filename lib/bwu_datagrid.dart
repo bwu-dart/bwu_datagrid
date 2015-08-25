@@ -1,3 +1,4 @@
+@HtmlImport('bwu_datagrid.html')
 library bwu_datagrid;
 
 import 'dart:async' as async;

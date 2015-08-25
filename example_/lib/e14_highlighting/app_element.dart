@@ -44,7 +44,7 @@ class AppElement extends PolymerElement {
       editable: false,
       enableAddRow: false,
       enableCellNavigation: true,
-      cellHighlightCssClass: 'changed', // TODO JS example has this, seems not to be uses anywhere
+      cellHighlightCssClass: 'changed',
       cellFlashingCssClass: 'current-server');
 
   MapDataItemProvider data;

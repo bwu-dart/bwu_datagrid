@@ -17,13 +17,55 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-      new Column(id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", editor: new TextEditor(), validator: new RequiredFieldValidator()),
-      new Column(id: "desc", name: "Description", field: "description", width: 100, editor: new LongTextEditor()),
-      new Column(id: "duration", name: "Duration", field: "duration", editor: new TextEditor()),
-      new Column(id: "%", name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: new fm.PercentCompleteBarFormatter(), editor: new PercentCompleteEditor()),
-      new Column(id: "start", name: "Start", field: "start", minWidth: 60, editor: new DateEditor()),
-      new Column(id: "finish", name: "Finish", field: "finish", minWidth: 60, editor: new DateEditor()),
-      new Column(id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: new fm.CheckmarkFormatter(), editor: new CheckboxEditor())
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 120,
+        cssClass: "cell-title",
+        editor: new TextEditor(),
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "desc",
+        name: "Description",
+        field: "description",
+        width: 100,
+        editor: new LongTextEditor()),
+    new Column(
+        id: "duration",
+        name: "Duration",
+        field: "duration",
+        editor: new TextEditor()),
+    new Column(
+        id: "%",
+        name: "% Complete",
+        field: "percentComplete",
+        width: 80,
+        resizable: false,
+        formatter: new fm.PercentCompleteBarFormatter(),
+        editor: new PercentCompleteEditor()),
+    new Column(
+        id: "start",
+        name: "Start",
+        field: "start",
+        minWidth: 60,
+        editor: new DateEditor()),
+    new Column(
+        id: "finish",
+        name: "Finish",
+        field: "finish",
+        minWidth: 60,
+        editor: new DateEditor()),
+    new Column(
+        id: "effort-driven",
+        name: "Effort Driven",
+        width: 80,
+        minWidth: 20,
+        maxWidth: 80,
+        cssClass: "cell-effort-driven",
+        field: "effortDriven",
+        formatter: new fm.CheckmarkFormatter(),
+        editor: new CheckboxEditor())
   ];
 
   var gridOptions = new GridOptions(
@@ -38,7 +80,9 @@ class AppElement extends PolymerElement {
   bool get isUndoItem => !_commandQueue.isEmpty;
 
   void queueAndExecuteCommand(
-      /*Item/Map*/ item, Column column, EditCommand editCommand) {
+      /*Item/Map*/ item,
+      Column column,
+      EditCommand editCommand) {
     var oldValue = isUndoItem;
     _commandQueue.add(editCommand);
     editCommand.execute();

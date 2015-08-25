@@ -219,6 +219,7 @@ bwu-datagrid /deep/ .editor-percentcomplete-wrapper,
   height: 98px;
   border: 1px solid gray;
   border-left: 0;
+  white-space: nowrap;
 }
 
 bwu-datagrid /deep/ .editor-percentcomplete-buttons,

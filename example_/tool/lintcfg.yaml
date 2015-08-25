@@ -20,10 +20,10 @@ rules:
 #    package_names:
 #      enabled: false # longer form of package_names: false
   lint:
-#    unnecessary_getters: false # TODO(zoechi) remove when #35 is fixed
-#    camel_case_types: false # TODO(zoechi) remove when #52 is fixed
-    non_constant_identifier_names: false # TODO(zoechi) remove when #52 is fixed
-    constant_identifier_names: false # TODO(zoechi) remove when #52 is fixed
-#    one_member_abstracts: false # TODO(zoechi) remove when #64 is fixed
+#    unnecessary_getters: false
+#    camel_case_types: false
+#    non_constant_identifier_names: false
+#    constant_identifier_names: false
+#    one_member_abstracts: false
     unnecessary_brace_in_string_interp: false
 #    lower_camel_case: fales
