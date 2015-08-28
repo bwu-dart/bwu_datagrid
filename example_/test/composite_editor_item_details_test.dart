@@ -107,8 +107,8 @@ tests(WebBrowser browser) {
           await (await driver.findElement(durationCellActiveRowSelector)).text,
           durationNewValue);
       expect(
-          await (await driver.findElement(percentCellActiveRowSelector))
-              .attributes['style'],
+          await (await driver.findElement(
+              percentCellActiveRowPercentBarSelector)).attributes['style'],
           contains('width: ${percentNewValue}%'));
 
       // TODO(zoechi) shouldn't be browser dependent. Needs a common
@@ -134,15 +134,16 @@ tests(WebBrowser browser) {
             finishNewValue);
       }
       expect(
-          await (await driver.findElement(effortDrivenCellActiveRowSelector)),
+          await (await driver
+              .findElement(effortDrivenCellActiveRowCheckedSelector)),
           isNotNull);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
     }, skip: 'temporary');
 
     test('edit and cancel', () async {
-      final String percentOldValue = await (await driver
-          .findElement(percentCellActiveRowSelector)).attributes['style'];
+      final String percentOldValue = await (await driver.findElement(
+          percentCellActiveRowPercentBarSelector)).attributes['style'];
       await editRow(driver);
 
       WebElement cancelButton =
@@ -161,8 +162,8 @@ tests(WebBrowser browser) {
           await (await driver.findElement(durationCellActiveRowSelector)).text,
           durationOldValue);
       expect(
-          await (await driver.findElement(percentCellActiveRowSelector))
-              .attributes['style'],
+          await (await driver.findElement(
+              percentCellActiveRowPercentBarSelector)).attributes['style'],
           contains('width: ${percentOldValue}%'));
 
       expect(await (await driver.findElement(startCellActiveRowSelector)).text,
@@ -170,7 +171,8 @@ tests(WebBrowser browser) {
       expect(await (await driver.findElement(finishCellActiveRowSelector)).text,
           finishOldValue);
       expect(
-          await (await driver.findElement(effortDrivenCellActiveRowSelector)),
+          await (await driver
+              .findElement(effortDrivenCellActiveRowCheckedSelector)),
           effortDrivenOldValue);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
@@ -231,8 +233,8 @@ tests(WebBrowser browser) {
       await saveButton.click();
 
       expect(
-          await (await driver.findElement(percentCellActiveRowSelector))
-              .attributes['style'],
+          await (await driver.findElement(
+              percentCellActiveRowPercentBarSelector)).attributes['style'],
           contains('width: 100%'));
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
