@@ -6,7 +6,7 @@ import 'dart:math' show Point, Rectangle;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-import 'package:webdriver/io.dart';
+import 'package:webdriver/io.dart' as wd;
 import 'common.dart';
 
 const pageUrl = '${server}/autotooltips.html';
@@ -53,8 +53,10 @@ tests(WebBrowser browser) {
               '* /deep/ bwu-datagrid-header-column#start /deep/ .bwu-datagrid-resizable-handle',
           targetSelector: '* /deep/ bwu-datagrid-header-column#start',
           targetLocation: target);
-      print('width2: ${await driver.getBoundingClientRect(start)}');
-      startColumnWidth = (await driver.getBoundingClientRect(start)).width;
+      print('width2: ${await start.size}'); //.getBoundingClientRect(start)}');
+//      print('width2: ${await start.size}'); //.getBoundingClientRect(start)}');
+//      startColumnWidth = (await driver.getBoundingClientRect(start)).width;
+      startColumnWidth = (await start.size).width;
 
       await new Future.delayed(const Duration(seconds: 150), () {});
       expect(startColumnWidth, lessThan(80));

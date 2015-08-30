@@ -13,7 +13,8 @@ import 'common.dart';
 const pageUrl = '${server}/e03_editing.html';
 
 main() {
-  group('Chrome,', () => testsWithBrowser(WebBrowser.chrome) /*, skip: 'temporary'*/);
+  group('Chrome,',
+      () => testsWithBrowser(WebBrowser.chrome) /*, skip: 'temporary'*/);
   group('Firefox,', () => testsWithBrowser(WebBrowser.firefox),
       skip: 'blocked by FirefoxDriver issue - s');
   group('Edge,', () => testsWithBrowser(WebBrowser.edge),
@@ -27,12 +28,8 @@ main() {
 
 // TODO(zoechi)
 // - accept with tab
-// - check after changing value and before accept/cancel
 
-enum AutoEdit {
-  enabled,
-  disabled,
-}
+enum AutoEdit { enabled, disabled, }
 
 void testsWithBrowser(WebBrowser browser) {
   testsWithEditMode(browser, AutoEdit.disabled);
@@ -60,8 +57,11 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         WebElement editor;
 
         setUp(() async {
-          if(autoEdit == AutoEdit.enabled) {
-            final autoEditEnableButton = await driver.findElements(const By.cssSelector('app-element::shadow div.options-panel button')).first;
+          if (autoEdit == AutoEdit.enabled) {
+            final autoEditEnableButton = await driver
+                .findElements(const By.cssSelector(
+                    'app-element::shadow div.options-panel button'))
+                .first;
             autoEditEnableButton.click();
           }
 
@@ -139,7 +139,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys(
               '${descriptionNewValue}${Keyboard.control}${Keyboard.enter}');
 
-          if(autoEdit == AutoEdit.disabled) {
+          if (autoEdit == AutoEdit.disabled) {
             expect(await driver.elementExists(editorSelector), isFalse);
           }
 
@@ -153,7 +153,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           final WebElement saveButton = await findSaveButton(driver);
           saveButton.click();
 
-          if(autoEdit == AutoEdit.disabled) {
+          if (autoEdit == AutoEdit.disabled) {
             expect(await driver.elementExists(editorSelector), isFalse);
           }
 
@@ -543,7 +543,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
               isFalse);
         });
       } /*, skip: 'temporary'*/);
-    }/*, skip: 'temporary'*/);
+    } /*, skip: 'temporary'*/);
   }, timeout: const Timeout(const Duration(seconds: 180)));
 }
 

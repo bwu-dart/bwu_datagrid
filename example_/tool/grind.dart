@@ -29,7 +29,7 @@ main(List<String> args) async {
   final origTestTask = grinderTasks.testTask;
 //  grinderTasks.testTask = (List<String> platforms) async {
   try {
-    await _startSelenium();
+//    await _startSelenium();
 //      origTestTask(platforms);
   } finally {
 //      await stopSelenium();
@@ -45,6 +45,9 @@ DockerConnection _dockerConnection;
 CreateResponse _createdHubContainer;
 CreateResponse _createdChromeNodeContainer;
 CreateResponse _createdFirefoxNodeContainer;
+
+@Task('start-selenium')
+startSelenium() => _startSelenium();
 
 _startSelenium() async {
   final dockerHostStr = io.Platform.environment[dockerHostFromEnvironment];

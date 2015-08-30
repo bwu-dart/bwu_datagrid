@@ -6,7 +6,7 @@ import 'dart:async' show Future, Stream;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-import 'package:webdriver/io.dart';
+import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
 //class ByCss implements By {
@@ -80,8 +80,17 @@ main() {
 tests(WebBrowser browser) {
   group('composite_editor_item_details', () {
     ExtendedWebDriver driver;
+    WebElement titleCell;
+
     setUp(() async {
       driver = await commonSetUp(pageUrl, browser);
+      titleCell =
+          await (driver.findElements(firstColumnSelector).skip(3).first);
+
+      expect(await titleCell.text, titleOldValue);
+      // make 3rd row active
+      await titleCell.click();
+      expect(await titleCell.attributes['class'], contains('active'));
     });
 
     tearDown(() {
@@ -113,7 +122,7 @@ tests(WebBrowser browser) {
 
       // TODO(zoechi) shouldn't be browser dependent. Needs a common
       // date lookup to fix though
-      if (browser == Browser.firefox) {
+      if (browser == WebBrowser.firefox) {
         expect(
             await (await driver.findElement(startCellActiveRowSelector)).text,
             startInsertValue);
@@ -124,7 +133,7 @@ tests(WebBrowser browser) {
       }
       // TODO(zoechi) shouldn't be browser dependent. Needs a common
       // date lookup to fix though
-      if (browser == Browser.firefox) {
+      if (browser == WebBrowser.firefox) {
         expect(
             await (await driver.findElement(finishCellActiveRowSelector)).text,
             finishInsertValue);
@@ -139,11 +148,12 @@ tests(WebBrowser browser) {
           isNotNull);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
-    }, skip: 'temporary');
+    } /*, skip: 'temporary'*/);
 
     test('edit and cancel', () async {
       final String percentOldValue = await (await driver.findElement(
           percentCellActiveRowPercentBarSelector)).attributes['style'];
+
       await editRow(driver);
 
       WebElement cancelButton =
@@ -157,14 +167,14 @@ tests(WebBrowser browser) {
       expect(
           await (await driver.findElement(descriptionCellActiveRowSelector))
               .text,
-          descriptionOldValue);
+          descriptionOldValue.replaceAll('  ', ' '));
       expect(
           await (await driver.findElement(durationCellActiveRowSelector)).text,
           durationOldValue);
       expect(
           await (await driver.findElement(
               percentCellActiveRowPercentBarSelector)).attributes['style'],
-          contains('width: ${percentOldValue}%'));
+          percentOldValue);
 
       expect(await (await driver.findElement(startCellActiveRowSelector)).text,
           startOldValue);
@@ -172,11 +182,11 @@ tests(WebBrowser browser) {
           finishOldValue);
       expect(
           await (await driver
-              .findElement(effortDrivenCellActiveRowCheckedSelector)),
-          effortDrivenOldValue);
+              .elementExists(effortDrivenCellActiveRowCheckedSelector)),
+          false);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
-    }, skip: 'temporary');
+    } /*, skip: 'temporary'*/);
 
     test('percent-complete editor with mouse', () async {
       WebElement editButton =
@@ -243,13 +253,6 @@ tests(WebBrowser browser) {
 }
 
 Future editRow(ExtendedWebDriver driver) async {
-  WebElement titleCell =
-      await (driver.findElements(firstColumnSelector).skip(3).first);
-  expect(await titleCell.text, titleOldValue);
-  // make 3rd row active
-  await titleCell.click();
-  expect(await titleCell.attributes['class'], contains('active'));
-
   WebElement editButton =
       await driver.findElement(openEditDialogButtonSelector);
   expect(editButton, isNotNull);

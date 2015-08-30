@@ -6,7 +6,7 @@ import 'dart:async' show Future, Stream;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-import 'package:webdriver/io.dart';
+//import 'package:webdriver/io.dart';
 import 'common.dart';
 
 const pageUrl = '${server}/e02_formatters.html';
@@ -67,7 +67,7 @@ tests(WebBrowser browser) {
   }, timeout: const Timeout(const Duration(seconds: 180)));
 }
 
-Future<bool> isTaskShown(WebDriver driver, int number) {
+Future<bool> isTaskShown(ExtendedWebDriver driver, int number) {
   return driver
       .findElements(firstColumnSelector)
       .asyncMap(

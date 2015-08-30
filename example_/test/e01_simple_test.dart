@@ -5,7 +5,7 @@ import 'dart:async' show Future, Stream;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-import 'package:webdriver/io.dart';
+//import 'package:webdriver/io.dart';
 import 'common.dart';
 
 const pageUrl = '${server}/e01_simple.html';
@@ -41,13 +41,13 @@ tests(WebBrowser browser) {
       expect(await isTaskShown(driver, 499), isFalse);
 
       await driver.scrollElementAbsolute(viewPort, y: maxYScroll);
-
       await new Future.delayed(const Duration(milliseconds: 100));
 
       expect(await isTaskShown(driver, 0), isFalse);
       expect(await isTaskShown(driver, 499), isTrue);
 
       await driver.scrollElementAbsolute(viewPort, y: 0);
+      await new Future.delayed(const Duration(milliseconds: 100));
 
       expect(await isTaskShown(driver, 0), isTrue);
       // this element is still contained in the DOM
@@ -62,7 +62,7 @@ tests(WebBrowser browser) {
   }, timeout: const Timeout(const Duration(seconds: 180)));
 }
 
-Future<bool> isTaskShown(WebDriver driver, int number) {
+Future<bool> isTaskShown(ExtendedWebDriver driver, int number) {
   return driver
       .findElements(firstColumnSelector)
       .asyncMap(

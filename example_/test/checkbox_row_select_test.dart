@@ -20,6 +20,10 @@ dom.CheckboxInputElement getSelectAllCheckBox() {
   // didn't work in FireFox
 }
 
+// TODO(zoechi) fails when run with `pub run test -pchrome` works with `-pdartium`
+// and when `checkbox_row_select_testx.html` is run from Chrome.
+// Seems to be caused by running within a iframe
+
 @whenPolymerReady
 init() {
   group('checkbox_row_select', () {

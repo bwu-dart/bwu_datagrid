@@ -19,6 +19,9 @@ const titleCellActiveRowSelector =
     const By.cssSelector('${gridActiveRowCellSelectorBase}0');
 const descriptionCellActiveRowSelector =
     const By.cssSelector('${gridActiveRowCellSelectorBase}1');
+// e03a_compound_editors
+const rangeCellActiveRowSelector =
+    const By.cssSelector('${gridActiveRowCellSelectorBase}1');
 const durationCellActiveRowSelector =
     const By.cssSelector('${gridActiveRowCellSelectorBase}2');
 const percentCellActiveRowSelector =
