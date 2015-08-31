@@ -1,12 +1,10 @@
 @TestOn('vm')
-library bwu_datagrid_examples.test.e03_editing_test;
+library bwu_datagrid_examples.test.e03a_compound_editors_test;
 
 import 'dart:async' show Future, Stream;
-//import 'dart:math' show Point, Rectangle;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-import 'package:webdriver/io.dart' as wd;
 import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 

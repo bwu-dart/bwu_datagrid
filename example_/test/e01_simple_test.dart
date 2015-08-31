@@ -5,7 +5,6 @@ import 'dart:async' show Future, Stream;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-//import 'package:webdriver/io.dart';
 import 'common.dart';
 
 const pageUrl = '${server}/e01_simple.html';

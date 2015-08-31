@@ -2,11 +2,9 @@
 library bwu_datagrid_examples.test.e02_formatters_test;
 
 import 'dart:async' show Future, Stream;
-//import 'dart:math' show Point, Rectangle;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-//import 'package:webdriver/io.dart';
 import 'common.dart';
 
 const pageUrl = '${server}/e02_formatters.html';

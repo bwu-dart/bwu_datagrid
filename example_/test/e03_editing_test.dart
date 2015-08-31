@@ -2,7 +2,6 @@
 library bwu_datagrid_examples.test.e03_editing_test;
 
 import 'dart:async' show Future, Stream;
-//import 'dart:math' show Point, Rectangle;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
