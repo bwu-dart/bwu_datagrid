@@ -8,26 +8,17 @@ import 'package:test/test.dart';
 import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
-const pageUrl = '${server}/e03b_editing_with_undo.html';
+String pageUrl;
 
-main() {
-  group('Chrome,',
-      () => testsWithBrowser(WebBrowser.chrome) /*, skip: 'temporary'*/);
-  group('Firefox,', () => testsWithBrowser(WebBrowser.firefox),
-      skip: 'blocked by FirefoxDriver issue - s');
-  group('Edge,', () => testsWithBrowser(WebBrowser.edge),
-      skip: 'blocked by FirefoxDriver issue - s');
-  group('IE,', () => testsWithBrowser(WebBrowser.ie),
-      skip: 'blocked by FirefoxDriver issue - s');
-
-// https://github.com/SeleniumHQ/selenium/issues/939
-// https://github.com/SeleniumHQ/selenium/issues/940
+main() async {
+  pageUrl =  '${await webServer}/e03b_editing_with_undo.html';
+  forEachBrowser(tests);
 }
 
 // TODO(zoechi)
 // - accept with tab
 
-void testsWithBrowser(WebBrowser browser) {
+void tests(WebBrowser browser) {
   group('e03b_editing_with_undo,', () {
     ExtendedWebDriver driver;
     setUp(() async {
@@ -35,7 +26,7 @@ void testsWithBrowser(WebBrowser browser) {
     });
 
     tearDown(() {
-      return driver?.close();
+      return driver?.quit();
     });
 
     test('undo', () async {
@@ -43,8 +34,11 @@ void testsWithBrowser(WebBrowser browser) {
       const dateEditorSelector = const By.cssSelector('input[type="date"]');
       const checkboxEditorSelector =
           const By.cssSelector('input[type="checkbox"]');
-      const undoButtonSelector =
-          const By.cssSelector('app-element::shadow .options-panel button');
+      const undoButtonSelector = const By.cssSelector(
+          'app-element::shadow .options-panel button', const {
+        WebBrowser.firefox: removeShadowDom,
+        WebBrowser.ie: replaceShadowWithDeep
+      });
 
       // prepare undo
       final undoButton = await driver.findElement(undoButtonSelector);

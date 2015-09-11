@@ -8,26 +8,18 @@ import 'package:test/test.dart';
 import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
-const pageUrl = '${server}/e03a_compound_editors.html';
+String pageUrl;
 
-main() {
-  group('Chrome,',
-      () => testsWithBrowser(WebBrowser.chrome) /*, skip: 'temporary'*/);
-  group('Firefox,', () => testsWithBrowser(WebBrowser.firefox),
-      skip: 'blocked by FirefoxDriver issue - s');
-  group('Edge,', () => testsWithBrowser(WebBrowser.edge),
-      skip: 'blocked by FirefoxDriver issue - s');
-  group('IE,', () => testsWithBrowser(WebBrowser.ie),
-      skip: 'blocked by FirefoxDriver issue - s');
-
-// https://github.com/SeleniumHQ/selenium/issues/939
-// https://github.com/SeleniumHQ/selenium/issues/940
+main() async {
+  pageUrl= '${await webServer}/e03a_compound_editors.html';
+  forEachBrowser(tests);
+//  tests(WebBrowser.chrome);
 }
 
 // TODO(zoechi)
 // - accept with tab
 
-void testsWithBrowser(WebBrowser browser) {
+void tests(WebBrowser browser) {
   group('e03a_compound_editors,', () {
     ExtendedWebDriver driver;
     setUp(() async {
@@ -35,7 +27,7 @@ void testsWithBrowser(WebBrowser browser) {
     });
 
     tearDown(() {
-      return driver?.close();
+      return driver?.quit();
     });
 
     group('range', () {

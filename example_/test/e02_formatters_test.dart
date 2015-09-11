@@ -7,14 +7,11 @@ import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
 import 'common.dart';
 
-const pageUrl = '${server}/e02_formatters.html';
+String pageUrl;
 
-main() {
-  group('Chrome', () => tests(WebBrowser.chrome));
-  group('Firefox', () => tests(WebBrowser.firefox),
-      skip: 'blocked by FirefoxDriver issue - s');
-// https://github.com/SeleniumHQ/selenium/issues/939
-// https://github.com/SeleniumHQ/selenium/issues/940
+main() async {
+  pageUrl =  '${await webServer}/e02_formatters.html';
+  forEachBrowser(tests);
 }
 
 tests(WebBrowser browser) {
@@ -25,12 +22,15 @@ tests(WebBrowser browser) {
     });
 
     tearDown(() {
-      return driver.close();
+      return driver?.quit();
     });
 
     test('link', () async {
-      const linksInFirstColumnSelector =
-          const By.cssSelector('${gridCellSelectorBase}0 a[href="#"]');
+      const linksInFirstColumnSelector = const By.cssSelector(
+          '${gridCellSelectorBase}0 a[href="#"]', const {
+        WebBrowser.firefox: removeShadowDom,
+        WebBrowser.ie: replaceShadowWithDeep
+      });
 
       final linksInFirstColumn =
           await driver.findElements(linksInFirstColumnSelector).toList();
@@ -42,7 +42,10 @@ tests(WebBrowser browser) {
 
     test('percentCompleteBar', () async {
       const barsInPercentCompleteColumnSelector = const By.cssSelector(
-          '${gridCellSelectorBase}2 span.percent-complete-bar');
+          '${gridCellSelectorBase}2 span.percent-complete-bar', const {
+        WebBrowser.firefox: removeShadowDom,
+        WebBrowser.ie: replaceShadowWithDeep
+      });
 
       final barsInPercentCompleteColumn = await driver
           .findElements(barsInPercentCompleteColumnSelector)
@@ -55,7 +58,8 @@ tests(WebBrowser browser) {
 
     test('checkMark', () async {
       const checkMarksInEffortDrivenColumnSelector = const By.cssSelector(
-          '${gridCellSelectorBase}5 img[src="packages/bwu_datagrid/asset/images/tick.png"]');
+          '${gridCellSelectorBase}5 img[src="packages/bwu_datagrid/asset/images/tick.png"]',
+          const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 
       final checkMarkInEffortDrivenColumn = await driver
           .findElements(checkMarksInEffortDrivenColumnSelector)

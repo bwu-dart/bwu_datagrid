@@ -1,29 +1,34 @@
 library bwu_datagrid_examples.tool.grind;
 
+import 'dart:async' show Completer, Future, Stream;
+import 'dart:collection';
+import 'dart:convert' show LineSplitter, UTF8;
 import 'dart:io' as io;
+
 import 'package:http/http.dart' as http;
 import 'package:grinder/grinder.dart';
 import 'package:bwu_docker/bwu_docker.dart';
 import 'package:bwu_docker/tasks.dart' as task;
-
+import 'package:bwu_utils/bwu_utils_server.dart' as utils;
 import 'package:bwu_grinder_tasks/bwu_grinder_tasks.dart' as grinderTasks;
 export 'package:bwu_grinder_tasks/bwu_grinder_tasks.dart' hide main;
 
-const seleniumImageVersion = ':2.47.1';
+//const seleniumImageVersion = ':2.47.1';
+const seleniumImageVersion = ':local';
 
 const _seleniumHubImage = 'selenium/hub${seleniumImageVersion}';
 const _hubContainerName = 'selenium-hub';
 
 //const seleniumChromeImage = 'selenium/node-chrome${seleniumImageVersion}';
 const _seleniumChromeImage =
-    'selenium/node-chrome-debug${seleniumImageVersion}';
+    'selenium/node-chrome-android-debug${seleniumImageVersion}';
 
 //const seleniumFirefoxImage = 'selenium/node-firefox${seleniumImageVersion}';
 const _seleniumFirefoxImage =
     'selenium/node-firefox-debug${seleniumImageVersion}';
 
-const webServer = 'webserver:192.168.2.156';
 //const webServer = 'webserver:192.168.2.96';
+const pubServePort = 21234;
 
 main(List<String> args) async {
   final origTestTask = grinderTasks.testTask;
@@ -45,11 +50,64 @@ DockerConnection _dockerConnection;
 CreateResponse _createdHubContainer;
 CreateResponse _createdChromeNodeContainer;
 CreateResponse _createdFirefoxNodeContainer;
+PubServe _pubServe;
 
 @Task('start-selenium')
 startSelenium() => _startSelenium();
 
-_startSelenium() async {
+@Task('selenium-debug')
+seleniumDebug() async {
+  io.ProcessSignal.SIGINT.watch().listen((e) => _stopServices());
+  io.ProcessSignal.SIGHUP.watch().listen((e) => _stopServices());
+  io.ProcessSignal.SIGTERM.watch().listen((e) => _stopServices());
+  io.ProcessSignal.SIGUSR1.watch().listen((e) => _stopServices());
+  io.ProcessSignal.SIGUSR2.watch().listen((e) => _stopServices());
+  io.ProcessSignal.SIGWINCH.watch().listen((e) => _stopServices());
+
+  try {
+    _pubServe = new PubServe();
+    log('start pub serve');
+    _pubServe
+        .start(port: pubServePort, hostname: '0.0.0.0', directories: ['web'])
+        .then((_) {
+      _pubServe.stdout.listen((e) => io.stdout.add(e));
+      _pubServe.stderr.listen((e) => io.stderr.add(e));
+    });
+
+    await _startSelenium();
+    final chromeInfo = await _dockerConnection
+        .container(_createdChromeNodeContainer.container);
+    final chromePort = chromeInfo.networkSettings.ports['5900/tcp'][0]
+        ['HostPort'];
+    print('Chrome: ${chromePort}');
+    io.Process.start('vinagre',
+        ['--vnc-scale', '--geometry', '1280x1024+200+0', ':${chromePort}']);
+//    io.Process.start('krdc', ['vnc://:${chromePort}']);
+//    io.Process.start('xvnc4viewer', ['-Shared', ':${chromePort}']);
+    final firefoxInfo = await _dockerConnection
+        .container(_createdFirefoxNodeContainer.container);
+    final firefoxPort = firefoxInfo.networkSettings.ports['5900/tcp'][0]
+        ['HostPort'];
+    print('Firefox: ${firefoxPort}');
+    await new Future.delayed(const Duration(seconds: 5));
+    io.Process.start('vinagre',
+        ['--vnc-scale', '--geometry', '1280x1024+300+0', ':${firefoxPort}']);
+//    io.Process.start('krdc', ['vnc://:${firefoxPort}']);
+//    io.Process.start('xvnc4viewer', ['-Shared', ':${firefoxPort}']);
+  } catch (_) {
+    _stopServices();
+    rethrow;
+  }
+}
+
+void _stopServices() {
+  _pubServe?.stop();
+  _dockerConnection?.stop(_createdChromeNodeContainer.container);
+  _dockerConnection?.stop(_createdFirefoxNodeContainer.container);
+  _dockerConnection?.stop(_createdHubContainer.container);
+}
+
+_startSelenium({bool wait: true}) async {
   final dockerHostStr = io.Platform.environment[dockerHostFromEnvironment];
   assert(dockerHostStr != null && dockerHostStr.isNotEmpty);
 //  final dockerHost = Uri.parse(dockerHostStr);
@@ -59,22 +117,112 @@ _startSelenium() async {
       new http.Client());
   await _dockerConnection.init();
   _createdHubContainer = await task.run(_dockerConnection, _seleniumHubImage,
-      name: _hubContainerName,
       detach: true,
+      name: _hubContainerName,
       publish: const ['4444:4444'],
-      rm: true);
+      rm: wait);
   _createdChromeNodeContainer = await task.run(
       _dockerConnection, _seleniumChromeImage,
       detach: true,
-      publishAll: true,
-      rm: true,
       link: const ['${_hubContainerName}:hub'],
-      addHost: const [webServer]);
+      privileged: true,
+      publishAll: true,
+      rm: wait,
+      volume: const ['/dev/bus/usb:/dev/bus/usb']
+//      ,addHost: const [pubServeIp]
+  );
   _createdFirefoxNodeContainer = await task.run(
       _dockerConnection, _seleniumFirefoxImage,
       detach: true,
-      publishAll: true,
-      rm: true,
       link: const ['${_hubContainerName}:hub'],
-      addHost: const [webServer]);
+      publishAll: true,
+      rm: wait
+//      ,addHost: const [pubServeIp]
+  );
+}
+
+// TODO(zoechi) move to bwu_grinder_tasks when stable
+// A copy is still in bwu_utils_dev
+class PubServe extends RunProcess {
+  int _port;
+  final _directoryPorts = <String, int>{};
+  Map<String, int> get directoryPorts =>
+      new UnmodifiableMapView(_directoryPorts);
+  final _servingMessageRegex = new RegExp(
+      r'^Serving [0-9a-zA-Z_]+ ([0-9a-zA-Z_]+) +on https?://.*:(\d{4,5})$');
+
+  Future start({int port, directories: const ['test'], String hostname}) async {
+    final readyCompleter = new Completer<io.Process>();
+    if (port != null && port > 0) {
+      _port = port;
+    } else {
+      _port = await utils.getFreeIpPort();
+    }
+    if (directories == null || directories.isEmpty) {
+      directories = ['test'];
+    }
+    directories.forEach((d) => _directoryPorts[d] = null);
+    String packageRoot = utils.packageRoot().path;
+    //_process = await io.Process.start(
+    List<String> args = ['serve', '--port=${_port}'];
+    if (hostname != null) {
+      args.add('--hostname=${hostname}');
+    }
+    args.addAll(directories);
+    await super._run('pub', args, workingDirectory: packageRoot);
+    exitCode.then((exitCode) {
+      _port = null;
+    });
+    stdout.transform(UTF8.decoder).transform(new LineSplitter()).listen((s) {
+      //_log.fine(s);
+      print(s);
+      final match = _servingMessageRegex.firstMatch(s);
+      if (match != null) {
+        _directoryPorts[match.group(1)] = int.parse(match.group(2));
+      }
+      if (!readyCompleter.isCompleted &&
+          !_directoryPorts.values.contains(null)) {
+        readyCompleter.complete(process);
+      }
+    });
+    stderr.transform(UTF8.decoder).listen(print);
+    return readyCompleter.future;
+  }
+}
+
+class RunProcess {
+  io.Process _process;
+  io.Process get process => _process;
+
+  Stream<List<int>> _stdoutStream;
+  Stream<List<int>> get stdout => _stdoutStream;
+
+  Stream<List<int>> _stderrStream;
+  Stream<List<int>> get stderr => _stderrStream;
+
+  Future<int> _exitCode;
+  Future<int> get exitCode => _exitCode;
+
+  Future _run(String executable, List<String> args,
+      {String workingDirectory}) async {
+    if (process != null) {
+      return process;
+    }
+    _process = await io.Process
+        .start(executable, args, workingDirectory: workingDirectory);
+    _exitCode = process.exitCode;
+    process.exitCode.then((exitCode) {
+      _process = null;
+    });
+
+    _stdoutStream = process.stdout.asBroadcastStream();
+    _stderrStream = process.stderr.asBroadcastStream();
+  }
+
+  bool stop() {
+    if (process != null) {
+      return process.kill(io.ProcessSignal.SIGTERM);
+    }
+    return false;
+  }
 }

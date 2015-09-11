@@ -9,49 +9,39 @@ import 'package:test/test.dart';
 import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
-//class ByCss implements By {
-//  static const _using = 'css selector';
-//  final String _value;
-//  final Browser browser;
-//
-//  const ByCss(this._value, this.browser);
-//
-//  @override
-//  Map<String, String> toJson() {
-//    if (browser == Browser.chrome || browser == Browser.firefox) {
-//      return {'using': _using, 'value': _value};
-//    } else {
-//      return {
-//        'using': _using,
-//        'value': _value.replaceAll(' /deep/ ', ' ').replaceAll('::shadow', ' >')
-//      };
-//    }
-//  }
-//}
-
-const pageUrl = '${server}/composite_editor_item_details.html';
-
-const openEditDialogButtonSelector =
-    const By.cssSelector('app-element::shadow .options-panel button');
+const openEditDialogButtonSelector = const By.cssSelector(
+    'app-element::shadow .options-panel button', const {
+  WebBrowser.firefox: removeShadowDom,
+  WebBrowser.ie: replaceShadowWithDeep
+});
 const dialogTitleFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="title"] input');
+    'composite-editor-view::shadow div.item-details-form [data-editorid="title"] input',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 const dialogDescriptionFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="desc"] input');
+    'composite-editor-view::shadow div.item-details-form [data-editorid="desc"] input',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 const dialogDurationFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="duration"] input');
+    'composite-editor-view::shadow div.item-details-form [data-editorid="duration"] input',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 const dialogPercentFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="percent"] input');
+    'composite-editor-view::shadow div.item-details-form [data-editorid="percent"] input',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 const dialogStartFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="start"] input');
+    'composite-editor-view::shadow div.item-details-form [data-editorid="start"] input',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 const dialogFinishFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="finish"] input');
+    'composite-editor-view::shadow div.item-details-form [data-editorid="finish"] input',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 const dialogEffortDrivenFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="effort-driven"] input');
+    'composite-editor-view::shadow div.item-details-form [data-editorid="effort-driven"] input',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 
 const dialogSaveButtonSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form button[data-action="save"]');
+    'composite-editor-view::shadow div.item-details-form button[data-action="save"]',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 const dialogCancelButtonSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form button[data-action="cancel"]');
+    'composite-editor-view::shadow div.item-details-form button[data-action="cancel"]',
+    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
 
 const titleOldValue = 'Task 3';
 const titleNewValue = 'replacement title';
@@ -69,12 +59,11 @@ const finishInsertValue = '12/11/2015';
 const finishNewValue = '2015-12-11';
 const effortDrivenOldValue = null;
 
-main() {
-  group('Chrome', () => tests(WebBrowser.chrome));
-  group('Firefox', () => tests(WebBrowser.firefox),
-      skip: 'blocked by FirefoxDriver issue - s');
-  // https://github.com/SeleniumHQ/selenium/issues/939
-  // https://github.com/SeleniumHQ/selenium/issues/940
+String pageUrl;
+
+main() async {
+  pageUrl =  '${await webServer}/composite_editor_item_details.html';
+  forEachBrowser(tests);
 }
 
 tests(WebBrowser browser) {
@@ -94,11 +83,11 @@ tests(WebBrowser browser) {
     });
 
     tearDown(() {
-      return driver.close();
+      return driver?.quit();
     });
 
     test('edit and save', () async {
-      await editRow(driver);
+      await editRow(driver, browser);
 
       WebElement saveButton =
           await driver.findElement(dialogSaveButtonSelector);
@@ -126,18 +115,13 @@ tests(WebBrowser browser) {
         expect(
             await (await driver.findElement(startCellActiveRowSelector)).text,
             startInsertValue);
-      } else {
-        expect(
-            await (await driver.findElement(startCellActiveRowSelector)).text,
-            startNewValue);
-      }
-      // TODO(zoechi) shouldn't be browser dependent. Needs a common
-      // date lookup to fix though
-      if (browser == WebBrowser.firefox) {
         expect(
             await (await driver.findElement(finishCellActiveRowSelector)).text,
             finishInsertValue);
       } else {
+        expect(
+            await (await driver.findElement(startCellActiveRowSelector)).text,
+            startNewValue);
         expect(
             await (await driver.findElement(finishCellActiveRowSelector)).text,
             finishNewValue);
@@ -148,13 +132,13 @@ tests(WebBrowser browser) {
           isNotNull);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
-    } /*, skip: 'temporary'*/);
+    }/*, skip: 'temporary'*/);
 
     test('edit and cancel', () async {
       final String percentOldValue = await (await driver.findElement(
           percentCellActiveRowPercentBarSelector)).attributes['style'];
 
-      await editRow(driver);
+      await editRow(driver, browser);
 
       WebElement cancelButton =
           await driver.findElement(dialogCancelButtonSelector);
@@ -186,7 +170,7 @@ tests(WebBrowser browser) {
           false);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
-    } /*, skip: 'temporary'*/);
+    }/*, skip: 'temporary'*/);
 
     test('percent-complete editor with mouse', () async {
       WebElement editButton =
@@ -196,30 +180,41 @@ tests(WebBrowser browser) {
 
       await driver.mouse.moveTo(
           element: await driver.findElement(const By.cssSelector(
-              'composite-editor-view::shadow .editor-percentcomplete-picker')));
+              'composite-editor-view::shadow .editor-percentcomplete-picker', const {
+        WebBrowser.firefox: removeShadowDom,
+        WebBrowser.ie: replaceShadowWithDeep
+      })));
 
       final dialogPercentField =
           await driver.findElement(dialogPercentFieldSelector);
       await (await driver.findElement(const By.cssSelector(
-              'composite-editor-view::shadow .editor-percentcomplete-picker button[val="0"]')))
-          .click();
+          'composite-editor-view::shadow .editor-percentcomplete-picker button[val="0"]', const {
+        WebBrowser.firefox: removeShadowDom,
+        WebBrowser.ie: replaceShadowWithDeep
+      }))).click();
       expect(await dialogPercentField.attributes['value'], '0');
 
       await (await driver.findElement(const By.cssSelector(
-              'composite-editor-view::shadow .editor-percentcomplete-picker button[val="50"]')))
-          .click();
+          'composite-editor-view::shadow .editor-percentcomplete-picker button[val="50"]', const {
+        WebBrowser.firefox: removeShadowDom,
+        WebBrowser.ie: replaceShadowWithDeep
+      }))).click();
       expect(await dialogPercentField.attributes['value'], '50');
 
       await (await driver.findElement(const By.cssSelector(
-              'composite-editor-view::shadow .editor-percentcomplete-picker button[val="100"]')))
-          .click();
+          'composite-editor-view::shadow .editor-percentcomplete-picker button[val="100"]', const {
+        WebBrowser.firefox: removeShadowDom,
+        WebBrowser.ie: replaceShadowWithDeep
+      }))).click();
       expect(await dialogPercentField.attributes['value'], '100');
 
       final slider = await driver.findElement(const By.cssSelector(
-          'composite-editor-view::shadow .editor-percentcomplete-picker input[type="range"]'));
+          'composite-editor-view::shadow .editor-percentcomplete-picker input[type="range"]',
+          const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep}));
       final sliderSize = await (slider).size;
       await driver.mouse
           .moveTo(element: slider, xOffset: sliderSize.width ~/ 2, yOffset: 1);
+
       await driver.mouse.click();
       expect(await dialogPercentField.attributes['value'], '0');
 
@@ -248,11 +243,13 @@ tests(WebBrowser browser) {
           contains('width: 100%'));
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
-    });
+    },
+        skip: browser ==
+            WebBrowser.firefox /*TODO(zoechi) try to make it work in Firefox (clicking in the slider doesn't work in FF)*/);
   }, timeout: const Timeout(const Duration(seconds: 180)));
 }
 
-Future editRow(ExtendedWebDriver driver) async {
+Future editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   WebElement editButton =
       await driver.findElement(openEditDialogButtonSelector);
   expect(editButton, isNotNull);
@@ -339,5 +336,7 @@ Future editRow(ExtendedWebDriver driver) async {
   expect(effortDrivenField, isNotNull);
   expect(await effortDrivenField.attributes['checked'], effortDrivenOldValue);
   await effortDrivenField.click();
-  await effortDrivenField.sendKeys([Keyboard.space,].join());
+  if (browser != WebBrowser.firefox) {
+    effortDrivenField.sendKeys(Keyboard.space);
+  }
 }

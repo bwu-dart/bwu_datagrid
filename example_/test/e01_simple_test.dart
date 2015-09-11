@@ -7,14 +7,11 @@ import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
 import 'common.dart';
 
-const pageUrl = '${server}/e01_simple.html';
+String pageUrl;
 
-main() {
-  group('Chrome', () => tests(WebBrowser.chrome));
-  group('Firefox', () => tests(WebBrowser.firefox),
-      skip: 'blocked by FirefoxDriver issue - s');
-// https://github.com/SeleniumHQ/selenium/issues/939
-// https://github.com/SeleniumHQ/selenium/issues/940
+main() async {
+  pageUrl =  '${await webServer}/e01_simple.html';
+  forEachBrowser(tests);
 }
 
 tests(WebBrowser browser) {
@@ -25,7 +22,7 @@ tests(WebBrowser browser) {
     });
 
     tearDown(() {
-      return driver.close();
+      return driver?.quit();
     });
 
     test('scroll', () async {

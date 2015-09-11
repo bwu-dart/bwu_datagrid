@@ -9,20 +9,12 @@ import 'package:webdriver/io.dart' as wd;
 import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
-const pageUrl = '${server}/e03_editing.html';
+String pageUrl;
 
-main() {
-  group('Chrome,',
-      () => testsWithBrowser(WebBrowser.chrome) /*, skip: 'temporary'*/);
-  group('Firefox,', () => testsWithBrowser(WebBrowser.firefox),
-      skip: 'blocked by FirefoxDriver issue - s');
-  group('Edge,', () => testsWithBrowser(WebBrowser.edge),
-      skip: 'blocked by FirefoxDriver issue - s');
-  group('IE,', () => testsWithBrowser(WebBrowser.ie),
-      skip: 'blocked by FirefoxDriver issue - s');
-
-// https://github.com/SeleniumHQ/selenium/issues/939
-// https://github.com/SeleniumHQ/selenium/issues/940
+main() async {
+  pageUrl =  '${await webServer}/e03_editing.html';
+  forEachBrowser(tests);
+//  tests(WebBrowser.chrome);
 }
 
 // TODO(zoechi)
@@ -30,7 +22,7 @@ main() {
 
 enum AutoEdit { enabled, disabled, }
 
-void testsWithBrowser(WebBrowser browser) {
+void tests(WebBrowser browser) {
   testsWithEditMode(browser, AutoEdit.disabled);
   testsWithEditMode(browser, AutoEdit.enabled);
 }
@@ -43,7 +35,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
     });
 
     tearDown(() {
-      return driver?.close();
+      return driver?.quit();
     });
 
     group('${autoEdit},', () {
@@ -59,7 +51,10 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           if (autoEdit == AutoEdit.enabled) {
             final autoEditEnableButton = await driver
                 .findElements(const By.cssSelector(
-                    'app-element::shadow div.options-panel button'))
+                    'app-element::shadow div.options-panel button', const {
+              WebBrowser.firefox: removeShadowDom,
+              WebBrowser.ie: replaceShadowWithDeep
+            }))
                 .first;
             autoEditEnableButton.click();
           }
@@ -100,7 +95,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await new Future.delayed(const Duration(milliseconds: 10));
           expect(await titleCell.text, titleOldValue);
         });
-      });
+      } /*, skip: 'temporary'*/);
 
       group('description', () {
         const descriptionOldValue =
@@ -344,7 +339,12 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with enter', () async {
-          await editor.sendKeys('${startNewInput}${Keyboard.enter}');
+          if (browser == WebBrowser.firefox) {
+            await editor.clear();
+            await editor.sendKeys('${startNewValue}${Keyboard.enter}');
+          } else {
+            await editor.sendKeys('${startNewInput}${Keyboard.enter}');
+          }
           expect(await startCell.elementExists(editorSelector), isFalse);
 
           await new Future.delayed(const Duration(milliseconds: 10));
@@ -352,7 +352,12 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with click on other cell', () async {
-          await editor.sendKeys('${startNewInput}');
+          if (browser == WebBrowser.firefox) {
+            await editor.clear();
+            await editor.sendKeys(startNewValue);
+          } else {
+            await editor.sendKeys(startNewInput);
+          }
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await startCell.elementExists(editorSelector), isFalse);
 
@@ -361,7 +366,12 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('cancel with Esc', () async {
-          await editor.sendKeys('${startNewInput}${Keyboard.escape}');
+          if (browser == WebBrowser.firefox) {
+            await editor.clear();
+            await editor.sendKeys('${startNewValue}${Keyboard.escape}');
+          } else {
+            await editor.sendKeys('${startNewInput}${Keyboard.escape}');
+          }
           expect(await startCell.elementExists(editorSelector), isFalse);
 
           await new Future.delayed(const Duration(milliseconds: 10));
@@ -394,7 +404,12 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with enter', () async {
-          await editor.sendKeys('${finishNewInput}${Keyboard.enter}');
+          if (browser == WebBrowser.firefox) {
+            await editor.clear();
+            await editor.sendKeys('${finishNewValue}${Keyboard.enter}');
+          } else {
+            await editor.sendKeys('${finishNewInput}${Keyboard.enter}');
+          }
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
           await new Future.delayed(const Duration(milliseconds: 10));
@@ -402,7 +417,12 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with click on other cell', () async {
-          await editor.sendKeys(finishNewInput);
+          if (browser == WebBrowser.firefox) {
+            await editor.clear();
+            await editor.sendKeys(finishNewValue);
+          } else {
+            await editor.sendKeys(finishNewInput);
+          }
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
@@ -411,7 +431,12 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('cancel with Esc', () async {
-          await editor.sendKeys('${finishNewInput}${Keyboard.escape}');
+          if (browser == WebBrowser.firefox) {
+            await editor.clear();
+            await editor.sendKeys('${finishNewValue}${Keyboard.escape}');
+          } else {
+            await editor.sendKeys('${finishNewInput}${Keyboard.escape}');
+          }
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
           await new Future.delayed(const Duration(milliseconds: 10));

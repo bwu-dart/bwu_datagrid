@@ -6,15 +6,13 @@ import 'dart:math' show Point, Rectangle;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-import 'package:webdriver/io.dart' as wd;
 import 'common.dart';
 
-const pageUrl = '${server}/autotooltips.html';
+String pageUrl;
 
-main() {
-  group('Chrome', () => tests(WebBrowser.chrome));
-  group('Firefox', () => tests(WebBrowser.firefox),
-      skip: 'blocked by FirefoxDriver issue - s');
+main() async {
+  pageUrl =  '${await webServer}/autotooltips.html';
+  forEachBrowser(tests);
 }
 
 tests(WebBrowser browser) {
@@ -25,7 +23,7 @@ tests(WebBrowser browser) {
     });
 
     tearDown(() {
-      return driver.close();
+      return driver?.quit();
     });
 
     test('load', () async {
