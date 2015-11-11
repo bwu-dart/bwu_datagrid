@@ -3293,12 +3293,12 @@ class BwuDatagrid extends PolymerElement {
   NodeBox _absBox(dom.HtmlElement elem) {
     var bcr = elem.getBoundingClientRect();
     var box = new NodeBox(
-        top: bcr.top is int ? bcr.top : (bcr.top as double).toInt(),
-        left: bcr.left is int ? bcr.left : (bcr.left as double).toInt(),
-        bottom: bcr.bottom is int ? bcr.bottom : (bcr.bottom as double).toInt(),
-        right: bcr.right is int ? bcr.right : (bcr.right as double).toInt(),
-        width: bcr.width is int ? bcr.width : (bcr.width as double).toInt(),
-        height: bcr.height is int ? bcr.height : (bcr.height as double).toInt(),
+        top: (bcr.top as num).toInt(),
+        left: (bcr.left as num).toInt(),
+        bottom: (bcr.bottom as num).toInt(),
+        right: (bcr.right as num).toInt(),
+        width: (bcr.width as num).toInt(),
+        height: (bcr.height as num).toInt(),
         visible: true);
 //    var cs = elem.getComputedStyle();
 //    var box = new NodeBox(
