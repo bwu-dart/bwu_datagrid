@@ -746,7 +746,7 @@ class BwuDatagrid extends PolymerElement {
           ..attributes["title"] = m.toolTip != null ? m.toolTip : ""
           ..attributes['ismovable'] = '${m.isMovable}'
           ..column = m;
-        if (m.headerCssClass != null) 
+        if (m.headerCssClass != null)
           header.classes.add(m.headerCssClass);
         _headers.append(header);
 
@@ -1819,7 +1819,7 @@ class BwuDatagrid extends PolymerElement {
       ..classes.add('ui-widget-content')
       ..classes.addAll(rowCss.split(" ").where((s) => s.length > 0))
       ..style.top = '${_getRowTop(row)}px';
-      
+
     //stringArray.add(rowElement);
 
     String colspan;
@@ -3293,12 +3293,12 @@ class BwuDatagrid extends PolymerElement {
   NodeBox _absBox(dom.HtmlElement elem) {
     var bcr = elem.getBoundingClientRect();
     var box = new NodeBox(
-        top: (bcr.top as double).toInt(),
-        left: (bcr.left as double).toInt(),
-        bottom: (bcr.bottom as double).toInt(),
-        right: (bcr.right as double).toInt(),
-        width: (bcr.width as double).toInt(),
-        height: (bcr.height as double).toInt(),
+        top: bcr.top is int ? bcr.top : (bcr.top as double).toInt(),
+        left: bcr.left is int ? bcr.left : (bcr.left as double).toInt(),
+        bottom: bcr.bottom is int ? bcr.bottom : (bcr.bottom as double).toInt(),
+        right: bcr.right is int ? bcr.right : (bcr.right as double).toInt(),
+        width: bcr.width is int ? bcr.width : (bcr.width as double).toInt(),
+        height: bcr.height is int ? bcr.height : (bcr.height as double).toInt(),
         visible: true);
 //    var cs = elem.getComputedStyle();
 //    var box = new NodeBox(
