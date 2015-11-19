@@ -43,70 +43,35 @@ const gridCellSelectorBase =
 const gridCellSelectorBaseNoShadow =
     'app-element > #myGrid > #viewport #canvas div.bwu-datagrid-row div.bwu-datagrid-cell.l';
 
-const viewPortSelector = const By.cssSelector(
-    'app-element::shadow #myGrid::shadow #viewport', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const firstColumnSelector = const By.cssSelector(
-    '${gridCellSelectorBase}0', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
+const viewPortSelector =
+    const By.shadow('app-element::shadow #myGrid::shadow #viewport');
+const firstColumnSelector = const By.shadow('${gridCellSelectorBase}0');
 
 const gridActiveRowCellSelectorBase =
     'app-element::shadow #myGrid::shadow div.bwu-datagrid-row.active div.bwu-datagrid-cell.l';
-const titleCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}0', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const descriptionCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}1', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
+const titleCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}0');
+const descriptionCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}1');
 // e03a_compound_editors
-const rangeCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}1', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const durationCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}2', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const percentCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}3', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
+const rangeCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}1');
+const durationCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}2');
+const percentCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}3');
 
-const percentCellActiveRowPercentBarSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}3 span.percent-complete-bar', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
+const percentCellActiveRowPercentBarSelector = const By.shadow(
+    '${gridActiveRowCellSelectorBase}3 span.percent-complete-bar');
 
-const startCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}4', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const finishCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}5', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const effortDrivenCellActiveRowSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}6', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const effortDrivenCellActiveRowCheckedSelector = const By.cssSelector(
-    '${gridActiveRowCellSelectorBase}6 img[src="packages/bwu_datagrid/asset/images/tick.png"]',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
+const startCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}4');
+const finishCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}5');
+const effortDrivenCellActiveRowSelector =
+    const By.shadow('${gridActiveRowCellSelectorBase}6');
+const effortDrivenCellActiveRowCheckedSelector = const By.shadow(
+    '${gridActiveRowCellSelectorBase}6 img[src="packages/bwu_datagrid/asset/images/tick.png"]');
 
 const effortDrivenCheckedImageSelector = const By.cssSelector(
     'img[src="packages/bwu_datagrid/asset/images/tick.png"]');

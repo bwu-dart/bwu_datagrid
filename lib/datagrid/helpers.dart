@@ -10,24 +10,26 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:collection/wrappers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
-abstract class DataProvider {
-  List<core.ItemBase> items;
+abstract class DataProvider<T extends core.ItemBase> {
+  List<T> _items;
+  List<T> get items => _items;
+  set items(List<T> items) => _items = items;
   int get length;
-  DataItem getItem(int index);
+  T getItem(int index);
   RowMetadata getItemMetadata(int index);
 
-  DataProvider(List<core.ItemBase> items)
-      : this.items = (items == null ? <core.ItemBase>[] : items);
+  DataProvider(List<T> items)
+      : this.items = (items == null ? <T>[] : items);
 }
 
-class MapDataItemProvider extends DataProvider {
-  MapDataItemProvider([List<DataItem> items]) : super(items);
+class MapDataItemProvider<T extends core.ItemBase> extends DataProvider<T> {
+  MapDataItemProvider([List<T> items]) : super(items);
 
   @override
   int get length => items.length;
 
   @override
-  DataItem getItem(int index) => items[index];
+  T getItem(int index) => items[index];
 
   @override
   RowMetadata getItemMetadata(int index) => null;
@@ -69,42 +71,42 @@ class Row {}
 class RowCache {
   coll.Queue cellRenderQueue = new coll.Queue();
   Map<int, String> cellColSpans = {};
-  dom.HtmlElement rowNode;
-  List<dom.HtmlElement> cellNodes = [];
-  Map<int, dom.HtmlElement> cellNodesByColumnIdx = {};
+  dom.Element rowNode;
+  List<dom.Element> cellNodes = [];
+  Map<int, dom.Element> cellNodesByColumnIdx = {};
 
   RowCache();
 }
 
-class Range {
-  int fromRow;
-  int toRow;
-  int fromCell;
-  int toCell;
+class Range extends core.Range {
+//  int fromRow;
+//  int fromCell;
+//  int toRow;
+//  int toCell;
   int rightPx;
   int leftPx;
   int top;
   int bottom;
 
-  Range({this.fromRow, this.toRow, this.fromCell, this.toCell, this.rightPx,
-      this.leftPx, this.top, this.bottom});
+  Range({int fromRow, int toRow, int fromCell, int toCell, this.rightPx,
+      this.leftPx, this.top, this.bottom}) : super(fromRow, fromCell, toRow: toRow, toCell: toCell);
 }
 
 typedef Editor EditorFactory(Column column);
 
 typedef Formatter FormatterFactory(Column column);
 
-abstract class DataItem extends ItemBase {
+abstract class DataItem<K,V> extends ItemBase<K,V> {
   bool collapsed;
 }
 
-class MapDataItem extends DelegatingMap implements DataItem {
+class MapDataItem<K,V> extends DelegatingMap<K,V> implements DataItem<K,V> {
   bool collapsed = false;
 
-  MapDataItem([Map base]) : super(base != null ? base : new Map());
+  MapDataItem([Map<K,V> base]) : super(base != null ? base : <K,V>{});
 
-  void extend(MapDataItem update) {
-    update.keys.forEach((e) => this[e] = update[e]);
+  void extend(MapDataItem<K,V> update) {
+    update.keys.forEach((K e) => this[e] = update[e]);
   }
 }
 
@@ -138,7 +140,7 @@ class EditController {
 }
 
 typedef void AsyncPostRenderFn(
-    dom.HtmlElement target, int row, DataItem dataContext, Column colDef);
+    dom.Element target, int row, DataItem dataContext, Column colDef);
 
 class Column {
   String id;

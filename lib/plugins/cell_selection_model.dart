@@ -19,9 +19,9 @@ class CellSelectionModelOptions {
 
 class CellSelectionModel extends SelectionModel {
   BwuDatagrid _grid;
-//  dom.HtmlElement _canvas; // TODO(zoechi) why is it unused?
+//  dom.Element _canvas; // TODO(zoechi) why is it unused?
   List<core.Range> _ranges = <core.Range>[];
-  var _selector = new CellRangeSelector(new CellRangeDecoratorOptions(
+  final CellRangeSelector _selector = new CellRangeSelector(new CellRangeDecoratorOptions(
       selectionCss: {'border': '2px solid black', 'z-index': '9999'}));
   CellSelectionModelOptions _options;
 //  var _defaults = {'selectActiveCell': true}; // TODO(zoechi) why is it unused?
@@ -54,15 +54,15 @@ class CellSelectionModel extends SelectionModel {
   }
 
   void destroy() {
-    _subscriptions.forEach((e) => e.cancel());
+    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
     _grid.unregisterPlugin(_selector);
   }
 
-  List<core.Range> removeInvalidRanges(ranges) {
-    var result = [];
+  List<core.Range> removeInvalidRanges(List<core.Range> ranges) {
+    final List<core.Range> result = <core.Range>[];
 
-    for (var i = 0; i < ranges.length; i++) {
-      var r = ranges[i];
+    for (int i = 0; i < ranges.length; i++) {
+      final core.Range r = ranges[i];
       if (_grid.canCellBeSelected(r.fromRow, r.fromCell) &&
           _grid.canCellBeSelected(r.toRow, r.toCell)) {
         result.add(r);
@@ -72,7 +72,7 @@ class CellSelectionModel extends SelectionModel {
     return result;
   }
 
-  void setSelectedRanges(ranges) {
+  void setSelectedRanges(List<core.Range> ranges) {
     _ranges = removeInvalidRanges(ranges);
     _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED,
         new core.SelectedRangesChanged(this, _ranges));
@@ -126,11 +126,11 @@ class CellSelectionModel extends SelectionModel {
       if (!last.contains(active.row, active.cell)) last =
           new core.Range(active.row, active.cell);
 
-      var dRow = last.toRow - last.fromRow,
-          dCell = last.toCell - last.fromCell,
+      int dRow = last.toRow - last.fromRow;
+      int dCell = last.toCell - last.fromCell;
           // walking direction
-          dirRow = active.row == last.fromRow ? 1 : -1,
-          dirCell = active.cell == last.fromCell ? 1 : -1;
+      final int dirRow = active.row == last.fromRow ? 1 : -1;
+      final int dirCell = active.cell == last.fromCell ? 1 : -1;
 
       if (e.causedBy.which == dom.KeyCode.LEFT) {
         dCell -= dirCell;
@@ -143,13 +143,13 @@ class CellSelectionModel extends SelectionModel {
       }
 
       // define new selection range
-      var new_last = new core.Range(active.row, active.cell,
+      final core.Range newLast = new core.Range(active.row, active.cell,
           toRow: active.row + dirRow * dRow,
           toCell: active.cell + dirCell * dCell);
-      if (removeInvalidRanges([new_last]).length != 0) {
-        ranges.add(new_last);
-        var viewRow = dirRow > 0 ? new_last.toRow : new_last.fromRow;
-        var viewCell = dirCell > 0 ? new_last.toCell : new_last.fromCell;
+      if (removeInvalidRanges([newLast]).length != 0) {
+        ranges.add(newLast);
+        final int viewRow = dirRow > 0 ? newLast.toRow : newLast.fromRow;
+        final int viewCell = dirCell > 0 ? newLast.toCell : newLast.fromCell;
         _grid.scrollRowIntoView(viewRow);
         _grid.scrollCellIntoView(viewRow, viewCell);
       } else {

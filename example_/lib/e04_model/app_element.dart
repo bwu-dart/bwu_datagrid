@@ -1,3 +1,4 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:html' as dom;
@@ -5,6 +6,7 @@ import 'dart:math' as math;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -17,10 +19,14 @@ import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
+import 'inline_filter_panel.dart';
 
+import '../filter_form.dart';
 import '../required_field_validator.dart';
 
-@CustomTag('app-element')
+
+/// Silence analyzer [InlineFilterPanel], [FilterForm]
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -106,8 +112,8 @@ class AppElement extends PolymerElement {
 
   String sortcol = "title";
   int sortdir = 1;
-  @observable String percentCompleteThreshold;
-  @observable String searchString;
+  @property String percentCompleteThreshold;
+  @property String searchString;
 
   @override
   void attached() {
@@ -221,7 +227,7 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void btnSelectRowsHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void btnSelectRowsHandler(dom.MouseEvent e, detail, dom.Element target) {
 //  $['filter-form'].on['select-rows'].listen((e) {
     if (!core.globalEditorLock.commitCurrentEdit()) {
       return;
@@ -321,15 +327,15 @@ class AppElement extends PolymerElement {
   }
 
   // Header row search icon
-  void toggleFilterRow(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void toggleFilterRow(dom.MouseEvent e, detail, dom.Element target) {
     grid.setTopPanelVisibility = !grid.getGridOptions.showTopPanel;
   }
 
-  void iconMouseOver(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void iconMouseOver(dom.MouseEvent e, detail, dom.Element target) {
     target.classes.add('ui-state-hover');
   }
 
-  void iconMouseOut(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void iconMouseOut(dom.MouseEvent e, detail, dom.Element target) {
     target.classes.remove('ui-state-hover');
   }
 

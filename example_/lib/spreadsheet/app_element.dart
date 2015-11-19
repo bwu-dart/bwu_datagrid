@@ -1,18 +1,22 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
+import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
 import 'package:bwu_datagrid/plugins/bwu_auto_tooltips.dart';
 import 'package:bwu_datagrid/plugins/cell_copymanager.dart';
 
 import 'formula_editor.dart';
 
-@CustomTag('app-element')
+/// Silence analyzer [BwuColumnPicker]
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 

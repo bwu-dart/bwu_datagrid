@@ -1,20 +1,16 @@
 <!DOCTYPE html>
-
-<link rel="import" href="../../../packages/polymer/polymer.html">
-
-<polymer-element name='bwu-datagrid-headers'>
+<dom-module id='bwu-datagrid-headers'>
   <template>
     <style>
       :host {
         display: block;
+        position: relative;
+        white-space: nowrap;
+        cursor: default;
+        overflow: hidden;
+        @apply(--bwu-datagrid-headers);
       }
     </style>
-    <!--<link rel='stylesheet' href='../asset/grid.css'>
-    <link rel='stylesheet' href='../asset/default_theme.css'> -->
-    <link rel='stylesheet' href='bwu_datagrid_headers.css'>
-    <link rel='stylesheet' href='bwu_datagrid_headers_default_theme.css'>
-
     <content></content>
   </template>
-  <script type='application/dart' src='bwu_datagrid_headers.dart'></script>
-</polymer-element>
+</dom-module>

@@ -5,14 +5,13 @@ import 'dart:math' as math;
 import 'dart:async' as async;
 //import 'package:collection/equality.dart' as collEqu;
 
-typedef void SortableStartFn(dom.HtmlElement element, dom.HtmlElement helper,
-    dom.HtmlElement placeholder);
-typedef void SortableBeforeStopFn(
-    dom.HtmlElement element, dom.HtmlElement helper);
+typedef void SortableStartFn(
+    dom.Element element, dom.Element helper, dom.Element placeholder);
+typedef void SortableBeforeStopFn(dom.Element element, dom.Element helper);
 typedef void SortableStopFn(dom.MouseEvent e);
 
 class Sortable {
-  final dom.HtmlElement sortable;
+  final dom.Element sortable;
   final String containment;
   final int distance;
   final String axis;
@@ -34,18 +33,27 @@ class Sortable {
   math.Point<int> _dragStartPos;
   int _minLeft, _maxLeft;
   int _minTop, _maxTop;
-  dom.HtmlElement _draggedHelper;
-  dom.HtmlElement _placeholder;
-  dom.HtmlElement _draggedElement;
+  dom.Element _draggedHelper;
+  dom.Element _placeholder;
+  dom.Element _draggedElement;
   math.Point<int> _draggedElementStartPos;
   int _draggedElementIndex;
 
   async.StreamSubscription _mouseMoveSubscr;
   List<async.StreamSubscription> _mouseDownSubscr = [];
 
-  Sortable({this.sortable, this.containment: 'parent', this.distance, this.axis,
-      this.cursor, this.tolerance, this.helper, this.placeholderCssClass,
-      this.start, this.beforeStop, this.stop}) {
+  Sortable(
+      {this.sortable,
+      this.containment: 'parent',
+      this.distance,
+      this.axis,
+      this.cursor,
+      this.tolerance,
+      this.helper,
+      this.placeholderCssClass,
+      this.start,
+      this.beforeStop,
+      this.stop}) {
     init();
 //    _mObserver = new dom.MutationObserver((mutations, _) {
 //      if(!_isDragActive && !const collEqu.IterableEquality().equals(sortable.children.where((e) => e.attributes['isMovable'] == 'true'), _items)) {
@@ -55,7 +63,7 @@ class Sortable {
 //    })..observe(sortable, attributes: true, childList: true, subtree: false);
 
     // every mouse-up stops a drag operation
-    dom.document.onMouseUp.listen((e) {
+    dom.document.onMouseUp.listen((dom.MouseEvent e) {
       if (_isDragActive) {
         if (e.which != 1) {
           cancel();
@@ -121,13 +129,13 @@ class Sortable {
 
   void init() {
     _items = sortable.children
-        .where((e) => e.attributes['ismovable'] == 'true')
+        .where((dom.Element e) => e.attributes['ismovable'] == 'true')
         .toList();
     _mouseDownSubscr.clear();
-    _items.forEach((e) {
-      _mouseDownSubscr.add(e.onMouseDown.listen((e) {
+    _items.forEach((dom.Element e) {
+      _mouseDownSubscr.add(e.onMouseDown.listen((dom.MouseEvent e) {
         if (e.which == 1) {
-          _draggedElement = e.target as dom.HtmlElement;
+          _draggedElement = e.target as dom.Element;
           if (_draggedElement.attributes.containsKey('draggable')) {
             return;
           }
@@ -152,7 +160,7 @@ class Sortable {
   }
 
   void _subscribeMouseMove() {
-    _mouseMoveSubscr = dom.document.onMouseMove.listen((e) {
+    _mouseMoveSubscr = dom.document.onMouseMove.listen((dom.MouseEvent e) {
       if (_dragStartPos != null && _isDragStartPending) {
         // seems we still receive events after _mouseMoveSubscr.cancel()
         if (!_isDragActive) {
@@ -170,7 +178,7 @@ class Sortable {
 
   void _updateIds() {
     reorderedIds.clear();
-    sortable.children.forEach((e) => reorderedIds.add(e.id));
+    sortable.children.forEach((dom.Element e) => reorderedIds.add(e.id));
   }
 
   void _dragStart() {
@@ -201,7 +209,7 @@ class Sortable {
       _maxLeft =
           (_draggedElement.offsetLeft + _draggedElement.offsetWidth).round();
       for (int i = dIdx - 1; i >= 0; i--) {
-        var elm = sortable.children[i];
+        final dom.Element elm = sortable.children[i];
         if (elm.attributes['ismovable'] != 'true') {
           break;
         }
@@ -209,7 +217,7 @@ class Sortable {
       }
 
       for (int i = dIdx + 1; i < sortable.children.length; i++) {
-        var elm = sortable.children[i];
+        final dom.Element elm = sortable.children[i];
         if (elm.attributes['ismovable'] != 'true') {
           break;
         }
@@ -227,7 +235,7 @@ class Sortable {
       _maxTop =
           (_draggedElement.offsetTop + _draggedElement.offsetHeight).round();
       for (int i = dIdx - 1; i >= 0; i--) {
-        var elm = sortable.children[i];
+        final dom.Element elm = sortable.children[i];
         if (elm.attributes['ismovable'] != 'true') {
           break;
         }
@@ -235,7 +243,7 @@ class Sortable {
       }
 
       for (int i = dIdx + 1; i < sortable.children.length; i++) {
-        var elm = sortable.children[i];
+        final dom.Element elm = sortable.children[i];
         if (elm.attributes['ismovable'] != 'true') {
           break;
         }
@@ -277,13 +285,14 @@ class Sortable {
     }
 
 //    int placeholderPos; // TODO(zoechi) why is it not used?
-//    dom.HtmlElement hoverElement; // TODO(zoechi) why is it not used?
+//    dom.Element hoverElement; // TODO(zoechi) why is it not used?
     int placeholderIdx = sortable.children.indexOf(_placeholder);
 
     // TODO check only relevant children
 
-    sortable.children.toList().forEach((elm) {
-      var bcr = elm.getBoundingClientRect();
+    sortable.children.toList().forEach((dom.Element elm) {
+      final dom.Rectangle<int> bcr =
+          elm.getBoundingClientRect() as dom.Rectangle<int>;
       int left = bcr.left.round();
       int right = (bcr.left + bcr.width).round();
       int midX = (left + bcr.width / 2).round();
@@ -324,7 +333,8 @@ class Sortable {
   }
 
   void destroy() {
-    _mouseDownSubscr.forEach((e) => e.cancel());
+    _mouseDownSubscr
+        .forEach((async.StreamSubscription subscr) => subscr.cancel());
 //    _mObserver.disconnect();
 //    _mObserver = null;
     cancel();

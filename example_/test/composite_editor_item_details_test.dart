@@ -9,39 +9,27 @@ import 'package:test/test.dart';
 import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
-const openEditDialogButtonSelector = const By.cssSelector(
-    'app-element::shadow .options-panel button', const {
-  WebBrowser.firefox: removeShadowDom,
-  WebBrowser.ie: replaceShadowWithDeep
-});
-const dialogTitleFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="title"] input',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
-const dialogDescriptionFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="desc"] input',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
-const dialogDurationFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="duration"] input',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
-const dialogPercentFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="percent"] input',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
-const dialogStartFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="start"] input',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
-const dialogFinishFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="finish"] input',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
-const dialogEffortDrivenFieldSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form [data-editorid="effort-driven"] input',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
+const openEditDialogButtonSelector =
+    const By.shadow('app-element::shadow .options-panel button');
+const dialogTitleFieldSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form [data-editorid="title"] input');
+const dialogDescriptionFieldSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form [data-editorid="desc"] input');
+const dialogDurationFieldSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form [data-editorid="duration"] input');
+const dialogPercentFieldSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form [data-editorid="percent"] input');
+const dialogStartFieldSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form [data-editorid="start"] input');
+const dialogFinishFieldSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form [data-editorid="finish"] input');
+const dialogEffortDrivenFieldSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form [data-editorid="effort-driven"] input');
 
-const dialogSaveButtonSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form button[data-action="save"]',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
-const dialogCancelButtonSelector = const By.cssSelector(
-    'composite-editor-view::shadow div.item-details-form button[data-action="cancel"]',
-    const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
+const dialogSaveButtonSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form button[data-action="save"]');
+const dialogCancelButtonSelector = const By.shadow(
+    'composite-editor-view::shadow div.item-details-form button[data-action="cancel"]');
 
 const titleOldValue = 'Task 3';
 const titleNewValue = 'replacement title';
@@ -62,7 +50,7 @@ const effortDrivenOldValue = null;
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/composite_editor_item_details.html';
+  pageUrl = '${await webServer}/composite_editor_item_details.html';
   forEachBrowser(tests);
 }
 
@@ -75,9 +63,10 @@ tests(WebBrowser browser) {
       driver = await commonSetUp(pageUrl, browser);
       titleCell =
           await (driver.findElements(firstColumnSelector).skip(3).first);
-
+      print(await titleCell.text);
       expect(await titleCell.text, titleOldValue);
       // make 3rd row active
+      await new Future.delayed(const Duration(milliseconds: 10));
       await titleCell.click();
       expect(await titleCell.attributes['class'], contains('active'));
     });
@@ -132,7 +121,7 @@ tests(WebBrowser browser) {
           isNotNull);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
-    }/*, skip: 'temporary'*/);
+    } /*, skip: 'temporary'*/);
 
     test('edit and cancel', () async {
       final String percentOldValue = await (await driver.findElement(
@@ -170,7 +159,7 @@ tests(WebBrowser browser) {
           false);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
-    }/*, skip: 'temporary'*/);
+    } /*, skip: 'temporary'*/);
 
     test('percent-complete editor with mouse', () async {
       WebElement editButton =
@@ -179,38 +168,28 @@ tests(WebBrowser browser) {
       await editButton.click();
 
       await driver.mouse.moveTo(
-          element: await driver.findElement(const By.cssSelector(
-              'composite-editor-view::shadow .editor-percentcomplete-picker', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      })));
+          element: await driver.findElement(const By.shadow(
+              'composite-editor-view::shadow .editor-percentcomplete-picker')));
 
       final dialogPercentField =
           await driver.findElement(dialogPercentFieldSelector);
-      await (await driver.findElement(const By.cssSelector(
-          'composite-editor-view::shadow .editor-percentcomplete-picker button[val="0"]', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      }))).click();
+      await (await driver.findElement(const By.shadow(
+              'composite-editor-view::shadow .editor-percentcomplete-picker button[val="0"]')))
+          .click();
       expect(await dialogPercentField.attributes['value'], '0');
 
-      await (await driver.findElement(const By.cssSelector(
-          'composite-editor-view::shadow .editor-percentcomplete-picker button[val="50"]', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      }))).click();
+      await (await driver.findElement(const By.shadow(
+              'composite-editor-view::shadow .editor-percentcomplete-picker button[val="50"]')))
+          .click();
       expect(await dialogPercentField.attributes['value'], '50');
 
-      await (await driver.findElement(const By.cssSelector(
-          'composite-editor-view::shadow .editor-percentcomplete-picker button[val="100"]', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      }))).click();
+      await (await driver.findElement(const By.shadow(
+              'composite-editor-view::shadow .editor-percentcomplete-picker button[val="100"]')))
+          .click();
       expect(await dialogPercentField.attributes['value'], '100');
 
-      final slider = await driver.findElement(const By.cssSelector(
-          'composite-editor-view::shadow .editor-percentcomplete-picker input[type="range"]',
-          const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep}));
+      final slider = await driver.findElement(const By.shadow(
+          'composite-editor-view::shadow .editor-percentcomplete-picker input[type="range"]'));
       final sliderSize = await (slider).size;
       await driver.mouse
           .moveTo(element: slider, xOffset: sliderSize.width ~/ 2, yOffset: 1);

@@ -1,3 +1,4 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:html' as dom;
@@ -5,6 +6,7 @@ import 'dart:math' as math;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -16,7 +18,7 @@ import 'package:bwu_datagrid_examples/composite_editor.dart';
 import 'composite_editor_view.dart';
 import 'package:bwu_datagrid/core/core.dart';
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -122,7 +124,7 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void openDetails(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void openDetails(dom.MouseEvent e, detail, dom.Element target) {
     if (grid.getEditorLock.isActive &&
         !grid.getEditorLock.commitCurrentEdit()) {
       return;
@@ -140,7 +142,7 @@ class AppElement extends PolymerElement {
         // position: $modal.position, positions the dialog with it's top/left corner above the current field
         destroy: $modal.destroy);
 
-    Map<String, dom.HtmlElement> containers = {};
+    Map<String, dom.Element> containers = {};
 
     new async.Future(() {
       columns.forEach((c) => containers[c.id] =

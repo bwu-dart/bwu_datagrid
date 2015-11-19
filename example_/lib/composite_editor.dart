@@ -46,7 +46,7 @@ class CompositeEditorOptions {
 class CompositeEditor extends Editor {
   List<Column> columns;
   CompositeEditorOptions options;
-  Map<String, dom.HtmlElement> containers;
+  Map<String, dom.Element> containers;
 
   CompositeEditor.prepare(this.columns, this.containers, this.options);
   CompositeEditor(this.args);

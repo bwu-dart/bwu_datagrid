@@ -43,7 +43,7 @@ class RowSelectionModel extends SelectionModel {
   }
 
   void destroy() {
-    _subscriptions.forEach((e) => e.cancel());
+    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
   }
 
 // TODO(zoechi)
@@ -59,8 +59,8 @@ class RowSelectionModel extends SelectionModel {
 
   List<int> _rangesToRows(List<core.Range> ranges) {
     List<int> rows = [];
-    for (var i = 0; i < ranges.length; i++) {
-      for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
+    for (int i = 0; i < ranges.length; i++) {
+      for (int j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
         rows.add(j);
       }
     }
@@ -69,16 +69,16 @@ class RowSelectionModel extends SelectionModel {
 
   List<core.Range> _rowsToRanges(List<int> rows) {
     List<core.Range> ranges = [];
-    var lastCell = _grid.getColumns.length - 1;
-    for (var i = 0; i < rows.length; i++) {
+    final int lastCell = _grid.getColumns.length - 1;
+    for (int i = 0; i < rows.length; i++) {
       ranges.add(new core.Range(rows[i], 0, toRow: rows[i], toCell: lastCell));
     }
     return ranges;
   }
 
   List<int> _getRowsRange(int from, int to) {
-    var i,
-        rows = [];
+    int i;
+    List<int> rows = <int>[];
     for (i = from; i <= to; i++) {
       rows.add(i);
     }
@@ -126,9 +126,7 @@ class RowSelectionModel extends SelectionModel {
         (e.causedBy.which == dom.KeyCode.UP ||
             e.causedBy.which == dom.KeyCode.DOWN)) {
       List<int> selectedRows = getSelectedRows();
-      selectedRows.sort((x, y) {
-        return x - y;
-      });
+      selectedRows.sort((int x, int y) => x - y);
 
       if (selectedRows.length == 0) {
         selectedRows = [activeRow.row];
@@ -169,20 +167,20 @@ class RowSelectionModel extends SelectionModel {
     }
 
     List<int> selection = _rangesToRows(_ranges);
-    var idx = selection.indexOf(cell.row);
+    final int idx = selection.indexOf(cell.row);
 
     if (idx == -1 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
       selection.add(cell.row);
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (idx != -1 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
-      selection = selection.where((o) => o != cell.row);
+      selection = selection.where((int o) => o != cell.row);
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (selection.length > 0 && e.causedBy.shiftKey) {
-      var last = selection.removeLast();
-      var from = math.min(cell.row, last);
-      var to = math.max(cell.row, last);
+      final int last = selection.removeLast();
+      final int from = math.min(cell.row, last);
+      final int to = math.max(cell.row, last);
       selection = [];
-      for (var i = from; i <= to; i++) {
+      for (int i = from; i <= to; i++) {
         if (i != last) {
           selection.add(i);
         }

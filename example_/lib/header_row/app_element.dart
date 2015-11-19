@@ -1,15 +1,17 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -72,7 +74,7 @@ class AppElement extends PolymerElement {
         });
 
         Function filterChangedHandler = (dom.Event e) {
-          var columnId = (e.target as dom.HtmlElement).dataset['columnId'];
+          var columnId = (e.target as dom.Element).dataset['columnId'];
           if (columnId != null) {
             columnFilters[columnId] = (e.target as dom.InputElement).value;
             dataView.refresh();

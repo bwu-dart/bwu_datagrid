@@ -6,6 +6,11 @@ import 'dart:math' as math;
 import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
+
+import 'datagrid/bwu_datagrid_headers.dart';
+import 'datagrid/bwu_datagrid_header_column.dart';
+import 'datagrid/bwu_datagrid_headerrow_column.dart';
 
 import 'package:bwu_datagrid/plugins/plugin.dart';
 
@@ -20,8 +25,10 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
+import 'package:bwu_datagrid/datagrid/bwu_datagrid_default_theme.dart';
 
-@CustomTag('bwu-datagrid')
+/// [bwuDatagridDefaultThemeSilence]
+@PolymerRegister('bwu-datagrid')
 class BwuDatagrid extends PolymerElement {
   BwuDatagrid.created() : super.created();
 
@@ -30,39 +37,32 @@ class BwuDatagrid extends PolymerElement {
 
   @override
   void attached() {
-    try {
-//      attributes['unresolved'] = 'true';
-      super.attached();
-      _isAttached = true;
-      if (_isPendingInit) {
-        _init();
-        render();
-        //      _unveilElement();
-        _isPendingInit = false;
-        _setupCompleter.complete();
-      }
-
-      _eventBus.fire(core.Events.ATTACHED, new core.Attached(this));
-    } catch (e) {
-//      _unveilElement();
+    super.attached();
+    _isAttached = true;
+    if (_isPendingInit) {
+      _init();
+      render();
+      _isPendingInit = false;
+      _setupCompleter.complete();
     }
+
+    _eventBus.fire(core.Events.ATTACHED, new core.Attached(this));
   }
 
-//  void _unveilElement() {
-//    attributes['resolved'] = 'true';
-//    attributes.remove('unresolved');
-//  }
+  /// The name of a style module to be used by the datagrids local DOM
+  @Property(observer: 'themeChanged')
+  String theme = 'bwu-datagrid-default-theme';
 
-  // DataGrid(dom.HtmlElement container, String data, int columns, Options options);
+  // DataGrid(dom.Element container, String data, int columns, Options options);
   DataProvider _dataProvider;
-  @published DataProvider get dataProvider => _dataProvider;
+  @property DataProvider get dataProvider => _dataProvider;
   set data(DataProvider data) => setData(data, true);
 
   List<Column> _columns;
-  @published List<Column> get columns => _columns;
+  @property List<Column> get columns => _columns;
 
   GridOptions _gridOptions = new GridOptions();
-  @published GridOptions get gridOptions => _gridOptions;
+  @property GridOptions get gridOptions => _gridOptions;
   set gridOptions(GridOptions options) => setGridOptions = options;
 
   // settings
@@ -87,25 +87,33 @@ class BwuDatagrid extends PolymerElement {
 
   // private
   bool _initialized = false;
-  dom.ShadowRoot _container;
+
+  // local D
+  PolymerDom __container;
+  PolymerDom get _container {
+    if (__container == null) {
+      __container = new PolymerDom(root);
+    }
+    return __container;
+  }
+
   //String uid = "bwu_datagrid_${(1000000 * new math.Random().nextDouble()).round()}";
-  dom.HtmlElement _focusSink, _focusSink2;
-  dom.HtmlElement _headerScroller;
+  dom.Element _focusSink, _focusSink2;
+  dom.Element _headerScroller;
   BwuDatagridHeaders _headers;
-  dom.HtmlElement _headerRow, _headerRowScroller, _headerRowSpacer;
-  dom.HtmlElement _topPanelScroller;
-  dom.HtmlElement _topPanel;
-  dom.HtmlElement _viewport;
-  dom.HtmlElement _canvas;
+  dom.Element _headerRow, _headerRowScroller, _headerRowSpacer;
+  dom.Element _topPanelScroller;
+  dom.Element _topPanel;
+  dom.Element _viewport;
+  dom.Element _canvas;
   dom.StyleElement _style;
-  dom.HtmlElement _boundAncestors;
+  dom.Element _boundAncestors;
   dom.CssStyleSheet _stylesheet;
   Map<int, dom.CssStyleRule> _columnCssRulesL, _columnCssRulesR;
   int _viewportH = 0;
   int _viewportW = 0;
   int _canvasWidth;
-  bool _viewportHasHScroll = false,
-      _viewportHasVScroll = false;
+  bool _viewportHasHScroll = false, _viewportHasVScroll = false;
   int _headerColumnWidthDiff = 0,
 //      _headerColumnHeightDiff = 0, // border+padding // TODO(zoechi) why is it unused?
       _cellWidthDiff = 0,
@@ -115,7 +123,7 @@ class BwuDatagrid extends PolymerElement {
   int _tabbingDirection = 1;
   int _activePosX;
   int _activeRow, _activeCell;
-  dom.HtmlElement _activeCellNode = null;
+  dom.Element _activeCellNode = null;
   Editor _currentEditor = null;
   dynamic _serializedEditorValue;
   EditController _editController;
@@ -132,21 +140,21 @@ class BwuDatagrid extends PolymerElement {
   int _scrollLeft = 0;
 
   SelectionModel _selectionModel;
-  List<int> _selectedRows = [];
+  List<int> _selectedRows = <int>[];
 
-  List<Plugin> _plugins = [];
-  Map<String, Map<int, Map<String, String>>> _cellCssClasses = {};
+  List<Plugin> _plugins = <Plugin>[];
+  Map<String, Map<int, Map<String, String>>> _cellCssClasses = <String, Map<int, Map<String, String>>>{};
 
-  Map<String, int> _columnsById = {};
-  List<SortColumn> _sortColumns = [];
-  List<int> _columnPosLeft = [];
-  List<int> _columnPosRight = [];
+  Map<String, int> _columnsById = <String, int>{};
+  List<SortColumn> _sortColumns = <SortColumn>[];
+  List<int> _columnPosLeft = <int>[];
+  List<int> _columnPosRight = <int>[];
 
   // async call handles
   async.Timer _h_editorLoader = null;
   async.Timer _h_render = null;
   async.Timer _h_postrender = null;
-  Map<int, List<bool>> _postProcessedRows = {};
+  Map<int, List<bool>> _postProcessedRows = <int, List<bool>>{};
   int _postProcessToRow = null;
   int _postProcessFromRow = null;
 
@@ -156,15 +164,30 @@ class BwuDatagrid extends PolymerElement {
 
   // These two variables work around a bug with inertial scrolling in Webkit/Blink on Mac.
   // See http://crbug.com/312427.
-  dom.HtmlElement _rowNodeFromLastMouseWheelEvent; // this node must not be deleted while inertial scrolling
-  dom.HtmlElement _zombieRowNodeFromLastMouseWheelEvent; // node that was hidden instead of getting deleted
+  dom.Element _rowNodeFromLastMouseWheelEvent; // this node must not be deleted while inertial scrolling
+  dom.Element _zombieRowNodeFromLastMouseWheelEvent; // node that was hidden instead of getting deleted
 
   core.EventBus get eventBus => _eventBus;
   core.EventBus _eventBus = new core.EventBus();
 
   async.Completer _setupCompleter;
 
-  async.Future setup({DataProvider dataProvider, List<Column> columns,
+  @reflectable
+  void themeChanged(String newValue, String oldValue) {
+    _container
+        .querySelectorAll('[bwu-datagrid-theme]')
+        .forEach((dom.Element e) => _container.removeChild(e));
+    _container.insertBefore(new dom.Element.tag('style', 'custom-style')
+          ..attributes['bwu-datagrid-theme'] = newValue
+          ..attributes['include'] = newValue ?? 'default-theme',
+        $['theme-placeholder']);
+    PolymerDom.flush();
+    render();
+  }
+
+  async.Future setup(
+      {DataProvider dataProvider,
+      List<Column> columns,
       GridOptions gridOptions}) {
     _setupCompleter = new async.Completer();
     if (_initialized) {
@@ -193,7 +216,7 @@ class BwuDatagrid extends PolymerElement {
     return _setupCompleter.future;
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   // Initialization
 
   void init() {
@@ -201,8 +224,6 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _init() {
-    _container = this.shadowRoot;
-
     // calculate these only once and share between grid instances
     _maxSupportedCssHeight = _maxSupportedCssHeight != null
         ? _maxSupportedCssHeight
@@ -269,8 +290,8 @@ class BwuDatagrid extends PolymerElement {
       ..style.position = 'relative';
     //_container.append(_headerScroller);
 
-    _headers = ($[
-        'bwuDatagridHeaders'] as BwuDatagridHeaders) //(new dom.Element.tag('bwu-datagrid-headers') as BwuDatagridHeaders)
+    _headers = ($['bwuDatagridHeaders']
+        as BwuDatagridHeaders) //(new dom.Element.tag('bwu-datagrid-headers') as BwuDatagridHeaders)
       //..classes.add('bwu-datagrid-header-columns')
       ..style.left = '-1000px';
     //_headerScroller.append(_headers);
@@ -339,7 +360,8 @@ class BwuDatagrid extends PolymerElement {
     if (!_initialized) {
       _initialized = true;
 
-      _viewportW = this.clientWidth
+      _viewportW = this
+          .clientWidth
           .round(); //tools.parseInt(this.getComputedStyle().width);
 
       // header columns and cells may have different padding/border skewing width calculations (box-sizing, hello?)
@@ -373,8 +395,8 @@ class BwuDatagrid extends PolymerElement {
       resizeCanvas();
       _bindAncestorScrollEvents();
 
-      _container.on['resize']
-          .listen(resizeCanvas); // TODO resize isn't thrown by default
+      _container.node.on['resize']
+          .listen(resizeCanvas); // TODO resize isn't fired by default
       //$viewport
       //.bind("click", handleClick)
       _viewport.onScroll.listen(_handleScroll);
@@ -382,7 +404,7 @@ class BwuDatagrid extends PolymerElement {
         ..onContextMenu.listen(_handleHeaderContextMenu)
         ..onClick.listen(_handleHeaderClick)
         ..querySelectorAll(".bwu-datagrid-header-column").forEach((e) {
-          (e as dom.HtmlElement)
+          (e as dom.Element)
             ..onMouseEnter.listen(_handleHeaderMouseEnter)
             ..onMouseLeave.listen(_handleHeaderMouseLeave);
         });
@@ -408,7 +430,7 @@ class BwuDatagrid extends PolymerElement {
 //          ..onBwuCustomDragStart.listen(_handleCustomDragStart)
 //          ..onBwuCustomDragEnd.listen(_handleCustomDragEnd);
 //          ..querySelectorAll(".bwu-datagrid-cell").forEach((e) {
-//            (e as dom.HtmlElement)
+//            (e as dom.Element)
 //              ..onMouseEnter.listen(handleMouseEnter)
 //              ..onMouseLeave.listen(handleMouseLeave);
 //          });
@@ -475,10 +497,10 @@ class BwuDatagrid extends PolymerElement {
 
   SelectionModel get getSelectionModel => _selectionModel;
 
-  dom.HtmlElement get getCanvasNode => _canvas;
+  dom.Element get getCanvasNode => _canvas;
 
   math.Point<int> _measureScrollbar() {
-    dom.HtmlElement $c = new dom.DivElement()
+    dom.Element $c = new dom.DivElement()
       ..style.position = 'absolute'
       ..style.top = '-10000px'
       ..style.left = '10000px'
@@ -538,7 +560,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void _disableSelection(dom.HtmlElement $target) {
+  void _disableSelection(dom.Element $target) {
 // TODO also for all childs ?? commented out lines below didn't change anything
 // starting in the text of a header and dragging down to the grid selects text
     if ($target != null) {
@@ -551,7 +573,7 @@ class BwuDatagrid extends PolymerElement {
           //..stopImmediatePropagation();
         }); // bind("selectstart.ui", function () {
     }
-    $target.querySelectorAll('*').forEach((dom.HtmlElement e) {
+    $target.querySelectorAll('*').forEach((dom.Element e) {
       e..attributes['unselectable'] = 'on';
 //        ..style.userSelect= 'none'
 //        ..onSelectStart.listen((e) {
@@ -673,13 +695,13 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  dom.HtmlElement getHeaderRow() {
+  dom.Element getHeaderRow() {
     return _headerRow;
   }
 
-  dom.HtmlElement getHeaderRowColumn(columnId) {
+  dom.Element getHeaderRowColumn(columnId) {
     var idx = getColumnIndex(columnId);
-    dom.HtmlElement $header = _headerRow.children
+    dom.Element $header = _headerRow.children
         .firstWhere((e) => e == idx); //.eq(idx); // TODO check
     if ($header != null && $header.children.length > 0) {
       return $header;
@@ -689,18 +711,18 @@ class BwuDatagrid extends PolymerElement {
 
   void _createColumnHeaders() {
     var onMouseEnter = (dom.MouseEvent e) {
-      (e.target as dom.HtmlElement).classes.add("ui-state-hover");
+      (e.target as dom.Element).classes.add("ui-state-hover");
     };
 
     var onMouseLeave = (dom.MouseEvent e) {
-      (e.target as dom.HtmlElement).classes.remove("ui-state-hover");
+      (e.target as dom.Element).classes.remove("ui-state-hover");
     };
 
     _headers
         .querySelectorAll(".bwu-datagrid-header-column")
-        .forEach((BwuDatagridHeaderColumn e) {
+        .forEach((dom.Element e) {
       // TODO check self/this
-      Column columnDef = e.column;
+      Column columnDef = (e as BwuDatagridHeaderColumn).column;
       if (columnDef != null) {
         _eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY,
             new core.BeforeHeaderCellDestroy(this, e, columnDef));
@@ -711,9 +733,9 @@ class BwuDatagrid extends PolymerElement {
 
     _headerRow
         .querySelectorAll(".bwu-datagrid-headerrow-column")
-        .forEach((BwuDatagridHeaderrowColumn e) {
+        .forEach((dom.Element e) {
       // TODO check self/this
-      Column columnDef = e.column;
+      Column columnDef = (e as BwuDatagridHeaderrowColumn).column;
       if (columnDef != null) {
         _eventBus.fire(core.Events.BEFORE_HEADER_CELL_DESTROY,
             new core.BeforeHeaderCellDestroy(this, e, columnDef));
@@ -730,7 +752,7 @@ class BwuDatagrid extends PolymerElement {
           nameElement = new dom.SpanElement()
             ..classes.add('bwu-datagrid-column-name')
             ..text =
-            m.name; // TODO this span element is not added in updateColumnHeader()
+                m.name; // TODO this span element is not added in updateColumnHeader()
         }
         if (m.nameElement != null) {
           nameElement = m.nameElement;
@@ -738,8 +760,8 @@ class BwuDatagrid extends PolymerElement {
         if (nameElement == null) {
           nameElement = new dom.Text('');
         }
-        var header = (new dom.Element.tag(
-            'bwu-datagrid-header-column') as BwuDatagridHeaderColumn)
+        var header = (new dom.Element.tag('bwu-datagrid-header-column')
+            as BwuDatagridHeaderColumn)
           ..classes.add('ui-state-default')
           ..classes.add('bwu-datagrid-header-column')
           ..append(nameElement)
@@ -749,8 +771,7 @@ class BwuDatagrid extends PolymerElement {
           ..attributes["title"] = m.toolTip != null ? m.toolTip : ""
           ..attributes['ismovable'] = '${m.isMovable}'
           ..column = m;
-        if (m.headerCssClass != null)
-          header.classes.add(m.headerCssClass);
+        if (m.headerCssClass != null) header.classes.add(m.headerCssClass);
         _headers.append(header);
 
         if (_gridOptions.enableColumnReorder || m.sortable) {
@@ -769,13 +790,14 @@ class BwuDatagrid extends PolymerElement {
             new core.HeaderCellRendered(this, header, m));
 
         if (_gridOptions.showHeaderRow) {
-          var headerRowCell = (new dom.Element.tag(
-              'bwu-datagrid-headerrow-column') as BwuDatagridHeaderrowColumn)
-            ..classes.add('ui-state-default')
-            ..classes.add('bwu-datagrid-headerrow-column')
-            ..classes.add('l${i}')
-            ..classes.add('r${i}')
-            ..column = m;
+          var headerRowCell =
+              (new dom.Element.tag('bwu-datagrid-headerrow-column')
+                  as BwuDatagridHeaderrowColumn)
+                ..classes.add('ui-state-default')
+                ..classes.add('bwu-datagrid-headerrow-column')
+                ..classes.add('l${i}')
+                ..classes.add('r${i}')
+                ..column = m;
           _headerRow.append(headerRowCell);
 
           _eventBus.fire(core.Events.HEADER_ROW_CELL_RENDERED,
@@ -796,13 +818,15 @@ class BwuDatagrid extends PolymerElement {
       // temporary workaround for a bug in jQuery 1.7.1 (http://bugs.jquery.com/ticket/11328)
       // e.metaKey = e.metaKey || e.ctrlKey; // TODO process Ctrl-key
 
-      if ((e.target as dom.HtmlElement).classes
+      if ((e.target as dom.Element)
+          .classes
           .contains("bwu-datagrid-resizable-handle")) {
         return;
       }
 
-      var $col = utils.closest((e.target as dom.HtmlElement),
-          '.bwu-datagrid-header-column') as BwuDatagridHeaderColumn;
+      var $col = utils.closest(
+              (e.target as dom.Element), '.bwu-datagrid-header-column')
+          as BwuDatagridHeaderColumn;
       if ($col.children.length == 0) {
         return;
       }
@@ -846,9 +870,9 @@ class BwuDatagrid extends PolymerElement {
           _eventBus.fire(core.Events.SORT,
               new core.Sort(this, false, column, null, sortOpts.sortAsc, e));
         } else {
-          var sortCols = new Map.fromIterable(_sortColumns,
-              key: (k) => columns[getColumnIndex(k.columnId)],
-              value: (k) => k.sortAsc);
+          final sortCols = new Map<Column,bool>.fromIterable(_sortColumns,
+              key: (SortColumn k) => columns[getColumnIndex(k.columnId)],
+              value: (SortColumn k) => k.sortAsc);
           _eventBus.fire(core.Events.SORT,
               new core.Sort(this, true, null, sortCols, null, e));
         }
@@ -861,7 +885,8 @@ class BwuDatagrid extends PolymerElement {
     if (_headers.sortable != null) {
       _headers.sortable.destroy();
     }
-    _headers.sortable = new sort.Sortable(sortable: _headers,
+    _headers.sortable = new sort.Sortable(
+        sortable: _headers,
         //selector: 'ui-sortable',
         containment: 'parent',
         distance: 3,
@@ -869,19 +894,20 @@ class BwuDatagrid extends PolymerElement {
         cursor: 'default',
         tolerance: 'intersection',
         helper: 'clone',
-        placeholderCssClass: 'bwu-datagrid-sortable-placeholder ui-state-default bwu-datagrid-header-column',
-        start: (elm, helper, placeholder) {
+        placeholderCssClass:
+            'bwu-datagrid-sortable-placeholder ui-state-default bwu-datagrid-header-column',
+        start: (dom.Element elm, dom.Element helper, dom.Element placeholder) {
       //placeholder.style.width = '${tools.outerWidth(elm) - _headerColumnWidthDiff}px';
       helper.classes.add('bwu-datagrid-header-column-active');
-    }, beforeStop: (elm, helper) {
+    }, beforeStop: (dom.Element elm, dom.Element helper) {
       helper.classes.remove('bwu-datagrid-header-column-active');
       if (!getEditorLock.commitCurrentEdit()) {
         _headers.sortable.cancel();
       }
     });
-    _headers.sortable.stop = (e) {
+    _headers.sortable.stop = (dom.Event e) {
       var reorderedIds = _headers.sortable.reorderedIds; //("toArray");
-      var reorderedColumns = [];
+      var reorderedColumns = <Column>[];
       for (var i = 0; i < reorderedIds.length; i++) {
         reorderedColumns.add(columns[getColumnIndex(reorderedIds[i])]);
       }
@@ -903,7 +929,7 @@ class BwuDatagrid extends PolymerElement {
     columnElements = new List<BwuDatagridHeaderColumn>.from(_headers.children);
     _headers
         .querySelectorAll(".bwu-datagrid-resizable-handle")
-        .forEach((dom.HtmlElement e) {
+        .forEach((dom.Element e) {
       e.remove();
     });
     for (int i = 0; i < columnElements.length; i++) {
@@ -935,10 +961,11 @@ class BwuDatagrid extends PolymerElement {
             return false;
           }
           pageX = e.page.x;
-          (e.target as dom.HtmlElement).parent.classes
+          (e.target as dom.Element)
+              .parent
+              .classes
               .add("bwu-datagrid-header-column-active");
-          int shrinkLeewayOnRight = null,
-              stretchLeewayOnRight = null;
+          int shrinkLeewayOnRight = null, stretchLeewayOnRight = null;
           // lock each column's width option to current width
           for (int i = 0; i < columnElements.length; i++) {
             columns[i].previousWidth = utils.outerWidth(columnElements[i]);
@@ -963,8 +990,7 @@ class BwuDatagrid extends PolymerElement {
               }
             }
           }
-          int shrinkLeewayOnLeft = 0,
-              stretchLeewayOnLeft = 0;
+          int shrinkLeewayOnLeft = 0, stretchLeewayOnLeft = 0;
           for (int j = 0; j <= i; j++) {
             // columns on left only affect minPageX
             c = columns[j];
@@ -1082,7 +1108,9 @@ class BwuDatagrid extends PolymerElement {
         })
         ..onDragEnd.listen((dom.MouseEvent e) {
           var newWidth;
-          (e.target as dom.HtmlElement).parent.classes
+          (e.target as dom.Element)
+              .parent
+              .classes
               .remove("bwu-datagrid-header-column-active");
           for (int j = 0; j < columnElements.length; j++) {
             c = columns[j];
@@ -1100,7 +1128,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  int _getVBoxDelta(dom.HtmlElement $el) {
+  int _getVBoxDelta(dom.Element $el) {
 //    var p = [ // TODO(zoechi) why is it unused?
 //      "borderTopWidth",
 //      "borderBottomWidth",
@@ -1126,8 +1154,8 @@ class BwuDatagrid extends PolymerElement {
 //    var h = ["borderLeftWidth", "borderRightWidth", "paddingLeft", "paddingRight"];
 //    var v = ["borderTopWidth", "borderBottomWidth", "paddingTop", "paddingBottom"];
 
-    el = (new dom.Element.tag(
-        'bwu-datagrid-header-column') as BwuDatagridHeaderColumn)
+    el = (new dom.Element.tag('bwu-datagrid-header-column')
+        as BwuDatagridHeaderColumn)
       ..classes.add('ui-state-default')
       ..classes.add('bwu-datagrid-header-column')
       ..style.visibility = 'hidden';
@@ -1191,7 +1219,7 @@ class BwuDatagrid extends PolymerElement {
     _style =
         new dom.StyleElement(); //.html("<style type='text/css' rel='stylesheet' />", validator: nodeValidator);
     //dom.document.head.append($style);
-    this.shadowRoot.append(_style);
+    _container.append(_style);
     var rowHeight = (_gridOptions.rowHeight - _cellHeightDiff);
     var rules = [
       ".bwu-datagrid-header-column { left: 1000px; }",
@@ -1238,7 +1266,7 @@ class BwuDatagrid extends PolymerElement {
       Match matches;
       int columnIdx;
       for (var i = 0; i < cssRules.length; i++) {
-        var selector = cssRules[i].selectorText;
+        var selector = cssRules[i].cssText; //selectorText;
         matches = new RegExp(r'(?:\.l)(\d+)').firstMatch(selector);
         if (matches != null) {
           columnIdx = utils.parseInt(
@@ -1269,7 +1297,7 @@ class BwuDatagrid extends PolymerElement {
     _eventBus.fire(core.Events.BEFORE_DESTROY, new core.BeforeDestroy(this));
 
     var i = _plugins.length;
-    while (i--) {
+    while (i-- > 0) {
       unregisterPlugin(_plugins[i]);
     }
 
@@ -1472,9 +1500,9 @@ class BwuDatagrid extends PolymerElement {
       hc
         ..classes.remove("bwu-datagrid-header-column-sorted")
         ..querySelectorAll(".bwu-datagrid-sort-indicator").forEach(
-            (dom.HtmlElement e) => e.classes
-          ..remove('bwu-datagrid-sort-indicator-asc')
-          ..remove('bwu-datagrid-sort-indicator-desc'));
+            (dom.Element e) => e.classes
+              ..remove('bwu-datagrid-sort-indicator-asc')
+              ..remove('bwu-datagrid-sort-indicator-desc'));
     });
 
     _sortColumns.forEach((col) {
@@ -1622,7 +1650,7 @@ class BwuDatagrid extends PolymerElement {
     return _dataProvider.getItem(i);
   }
 
-  dom.HtmlElement get getTopPanel => _topPanel;
+  dom.Element get getTopPanel => _topPanel;
 
   void set setTopPanelVisibility(visible) {
     if (_gridOptions.showTopPanel != visible) {
@@ -1637,7 +1665,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  math.Rectangle<int> getCurrentSize(dom.HtmlElement e) {
+  math.Rectangle<int> getCurrentSize(dom.Element e) {
     var oldPos = e.style.position;
     var oldDisplay = e.style.display;
     var oldLeft = e.offsetLeft;
@@ -1651,7 +1679,7 @@ class BwuDatagrid extends PolymerElement {
     return size;
   }
 
-  void slideDown(dom.HtmlElement element, Function fn) {
+  void slideDown(dom.Element element, Function fn) {
     var size = getCurrentSize(element);
     element.style.height = '0';
     element.style.display = 'block';
@@ -1667,7 +1695,7 @@ class BwuDatagrid extends PolymerElement {
     });
   }
 
-  void slideUp(dom.HtmlElement element, Function fn) {
+  void slideUp(dom.Element element, Function fn) {
     var oldHeight = element.clientHeight.round();
     fn();
     element.classes.add('slide-up');
@@ -1694,7 +1722,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  dom.ShadowRoot get getContainerNode => _container;
+  PolymerDom get getContainerNode => _container;
 
   //////////////////////////////////////////////////////////////////////////////////////////////
   // Rendering / Scrolling
@@ -1800,7 +1828,7 @@ class BwuDatagrid extends PolymerElement {
     return item[columnDef.field];
   }
 
-  dom.HtmlElement _appendRowHtml(int row, Range range, int dataLength) {
+  dom.Element _appendRowHtml(int row, Range range, int dataLength) {
     var d = getDataItem(row);
     var dataLoading = row < dataLength && d == null;
     var rowCss =
@@ -1819,7 +1847,7 @@ class BwuDatagrid extends PolymerElement {
       rowCss = '${rowCss} ${metadata.cssClasses}';
     }
 
-    dom.HtmlElement rowElement = new dom.DivElement()
+    dom.Element rowElement = new dom.DivElement()
       ..classes.add('ui-widget-content')
       ..classes.addAll(rowCss.split(" ").where((s) => s.length > 0))
       ..style.top = '${_getRowTop(row)}px';
@@ -1866,7 +1894,7 @@ class BwuDatagrid extends PolymerElement {
     return rowElement;
   }
 
-  void _appendCellHtml(dom.HtmlElement rowElement, int row, int cell,
+  void _appendCellHtml(dom.Element rowElement, int row, int cell,
       String colspan, core.ItemBase item) {
     var m = columns[cell];
     var cellCss =
@@ -1884,8 +1912,8 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    dom.HtmlElement cellElement = new dom.DivElement()
-                                    ..classes.addAll(cellCss.split(" ").where((s) => s.length > 0));
+    dom.Element cellElement = new dom.DivElement()
+      ..classes.addAll(cellCss.split(" ").where((s) => s.length > 0));
 
     if (m.isDraggable) {
       cellElement.attributes['draggable'] = 'true';
@@ -1979,21 +2007,21 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void updateCell(int row, int cell) {
-    var cellNode = getCellNode(row, cell);
+    final dom.Element cellNode = getCellNode(row, cell);
     if (cellNode == null) {
       return;
     }
 
-    var m = columns[cell],
-        d = getDataItem(row);
+    final Column m = columns[cell];
+    final core.ItemBase d = getDataItem(row);
     if (_currentEditor != null && _activeRow == row && _activeCell == cell) {
       _currentEditor.loadValue(d);
     } else {
       // TODO(zoechi) the first parameter to the formatter seems to be missing (test)
-      cellNode.innerHtml = d
+      d != null
           ? (_getFormatter(row, m) as CellFormatter).format(
               cellNode, row, cell, _getDataItemValueForColumn(d, m), m, d)
-          : "";
+          : cellNode.innerHtml = '';
       _invalidatePostProcessingResults(row);
     }
   }
@@ -2033,7 +2061,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   int _getViewportHeight() {
-    var containerCs = _container.host.getComputedStyle();
+    var containerCs = getComputedStyle();
     var headerScrollerCs = _headerScroller.getComputedStyle();
 
     var x = utils.parseIntDropUnit(containerCs.height) -
@@ -2062,7 +2090,8 @@ class BwuDatagrid extends PolymerElement {
     }
 
     _numVisibleRows = (_viewportH / _gridOptions.rowHeight).ceil();
-    _viewportW = this.clientWidth
+    _viewportW = this
+        .clientWidth
         .round(); //tools.parseInt(this.getComputedStyle().width);
     if (!_gridOptions.autoHeight) {
       _viewport.style.height = "${_viewportH}px";
@@ -2257,7 +2286,7 @@ class BwuDatagrid extends PolymerElement {
   void _cleanUpAndRenderCells(Range range) {
     RowCache cacheEntry;
     //var stringArray = [];
-    dom.HtmlElement rowElement = new dom.DivElement();
+    dom.Element rowElement = new dom.DivElement();
     var processedRows = [];
     int cellsAdded;
 //    var totalCellsAdded = 0; // TODO(zoechi) why is it unused?
@@ -2358,8 +2387,8 @@ class BwuDatagrid extends PolymerElement {
     var parentNode = _canvas;
 
     //stringArray = [],
-    //dom.HtmlElement rowElement;
-//    List<dom.HtmlElement> rowElements = []; // TODO(zoechi) why is it unused?
+    //dom.Element rowElement;
+//    List<dom.Element> rowElements = []; // TODO(zoechi) why is it unused?
 
     List<int> rows = [];
     bool needToReselectCell = false;
@@ -2405,10 +2434,11 @@ class BwuDatagrid extends PolymerElement {
 
     for (var i = 0; i < rows.length; i++) {
       _rowsCache[rows[i]].rowNode = parentNode.append(x.firstChild);
-      _rowsCache[rows[i]].rowNode
+      _rowsCache[rows[i]]
+          .rowNode
           .querySelectorAll(".bwu-datagrid-cell")
           .forEach((e) {
-        (e as dom.HtmlElement)
+        (e as dom.Element)
           ..onMouseEnter.listen(_handleMouseEnter)
           ..onMouseLeave.listen(_handleMouseLeave);
       });
@@ -2439,7 +2469,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _updateRowPositions() {
-    for (final int row in _rowsCache) {
+    for (final int row in _rowsCache.keys) {
       _rowsCache[row].rowNode.style.top = "${_getRowTop(row)}px";
     }
   }
@@ -2504,9 +2534,11 @@ class BwuDatagrid extends PolymerElement {
         if (_h == _viewportH) {
           _page = 0;
         } else {
-          _page = math.min(_n - 1, (_scrollTop *
-              ((_th - _viewportH) / (_h - _viewportH)) *
-              (1 / _ph)).floor());
+          _page = math.min(
+              _n - 1,
+              (_scrollTop *
+                  ((_th - _viewportH) / (_h - _viewportH)) *
+                  (1 / _ph)).floor());
         }
         _pageOffset = (_page * _cj).round();
         if (oldOffset != _pageOffset) {
@@ -2585,7 +2617,7 @@ class BwuDatagrid extends PolymerElement {
   void _updateCellCssStylesOnRenderedRows(
       Map<int, Map<String, String>> addedHash,
       Map<int, Map<String, String>> removedHash) {
-    dom.HtmlElement node;
+    dom.Element node;
 //    String columnId; // TODO(zoechi) why is it unused?
     Map addedRowHash;
     Map removedRowHash;
@@ -2620,7 +2652,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void addCellCssStyles(key, hash) {
+  void addCellCssStyles(String key, Map<int, Map<String, String>> hash) {
     if (_cellCssClasses[key] != null) {
       throw "addCellCssStyles: cell CSS hash with key '" +
           key +
@@ -2656,7 +2688,7 @@ class BwuDatagrid extends PolymerElement {
         new core.CellCssStylesChanged(this, key, hash: hash));
   }
 
-  Map<int, Map<String, String>> getCellCssStyles(int key) {
+  Map<int, Map<String, String>> getCellCssStyles(String key) {
     return _cellCssClasses[key];
   }
 
@@ -2685,7 +2717,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _handleMouseWheel(dom.MouseEvent e) {
     var rowNode =
-        utils.closest((e.target as dom.HtmlElement), '.bwu-datagrid-row');
+        utils.closest((e.target as dom.Element), '.bwu-datagrid-row');
     if (rowNode != _rowNodeFromLastMouseWheelEvent) {
       if (_zombieRowNodeFromLastMouseWheelEvent != null &&
           _zombieRowNodeFromLastMouseWheelEvent != rowNode) {
@@ -2868,7 +2900,7 @@ class BwuDatagrid extends PolymerElement {
       // don't steal it back - keyboard events will still bubble up
       // IE9+ seems to default DIVs to tabIndex=0 instead of -1, so check for cell clicks directly.
       if (e.target != dom.document.activeElement ||
-          (e.target as dom.HtmlElement).classes.contains("bwu-datagrid-cell")) {
+          (e.target as dom.Element).classes.contains("bwu-datagrid-cell")) {
         setFocus();
       }
     }
@@ -2898,7 +2930,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _handleContextMenu(dom.MouseEvent e) {
     var cell = getCellFromEvent(e);
-    //var $cell = tools.closest((e.target as dom.HtmlElement), '.bwu-datagrid-cell', context: $canvas);
+    //var $cell = tools.closest((e.target as dom.Element), '.bwu-datagrid-cell', context: $canvas);
     if (cell == null) {
       return;
     }
@@ -2912,7 +2944,7 @@ class BwuDatagrid extends PolymerElement {
         new core.ContextMenu(this, cell, causedBy: e));
   }
 
-  void _handleDblClick(dom.MouseEvent e) {
+  void _handleDblClick(dom.Event e) {
     Cell cell = getCellFromEvent(e);
     if (cell == null ||
         (_currentEditor != null &&
@@ -2933,8 +2965,11 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _handleHeaderMouseEnter(dom.MouseEvent e) {
-    _eventBus.fire(core.Events.HEADER_MOUSE_ENTER, new core.HeaderMouseEnter(
-        this, (e.target as BwuDatagridHeaderColumn).column, causedBy: e));
+    _eventBus.fire(
+        core.Events.HEADER_MOUSE_ENTER,
+        new core.HeaderMouseEnter(
+            this, (e.target as BwuDatagridHeaderColumn).column,
+            causedBy: e));
   }
 
   void _handleHeaderMouseLeave(dom.MouseEvent e) {
@@ -2943,16 +2978,18 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _handleHeaderContextMenu(dom.MouseEvent e) {
-    var $header = utils.closest((e.target as dom.HtmlElement),
-        ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/) as BwuDatagridHeaderColumn;
+    var $header = utils.closest((e.target as dom.Element),
+            ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/)
+        as BwuDatagridHeaderColumn;
     var column = $header != null ? $header.column : null;
     _eventBus.fire(core.Events.HEADER_CONTEX_MENU,
         new core.HeaderContextMenu(this, column, causedBy: e));
   }
 
   void _handleHeaderClick(dom.MouseEvent e) {
-    var $header = utils.closest((e.target as dom.HtmlElement),
-        '.bwu-datagrid-header-column' /*, ".bwu-datagrid-header-columns"*/) as BwuDatagridHeaderColumn;
+    var $header = utils.closest((e.target as dom.Element),
+            '.bwu-datagrid-header-column' /*, ".bwu-datagrid-header-columns"*/)
+        as BwuDatagridHeaderColumn;
     var column = $header != null ? $header.column : null;
     if (column != null) {
       _eventBus.fire(core.Events.HEADER_CLICK,
@@ -2994,7 +3031,7 @@ class BwuDatagrid extends PolymerElement {
     return new Cell(row, cell - 1);
   }
 
-  int _getCellFromNode(dom.HtmlElement cellNode) {
+  int _getCellFromNode(dom.Element cellNode) {
     // read column number from .l<columnNumber> CSS class
     var matches = new RegExp(r'(?:\l)(\d+)').firstMatch(cellNode.className);
     //var cls = new RegExp(r'l\d+').allMatches(cellNode.className);
@@ -3004,7 +3041,7 @@ class BwuDatagrid extends PolymerElement {
     return utils.parseInt(matches.group(1));
   }
 
-  int _getRowFromNode(dom.HtmlElement rowNode) {
+  int _getRowFromNode(dom.Element rowNode) {
     for (final row in _rowsCache.keys) {
       // TODO in rowsCache) {
       if (_rowsCache[row] != null && _rowsCache[row].rowNode == rowNode) {
@@ -3016,10 +3053,10 @@ class BwuDatagrid extends PolymerElement {
   }
 
   Cell getCellFromEvent(dom.Event e) {
-    return getCellFromTarget(e.target as dom.HtmlElement);
+    return getCellFromTarget(e.target as dom.Element);
   }
 
-  Cell getCellFromTarget(dom.HtmlElement t) {
+  Cell getCellFromTarget(dom.Element t) {
     var $cell = utils.closest(t, '.bwu-datagrid-cell', context: _canvas);
     if ($cell == null) {
       return null;
@@ -3087,7 +3124,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void _setActiveCellInternal(dom.HtmlElement newCell, [bool opt_editMode]) {
+  void _setActiveCellInternal(dom.Element newCell, [bool opt_editMode]) {
     if (_activeCellNode != null) {
       _makeActiveCellNormal();
       _activeCellNode.classes.remove("active");
@@ -3117,8 +3154,8 @@ class BwuDatagrid extends PolymerElement {
           _h_editorLoader.cancel();
         }
         if (_gridOptions.asyncEditorLoading) {
-          _h_editorLoader = new async.Timer(_gridOptions.asyncEditorLoadDelay,
-              () {
+          _h_editorLoader =
+              new async.Timer(_gridOptions.asyncEditorLoadDelay, () {
             _makeActiveCellEditable();
           });
         } else {
@@ -3143,8 +3180,8 @@ class BwuDatagrid extends PolymerElement {
 //      } catch (e) { }
 //    } else
 //      if (dom.window.getSelection) {
-    var sel = dom.window.getSelection();
-    if (sel && sel.removeAllRanges) {
+    final sel = dom.window.getSelection();
+    if (sel != null) {
       sel.removeAllRanges();
     }
 //    }
@@ -3181,15 +3218,17 @@ class BwuDatagrid extends PolymerElement {
 
     if (_activeCellNode != null) {
       var d = getDataItem(_activeRow);
-      _activeCellNode.classes
-        ..remove("editable")
-        ..remove("invalid");
+      _activeCellNode.classes..remove("editable")..remove("invalid");
       if (d != null) {
         var column = columns[_activeCell];
         CellFormatter formatter = _getFormatter(_activeRow, column);
-        /*activeCellNode.innerHtml =*/ formatter.format(_activeCellNode,
-            _activeRow, _activeCell, _getDataItemValueForColumn(d, column),
-            column, d);
+        /*activeCellNode.innerHtml =*/ formatter.format(
+            _activeCellNode,
+            _activeRow,
+            _activeCell,
+            _getDataItemValueForColumn(d, column),
+            column,
+            d);
         _invalidatePostProcessingResults(_activeRow);
       }
     }
@@ -3225,11 +3264,14 @@ class BwuDatagrid extends PolymerElement {
     var columnDef = columns[_activeCell];
     var item = getDataItem(_activeRow);
 
-    if (!_eventBus.fire(core.Events.BEFORE_EDIT_CELL, new core.BeforeEditCell(
-        this,
-        cell: new Cell(_activeRow, _activeCell),
-        item: item,
-        column: columnDef)).retVal) {
+    if (!_eventBus
+        .fire(
+            core.Events.BEFORE_EDIT_CELL,
+            new core.BeforeEditCell(this,
+                cell: new Cell(_activeRow, _activeCell),
+                item: item,
+                column: columnDef))
+        .retVal) {
       setFocus();
       return;
     }
@@ -3249,7 +3291,7 @@ class BwuDatagrid extends PolymerElement {
     }
     _currentEditor = _currentEditor.newInstance(new EditorArgs(
         grid: this,
-        gridPosition: _absBox(_container.host),
+        gridPosition: _absBox(this),
         position: (_absBox(_activeCellNode)),
         container: _activeCellNode,
         column: columnDef,
@@ -3296,15 +3338,15 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  NodeBox _absBox(dom.HtmlElement elem) {
+  NodeBox _absBox(dom.Element elem) {
     var bcr = elem.getBoundingClientRect();
     var box = new NodeBox(
-        top: (bcr.top as double).toInt(),
-        left: (bcr.left as double).toInt(),
-        bottom: (bcr.bottom as double).toInt(),
-        right: (bcr.right as double).toInt(),
-        width: (bcr.width as double).toInt(),
-        height: (bcr.height as double).toInt(),
+        top: (bcr.top as num).toInt(),
+        left: (bcr.left as num).toInt(),
+        bottom: (bcr.bottom as num).toInt(),
+        right: (bcr.right as num).toInt(),
+        width: (bcr.width as num).toInt(),
+        height: (bcr.height as num).toInt(),
         visible: true);
 //    var cs = elem.getComputedStyle();
 //    var box = new NodeBox(
@@ -3350,7 +3392,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   NodeBox getGridPosition() {
-    return _absBox(_container.host);
+    return _absBox(this);
   }
 
   void _handleActiveCellPositionChange(dom.Event e) {
@@ -3387,7 +3429,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  dom.HtmlElement getActiveCellNode() {
+  dom.Element getActiveCellNode() {
     return _activeCellNode;
   }
 
@@ -3431,14 +3473,13 @@ class BwuDatagrid extends PolymerElement {
         row = 0;
       }
 
-      var cell = 0,
-          prevCell = null;
-      var prevActivePosX = _activePosX;
+      int cell = 0, prevCell = null;
+      int prevActivePosX = _activePosX;
       while (cell <= _activePosX) {
         if (canCellBeActive(row, cell)) {
           prevCell = cell;
         }
-        cell += _getColspan(row, cell);
+        cell += int.parse(_getColspan(row, cell));
       }
 
       if (prevCell != null) {
@@ -3482,7 +3523,7 @@ class BwuDatagrid extends PolymerElement {
       if (canCellBeActive(row, cell)) {
         return cell;
       }
-      cell += _getColspan(row, cell);
+      cell += int.parse(_getColspan(row, cell));
     }
     return null;
   }
@@ -3705,7 +3746,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  dom.HtmlElement getCellNode(int row, int cell) {
+  dom.Element getCellNode(int row, int cell) {
     if (_rowsCache[row] != null) {
       _ensureCellNodesInRowsCache(row);
       var c = _rowsCache[row].cellNodesByColumnIdx[cell];
@@ -3835,19 +3876,22 @@ class BwuDatagrid extends PolymerElement {
                 cell: _activeCell,
                 editor: _currentEditor,
                 serializedValue: _currentEditor.serializeValue(),
-                prevSerializedValue: _serializedEditorValue,
-                execute: () {
+                prevSerializedValue: _serializedEditorValue, execute: () {
               EditCommand cmd = editCommand;
               cmd.editor.applyValue(item, cmd.serializedValue);
               updateRow(cmd.row);
-              _eventBus.fire(core.Events.CELL_CHANGE, new core.CellChange(
-                  this, new Cell(_activeRow, _activeCell), item));
+              _eventBus.fire(
+                  core.Events.CELL_CHANGE,
+                  new core.CellChange(
+                      this, new Cell(_activeRow, _activeCell), item));
             }, undo: () {
               EditCommand cmd = editCommand;
               cmd.editor.applyValue(item, cmd.prevSerializedValue);
               updateRow(cmd.row);
-              _eventBus.fire(core.Events.CELL_CHANGE, new core.CellChange(
-                  this, new Cell(_activeRow, _activeCell), item));
+              _eventBus.fire(
+                  core.Events.CELL_CHANGE,
+                  new core.CellChange(
+                      this, new Cell(_activeRow, _activeCell), item));
             });
 
             if (_gridOptions.editCommandHandler != null) {
@@ -3871,16 +3915,18 @@ class BwuDatagrid extends PolymerElement {
         } else {
           // Re-add the CSS class to trigger transitions, if any.
           _activeCellNode.classes.remove("invalid");
-          _activeCellNode.style.width; // force layout // TODO ob das in Dart so funktioniert
+          _activeCellNode.style
+              .width; // force layout // TODO ob das in Dart so funktioniert
           _activeCellNode.classes.add("invalid");
 
-          _eventBus.fire(core.Events.VALIDATION_ERROR, new core.ValidationError(
-              this,
-              editor: _currentEditor,
-              cellNode: _activeCellNode,
-              validationResults: validationResults,
-              cell: new Cell(_activeRow, _activeCell),
-              column: column));
+          _eventBus.fire(
+              core.Events.VALIDATION_ERROR,
+              new core.ValidationError(this,
+                  editor: _currentEditor,
+                  cellNode: _activeCellNode,
+                  validationResults: validationResults,
+                  cell: new Cell(_activeRow, _activeCell),
+                  column: column));
 
           _currentEditor.focus();
           return false;
@@ -3897,8 +3943,8 @@ class BwuDatagrid extends PolymerElement {
     return true;
   }
 
-  List<core.Range> _rowsToRanges(List<int> rows) {
-    var ranges = [];
+  List<Range> _rowsToRanges(List<int> rows) {
+    final ranges = <Range>[];
     var lastCell = columns.length - 1;
     for (var i = 0; i < rows.length; i++) {
       ranges.add(new Range(
@@ -3938,49 +3984,53 @@ class BwuDatagrid extends PolymerElement {
   }
 
   async.Stream<core.ActiveCellChanged> get onBwuActiveCellChanged =>
-      _eventBus.onEvent(core.Events.ACTIVE_CELL_CHANGED);
+      _eventBus.onEvent(core.Events.ACTIVE_CELL_CHANGED) as async.Stream<core.ActiveCellChanged>;
 
-  async.Stream<core.ActiveCellPositionChanged> get onBwuActiveCellPositionChanged =>
-      _eventBus.onEvent(core.Events.ACTIVE_CELL_POSITION_CHANGED);
+  async.Stream<
+      core.ActiveCellPositionChanged> get onBwuActiveCellPositionChanged =>
+      _eventBus.onEvent(core.Events.ACTIVE_CELL_POSITION_CHANGED) as async.Stream<
+            core.ActiveCellPositionChanged>;
 
   async.Stream<core.AddNewRow> get onBwuAddNewRow =>
-      _eventBus.onEvent(core.Events.ADD_NEW_ROW);
+      _eventBus.onEvent(core.Events.ADD_NEW_ROW) as async.Stream<core.AddNewRow>;
 
   async.Stream<core.Attached> get onBwuAttached =>
-      _eventBus.onEvent(core.Events.ATTACHED);
+      _eventBus.onEvent(core.Events.ATTACHED) as async.Stream<core.Attached>;
 
   async.Stream<core.BeforeCellEditorDestroy> get onBwuBeforeCellEditorDestroy =>
-      _eventBus.onEvent(core.Events.BEFORE_CELL_EDITOR_DESTROY);
+      _eventBus.onEvent(core.Events.BEFORE_CELL_EDITOR_DESTROY) as async.Stream<core.BeforeCellEditorDestroy>;
 
   async.Stream<core.BeforeDestroy> get onBwuDestroy =>
-      _eventBus.onEvent(core.Events.BEFORE_DESTROY);
+      _eventBus.onEvent(core.Events.BEFORE_DESTROY) as async.Stream<core.BeforeDestroy>;
 
   async.Stream<core.BeforeEditCell> get onBwuBeforeEditCell =>
-      _eventBus.onEvent(core.Events.BEFORE_EDIT_CELL);
+      _eventBus.onEvent(core.Events.BEFORE_EDIT_CELL) as async.Stream<core.BeforeEditCell>;
 
   async.Stream<core.BeforeHeaderCellDestroy> get onBwuBeforeHeaderCellDestory =>
-      _eventBus.onEvent(core.Events.BEFORE_HEADER_CELL_DESTROY);
+      _eventBus.onEvent(core.Events.BEFORE_HEADER_CELL_DESTROY) as async.Stream<core.BeforeHeaderCellDestroy>;
 
-  async.Stream<core.BeforeHeaderRowCellDestroy> get onBwuBeforeHeaderRowCellDestory =>
-      _eventBus.onEvent(core.Events.BEFORE_HEADER_ROW_CELL_DESTROY);
+  async.Stream<
+      core.BeforeHeaderRowCellDestroy> get onBwuBeforeHeaderRowCellDestory =>
+      _eventBus.onEvent(core.Events.BEFORE_HEADER_ROW_CELL_DESTROY) as async.Stream<
+            core.BeforeHeaderRowCellDestroy>;
 
   async.Stream<core.CellChange> get onBwuCellChange =>
-      _eventBus.onEvent(core.Events.CELL_CHANGE);
+      _eventBus.onEvent(core.Events.CELL_CHANGE) as async.Stream<core.CellChange>;
 
   async.Stream<core.CellCssStylesChanged> get onBwuCellCssStylesChanged =>
-      _eventBus.onEvent(core.Events.CELL_CSS_STYLES_CHANGED);
+      _eventBus.onEvent(core.Events.CELL_CSS_STYLES_CHANGED) as async.Stream<core.CellCssStylesChanged>;
 
   async.Stream<core.Click> get onBwuClick =>
-      _eventBus.onEvent(core.Events.CLICK);
+      _eventBus.onEvent(core.Events.CLICK) as async.Stream<core.Click>;
 
   async.Stream<core.ColumnsReordered> get onBwuColumnsReordered =>
-      _eventBus.onEvent(core.Events.COLUMNS_REORDERED);
+      _eventBus.onEvent(core.Events.COLUMNS_REORDERED) as async.Stream<core.ColumnsReordered>;
 
   async.Stream<core.ColumnsResized> get onBwuColumnsResized =>
-      _eventBus.onEvent(core.Events.COLUMNS_RESIZED);
+      _eventBus.onEvent(core.Events.COLUMNS_RESIZED) as async.Stream<core.ColumnsResized>;
 
   async.Stream<core.ContextMenu> get onBwuContextMenu =>
-      _eventBus.onEvent(core.Events.CONTEXT_MENU);
+      _eventBus.onEvent(core.Events.CONTEXT_MENU) as async.Stream<core.ContextMenu>;
 
 //  async.Stream<core.CustomDrag> get onBwuCustomDrag =>
 //      _eventBus.onEvent(core.Events.CUSTOM_DRAG);
@@ -3992,75 +4042,75 @@ class BwuDatagrid extends PolymerElement {
 //      _eventBus.onEvent(core.Events.CUSTOM_DRAG_START);
 //
   async.Stream<core.DoubleClick> get onBwuDoubleClick =>
-      _eventBus.onEvent(core.Events.DOUBLE_CLICK);
+      _eventBus.onEvent(core.Events.DOUBLE_CLICK) as async.Stream<core.DoubleClick>;
 
-  async.Stream<core.Drag> get onBwuDrag => _eventBus.onEvent(core.Events.DRAG);
+  async.Stream<core.Drag> get onBwuDrag => _eventBus.onEvent(core.Events.DRAG) as async.Stream<core.Drag>;
 
   async.Stream<core.DragEnd> get onBwuDragEnd =>
-      _eventBus.onEvent(core.Events.DRAG_END);
+      _eventBus.onEvent(core.Events.DRAG_END) as async.Stream<core.DragEnd>;
 
   async.Stream<core.DragEnter> get onBwuDragEnter =>
-      _eventBus.onEvent(core.Events.DRAG_ENTER);
+      _eventBus.onEvent(core.Events.DRAG_ENTER) as async.Stream<core.DragEnter>;
 
   async.Stream<core.DragLeave> get onBwuDragLeave =>
-      _eventBus.onEvent(core.Events.DRAG_LEAVE);
+      _eventBus.onEvent(core.Events.DRAG_LEAVE) as async.Stream<core.DragLeave>;
 
   async.Stream<core.DragOver> get onBwuDragOver =>
-      _eventBus.onEvent(core.Events.DRAG_OVER);
+      _eventBus.onEvent(core.Events.DRAG_OVER) as async.Stream<core.DragOver>;
 
 // TODO this event is jQuery specific and not avaialble in Dart
 //  async.Stream<core.DragInit> get onBwuDragInit =>
 //      _eventBus.onEvent(core.Events.DRAG_INIT);
 
   async.Stream<core.DragStart> get onBwuDragStart =>
-      _eventBus.onEvent(core.Events.DRAG_START);
+      _eventBus.onEvent(core.Events.DRAG_START) as async.Stream<core.DragStart>;
 
-  async.Stream<core.Drop> get onBwuDrop => _eventBus.onEvent(core.Events.DROP);
+  async.Stream<core.Drop> get onBwuDrop => _eventBus.onEvent(core.Events.DROP) as async.Stream<core.Drop>;
 
   async.Stream<core.HeaderCellRendered> get onBwuHeaderCellRendered =>
-      _eventBus.onEvent(core.Events.HEADER_CELL_RENDERED);
+      _eventBus.onEvent(core.Events.HEADER_CELL_RENDERED) as async.Stream<core.HeaderCellRendered>;
 
   async.Stream<core.HeaderClick> get onBwuHeaderClick =>
-      _eventBus.onEvent(core.Events.HEADER_CLICK);
+      _eventBus.onEvent(core.Events.HEADER_CLICK) as async.Stream<core.HeaderClick>;
 
   async.Stream<core.HeaderContextMenu> get onBwuHeaderContextMenu =>
-      _eventBus.onEvent(core.Events.HEADER_CONTEX_MENU);
+      _eventBus.onEvent(core.Events.HEADER_CONTEX_MENU) as async.Stream<core.HeaderContextMenu>;
 
   async.Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
-      _eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER);
+      _eventBus.onEvent(core.Events.HEADER_MOUSE_ENTER) as async.Stream<core.HeaderMouseEnter>;
 
   async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
-      _eventBus.onEvent(core.Events.HEADER_MOUSE_LEAVE);
+      _eventBus.onEvent(core.Events.HEADER_MOUSE_LEAVE) as async.Stream<core.HeaderMouseLeave>;
 
   async.Stream<core.HeaderRowCellRendered> get onBwuHeaderRowCellRendered =>
-      _eventBus.onEvent(core.Events.HEADER_ROW_CELL_RENDERED);
+      _eventBus.onEvent(core.Events.HEADER_ROW_CELL_RENDERED) as async.Stream<core.HeaderRowCellRendered>;
 
   async.Stream<core.KeyDown> get onBwuKeyDown =>
-      _eventBus.onEvent(core.Events.KEY_DOWN);
+      _eventBus.onEvent(core.Events.KEY_DOWN) as async.Stream<core.KeyDown>;
 
   async.Stream<core.MouseEnter> get onBwuMouseEnter =>
-      _eventBus.onEvent(core.Events.MOUSE_ENTER);
+      _eventBus.onEvent(core.Events.MOUSE_ENTER) as async.Stream<core.MouseEnter>;
 
   async.Stream<core.MouseLeave> get onBwuMouseLeave =>
-      _eventBus.onEvent(core.Events.MOUSE_LEAVE);
+      _eventBus.onEvent(core.Events.MOUSE_LEAVE) as async.Stream<core.MouseLeave>;
 
   async.Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.PASTE_CELLS);
+      _eventBus.onEvent(core.Events.PASTE_CELLS) as async.Stream<core.PasteCells>;
 
   async.Stream<core.SelectedRangesChanged> get onBwuSelectedRangesChanged =>
-      _eventBus.onEvent(core.Events.SELECTED_RANGES_CHANGED);
+      _eventBus.onEvent(core.Events.SELECTED_RANGES_CHANGED) as async.Stream<core.SelectedRangesChanged>;
 
   async.Stream<core.SelectedRowsChanged> get onBwuSelectedRowsChanged =>
-      _eventBus.onEvent(core.Events.SELECTED_ROWS_CHANGED);
+      _eventBus.onEvent(core.Events.SELECTED_ROWS_CHANGED) as async.Stream<core.SelectedRowsChanged>;
 
   async.Stream<core.Scroll> get onBwuScroll =>
-      _eventBus.onEvent(core.Events.SCROLL);
+      _eventBus.onEvent(core.Events.SCROLL) as async.Stream<core.Scroll>;
 
-  async.Stream<core.Sort> get onBwuSort => _eventBus.onEvent(core.Events.SORT);
+  async.Stream<core.Sort> get onBwuSort => _eventBus.onEvent(core.Events.SORT) as async.Stream<core.Sort>;
 
   async.Stream<core.ValidationError> get onBwuValidationError =>
-      _eventBus.onEvent(core.Events.VALIDATION_ERROR);
+      _eventBus.onEvent(core.Events.VALIDATION_ERROR) as async.Stream<core.ValidationError>;
 
   async.Stream<core.ViewportChanged> get onBwuViewportChanged =>
-      _eventBus.onEvent(core.Events.VIEWPORT_CHANGED);
+      _eventBus.onEvent(core.Events.VIEWPORT_CHANGED) as async.Stream<core.ViewportChanged>;
 }

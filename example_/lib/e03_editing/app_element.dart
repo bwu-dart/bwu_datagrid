@@ -1,8 +1,11 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
+
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -12,7 +15,7 @@ import '../required_field_validator.dart';
 import 'package:bwu_datagrid/core/core.dart';
 import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -118,12 +121,12 @@ class AppElement extends PolymerElement {
   }
 
   void enableAutoEdit(
-      dom.MouseEvent e, dynamic details, dom.HtmlElement target) {
+      dom.MouseEvent e, dynamic details, dom.Element target) {
     grid.setGridOptions = new GridOptions.unitialized()..autoEdit = true;
   }
 
   void disableAutoEdit(
-      dom.MouseEvent e, dynamic details, dom.HtmlElement target) {
+      dom.MouseEvent e, dynamic details, dom.Element target) {
     grid.setGridOptions = new GridOptions.unitialized()..autoEdit = false;
   }
 

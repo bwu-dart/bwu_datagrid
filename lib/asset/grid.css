@@ -124,8 +124,7 @@ classes should alter those!
   z-index: 11;
   overflow: visible;
   background: white;
-  border-color: solid
-  border-style: black;
+  border: solid black;
 }
 
 .bwu-datagrid-cell:focus {

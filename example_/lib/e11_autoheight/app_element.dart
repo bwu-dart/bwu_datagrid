@@ -1,13 +1,15 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 

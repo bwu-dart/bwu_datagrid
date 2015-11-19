@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-
-<link rel="import" href="../../packages/polymer/polymer.html">
-
-<polymer-element name='filter-form'>
+<dom-module id='filter-form'>
   <template>
     <style>
       :host {
@@ -30,5 +27,4 @@
     <input type=text id='txtSearch' value='{{searchString}}' on-keyup='{{clearSearch}}'>
 
   </template>
-  <script type='application/dart' src='filter_form.dart'></script>
-</polymer-element>
+</dom-module>

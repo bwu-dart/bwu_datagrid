@@ -12,13 +12,13 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 
 class CellRangeSelector extends Plugin {
   BwuDatagrid _grid;
-  dom.HtmlElement _canvas;
+  dom.Element _canvas;
   bool _dragging = false;
   Decorator _decorator;
   //var _handler = new Slick.EventHandler();
   math.Point<int> _canvasOrigin;
   Range _range;
-  dom.HtmlElement _dummyProxy;
+  dom.Element _dummyProxy;
 
   core.EventBus get eventBus => _eventBus;
   core.EventBus _eventBus = new core.EventBus();
@@ -62,7 +62,7 @@ class CellRangeSelector extends Plugin {
 //    e.stopImmediatePropagation();
 //  }
 
-  dom.HtmlElement _handleDragStart(DragStart e) {
+  dom.Element _handleDragStart(DragStart e) {
     if (e.isImmediatePropagationStopped || isSuspended) return null;
 
     var cell = _grid.getCellFromEvent(e.causedBy);
@@ -127,10 +127,10 @@ class CellRangeSelector extends Plugin {
   }
 
   async.Stream<core.BeforeCellRangeSelected> get onBwuBeforeCellRangeSelected =>
-      _eventBus.onEvent(core.Events.BEFORE_CELL_RANGE_SELECTED);
+      _eventBus.onEvent(core.Events.BEFORE_CELL_RANGE_SELECTED) as async.Stream<core.BeforeCellRangeSelected>;
 
   async.Stream<core.CellRangeSelected> get onBwuCellRangeSelected =>
-      _eventBus.onEvent(core.Events.CELL_RANGE_SELECTED);
+      _eventBus.onEvent(core.Events.CELL_RANGE_SELECTED) as async.Stream<core.CellRangeSelected>;
 }
 
 //    $.extend(this, {

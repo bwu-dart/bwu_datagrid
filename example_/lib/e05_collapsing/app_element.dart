@@ -1,3 +1,4 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:async' as async;
@@ -6,6 +7,7 @@ import 'dart:html' as dom;
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -15,16 +17,18 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
+import '../filter_form.dart';
 
 import '../required_field_validator.dart';
 
+/// Silence analyzer [FilterForm]
 class TaskNameFormatter extends fm.CellFormatter {
   List<DataItem> data;
   DataView dataView;
   TaskNameFormatter({this.data, this.dataView});
 
   @override
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
+  void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, DataItem dataContext) {
     target.children.clear();
     String val = new HtmlEscape().convert(value.toString());
@@ -49,7 +53,7 @@ class TaskNameFormatter extends fm.CellFormatter {
   }
 }
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -118,8 +122,8 @@ class AppElement extends PolymerElement {
   String sortcol = "title";
   int sortdir = 1;
 
-  @observable String percentCompleteThreshold;
-  @observable String searchString;
+  @property String percentCompleteThreshold;
+  @property String searchString;
 
   @override
   void attached() {
@@ -203,7 +207,7 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuClick.listen((e) {
-          if ((e.causedBy.target as dom.HtmlElement)
+          if ((e.causedBy.target as dom.Element)
               .classes
               .contains("toggle")) {
             var item = dataView.getItem(e.cell.row);

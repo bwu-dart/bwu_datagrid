@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 
-<link rel="import" href="../../packages/polymer/polymer.html">
-<link rel='import' href='datagrid/bwu_datagrid_headers.html'>
-<link rel='import' href='datagrid/bwu_datagrid_header_column.html'>
-<link rel='import' href='datagrid/bwu_datagrid_headerrow_column.html'>
-
-<polymer-element name='bwu-datagrid' tabindex='0'>
+<dom-module id='bwu-datagrid' tabindex='0'>
   <template>
-    <link rel='stylesheet' href='asset/smoothness/jquery-ui-1.8.16.custom.css'>
-    <link rel='stylesheet' href='asset/grid.css'>
-    <link rel='stylesheet' href='asset/default_theme.css'>
+    <!--<link rel='stylesheet' href='asset/smoothness/jquery-ui-1.8.16.custom.css'>-->
+    <!--<link rel='stylesheet' href='asset/grid.css'>-->
+    <!--<link rel='stylesheet' href='asset/default_theme.css'>-->
     <style>
       :host {
         display: block;
         overflow: hidden;
         outline: 0;
+        @apply(--bwu-datagrid);
       }
     </style>
 
+    <span class="hidden" id="theme-placeholder"></span>
     <content select='[grid-target="popup"]'></content>
 
     <div id='focusSink' tabIndex='0' hidefocus="true"></div>
@@ -41,5 +38,4 @@
 
     <content></content>
   </template>
-  <script type='application/dart' src='bwu_datagrid.dart'></script>
-</polymer-element>
+</dom-module>

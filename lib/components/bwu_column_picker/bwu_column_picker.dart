@@ -1,9 +1,11 @@
+@HtmlImport('bwu_column_picker.html')
 library bwu_datagrid.components.bwu_column_picker;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart';
@@ -21,7 +23,7 @@ class ColumnPickerOptions {
   ColumnPickerOptions({this.fadeSpeed: 250});
 }
 
-@CustomTag('bwu-column-picker')
+@PolymerRegister('bwu-column-picker')
 class BwuColumnPicker extends PolymerElement {
   BwuColumnPicker.created() : super.created();
 
@@ -29,9 +31,9 @@ class BwuColumnPicker extends PolymerElement {
   BwuDatagrid _grid;
   List<Column> _columns;
 
-  @observable List<CbData> columnCheckboxes = toObservable(<CbData>[]);
-  @observable bool isSyncResize = false;
-  @observable bool isAutoResize = false;
+  @property List<CbData> columnCheckboxes = <CbData>[];
+  @property bool isSyncResize = false;
+  @property bool isAutoResize = false;
 
   bool _isInitialized = false;
 
@@ -62,13 +64,15 @@ class BwuColumnPicker extends PolymerElement {
 //    _grid.setGridOptions = new GridOptions(forceFitColumns: isAutoResize);
 //  }
 
-  void syncResizeChangedHandler(dom.Event e, detail, dom.HtmlElement target) {
+  void syncResizeChangedHandler(
+      dom.Event e, Object detail, dom.Element target) {
     _grid.setGridOptions = new GridOptions.unitialized()
       ..syncColumnCellResize = (target as dom.CheckboxInputElement).checked;
   }
 
-  void autoResizeChangedHandler(dom.Event e, detail, dom.HtmlElement target) {
-    var checked = (target as dom.CheckboxInputElement).checked;
+  void autoResizeChangedHandler(
+      dom.Event e, Object detail, dom.Element target) {
+    final bool checked = (target as dom.CheckboxInputElement).checked;
     _grid.setGridOptions = new GridOptions.unitialized()
       ..forceFitColumns = checked;
     if (checked) {
@@ -80,7 +84,7 @@ class BwuColumnPicker extends PolymerElement {
     if (_isInitialized) {
       throw '"columns" must not be updated after the control was added to the DOM.';
     }
-    _columns = toObservable(columns);
+    _columns = columns;
   }
 
   void attached() {
@@ -96,7 +100,7 @@ class BwuColumnPicker extends PolymerElement {
   void detached() {
     super.detached();
 
-    _subscriptions.forEach((e) => e.cancel());
+    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
     remove();
   }
 
@@ -106,7 +110,7 @@ class BwuColumnPicker extends PolymerElement {
     _updateColumnOrder();
 
 //    var $li, $input; // TODO(zoechi) why is it unused?
-    for (var i = 0; i < _columns.length; i++) {
+    for (int i = 0; i < _columns.length; i++) {
       CbData cb = new CbData(_columns[i].id);
 
       cb.checked = _grid.getColumnIndex(_columns[i].id) != null;
@@ -128,9 +132,10 @@ class BwuColumnPicker extends PolymerElement {
     // We create a new `columns` structure by leaving currently-hidden
     // columns in their original ordinal position and interleaving the results
     // of the current column sort.
-    var current = new List<Column>.from(_grid.getColumns); //.slice(0);
-    var ordered = new List<Column>(_columns.length);
-    for (var i = 0; i < ordered.length; i++) {
+    final List<Column> current =
+        new List<Column>.from(_grid.getColumns); //.slice(0);
+    final List<Column> ordered = new List<Column>(_columns.length);
+    for (int i = 0; i < ordered.length; i++) {
       if (_grid.getColumnIndex(_columns[i].id) == null) {
         // If the column doesn't return a value from getColumnIndex,
         // it is hidden. Leave it in this position.
@@ -144,12 +149,12 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   void updateColumn(dom.Event e) {
-    var cb = e.target as dom.CheckboxInputElement;
+    final dom.CheckboxInputElement cb = e.target as dom.CheckboxInputElement;
     CbData curCbData;
 
-    var visibleColumns = [];
+    final List<Column> visibleColumns = <Column>[];
     for (int i = 0; i < columnCheckboxes.length; i++) {
-      var cbData = columnCheckboxes[i];
+      final CbData cbData = columnCheckboxes[i];
       if (cbData.id == cb.dataset['column-id']) {
         cbData.checked = cb.checked;
         curCbData = cbData;
@@ -177,12 +182,15 @@ class BwuColumnPicker extends PolymerElement {
     style.display = 'block';
     style.transition = 'opacity ${milliseconds}ms ease-in';
     new async.Future(() => style.opacity = '1');
-    onMouseLeave.first.then((e) => fadeOut(_options.fadeSpeed));
+    onMouseLeave.first.then((dom.MouseEvent e) => fadeOut(_options.fadeSpeed));
   }
 
   void fadeOut(int milliseconds) {
     style.transition = 'opacity ${milliseconds}ms ease-out';
     new async.Future(() => style.opacity = '0');
-    this.onTransitionEnd.first.then((e) => style.display = 'none');
+    this
+        .onTransitionEnd
+        .first
+        .then((dom.TransitionEvent e) => style.display = 'none');
   }
 }

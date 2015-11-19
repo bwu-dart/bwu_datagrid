@@ -17,26 +17,27 @@ class DefaultGroupCellFormatter extends fm.CellFormatter {
   DefaultGroupCellFormatter(this.giMetadataProvider);
 
   @override
-  void format(dom.HtmlElement target, int row, int cell, String value,
-      Column columnDef, /*Item/Map*/ item) {
+  void format(dom.Element target, int row, int cell, String value,
+      Column columnDef, core.ItemBase item) {
+    final core.Group group = item as core.Group;
     if (!giMetadataProvider.enableExpandCollapse) {
-      target.append(item.title);
+      target.append(group.title);
       return;
     }
 
-    var indentation = '${item.level * 15}px';
+    final String indentation = '${group.level * 15}px';
 
     target.innerHtml = '';
     target
       ..append(new dom.SpanElement()
         ..classes.add('${giMetadataProvider.toggleCssClass}')
         ..classes.add(
-            '${item.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
+            '${group.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
         ..style.marginLeft = indentation)
       ..append(new dom.SpanElement()
         ..classes.add('${giMetadataProvider.groupTitleCssClass}')
-        ..attributes['level'] = '${item.level}'
-        ..append(item.title));
+        ..attributes['level'] = '${group.level}'
+        ..append(group.title));
   }
 }
 
@@ -45,7 +46,7 @@ class DefaultTotalsCellFormatter extends core.GroupTotalsFormatter {
 
   @override
   void format(
-      dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+      dom.Element target, core.GroupTotals totals, Column columnDef) {
     if (columnDef.groupTotalsFormatter != null) {
       columnDef.groupTotalsFormatter.format(target, totals, columnDef);
     } else {
@@ -127,11 +128,11 @@ class GroupItemMetadataProvider extends Plugin {
     core.ItemBase item = grid.getDataItem(e.cell.row);
     if (item != null &&
         item is core.Group &&
-        (e.causedBy.target as dom.HtmlElement).classes
+        (e.causedBy.target as dom.Element).classes
             .contains(toggleCssClass)) {
-      var range = grid.getRenderedRange();
+      final Range range = grid.getRenderedRange();
       if (grid.dataProvider is DataView) {
-        var dp = grid.dataProvider as DataView;
+        final DataView dp = grid.dataProvider as DataView;
         dp.setRefreshHints(
             {'ignoreDiffsBefore': range.top, 'ignoreDiffsAfter': range.bottom});
 
@@ -150,14 +151,14 @@ class GroupItemMetadataProvider extends Plugin {
   void _handleGridKeyDown(core.KeyDown e) {
     BwuDatagrid grid = e.sender;
     if (enableExpandCollapse && (e.causedBy.which == dom.KeyCode.SPACE)) {
-      var activeCell = grid.getActiveCell();
+      final Cell activeCell = grid.getActiveCell();
       if (activeCell != null) {
         core.ItemBase item = grid.getDataItem(activeCell.row);
         if (item != null && item is core.Group) {
-          var range = grid.getRenderedRange();
+          final Range range = grid.getRenderedRange();
 
           if (grid.dataProvider is DataView) {
-            var dp = grid.dataProvider as DataView;
+            final DataView dp = grid.dataProvider as DataView;
 
             (grid.dataProvider as DataView).setRefreshHints({
               'ignoreDiffsBefore': range.top,

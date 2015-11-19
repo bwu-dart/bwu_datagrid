@@ -4,7 +4,7 @@
 import 'package:test/test.dart';
 
 // TODO comment in when it's settled how to set up WebDriver tests
-main() async {
+dynamic main() async {
 //  DriverFactory wdFactory = createDriverFactory();
 //  await wdFactory.startFactory();
 

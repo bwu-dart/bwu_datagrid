@@ -70,7 +70,7 @@ class CellCopyManager extends Plugin {
 
   void _markCopySelection(List<core.Range> ranges) {
     var columns = grid.getColumns;
-    var hash = {};
+    var hash = <int, Map<String, String>>{};
     for (var i = 0; i < ranges.length; i++) {
       for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
         hash[j] = {};
@@ -87,11 +87,11 @@ class CellCopyManager extends Plugin {
   }
 
   async.Stream<core.CopyCells> get onBwuCopyCells =>
-      _eventBus.onEvent(core.Events.COPY_CELLS);
+      _eventBus.onEvent(core.Events.COPY_CELLS) as async.Stream<core.CopyCells>;
 
   async.Stream<core.CopyCancelled> get onBwuCopyCancelled =>
-      _eventBus.onEvent(core.Events.COPY_CANCELLED);
+      _eventBus.onEvent(core.Events.COPY_CANCELLED) as async.Stream<core.CopyCancelled>;
 
   async.Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.PASTE_CELLS);
+      _eventBus.onEvent(core.Events.PASTE_CELLS) as async.Stream<core.PasteCells>;
 }

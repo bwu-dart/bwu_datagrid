@@ -18,8 +18,8 @@ class CheckboxSelectionFormatter extends CellFormatter {
   /// The added element (click target) must have the `selectColumn` attribute set
   /// to be recognized by the [CheckboxSelectColumn] click handler.
   @override
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+  void format(dom.Element target, int row, int cell, dynamic value,
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
 
     if (dataContext != null) {
@@ -74,7 +74,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
   void handleSelectedRowsChanged(core.SelectedRowsChanged e) {
     List<int> selectedRows = _grid.getSelectedRows();
-    Map lookup = {};
+    Map<int,bool> lookup = <int,bool>{};
     int row;
     for (int i = 0; i < selectedRows.length; i++) {
       row = selectedRows[i];
@@ -157,7 +157,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
       }
 
       if ((e.causedBy.target as dom.CheckboxInputElement).checked) {
-        var rows = [];
+        final List<int> rows = <int>[];
         for (var i = 0; i < _grid.getDataLength; i++) {
           rows.add(i);
         }

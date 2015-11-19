@@ -1,3 +1,4 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:html' as dom;
@@ -5,6 +6,7 @@ import 'dart:math' as math;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -12,7 +14,7 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
 class CpuUtilizationFormatter extends fm.CellFormatter {
   @override
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
+  void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, DataItem dataContext) {
     if (value != null && value > 90) {
       target.children.clear();
@@ -31,7 +33,7 @@ class CpuUtilizationFormatter extends fm.CellFormatter {
   }
 }
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -94,7 +96,7 @@ class AppElement extends PolymerElement {
   int currentServer;
 
   void simulateRealTimeUpdates(
-      [dom.MouseEvent e, detail, dom.HtmlElement target]) {
+      [dom.MouseEvent e, detail, dom.Element target]) {
     var changes = new Map<int, Map<String, String>>();
     int numberOfUpdates = (rnd.nextDouble() * (data.length / 10)).round();
 
@@ -126,7 +128,7 @@ class AppElement extends PolymerElement {
         new Duration(milliseconds: 500), () => simulateRealTimeUpdates());
   }
 
-  void findCurrentServer(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void findCurrentServer(dom.MouseEvent e, detail, dom.Element target) {
     grid.scrollRowIntoView(currentServer);
     grid.flashCell(currentServer, grid.getColumnIndex("server"), 100);
   }

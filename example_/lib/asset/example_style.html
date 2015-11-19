@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- copyright notice -->
+
+<style>
+  body {
+    background-color: beige;
+    padding: 0;
+    margin: 8px;
+
+    font-family: arial,sans-serif;
+    font-size: 8px;
+  }
+
+  h2 {
+    font-size: 10pt;
+    border-bottom: 1px dotted gray;
+  }
+
+  ul {
+    margin-left: 0;
+    padding: 0;
+    cursor: default;
+  }
+
+  li {
+    background: url('../../../packages/bwu_datagrid/asset/images/arrow_right_spearmint.png') no-repeat center left;
+    padding: 0 0 0 14px;
+
+    list-style: none;
+    margin: 0;
+  }
+</style>
+<dom-module id='example-style'>
+  <template>
+    <style include="bwu-datagrid-example-theme">
+      :host::content .grid-header *,
+      .grid-header * {
+        background-color: red;
+      }
+      /* demo description */
+      /*.grid-header {*/
+        /*border: 1px solid gray;*/
+        /*border-bottom: 0;*/
+        /*border-top: 0;*/
+        /*background: url('../../../packages/bwu_datagrid/asset/images/header-bg.gif') repeat-x center top;*/
+        /*color: black;*/
+        /*height: 24px;*/
+        /*line-height: 24px;*/
+      /*}*/
+      /*.grid-header label {*/
+        /*display: inline-block;*/
+        /*font-weight: bold;*/
+        /*margin: auto auto auto 6px;*/
+      /*}*/
+      /**/
+      /*.grid-header .ui-icon {*/
+        /*margin: 4px 4px auto 6px;*/
+        /*background-color: transparent;*/
+        /*border-color: transparent;*/
+      /*}*/
+      /**/
+      /*.grid-header .ui-icon.ui-state-hover {*/
+        /*background-color: white;*/
+      /*}*/
+      /**/
+      /*.grid-header #txtSearch {*/
+        /*margin: 0 4px 0 4px;*/
+        /*padding: 2px 2px;*/
+        /*border-radius: 2px;*/
+        /*-moz-border-radius: 2px;*/
+        /*-webkit-border-radius: 2px;*/
+        /*border: 1px solid silver;*/
+      /*}*/
+      /**/
+      /*.options-panel {*/
+        /*border-radius: 6px;*/
+        /*-moz-border-radius: 6px;*/
+        /*-webkit-border-radius: 6px;*/
+        /*border: 1px solid silver;*/
+        /*background: #f0f0f0;*/
+        /*padding: 4px;*/
+        /*margin-bottom: 20px;*/
+        /*width: 320px;*/
+        /*position: absolute;*/
+        /*top: 0;*/
+        /*left: 650px;*/
+      /*}      */
+    </style>
+  </template>
+</dom-module>

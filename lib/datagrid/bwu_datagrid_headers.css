@@ -1,7 +1,0 @@
-/*.bwu-datagrid-header-columns */
-:host {
-  position: relative;
-  white-space: nowrap;
-  cursor: default;
-  overflow: hidden;
-}

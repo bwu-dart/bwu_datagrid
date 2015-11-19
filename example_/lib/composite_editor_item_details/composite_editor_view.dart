@@ -1,18 +1,20 @@
+@HtmlImport('composite_editor_view.html')
 library bwu_datagrid.context_menu;
 
 import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
-@CustomTag('composite-editor-view')
+@PolymerRegister('composite-editor-view')
 class CompositeEditorView extends PolymerElement {
   CompositeEditorView.created() : super.created();
 
   BwuDatagrid grid;
-  @observable List<Column> columns;
+  @property List<Column> columns;
 
   void attached() {
     style.visibility = 'hidden';
@@ -46,11 +48,11 @@ class CompositeEditorView extends PolymerElement {
     }
   }
 
-  void btnSaveHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void btnSaveHandler(dom.MouseEvent e, detail, dom.Element target) {
     grid.getEditController.commitCurrentEdit();
   }
 
-  void btnCancelHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void btnCancelHandler(dom.MouseEvent e, detail, dom.Element target) {
     grid.getEditController.cancelCurrentEdit();
   }
 

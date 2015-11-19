@@ -1,9 +1,11 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_sparkline/bwu_sparkline.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
 
@@ -15,7 +17,7 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import '../required_field_validator.dart';
 
 class WaitingFormatter extends fm.Formatter {
-  void call(dom.HtmlElement target, int row, int cell, dynamic value,
+  void call(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, DataItem dataContext) {
     target
       ..children.clear()
@@ -24,7 +26,7 @@ class WaitingFormatter extends fm.Formatter {
 }
 
 void renderSparkline(
-    dom.HtmlElement target, int row, DataItem dataContext, Column colDef) {
+    dom.Element target, int row, DataItem dataContext, Column colDef) {
   var vals = [
     tools.parseNum(dataContext["n1"], onErrorDefault: 0),
     tools.parseNum(dataContext["n2"], onErrorDefault: 0),
@@ -40,7 +42,7 @@ void renderSparkline(
       ..options = (new LineOptions()..width = '100%'));
 }
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 

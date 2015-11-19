@@ -10,7 +10,7 @@ import 'common.dart';
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/e02_formatters.html';
+  pageUrl = '${await webServer}/e02_formatters.html';
   forEachBrowser(tests);
 }
 
@@ -26,11 +26,8 @@ tests(WebBrowser browser) {
     });
 
     test('link', () async {
-      const linksInFirstColumnSelector = const By.cssSelector(
-          '${gridCellSelectorBase}0 a[href="#"]', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      });
+      const linksInFirstColumnSelector =
+          const By.shadow('${gridCellSelectorBase}0 a[href="#"]');
 
       final linksInFirstColumn =
           await driver.findElements(linksInFirstColumnSelector).toList();
@@ -41,11 +38,8 @@ tests(WebBrowser browser) {
     });
 
     test('percentCompleteBar', () async {
-      const barsInPercentCompleteColumnSelector = const By.cssSelector(
-          '${gridCellSelectorBase}2 span.percent-complete-bar', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      });
+      const barsInPercentCompleteColumnSelector =
+          const By.shadow('${gridCellSelectorBase}2 span.percent-complete-bar');
 
       final barsInPercentCompleteColumn = await driver
           .findElements(barsInPercentCompleteColumnSelector)
@@ -57,9 +51,8 @@ tests(WebBrowser browser) {
     });
 
     test('checkMark', () async {
-      const checkMarksInEffortDrivenColumnSelector = const By.cssSelector(
-          '${gridCellSelectorBase}5 img[src="packages/bwu_datagrid/asset/images/tick.png"]',
-          const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep});
+      const checkMarksInEffortDrivenColumnSelector = const By.shadow(
+          '${gridCellSelectorBase}5 img[src="packages/bwu_datagrid/asset/images/tick.png"]');
 
       final checkMarkInEffortDrivenColumn = await driver
           .findElements(checkMarksInEffortDrivenColumnSelector)

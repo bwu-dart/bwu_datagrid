@@ -10,7 +10,6 @@ import 'package:grinder/grinder.dart';
 import 'package:bwu_docker/bwu_docker.dart';
 import 'package:bwu_docker/tasks.dart' as task;
 import 'package:bwu_utils/bwu_utils_server.dart' as utils;
-import 'package:bwu_grinder_tasks/bwu_grinder_tasks.dart' as grinderTasks;
 export 'package:bwu_grinder_tasks/bwu_grinder_tasks.dart' hide main;
 
 //const seleniumImageVersion = ':2.47.1';
@@ -31,7 +30,7 @@ const _seleniumFirefoxImage =
 const pubServePort = 21234;
 
 main(List<String> args) async {
-  final origTestTask = grinderTasks.testTask;
+//  final origTestTask = grinderTasks.testTask;
 //  grinderTasks.testTask = (List<String> platforms) async {
   try {
 //    await _startSelenium();
@@ -89,7 +88,7 @@ seleniumDebug() async {
     final firefoxPort = firefoxInfo.networkSettings.ports['5900/tcp'][0]
         ['HostPort'];
     print('Firefox: ${firefoxPort}');
-    await new Future.delayed(const Duration(seconds: 5));
+    await new Future.delayed(const Duration(seconds: 1));
     io.Process.start('vinagre',
         ['--vnc-scale', '--geometry', '1280x1024+300+0', ':${firefoxPort}']);
 //    io.Process.start('krdc', ['vnc://:${firefoxPort}']);
@@ -130,7 +129,7 @@ _startSelenium({bool wait: true}) async {
       rm: wait,
       volume: const ['/dev/bus/usb:/dev/bus/usb']
 //      ,addHost: const [pubServeIp]
-  );
+      );
   _createdFirefoxNodeContainer = await task.run(
       _dockerConnection, _seleniumFirefoxImage,
       detach: true,
@@ -138,7 +137,7 @@ _startSelenium({bool wait: true}) async {
       publishAll: true,
       rm: wait
 //      ,addHost: const [pubServeIp]
-  );
+      );
 }
 
 // TODO(zoechi) move to bwu_grinder_tasks when stable

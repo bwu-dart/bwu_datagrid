@@ -11,7 +11,7 @@ import 'common.dart';
 String pageUrl;
 
 main() async {
-  pageUrl= '${await webServer}/e03a_compound_editors.html';
+  pageUrl = '${await webServer}/e03a_compound_editors.html';
   forEachBrowser(tests);
 //  tests(WebBrowser.chrome);
 }

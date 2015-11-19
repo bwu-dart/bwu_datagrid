@@ -1,9 +1,11 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -13,9 +15,11 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/plugins/row_move_manager.dart';
 
+import 'drop_zone.dart';
 import '../required_field_validator.dart';
 
-@CustomTag('app-element')
+/// Silence analyzer [DropZone]
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -111,7 +115,7 @@ class AppElement extends PolymerElement {
           if (dt.getData('text/bwu-datagrid-recycle') != "recycle") {
             return;
           }
-          (dt.getData('helper') as dom.HtmlElement)
+          (dt.getData('helper') as dom.Element)
             ..style.top = '${e.causedBy.page.y + 5}px'
             ..style.left = '${e.causedBy.page.x + 5}px';
         });
@@ -136,7 +140,7 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void zoneDropHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void zoneDropHandler(dom.MouseEvent e, detail, dom.Element target) {
     if (e.dataTransfer.getData('text/bwu-datagrid-recycle') != "recycle") {
       return;
     }
@@ -147,7 +151,7 @@ class AppElement extends PolymerElement {
     selectedRows.forEach((r) {
       rowsToDelete.add(data.items[r]);
     });
-    rowsToDelete.forEach((r) => data.items.remove(r));
+    rowsToDelete.forEach((core.ItemBase r) => data.items.remove(r));
 
     grid.invalidate();
     grid.setSelectedRows([]);

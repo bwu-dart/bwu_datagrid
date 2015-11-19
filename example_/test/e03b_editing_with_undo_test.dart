@@ -11,7 +11,7 @@ import 'common.dart';
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/e03b_editing_with_undo.html';
+  pageUrl = '${await webServer}/e03b_editing_with_undo.html';
   forEachBrowser(tests);
 }
 
@@ -34,11 +34,8 @@ void tests(WebBrowser browser) {
       const dateEditorSelector = const By.cssSelector('input[type="date"]');
       const checkboxEditorSelector =
           const By.cssSelector('input[type="checkbox"]');
-      const undoButtonSelector = const By.cssSelector(
-          'app-element::shadow .options-panel button', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      });
+      const undoButtonSelector =
+          const By.cssSelector('app-element::shadow .options-panel button');
 
       // prepare undo
       final undoButton = await driver.findElement(undoButtonSelector);

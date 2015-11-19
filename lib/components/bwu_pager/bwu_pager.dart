@@ -1,8 +1,10 @@
+@HtmlImport('bwu_pager.html')
 library bwu_datagrid.components.bwu_pager;
 
 import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -10,18 +12,18 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
-class NavState extends Observable {
-  @observable bool canGotoFirst;
-  @observable bool canGotoLast;
-  @observable bool canGotoPrev;
-  @observable bool canGotoNext;
+class NavState extends JsProxy {
+  @reflectable bool canGotoFirst;
+  @reflectable bool canGotoLast;
+  @reflectable bool canGotoPrev;
+  @reflectable bool canGotoNext;
   PagingInfo pagingInfo;
 
   NavState({this.canGotoFirst, this.canGotoLast, this.canGotoPrev,
       this.canGotoNext});
 }
 
-@CustomTag('bwu-pager')
+@PolymerRegister('bwu-pager')
 class BwuPager extends PolymerElement {
   BwuPager.created() : super.created();
 
@@ -30,16 +32,16 @@ class BwuPager extends PolymerElement {
   DataView _dataView;
   BwuDatagrid _grid;
 
-  @observable bool pagerSettingsExpanded = true;
-  @observable String pagerStatusText = '';
-  @observable final NavState navState = new NavState();
+  @property bool pagerSettingsExpanded = true;
+  @property String pagerStatusText = '';
+  @property final NavState navState = new NavState();
 
-  dom.HtmlElement $status;
+  dom.Element status;
 
   void init(DataView dataView, BwuDatagrid grid) {
     _dataView = dataView;
     _grid = grid;
-    _dataView.onBwuPagingInfoChanged.listen((e) {
+    _dataView.onBwuPagingInfoChanged.listen((core.PagingInfoChanged e) {
       updatePager(e.pagingInfo);
     });
 
@@ -66,18 +68,18 @@ class BwuPager extends PolymerElement {
   }
 
   void setPageSize(int n) {
-    _dataView.setRefreshHints({'isFilterUnchanged': true});
+    _dataView.setRefreshHints(<String,bool>{'isFilterUnchanged': true});
     _dataView.setPagingOptions(new PagingInfo(pageSize: n));
   }
 
-  void gotoFirst(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void gotoFirst(dom.MouseEvent e, Object detail, dom.Element target) {
     updateNavState();
     if (navState.canGotoFirst) {
       _dataView.setPagingOptions(new PagingInfo(pageNum: 0));
     }
   }
 
-  void gotoLast(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void gotoLast(dom.MouseEvent e, Object detail, dom.Element target) {
     updateNavState();
     if (navState.canGotoLast) {
       _dataView.setPagingOptions(
@@ -85,7 +87,7 @@ class BwuPager extends PolymerElement {
     }
   }
 
-  void gotoPrev(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void gotoPrev(dom.MouseEvent e, Object detail, dom.Element target) {
     updateNavState();
     if (navState.canGotoPrev) {
       _dataView.setPagingOptions(
@@ -93,7 +95,7 @@ class BwuPager extends PolymerElement {
     }
   }
 
-  void gotoNext(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void gotoNext(dom.MouseEvent e, Object detail, dom.Element target) {
     updateNavState();
     if (navState.canGotoNext) {
       _dataView.setPagingOptions(
@@ -101,9 +103,9 @@ class BwuPager extends PolymerElement {
     }
   }
 
-  void pageSizeClickHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void pageSizeClickHandler(dom.MouseEvent e, Object detail, dom.Element target) {
     int pagesize = utils.parseInt(
-        (e.target as dom.HtmlElement).dataset['value'], onErrorDefault: 0);
+        (e.target as dom.Element).dataset['value'], onErrorDefault: 0);
     //if (pagesize != 0) {
     if (pagesize == -1) {
       Range vp = _grid.getViewport();
@@ -114,16 +116,16 @@ class BwuPager extends PolymerElement {
     //}
   }
 
-  void toggleMouseOver(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void toggleMouseOver(dom.MouseEvent e, Object detail, dom.Element target) {
     target.classes.add('ui-state-hover');
   }
 
-  void toggleMouseOut(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void toggleMouseOut(dom.MouseEvent e, Object detail, dom.Element target) {
     target.classes.remove('ui-state-hover');
   }
 
   void expandPagerSettingsClickHandler(
-      dom.MouseEvent e, detail, dom.HtmlElement target) {
+      dom.MouseEvent e, Object detail, dom.Element target) {
     pagerSettingsExpanded = !pagerSettingsExpanded;
   }
 
@@ -131,8 +133,8 @@ class BwuPager extends PolymerElement {
     updateNavState();
 
     if (pagingInfo.pageSize == 0) {
-      var totalRowsCount = _dataView.getItems().length;
-      var visibleRowsCount = pagingInfo.totalRows;
+      final int totalRowsCount = _dataView.getItems().length;
+      final int visibleRowsCount = pagingInfo.totalRows;
       if (visibleRowsCount < totalRowsCount) {
         pagerStatusText =
             'Showing ${visibleRowsCount} of ${totalRowsCount} rows';

@@ -18,16 +18,16 @@ class RowMoveManager extends Plugin {
   core.EventBus get eventBus => _eventBus;
   core.EventBus _eventBus = new core.EventBus();
 
-  dom.HtmlElement _canvas;
+  dom.Element _canvas;
   int _canvasTop;
   bool _dragging = false;
   List<async.StreamSubscription> _subscriptions = [];
 
 //  sort.Sortable _sortable; // TODO(zoechi) why is it unused?
 
-  dom.HtmlElement _selectionProxy;
-  dom.HtmlElement _dummyProxy;
-  dom.HtmlElement _guide;
+  dom.Element _selectionProxy;
+  dom.Element _dummyProxy;
+  dom.Element _guide;
   bool _canMove = false;
   int _insertBefore;
   List<int> _selectedRows;
@@ -166,8 +166,8 @@ class RowMoveManager extends Plugin {
   }
 
   async.Stream<core.BeforeMoveRows> get onBwuBeforeMoveRows =>
-      _eventBus.onEvent(core.Events.BEFORE_MOVE_ROWS);
+      _eventBus.onEvent(core.Events.BEFORE_MOVE_ROWS) as async.Stream<core.BeforeMoveRows>;
 
   async.Stream<core.MoveRows> get onBwuMoveRows =>
-      _eventBus.onEvent(core.Events.MOVE_ROWS);
+      _eventBus.onEvent(core.Events.MOVE_ROWS) as async.Stream<core.MoveRows>;
 }

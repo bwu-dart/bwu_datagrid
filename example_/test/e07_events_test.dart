@@ -1,8 +1,6 @@
 @TestOn('vm')
 library bwu_datagrid_examples.test.e07_events_test;
 
-import 'dart:async' show Future, Stream;
-
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
 import 'common.dart';
@@ -10,7 +8,7 @@ import 'common.dart';
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/e07_events.html';
+  pageUrl = '${await webServer}/e07_events.html';
 
   forEachBrowser(tests);
 }
@@ -30,14 +28,10 @@ void tests(WebBrowser browser) {
     });
 
     test('filter % complete', () async {
-      final app = await driver.findElement(const By.cssSelector(
-          'app-element /deep/ #canvas', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      }));
-      final filterSlider = await driver.findElement(const By.cssSelector(
-          'app-element /deep/ div.options-panel #filter-form /deep/ input#txtSearch',
-          const {WebBrowser.firefox: removeShadowDom, WebBrowser.ie: replaceShadowWithDeep}));
+      final app = await driver
+          .findElement(const By.shadow('app-element /deep/ #canvas'));
+      final filterSlider = await driver.findElement(const By.shadow(
+          'app-element /deep/ div.options-panel #filter-form /deep/ input#txtSearch'));
       await driver.mouse.moveTo(element: app);
       await driver.mouse.click();
       await driver.mouse.moveTo(element: filterSlider, xOffset: 1, yOffset: 1);

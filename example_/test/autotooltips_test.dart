@@ -11,7 +11,7 @@ import 'common.dart';
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/autotooltips.html';
+  pageUrl = '${await webServer}/autotooltips.html';
   forEachBrowser(tests);
 }
 
@@ -30,15 +30,15 @@ tests(WebBrowser browser) {
 //      print(driver.capabilities);
       await driver.get(pageUrl);
       WebElement start = await driver.findElement(
-          const By.cssSelector('* /deep/ bwu-datagrid-header-column#start'));
+          const By.shadow('* /deep/ bwu-datagrid-header-column#start'));
       expect(await start.attributes['id'], 'start');
-      int startColumnWidth = (await driver.getBoundingClientRect(start)).width;
+      int startColumnWidth = (await start.size).width;
       expect(startColumnWidth, 80);
       print('width: ${startColumnWidth}');
-      WebElement startResizeHandle = await driver.findElement(const By.cssSelector(
+      WebElement startResizeHandle = await driver.findElement(const By.shadow(
           '* /deep/ bwu-datagrid-header-column#start /deep/ .bwu-datagrid-resizable-handle'));
       expect(startResizeHandle, isNotNull);
-      Rectangle bounds = await driver.getBoundingClientRect(start);
+      Rectangle bounds = await start.size;
       print('bounds before: ${bounds}');
       final target = new Point(
           bounds.left + bounds.width ~/ 2, bounds.top + bounds.height ~/ 2);

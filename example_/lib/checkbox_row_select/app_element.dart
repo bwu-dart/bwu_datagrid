@@ -1,13 +1,11 @@
 @HtmlImport('app_element.html')
-@HtmlImport('package:bwu_datagrid/bwu_datagrid.html')
-@HtmlImport(
-    'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.html')
 library app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -16,7 +14,7 @@ import 'package:bwu_datagrid/plugins/checkbox_select_column.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   factory AppElement() => new dom.Element.tag('app-element');
 

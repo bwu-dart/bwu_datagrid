@@ -1,12 +1,14 @@
+@HtmlImport('context_menu.html')
 library bwu_datagrid_examples.e07_events.context_menu;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
-@CustomTag('context-menu')
+@PolymerRegister('context-menu')
 class ContextMenu extends PolymerElement {
   ContextMenu.created() : super.created();
 

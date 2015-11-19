@@ -1,18 +1,21 @@
 name: bwu_datagrid_examples
-version: 0.0.20
+version: 0.1.0
 author: Günter Zöchbauer <guenter@gzoechbauer.com>
 description: BWU Datagrid is A Polymer.dart grid/spreadsheet element inspired by SlickGrid.
 homepage: https://github.com/bwu-dart/bwu_datagrid
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: '>=1.12.0 <2.0.0'
 
 dependencies:
   bwu_datagrid:
     path: ..
   bwu_utils: '>=0.1.0 <0.2.0'
-  polymer: '>=0.12.1 <0.17.0'
+  polymer: ^1.0.0-rc.5
+  polymer_interop: ^1.0.0-rc.3
   quiver: '>=0.21.3 <0.22.0'
   quiver_log: '>=1.0.1 <2.0.0'
+  reflectable: ^0.3.2
+  web_components: ^0.12.0
 
 dev_dependencies:
 #  bwu_docker: '>=0.2.1 <0.3.0'
@@ -21,7 +24,7 @@ dev_dependencies:
   bwu_docker:
     path: ../../bwu_docker
   bwu_grinder_tasks: '>=0.1.0 <0.2.0'
-  bwu_sparkline: '>=0.0.9 <0.1.0'
+#  bwu_sparkline: '>=0.0.9 <0.1.0' # TODO(zoechi) upgrade to Polymer 1
 #  crypto: '>=0.9.0 <0.10.0' # for Webdriver Firefox profile settings
   grinder: '>=0.7.2 <0.8.0'
      #path: ../bwu_sparkline
@@ -31,7 +34,7 @@ dev_dependencies:
 
 
 transformers:
-- polymer:
+- web_components:
     entry_points:
     - web/e01_simple.html
     - web/e02_formatters.html
@@ -58,6 +61,34 @@ transformers:
 
     - test/checkbox_row_select_test.html
     - test/checkbox_row_select_testx.html
+
+- reflectable:
+    entry_points:
+    - web/e01_simple.dart
+    - web/e02_formatters.dart
+    - web/e07_events.dart
+    - web/e14_highlighting.dart
+    - web/e03_editing.dart
+    - web/e03a_compound_editors.dart
+    - web/e03b_editing_with_undo.dart
+    - web/composite_editor_item_details.dart
+    - web/totals_via_data_provider.dart
+    - web/e04_model.dart
+    - web/e05_collapsing.dart
+    - web/e08_alternative_display.dart
+    - web/e09_row_reordering.dart
+    - web/e10_async_post_render.dart
+    - web/e11_autoheight.dart
+    - web/e12_fillbrowser.dart
+    - web/e13_get_item_sorting.dart
+    - web/header_row.dart
+    - web/checkbox_row_select.dart
+    - web/spreadsheet.dart
+    - web/grouping.dart
+    - web/autotooltips.dartdart
+
+    - test/checkbox_row_select_test.dart
+    - test/checkbox_row_select_testx.dartdart
 
     inline_stylesheets:
       packages/bwu_datagrid_examples/asset/examples.css: false

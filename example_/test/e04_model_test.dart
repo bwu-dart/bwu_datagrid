@@ -1,17 +1,14 @@
 @TestOn('vm')
 library bwu_datagrid_examples.test.e04_model_test;
 
-import 'dart:async' show Future, Stream;
-
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
-import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/e04_model.html';
+  pageUrl = '${await webServer}/e04_model.html';
 
   forEachBrowser(tests);
 }
@@ -31,18 +28,12 @@ void tests(WebBrowser browser) {
     });
 
     test('filter % complete', () async {
-      final app = await driver.findElement(const By.cssSelector(
-          'app-element /deep/ #canvas', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      }));
-      final filterSlider = await driver.findElement(const By.cssSelector(
-          '* /deep/ div.options-panel /deep/ input#slider', const {
-        WebBrowser.firefox: removeShadowDom,
-        WebBrowser.ie: replaceShadowWithDeep
-      })); //  /deep/ #txtSearch
+      final app = await driver
+          .findElement(const By.shadow('app-element /deep/ #canvas'));
+      final filterSlider = await driver.findElement(const By.shadow(
+          '* /deep/ div.options-panel /deep/ input#slider')); //  /deep/ #txtSearch
       await app.click();
-//      final filterSlider = await driver.findElement(const By.cssSelector(
+//      final filterSlider = await driver.findElement(const By.shadow(
 //      'app-element /deep/ bwu-datagrid-header-column#title'));
       print(await filterSlider.location);
 //      await driver.mouse.click();

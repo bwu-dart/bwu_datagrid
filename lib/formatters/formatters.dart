@@ -13,7 +13,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 /// @namespace Slick
 
 class DefaultFormatter extends CellFormatter {
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
+  void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value != null) {
@@ -26,8 +26,8 @@ class DefaultFormatter extends CellFormatter {
 abstract class Formatter {}
 
 abstract class CellFormatter extends Formatter {
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext);
+  void format(dom.Element target, int row, int cell, dynamic value,
+      Column columnDef, core.ItemBase dataContext);
 }
 
 abstract class GroupTitleFormatter extends Formatter {
@@ -35,8 +35,8 @@ abstract class GroupTitleFormatter extends Formatter {
 }
 
 class PercentCompleteFormatter extends CellFormatter {
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+  void format(dom.Element target, int row, int cell, dynamic value,
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value == null || value == "") {
       target.text = '-';
@@ -52,14 +52,14 @@ class PercentCompleteFormatter extends CellFormatter {
 }
 
 class PercentCompleteBarFormatter extends CellFormatter {
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
+  void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase dataContext) {
     if (value == null || value == "") {
       //target.text = '';
       value = 0;
     }
 
-    var color;
+    String color;
 
     if (value < 30) {
       color = 'red';
@@ -78,14 +78,14 @@ class PercentCompleteBarFormatter extends CellFormatter {
 }
 
 class YesNoFormatter extends CellFormatter {
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+  void format(dom.Element target, int row, int cell, dynamic value,
+      Column columnDef, core.ItemBase dataContext) {
     target.text = value ? 'Yes' : 'No';
   }
 }
 
 class CheckmarkFormatter extends CellFormatter {
-  void format(dom.HtmlElement target, int row, int cell, dynamic value,
+  void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value != null && value is bool && value) {

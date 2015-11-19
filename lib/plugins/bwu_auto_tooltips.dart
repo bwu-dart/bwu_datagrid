@@ -11,6 +11,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import 'plugin.dart';
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 class AutoTooltipsOptions {
   bool enableForCells;
@@ -87,12 +88,12 @@ class AutoTooltips extends Plugin {
   /// Handle mouse entering grid cell to add/remove tooltip.
   /// @param {jQuery.Event} e - The event
   void handleMouseEnter(core.MouseEnter e) {
-    var cell = grid.getCellFromEvent(e.causedBy);
+    final Cell cell = grid.getCellFromEvent(e.causedBy);
     if (cell != null) {
-      var $node = grid.getCellNode(cell.row, cell.cell);
-      var text;
-      if (utils.innerWidth($node) < $node.scrollWidth) {
-        text = $node.text.trim();
+      final dom.Element node = grid.getCellNode(cell.row, cell.cell);
+      String text;
+      if (utils.innerWidth(node) < node.scrollWidth) {
+        text = node.text.trim();
         if (options.maxTooltipLength != null &&
             text.length > options.maxTooltipLength) {
           text = text.substring(0, options.maxTooltipLength - 3) + "...";
@@ -102,12 +103,12 @@ class AutoTooltips extends Plugin {
         text = "";
         //tooltip.show = false;
       }
-      $node.attributes["title"] = text;
+      node.attributes["title"] = text;
       //ttText.text = text;
     }
   }
 
-//  void showTooltip(dom.HtmlElement $node) {
+//  void showTooltip(dom.Element $node) {
 //    var bcr = $node.getBoundingClientRect();
 //    var ttBcr = tooltip.getBoundingClientRect();
 //    var transition = '';
@@ -141,16 +142,16 @@ class AutoTooltips extends Plugin {
   /// @param {object} args.column - The column definition
   void handleHeaderMouseEnter(core.HeaderMouseEnter e) {
     //var detail = e.detail as core.HeaderMouseEnter;
-    var column = e.data;
-    var $node = utils.closest(
-        (e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
-    if ($node == null) {
-      $node = utils.closest((e.causedBy.target as dom.HtmlElement),
+    final Column column = e.data;
+    dom.Element node = utils.closest(
+        (e.causedBy.target as dom.Element), '.bwu-datagrid-header-column');
+    if (node == null) {
+      node = utils.closest((e.causedBy.target as dom.Element),
           '.bwu-datagrid-header-column');
     }
     if (column.toolTip == null) {
-      $node.attributes["title"] =
-          utils.innerWidth($node) < $node.scrollWidth ? column.name : "";
+      node.attributes["title"] =
+          utils.innerWidth(node) < node.scrollWidth ? column.name : "";
     }
   }
 }

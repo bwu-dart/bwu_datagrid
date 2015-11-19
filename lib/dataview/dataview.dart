@@ -28,7 +28,7 @@ part 'helpers.dart';
 
 typedef bool FilterFn(a, b);
 
-class DataView extends DataProvider {
+class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   /// A sample Model implementation.
   /// Provides a filtered view of the underlying data.
@@ -37,7 +37,7 @@ class DataView extends DataProvider {
   DataViewOptions options = new DataViewOptions();
   GroupingInfo groupingInfo = new GroupingInfo();
 
-  DataView({DataViewOptions options, List<DataItem> items}) : super(items) {
+  DataView({DataViewOptions options, List<T> items}) : super(items) {
     if (options != null) {
       this.options = options;
     }
@@ -45,9 +45,9 @@ class DataView extends DataProvider {
 
   // private
   String idProperty = "id"; // property holding a unique row id
-  //List<core.ItemBase> items = [];         // data by index
-  List<core.ItemBase> rows = []; // data by row
-  Map<dynamic, int> idxById = {
+  //List<T> items = [];         // data by index
+  List<T> rows = <T>[]; // data by row
+  Map<dynamic, int> idxById = <dynamic, int>{
   }; // indexes by id - the id needs to be a valid map key
   Map<dynamic, int> rowsById =
       null; // rows by id; lazy-calculated - the id needs to be a valid map key
@@ -57,18 +57,18 @@ class DataView extends DataProvider {
   bool suspend = false; // suspends the recalculation
   bool sortAsc = true;
   String fastSortField;
-  SortComparerFunc sortComparer;
-  Map<String, int> refreshHints = {
+  SortComparerFunc<T> sortComparer;
+  Map<String, dynamic> refreshHints = <String, dynamic>{
   }; // TODO make class, if this String stores ids it should be dynamic
-  Map<String, int> prevRefreshHints = {};
+  Map<String, dynamic> prevRefreshHints = <String, dynamic>{};
   Map filterArgs;
-  List<core.ItemBase> filteredItems = [];
+  List<T> filteredItems = <T>[];
   FilterFn compiledFilter;
   FilterFn compiledFilterWithCaching;
-  Map<int, bool> filterCache = {};
+  Map<int, bool> filterCache = <int, bool>{};
 
-  List<GroupingInfo> groupingInfos = [];
-  List<core.Group> groups = [];
+  List<GroupingInfo> groupingInfos = <GroupingInfo>[];
+  List<core.Group> groups = <core.Group>[];
   List<Map<String, bool>> toggledGroupsByLevel = [];
   String groupingDelimiter = ':|:';
 
@@ -80,16 +80,16 @@ class DataView extends DataProvider {
   core.EventBus _eventBus = new core.EventBus();
 
   async.Stream<core.PagingInfoChanged> get onBwuPagingInfoChanged =>
-      _eventBus.onEvent(core.Events.PAGING_INFO_CHANGED);
+      _eventBus.onEvent(core.Events.PAGING_INFO_CHANGED) as async.Stream<core.PagingInfoChanged>;
 
   async.Stream<core.RowCountChanged> get onBwuRowCountChanged =>
-      _eventBus.onEvent(core.Events.ROW_COUNT_CHANGED);
+      _eventBus.onEvent(core.Events.ROW_COUNT_CHANGED) as async.Stream<core.RowCountChanged>;
 
   async.Stream<core.RowsChanged> get onBwuRowsChanged =>
-      _eventBus.onEvent(core.Events.ROWS_CHANGED);
+      _eventBus.onEvent(core.Events.ROWS_CHANGED) as async.Stream<core.RowsChanged>;
 
   async.Stream<core.SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
-      _eventBus.onEvent(core.Events.SELECTED_ROW_IDS_CHANGED);
+      _eventBus.onEvent(core.Events.SELECTED_ROW_IDS_CHANGED) as async.Stream<core.SelectedRowIdsChanged>;
 
   void beginUpdate() {
     suspend = true;
@@ -100,7 +100,7 @@ class DataView extends DataProvider {
     refresh();
   }
 
-  void setRefreshHints(Map<String, int> hints) {
+  void setRefreshHints(Map<String, dynamic> hints) {
     refreshHints = hints;
   }
 
@@ -130,12 +130,15 @@ class DataView extends DataProvider {
     }
   }
 
-  List<core.ItemBase> getItems() => items;
+  List<T> getItems() => items;
 
-  @override set items(List<core.ItemBase> items) => setItems(items);
+  @override
+  set items(List<T> items) {
+    setItems(items);
+  }
 
-  void setItems(List<DataItem> data, [String objectIdProperty]) {
-    assert(!data.map((d) => d is DataItem).contains(false));
+  void setItems(List<T> data, [String objectIdProperty]) {
+    assert(!data.map((d) => d is T).contains(false));
     if (objectIdProperty != null) {
       idProperty = objectIdProperty;
     }
@@ -177,7 +180,7 @@ class DataView extends DataProvider {
         totalPages: totalPages);
   }
 
-  void sort(SortComparerFunc comparer, [bool ascending = true]) {
+  void sort(SortComparerFunc<T> comparer, [bool ascending = true]) {
     assert(ascending is bool && ascending != null);
 
     sortAsc = ascending;
@@ -248,8 +251,7 @@ class DataView extends DataProvider {
 
     groups = [];
     toggledGroupsByLevel = [];
-    groupingInfo = groupingInfo != null ? groupingInfo : [];
-    groupingInfos = (groupingInfo is List) ? groupingInfo : [groupingInfo];
+    groupingInfo = groupingInfo != null ? groupingInfo : <GroupingInfo>[];
 
     for (var i = 0; i < groupingInfos.length; i++) {
       GroupingInfo gi = groupingInfos[i];
@@ -292,7 +294,7 @@ class DataView extends DataProvider {
 //      setGrouping(groupingInfos);
 //    }
 
-  DataItem getItemByIdx(int i) {
+  T getItemByIdx(int i) {
     if (i < 0 || i >= items.length) {
       return null;
     }
@@ -319,7 +321,7 @@ class DataView extends DataProvider {
   }
 
   // the id needs to be a valid map key
-  DataItem getItemById(id) {
+  T getItemById(id) {
     var idx = idxById[id];
     if (idx == null) {
       return null;
@@ -341,8 +343,8 @@ class DataView extends DataProvider {
   }
 
   // the id needs to be a valid map key
-  List mapRowsToIds(List<int> rowArray) {
-    List ids = [];
+  List<String> mapRowsToIds(List<int> rowArray) {
+    final List<String> ids = <String>[];
     for (int i = 0; i < rowArray.length; i++) {
       if (rowArray[i] < rows.length) {
         ids.add(rows[rowArray[i]][idProperty]);
@@ -352,7 +354,7 @@ class DataView extends DataProvider {
   }
 
   // the id needs to be a valid map key
-  void updateItem(id, core.ItemBase item) {
+  void updateItem(id, T item) {
     if (idxById[id] == null || id != item[idProperty]) {
       throw "Invalid or non-matching id";
     }
@@ -364,13 +366,13 @@ class DataView extends DataProvider {
     refresh();
   }
 
-  void insertItem(int insertBefore, core.ItemBase item) {
+  void insertItem(int insertBefore, T item) {
     items.insert(insertBefore, item);
     updateIdxById(insertBefore);
     refresh();
   }
 
-  void addItem(DataItem item) {
+  void addItem(T item) {
     items.add(item);
     updateIdxById(items.length - 1);
     refresh();
@@ -390,24 +392,27 @@ class DataView extends DataProvider {
 
   int get length => rows.length;
 
-  core.ItemBase getItem(int i) {
-    core.ItemBase item = rows[i];
+  T getItem(int i) {
+    final T item = rows[i];
 
+    core.Group group;
+    if(item != null && item is core.Group) {
+      group = item as core.Group;
+    }
     // if this is a group row, make sure totals are calculated and update the title
-    if (item != null &&
-        item is core.Group &&
-        item.totals != null &&
-        !item.totals.isInitialized) {
-      GroupingInfo gi = groupingInfos[item.level];
+    if (group != null &&
+        group.totals != null &&
+        !group.totals.isInitialized) {
+      GroupingInfo gi = groupingInfos[group.level];
       if (!gi.isDisplayTotalsRow) {
-        calculateTotals(item.totals);
-        item.title =
-            gi.formatter != null ? gi.formatter.format(item) : item.value;
+        calculateTotals(group.totals);
+        group.title =
+            gi.formatter != null ? gi.formatter.format(group) : group.value;
       }
     }
     // if this is a totals row, make sure it's calculated
-    else if (item != null && item is core.GroupTotals && !item.isInitialized) {
-      calculateTotals(item);
+    else if (item != null && item is core.GroupTotals && !(item as core.GroupTotals).isInitialized) {
+      calculateTotals(item as core.GroupTotals);
     }
 
     return item;
@@ -859,7 +864,7 @@ class DataView extends DataProvider {
     return diff;
   }
 
-  List<int> recalc(List<core.ItemBase> items) {
+  List<int> recalc(List<T> items) {
     rowsById = null;
 
     if (refreshHints['isFilterNarrowing'] !=
@@ -871,7 +876,7 @@ class DataView extends DataProvider {
 
     Map filteredItems = getFilteredAndPagedItems(items);
     totalRows = filteredItems['totalRows'];
-    List<core.ItemBase> newRows = filteredItems['rows'];
+    List<T> newRows = filteredItems['rows'] as List<T>;
 
     groups = [];
     if (groupingInfos.length > 0) {
@@ -965,7 +970,7 @@ class DataView extends DataProvider {
           new core.SelectedRowIdsChanged(this, grid, selectedRowIds));
     }
 
-    void update(e) {
+    void update(core.EventData e) {
       if (selectedRowIds.length > 0) {
         inHandler = true;
         var selectedRows = mapIdsToRows(selectedRowIds);
@@ -988,7 +993,7 @@ class DataView extends DataProvider {
       } else {
         // keep the ones that are hidden
         List<String> existing =
-            selectedRowIds.where((id) => getRowById(id) == null).toList();
+            selectedRowIds.where((id) => getRowById(id) == null).toList() as List<String>;
         // add the newly selected ones
         setSelectedRowIds(existing.addAll(newSelectedRowIds));
       }
@@ -1002,14 +1007,14 @@ class DataView extends DataProvider {
   }
 
   // TODO(zoechi) set type annotations
-  void syncGridCellCssStyles(grid, key) {
-    var hashById;
-    var inHandler;
+  void syncGridCellCssStyles(grid.BwuDatagrid grid, String key) {
+    Map<int,Map<String,String>> hashById;
+    bool inHandler;
 
-    void storeCellCssStyles(hash) {
-      hashById = {};
-      for (int row in hash) {
-        var id = rows[row][idProperty];
+    void storeCellCssStyles(Map <int, Map<String, String>> hash) {
+      hashById = <int,Map<String,String>>{};
+      for (int row in hash.keys) {
+        final id = rows[row][idProperty];
         hashById[id] = hash[row];
       }
     }
@@ -1018,13 +1023,13 @@ class DataView extends DataProvider {
     // get the existing ones right away
     storeCellCssStyles(grid.getCellCssStyles(key));
 
-    void update(dynamic e) {
-      if (hashById) {
+    void update(core.EventData e) {
+      if (hashById != null) {
         inHandler = true;
         ensureRowsByIdCache();
-        Map newHash = {};
+        final newHash = <int, Map<String, String>>{};
         // the id needs to be a valid map key
-        for (final id in hashById) {
+        for (final id in hashById.keys) {
           int row = rowsById[id];
           if (row != null) {
             newHash[row] = hashById[id];
@@ -1035,15 +1040,15 @@ class DataView extends DataProvider {
       }
     }
 
-    grid.onCellCssStylesChanged.subscribe((e, args) {
+    grid.onBwuCellCssStylesChanged.listen((core.CellCssStylesChanged e) {
       if (inHandler) {
         return;
       }
-      if (key != args.key) {
+      if (key != e.key) {
         return;
       }
-      if (args.hash) {
-        storeCellCssStyles(args.hash);
+      if (e.hash != null) {
+        storeCellCssStyles(e.hash);
       }
     });
 

@@ -2,8 +2,10 @@ part of bwu_datagrid.core;
 
 //const EventBus EVENT_BUS = const EventBus();
 
+typedef async.StreamController<T> _StreamControllerFactory<T>();
+
 /// [EventBus] is a central event hub.
-class EventBus {
+class EventBus<T> {
   final _logger = new logging.Logger("EventBusModel");
 
   /// A [StreamController] is maintained for each event type.
@@ -19,7 +21,7 @@ class EventBus {
   EventBus({this.isSync: true});
 
   ///  [onEvent] allows to access an stream for the specified [eventType].
-  async.Stream /*<T>*/ onEvent(EventType /*<T>*/ eventType) {
+  async.Stream/*<T>*/ onEvent(EventType/*<T>*/ eventType) {
     _logger.finest('onEvent');
 
     if (!streamControllers.containsKey(eventType)) {
@@ -28,11 +30,11 @@ class EventBus {
 
     return streamControllers.putIfAbsent(eventType, () {
       return new async.StreamController.broadcast(sync: isSync);
-    }).stream;
+    } as _StreamControllerFactory).stream as async.Stream/*<T>*/;
   }
 
   /// [fire] broadcasts an event of a type [eventType] to all subscribers.
-  EventData fire(EventType /*<T>*/ eventType, /*<T>*/ EventData data) {
+  EventData fire(EventType/*<T>*/ eventType, EventData data) {
     _logger.finest('event fired: ${eventType.name}');
 
     if (data != null && !eventType.isTypeT(data)) {
@@ -44,9 +46,9 @@ class EventBus {
       _logger.finest('fire: new EventType: ${eventType.name}');
     }
 
-    var controller = streamControllers.putIfAbsent(eventType, () {
+    final controller = streamControllers.putIfAbsent(eventType, () {
       return new async.StreamController.broadcast(sync: isSync);
-    });
+    } as _StreamControllerFactory);
 
     controller.add(data);
     return data;

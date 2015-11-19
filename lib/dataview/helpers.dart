@@ -8,13 +8,13 @@ class DataViewOptions {
       {this.groupItemMetadataProvider: null, this.inlineFilters: false});
 }
 
-typedef int SortComparerFunc(a, b);
+typedef int SortComparerFunc<T>(T a, T b);
 
 class GroupingInfo {
   var getter;
   bool getterIsAFn = false;
   fm.GroupTitleFormatter formatter;
-  SortComparerFunc comparer;
+  SortComparerFunc<core.ItemBase> comparer;
   List predefinedValues;
   List<Aggregator> aggregators;
   bool doAggregateEmpty;
@@ -31,18 +31,18 @@ class GroupingInfo {
       this.isLazyTotalsCalculation: false}) {
     if (predefinedValues == null) predefinedValues = [];
     if (aggregators == null) aggregators = [];
-    if (comparer == null) comparer = (a, b) {
-      if (a.value is bool && b.value is bool) {
-        return (a.value ? 1 : 0) - (b.value ? 1 : 0);
+    if (comparer == null) comparer = (core.ItemBase a, core.ItemBase b) {
+      if (a['value'] is bool && b['value'] is bool) {
+        return (a['value'] ? 1 : 0) - (b['value'] ? 1 : 0);
       }
-      if (a.value is String) {
-        return (a.value as String).compareTo('${b.value}');
+      if (a['value'] is String) {
+        return (a['value'] as String).compareTo('${b['value']}');
       }
-      if (a.value == null) {
-        return b.value == null ? 0 : -1;
+      if (a['value'] == null) {
+        return b['value'] == null ? 0 : -1;
       }
-      return a.value - b.value;
-    };
+      return a['value'] - b['value'];
+    } as SortComparerFunc<core.ItemBase>;
   }
 }
 

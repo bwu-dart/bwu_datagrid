@@ -15,7 +15,7 @@ abstract class Editor {
   Editor newInstance(EditorArgs args);
   BwuDatagrid grid;
   NodeBox gridPosition;
-  dom.HtmlElement container;
+  dom.Element container;
   Column column;
   DataItem item;
   Function commitChanges;
@@ -47,7 +47,7 @@ class ValidationResult {
 class ValidationErrorSource {
   int index;
   Editor editor;
-  dom.HtmlElement container;
+  dom.Element container;
   String message;
 
   ValidationErrorSource(
@@ -64,7 +64,7 @@ class EditorArgs {
   BwuDatagrid grid;
   NodeBox gridPosition;
   NodeBox position;
-  dom.HtmlElement container;
+  dom.Element container;
   Column column;
   DataItem item;
 
@@ -392,7 +392,7 @@ class YesNoSelectEditor extends Editor {
   }
 
   @override
-  void applyValue(/*Map/Item*/ dynamic item, int state) {
+  void applyValue(DataItem item, int state) {
     item[args.column.field] = state;
   }
 
@@ -474,7 +474,7 @@ class CheckboxEditor extends Editor {
 
 class PercentCompleteEditor extends Editor {
   dom.InputElement $input;
-  dom.HtmlElement $picker;
+  dom.Element $picker;
   dom.RangeInputElement $slider;
   int defaultValue;
   EditorArgs args;
@@ -543,7 +543,7 @@ class PercentCompleteEditor extends Editor {
 //      'orientation': "vertical",
 //      'range': "min",
 //      'value': defaultValue,
-//      'slide': (dom.MouseEvent event, dom.HtmlElement ui) {
+//      'slide': (dom.MouseEvent event, dom.Element ui) {
 //        $input.value = ui.attributes['val'];
 //      }
 //    });
@@ -623,7 +623,7 @@ class PercentCompleteEditor extends Editor {
 /// KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
 class LongTextEditor extends Editor {
   dom.TextAreaElement $input;
-  dom.HtmlElement $wrapper;
+  dom.Element $wrapper;
   String defaultValue;
   EditorArgs args;
 

@@ -12,7 +12,7 @@ import 'common.dart';
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/e03_editing.html';
+  pageUrl = '${await webServer}/e03_editing.html';
   forEachBrowser(tests);
 //  tests(WebBrowser.chrome);
 }
@@ -50,11 +50,8 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         setUp(() async {
           if (autoEdit == AutoEdit.enabled) {
             final autoEditEnableButton = await driver
-                .findElements(const By.cssSelector(
-                    'app-element::shadow div.options-panel button', const {
-              WebBrowser.firefox: removeShadowDom,
-              WebBrowser.ie: replaceShadowWithDeep
-            }))
+                .findElements(const By.shadow(
+                    'app-element::shadow div.options-panel button'))
                 .first;
             autoEditEnableButton.click();
           }

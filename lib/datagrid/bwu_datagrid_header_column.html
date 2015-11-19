@@ -1,20 +1,34 @@
 <!DOCTYPE html>
-
-<link rel="import" href="../../../packages/polymer/polymer.html">
-
-<polymer-element name='bwu-datagrid-header-column'>
+<dom-module id='bwu-datagrid-header-column'>
   <template>
     <style>
       :host {
         display: block;
+        @apply(--bwu-datagrid-header-column);
+      }
+      :host(.ui-state-default) {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        height: 16px;
+        line-height: 16px;
+        margin: 0;
+        padding: 4px;
+        border-right: 1px solid silver;
+        border-left: 0;
+        border-top: 0;
+        border-bottom: 0;
+        float: left;
+
+        @apply(--bwu-datagrid-header-column-default);
+      }
+      :host(.bwu-datagrid-header-column:hover),
+      :host(.bwu-datagrid-header-column-active) {
+        @apply(--bwu-datagrid-header-column-hover);
       }
     </style>
-    <!--<link rel='stylesheet' href='../asset/grid.css'>
-    <link rel='stylesheet' href='../asset/default_theme.css'> -->
-    <link rel='stylesheet' href='bwu_datagrid_header_column.css'>
-    <link rel='stylesheet' href='bwu_datagrid_header_column_default_theme.css'>
-
     <content></content>
   </template>
-  <script type='application/dart' src='bwu_datagrid_header_column.dart'></script>
-</polymer-element>
+</dom-module>

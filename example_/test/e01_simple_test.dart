@@ -10,7 +10,7 @@ import 'common.dart';
 String pageUrl;
 
 main() async {
-  pageUrl =  '${await webServer}/e01_simple.html';
+  pageUrl = '${await webServer}/e01_simple.html';
   forEachBrowser(tests);
 }
 

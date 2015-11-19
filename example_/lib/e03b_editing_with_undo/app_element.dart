@@ -1,8 +1,11 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:math' as math;
 import 'dart:html' as dom;
+
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -11,7 +14,7 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import '../required_field_validator.dart';
 import 'package:bwu_datagrid/core/core.dart';
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
@@ -89,7 +92,7 @@ class AppElement extends PolymerElement {
     notifyPropertyChange(#isUndoItem, oldValue, isUndoItem);
   }
 
-  void undo(dom.MouseEvent e, detail, dom.HtmlElement target) {
+  void undo(dom.MouseEvent e, detail, dom.Element target) {
     var oldValue = isUndoItem;
     var command = _commandQueue.removeLast();
     if (command != null && globalEditorLock.cancelCurrentEdit()) {

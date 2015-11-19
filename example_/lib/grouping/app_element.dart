@@ -1,3 +1,4 @@
+@HtmlImport('app_element.html')
 library app_element;
 
 import 'dart:math' as math;
@@ -5,6 +6,7 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -20,7 +22,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   @override
   void format(
-      dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+      dom.Element target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['avg'] != null && totals['avg'][columnDef.field] != null) {
@@ -37,7 +39,7 @@ class AvgTotalsFormatter extends core.GroupTotalsFormatter {
 class SumTotalsFormatter extends core.GroupTotalsFormatter {
   @override
   void format(
-      dom.HtmlElement target, core.GroupTotals totals, Column columnDef) {
+      dom.Element target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['sum'] != null && totals['sum'][columnDef.field] != null) {
@@ -79,9 +81,9 @@ class BooleanGroupTitleFormatter extends fm.GroupTitleFormatter {
   }
 }
 
-@CustomTag('app-element')
+@PolymerRegister('app-element')
 class AppElement extends PolymerElement {
-  @observable String threshold = '0';
+  @property String threshold = '0';
 
   AppElement.created() : super.created();
 

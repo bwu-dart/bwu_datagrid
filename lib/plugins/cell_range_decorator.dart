@@ -2,10 +2,11 @@ library bwu_datagrid.plugins.cell_range_decorator;
 
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
-import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 abstract class Decorator {
-  dom.HtmlElement show(Range r);
+  dom.Element show(core.Range r);
   void hide();
 }
 
@@ -22,7 +23,7 @@ class CellRangeDecoratorOptions {
 }
 
 class CellRangeDecorator extends Decorator {
-  dom.HtmlElement _elem;
+  dom.Element _elem;
 
   BwuDatagrid _grid;
   CellRangeDecoratorOptions _options;
@@ -45,19 +46,19 @@ class CellRangeDecorator extends Decorator {
   }
 
   @override
-  dom.HtmlElement show(Range range) {
+  dom.Element show(core.Range range) {
     if (_elem == null) {
       _elem = new dom.DivElement()
         ..classes.add(_options.selectionCssClass)
         ..style.position = 'absolute';
-      for (var k in _options.selectionCss.keys) {
+      for (final String k in _options.selectionCss.keys) {
         _elem.style.setProperty(k, _options.selectionCss[k]);
       }
       _grid.getCanvasNode.append(_elem);
     }
 
-    var from = _grid.getCellNodeBox(range.fromRow, range.fromCell);
-    var to = _grid.getCellNodeBox(range.toRow, range.toCell);
+    final NodeBox from = _grid.getCellNodeBox(range.fromRow, range.fromCell);
+    final NodeBox to = _grid.getCellNodeBox(range.toRow, range.toCell);
 
     _elem.style
       ..top = '${from.top - 1}px'

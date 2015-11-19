@@ -1,16 +1,19 @@
+@HtmlImport('filter_form.html')
 library bwu_datagrid_examples.e04_model.filter_form;
 
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
-@CustomTag('filter-form')
+
+@PolymerRegister('filter-form')
 class FilterForm extends PolymerElement {
   FilterForm.created() : super.created();
 
-  @published String threshold = '0';
-  @published String searchString = '';
+  @property String threshold = '0';
+  @property String searchString = '';
 
-  void clearSearch(dom.KeyboardEvent e, detail, dom.HtmlElement target) {
+  void clearSearch(dom.KeyboardEvent e, detail, dom.Element target) {
     if (e.which == dom.KeyCode.ESC) {
       searchString = '';
     }

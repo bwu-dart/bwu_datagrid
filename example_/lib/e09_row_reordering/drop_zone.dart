@@ -1,7 +1,9 @@
+@HtmlImport('drop_zone.html')
 library bwu_datagrid_examples.e09_row_reordering.drop_zone;
 
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 
 class ZoneDrop {
   dom.MouseEvent causedBy;
@@ -9,14 +11,14 @@ class ZoneDrop {
   ZoneDrop({this.causedBy});
 }
 
-@CustomTag('drop-zone')
+@PolymerRegister('drop-zone')
 class DropZone extends PolymerElement {
   DropZone.created() : super.created();
 
   bool _isAcceptedDragStarted = false;
   List<String> _accept;
 
-  @published String dropzone;
+  @property String dropzone;
 
   void dropzoneChanged(old) {
     String s = 'move s:text/bwu-datagrid-recycle file:text/blajflaskjfd';

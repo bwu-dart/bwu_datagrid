@@ -9,6 +9,7 @@ import 'dart:async' show Future;
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:test/test.dart';
 import 'package:bwu_datagrid_examples/checkbox_row_select/app_element.dart';
 
@@ -24,8 +25,9 @@ dom.CheckboxInputElement getSelectAllCheckBox() {
 // and when `checkbox_row_select_testx.html` is run from Chrome.
 // Seems to be caused by running within a iframe
 
-@whenPolymerReady
-init() {
+main() async {
+  await initPolymer();
+
   group('checkbox_row_select', () {
     BwuDatagrid grid;
     dom.Element appElement;
