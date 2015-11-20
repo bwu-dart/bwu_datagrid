@@ -2,13 +2,15 @@
 <!-- copyright notice -->
 
 <style>
+  * {
+    font-family: arial,serif;
+    font-size: 8pt;
+  }
+
   body {
     background-color: beige;
     padding: 0;
     margin: 8px;
-
-    font-family: arial,sans-serif;
-    font-size: 8px;
   }
 
   h2 {
@@ -30,61 +32,88 @@
     margin: 0;
   }
 </style>
+
+<!-- styling the example app-elements -->
 <dom-module id='example-style'>
   <template>
     <style include="bwu-datagrid-example-theme">
-      :host::content .grid-header *,
-      .grid-header * {
-        background-color: red;
+      :root {
+        --options-panel: {
+          border-radius: 6px;
+          -moz-border-radius: 6px;
+          -webkit-border-radius: 6px;
+          border: 1px solid silver;
+          background: #f0f0f0;
+          padding: 10px;
+          margin-left: 25px;
+          width: 320px;
+        };
+
+        --bwu-datagrid: {
+          width: 600px;
+          height: 500px;
+
+          opacity: 1;
+          transition: opacity 200ms;
+
+          background: white;
+          outline: 0;
+          border: 1px solid gray;
+        };
+
+        --bwu-datagrid-header-column: {
+          background: url('../../../packages/bwu_datagrid/asset/images/header-columns-bg.gif') repeat-x center bottom;
+        };
+
+        --bwu-datagrid-header-column-default: {
+          border: 0;
+          border-right: 1px solid silver;
+        }
       }
-      /* demo description */
-      /*.grid-header {*/
-        /*border: 1px solid gray;*/
-        /*border-bottom: 0;*/
-        /*border-top: 0;*/
-        /*background: url('../../../packages/bwu_datagrid/asset/images/header-bg.gif') repeat-x center top;*/
-        /*color: black;*/
-        /*height: 24px;*/
-        /*line-height: 24px;*/
-      /*}*/
-      /*.grid-header label {*/
-        /*display: inline-block;*/
-        /*font-weight: bold;*/
-        /*margin: auto auto auto 6px;*/
-      /*}*/
-      /**/
-      /*.grid-header .ui-icon {*/
-        /*margin: 4px 4px auto 6px;*/
-        /*background-color: transparent;*/
-        /*border-color: transparent;*/
-      /*}*/
-      /**/
-      /*.grid-header .ui-icon.ui-state-hover {*/
-        /*background-color: white;*/
-      /*}*/
-      /**/
-      /*.grid-header #txtSearch {*/
-        /*margin: 0 4px 0 4px;*/
-        /*padding: 2px 2px;*/
-        /*border-radius: 2px;*/
-        /*-moz-border-radius: 2px;*/
-        /*-webkit-border-radius: 2px;*/
-        /*border: 1px solid silver;*/
-      /*}*/
-      /**/
-      /*.options-panel {*/
-        /*border-radius: 6px;*/
-        /*-moz-border-radius: 6px;*/
-        /*-webkit-border-radius: 6px;*/
-        /*border: 1px solid silver;*/
-        /*background: #f0f0f0;*/
-        /*padding: 4px;*/
-        /*margin-bottom: 20px;*/
-        /*width: 320px;*/
-        /*position: absolute;*/
-        /*top: 0;*/
-        /*left: 650px;*/
-      /*}      */
     </style>
   </template>
 </dom-module>
+
+<!-- for the additional grid header used in some examples like "grouping" -->
+<dom-module id="example-grid-header-style">
+  <template>
+    <style>
+      .grid-header {
+        border: 1px solid gray;
+        border-bottom: 0;
+        border-top: 0;
+        background: url('../../../packages/bwu_datagrid/asset/images/header-bg.gif') repeat-x center top;
+        color: black;
+        height: 24px;
+        line-height: 24px;
+      }
+
+      .grid-header label {
+        display: inline-block;
+        font-weight: bold;
+        margin: auto auto auto 6px;
+      }
+
+      .grid-header .ui-icon {
+        margin: 4px 4px auto 6px;
+        background-color: transparent;
+        border-color: transparent;
+      }
+
+      .grid-header .ui-icon.ui-state-hover {
+        background-color: white;
+      }
+
+      .grid-header #txtSearch {
+        margin: 0 4px 0 4px;
+        padding: 2px 2px;
+        border-radius: 2px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border: 1px solid silver;
+      }
+    </style>
+  </template>
+</dom-module>
+
+

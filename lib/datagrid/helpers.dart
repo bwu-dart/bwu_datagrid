@@ -19,7 +19,7 @@ abstract class DataProvider<T extends core.ItemBase> {
   RowMetadata getItemMetadata(int index);
 
   DataProvider(List<T> items)
-      : this.items = (items == null ? <T>[] : items);
+      : _items = (items == null ? <T>[] : items);
 }
 
 class MapDataItemProvider<T extends core.ItemBase> extends DataProvider<T> {

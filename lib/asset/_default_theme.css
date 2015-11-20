@@ -56,8 +56,7 @@ classes should alter those!
 }
 
 .bwu-datagrid-cell.active {
-  border-color: gray;
-  border-style: solid;
+  border: solid gray;
 }
 
 .bwu-datagrid-sortable-placeholder {

@@ -6,8 +6,8 @@
         /*
           bwu-datagrid
         */
-        --bwu-datagrid: {
-        };
+        /*--bwu-datagrid: {*/
+        /*};*/
 
         /*
           header-column (base)
@@ -57,6 +57,109 @@
           background: url('../../../packages/bwu_datagrid/asset/images/header-columns-bg.gif') repeat-x center bottom;
           border-bottom: 1px solid silver;
         }
+      }
+
+      :host::content .bwu-datagrid-row.ui-state-active,
+      .bwu-datagrid-row.ui-state-active {
+        background: #F5F7D7;
+      }
+
+      :host::content .bwu-datagrid-row,
+      .bwu-datagrid-row {
+        position: absolute;
+        background: white;
+        border: 0;
+        line-height: 20px;
+      }
+
+      :host::content .bwu-datagrid-row.selected,
+      .bwu-datagrid-row.selected {
+        z-index: 10;
+        background: #DFE8F6;
+      }
+
+      :host::content .bwu-datagrid-cell,
+      .bwu-datagrid-cell {
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+
+      :host::content .bwu-datagrid-group,
+      .bwu-datagrid-group {
+        border-bottom: 2px solid silver;
+      }
+
+      :host::content .bwu-datagrid-group-toggle,
+      .bwu-datagrid-group-toggle {
+        width: 9px;
+        height: 9px;
+        margin-right: 5px;
+      }
+
+      :host::content .bwu-datagrid-group-toggle.expanded,
+      .bwu-datagrid-group-toggle.expanded {
+        background: url(images/collapse.gif) no-repeat center center;
+      }
+
+      :host::content .bwu-datagrid-group-toggle.collapsed,
+      .bwu-datagrid-group-toggle.collapsed {
+        background: url(images/expand.gif) no-repeat center center;
+      }
+
+      :host::content .bwu-datagrid-group-totals,
+      .bwu-datagrid-group-totals {
+        color: gray;
+        background: white;
+      }
+
+      :host::content .bwu-datagrid-cell.selected,
+      .bwu-datagrid-cell.selected {
+        background-color: beige;
+      }
+
+      :host::content .bwu-datagrid-cell.active,
+      .bwu-datagrid-cell.active {
+        border: solid gray;
+      }
+
+      :host::content .bwu-datagrid-sortable-placeholder,
+      .bwu-datagrid-sortable-placeholder {
+        background: silver !important;
+      }
+
+      :host::content .bwu-datagrid-row.odd,
+      .bwu-datagrid-row.odd {
+        background: #fafafa;
+      }
+
+      :host::content .bwu-datagrid-row.ui-state-active,
+      .bwu-datagrid-row.ui-state-active {
+        background: #F5F7D7;
+      }
+
+      :host::content .bwu-datagrid-row.loading,
+      .bwu-datagrid-row.loading {
+        opacity: 0.5;
+        filter: alpha(opacity = 50);
+      }
+
+      :host::content .bwu-datagrid-cell.invalid,
+      .bwu-datagrid-cell.invalid {
+        border-color: red;
+        -moz-animation-duration: 0.2s;
+        -webkit-animation-duration: 0.2s;
+        -moz-animation-name: bwu-datagrid-invalid-hilite;
+        -webkit-animation-name: bwu-datagrid-invalid-hilite;
+      }
+
+      @-moz-keyframes bwu-datagrid-invalid-hilite {
+        from { box-shadow: 0 0 6px red; }
+        to { box-shadow: none; }
+      }
+
+      @-webkit-keyframes bwu-datagrid-invalid-hilite {
+        from { box-shadow: 0 0 6px red; }
+        to { box-shadow: none; }
       }
     </style>
   </template>

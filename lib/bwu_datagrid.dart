@@ -26,6 +26,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_default_theme.dart';
+import 'package:bwu_datagrid/datagrid/bwu_datagrid_style.dart';
 
 /// [bwuDatagridDefaultThemeSilence]
 @PolymerRegister('bwu-datagrid')

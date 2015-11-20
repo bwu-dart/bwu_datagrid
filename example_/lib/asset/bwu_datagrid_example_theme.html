@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+<!-- theme the grid in the examples -->
 <dom-module id='bwu-datagrid-example-theme'>
   <template>
-    <style>
+    <style include="bwu-datagrid-default-theme">
       :root {
         /* bwu-datagrid */
         --bwu-datagrid: {
@@ -48,6 +49,175 @@
           headers (base)
         */
         /*--bwu-datagrid-headers: {}*/
+
+
+      }
+
+      /* Individual cell styles */
+      :host::content .bwu-datagrid-cell.task-name,
+      .bwu-datagrid-cell.task-name {
+        font-weight: bold;
+        text-align: right;
+      }
+
+      :host::content .bwu-datagrid-cell.task-percent,
+      .bwu-datagrid-cell.task-percent {
+        text-align: right;
+      }
+
+      :host::content .bwu-datagrid-cell.cell-move-handle,
+      .bwu-datagrid-cell.cell-move-handle {
+        font-weight: bold;
+        text-align: right;
+        border-right: solid gray;
+
+        background: #efefef;
+        cursor: move;
+      }
+
+      :host::content .cell-move-handle:hover,
+      .cell-move-handle:hover {
+        background: #b6b9bd;
+      }
+
+      :host::content .bwu-datagrid-row.selected .cell-move-handle,
+      .bwu-datagrid-row.selected .cell-move-handle {
+        background: #D5DC8D;
+      }
+
+      :host::content .bwu-datagrid-row .cell-actions,
+      .bwu-datagrid-row .cell-actions {
+        text-align: left;
+      }
+
+      :host::content .bwu-datagrid-row.complete,
+      .bwu-datagrid-row.complete {
+        background-color: #DFD;
+        color: #555;
+      }
+
+      :host::content .percent-complete-bar,
+      .percent-complete-bar  {
+        display: inline-block;
+        height: 6px;
+        border-radius: 3px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+      }
+
+      /* Editors.Text, Editors.Date */
+      :host::content input.editor-text,
+      input.editor-text {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        margin: 0;
+        background: transparent;
+        outline: 0;
+        padding: 0;
+
+      }
+
+      :host::content .ui-datepicker-trigger,
+      .ui-datepicker-trigger {
+        margin-top: 2px;
+        padding: 0;
+        vertical-align: top;
+      }
+
+      /* Editors.PercentComplete */
+      :host::content input.editor-percentcomplete,
+      input.editor-percentcomplete {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        margin: 0;
+        background: transparent;
+        outline: 0;
+        padding: 0;
+
+        float: left;
+      }
+
+      :host::content .editor-percentcomplete-picker,
+      .editor-percentcomplete-picker {
+        position: relative;
+        display: inline-block;
+        width: 16px;
+        height: 100%;
+        background: url('../../../packages/bwu_datagrid/asset/images/pencil.gif') no-repeat center center;
+        overflow: visible;
+        z-index: 1000;
+        float: right;
+      }
+
+      :host::content .editor-percentcomplete-helper,
+      .editor-percentcomplete-helper {
+        border: 0 solid gray;
+        position: absolute;
+        top: -2px;
+        left: -9px;
+        background: url('../../../packages/bwu_datagrid/asset/images/editor-helper-bg.gif') no-repeat top left;
+        padding-left: 9px;
+
+        width: 120px;
+        height: 140px;
+        display: none;
+        overflow: visible;
+      }
+
+      :host::content .editor-percentcomplete-wrapper,
+      .editor-percentcomplete-wrapper {
+        background: beige;
+        padding: 20px 8px;
+
+        width: 100%;
+        height: 98px;
+        border: 1px solid gray;
+        border-left: 0;
+        white-space: nowrap;
+      }
+
+      :host::content .editor-percentcomplete-buttons,
+      .editor-percentcomplete-buttons {
+        float: right;
+      }
+
+      :host::content .editor-percentcomplete-buttons button,
+      .editor-percentcomplete-buttons button {
+        width: 80px;
+      }
+
+      :host::content .editor-percentcomplete-slider,
+      .editor-percentcomplete-slider {
+        float: left;
+      }
+
+      :host::content .editor-percentcomplete-picker:hover .editor-percentcomplete-helper,
+      .editor-percentcomplete-picker:hover .editor-percentcomplete-helper {
+        display: block;
+      }
+
+      :host::content .editor-percentcomplete-helper:hover,
+      .editor-percentcomplete-helper:hover {
+        display: block;
+      }
+
+      /* Editors.YesNoSelect */
+      :host::content select.editor-yesno,
+      select.editor-yesno {
+        width: 100%;
+        margin: 0;
+        vertical-align: middle;
+      }
+
+      /* Editors.Checkbox */
+      :host::content input.editor-checkbox,
+      input.editor-checkbox {
+        margin: 0;
+        height: 100%;
+        padding: 0;
+        border: 0;
       }
     </style>
   </template>

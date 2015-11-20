@@ -107,6 +107,7 @@ li {
   left: 650px;
 }
 
+/*********************************/
 /* Individual cell styles */
 bwu-datagrid /deep/ .bwu-datagrid-cell.task-name {
   font-weight: bold;

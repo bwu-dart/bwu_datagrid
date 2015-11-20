@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<dom-module id="options-panel">
+  <template>
+    <style>
+      .layout.horizontal,
+      .layout.horizontal-reverse,
+      .layout.vertical,
+      .layout.vertical-reverse {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+      }
+
+      .layout.wrap {
+        -ms-flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+      }
+
+      .layout.start {
+        -ms-flex-align: start;
+        -webkit-align-items: flex-start;
+        align-items: flex-start;
+      }
+
+      .options {
+        @apply(--options-panel);
+      }
+
+    </style>
+    <div class="layout horizontal wrap start">
+      <div class="grid">
+        <content select="bwu-datagrid"></content>
+      </div>
+      <div class="options">
+        <h2>Demonstrates:</h2>
+        <ul>
+          <li><content select=".title"></content></li>
+        </ul>
+        <h2>View Source:</h2>
+        <ul><li><a href$="[[gitHubSourceUri(sourceDir)]]" target="_sourcewindow">
+              View the source for this example on Github
+        </a></li></ul>
+      </div>
+    </div>
+  </template>
+</dom-module>

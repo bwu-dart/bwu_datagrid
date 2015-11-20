@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<dom-module id='bwu-datagrid-style'>
+  <template>
+    <style>
+      /* from jquery-ui-1.8.16.custom.css */
+      :host::content .ui-state-default,
+      .ui-state-default {
+        border: 1px solid #d3d3d3;
+        border-bottom: 0; /* to fix higher selectibility of this outer style */
+        background: #e6e6e6 url('smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png') 50% 50% repeat-x;
+        font-weight: normal;
+        color: #555555;
+
+      /* from example.css */
+        font-family: arial,sans-serif;
+        font-size: 8pt;
+      }
+
+      /*
+      IMPORTANT:
+      In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.
+      No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS
+      classes should alter those!
+      */
+
+      .slide-down, :host::content .slide-down,
+      .slide-up, :host::content .slide-up {
+        transition: height 250ms ease-out;
+        -webkit-transition: height 250ms ease-out;
+        -moz-transition: height 250ms ease-out;
+        -o-transition: height 250ms ease-out;
+      }
+
+      :host::content .bwu-datagrid-header.ui-state-default,
+      .bwu-datagrid-header.ui-state-default/*, .bwu-datagrid-headerrow.ui-state-default*/ {
+        width: 100%;
+        overflow: hidden;
+        border-left: 0;
+      }
+
+      :host::content .bwu-datagrid-header-columns,
+      .bwu-datagrid-header-columns,
+      /* TODO(zoechi) shouldn't this be in bwu_datagrid_headerrow_column.html? */
+      :host::content .bwu-datagrid-headerrow-columns,
+      .bwu-datagrid-headerrow-columns {
+        position: relative;
+        white-space: nowrap;
+        cursor: default;
+        overflow: hidden;
+      }
+
+      :host::content .bwu-datagrid-sort-indicator,
+      .bwu-datagrid-sort-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 5px;
+        margin-left: 4px;
+        margin-top: 6px;
+        float: left;
+      }
+
+      :host::content .bwu-datagrid-sort-indicator-desc,
+      .bwu-datagrid-sort-indicator-desc {
+        background: url(images/sort-desc.gif); /* TODO(zoechi) URL */
+      }
+
+      :host::content .bwu-datagrid-sort-indicator-asc,
+      .bwu-datagrid-sort-indicator-asc {
+        background: url(images/sort-asc.gif);
+      }
+
+      :host::content .bwu-datagrid-resizable-handle,
+      .bwu-datagrid-resizable-handle {
+        position: absolute;
+        font-size: 0.1%;
+        display: block;
+        cursor: col-resize;
+        width: 4px;
+        right: 0;
+        top: 0;
+        height: 100%;
+      }
+
+      :host::content .bwu-datagrid-sortable-placeholder,
+      .bwu-datagrid-sortable-placeholder {
+        background: silver;
+      }
+
+      .grid-canvas {
+        position: relative;
+        outline: 0;
+      }
+
+      :host::content .bwu-datagrid-row.ui-widget-content,
+      .bwu-datagrid-row.ui-widget-content,
+      :host::content .bwu-datagrid-row.ui-state-active,
+      .bwu-datagrid-row.ui-state-active {
+        position: absolute;
+        border: 0;
+        width: 100%;
+      }
+
+      /* also update bwu-datagrid-headerrow-column element CSS */
+      :host::content .bwu-datagrid-cell,
+      .bwu-datagrid-cell {
+        position: absolute;
+        border: 1px solid transparent;
+        border-right: 1px dotted silver;
+        border-bottom-color: silver;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        z-index: 1;
+        padding: 1px 2px 2px 1px;
+        margin: 0;
+        white-space: nowrap;
+        cursor: default;
+      }
+
+      :host::content .bwu-datagrid-group,
+      .bwu-datagrid-group {
+      }
+
+      :host::content .bwu-datagrid-group-toggle,
+      .bwu-datagrid-group-toggle {
+        display: inline-block;
+      }
+
+      :host::content .bwu-datagrid-cell.highlighted,
+      .bwu-datagrid-cell.highlighted {
+        background: lightskyblue;
+        background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -o-transition: all 0.5s;
+        transition: all 0.5s;
+      }
+
+      :host::content .bwu-datagrid-cell.flashing,
+      .bwu-datagrid-cell.flashing {
+        border: 1px solid red !important;
+      }
+
+      :host::content .bwu-datagrid-cell.editable,
+      .bwu-datagrid-cell.editable {
+        z-index: 11;
+        overflow: visible;
+        background: white;
+        border: solid black;
+      }
+
+      :host::content .bwu-datagrid-cell:focus,
+      .bwu-datagrid-cell:focus {
+        outline: none;
+      }
+
+      :host::content .bwu-datagrid-reorder-proxy,
+      .bwu-datagrid-reorder-proxy {
+        display: inline-block;
+        background: blue;
+        opacity: 0.15;
+        filter: alpha(opacity = 15);
+        cursor: move;
+      }
+
+      :host::content .bwu-datagrid-reorder-guide,
+      .bwu-datagrid-reorder-guide {
+        display: inline-block;
+        height: 2px;
+        background: blue;
+        opacity: 0.7;
+        filter: alpha(opacity = 70);
+      }
+
+      :host::content .bwu-datagrid-selection,
+      .bwu-datagrid-selection {
+        z-index: 10;
+        position: absolute;
+        border: 2px dashed black;
+      }
+    </style>
+  </template>
+</dom-module>

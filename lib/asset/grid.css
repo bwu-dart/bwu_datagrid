@@ -59,7 +59,7 @@ classes should alter those!
 
 .bwu-datagrid-resizable-handle {
   position: absolute;
-  font-size: 0.1px;
+  font-size: 0.1%;
   display: block;
   cursor: col-resize;
   width: 4px;
