@@ -6,11 +6,11 @@ typedef async.StreamController<T> _StreamControllerFactory<T>();
 
 /// [EventBus] is a central event hub.
 class EventBus<T> {
-  final _logger = new logging.Logger("EventBusModel");
+  final logging.Logger _logger = new logging.Logger("EventBusModel");
 
   /// A [StreamController] is maintained for each event type.
-  final Map<EventType, async.StreamController> streamControllers =
-      <EventType, async.StreamController>{};
+  final Map<EventType, async.StreamController<EventData>> streamControllers =
+      <EventType, async.StreamController<EventData>>{};
 
   //StreamController _historyStreamController = new StreamController();
 
@@ -30,7 +30,7 @@ class EventBus<T> {
 
     return streamControllers.putIfAbsent(eventType, () {
       return new async.StreamController.broadcast(sync: isSync);
-    } as _StreamControllerFactory).stream as async.Stream/*<T>*/;
+    } as _StreamControllerFactory<EventData>).stream as async.Stream/*<T>*/;
   }
 
   /// [fire] broadcasts an event of a type [eventType] to all subscribers.
@@ -46,9 +46,9 @@ class EventBus<T> {
       _logger.finest('fire: new EventType: ${eventType.name}');
     }
 
-    final controller = streamControllers.putIfAbsent(eventType, () {
+    final async.StreamController<EventData> controller = streamControllers.putIfAbsent(eventType, () {
       return new async.StreamController.broadcast(sync: isSync);
-    } as _StreamControllerFactory);
+    } as _StreamControllerFactory<EventData>);
 
     controller.add(data);
     return data;
@@ -67,5 +67,5 @@ class EventType<T> {
   ///
   /// This method is needed to provide type safety to the [EventBus] as long as
   /// Dart does not support generic types for methods.
-  bool isTypeT(data) => data is T;
+  bool isTypeT(dynamic data) => data is T;
 }
