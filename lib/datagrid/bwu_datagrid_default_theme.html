@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <dom-module id='bwu-datagrid-default-theme'>
   <template>
+    <!--suppress CssOptimizeSimilarProperties -->
     <style>
       :root {
         /*
@@ -119,7 +120,9 @@
 
       :host::content .bwu-datagrid-cell.active,
       .bwu-datagrid-cell.active {
-        border: solid gray;
+        /* don't combine, otherwise active cell style breaks */
+        border-style: solid;
+        border-color: gray;
       }
 
       :host::content .bwu-datagrid-sortable-placeholder,

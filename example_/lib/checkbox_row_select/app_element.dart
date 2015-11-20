@@ -13,7 +13,10 @@ import 'package:bwu_datagrid/editors/editors.dart' as editors;
 import 'package:bwu_datagrid/plugins/checkbox_select_column.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   factory AppElement() => new dom.Element.tag('app-element');
@@ -66,10 +69,9 @@ class AppElement extends PolymerElement {
         grid.registerPlugin(checkboxColumn);
         //new ColumnPicker(columns, grid, options);
 
-        BwuColumnPicker columnPicker =
-            (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
-              ..columns = columns
-              ..grid = grid;
+        BwuColumnPicker columnPicker = new BwuColumnPicker()
+          ..columns = columns
+          ..grid = grid;
         dom.document.body.append(columnPicker);
       });
     } on NoSuchMethodError catch (e) {

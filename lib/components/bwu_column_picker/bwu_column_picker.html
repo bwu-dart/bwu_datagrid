@@ -1,13 +1,62 @@
 <!DOCTYPE html>
-<dom-module id='bwu-column-picker'>
+<dom-module id="bwu-column-picker">
   <template>
-    <link rel='stylesheet' href='bwu_column_picker.css'>
+    <style>
+      :host {
+        display: none;
+        position: absolute;
+        z-index: 20;
+
+        border: 1px solid #718BB7;
+        background: #f0f0f0;
+        padding: 6px;
+        -moz-box-shadow: 2px 2px 2px silver;
+        -webkit-box-shadow: 2px 2px 2px silver;
+        box-shadow: 2px 2px 2px silver;
+        min-width: 100px;
+        cursor: default;
+        opacity: 0;
+        @apply(--bwu-column-picker);
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        @apply(--bwu-column-picker-ul);
+      }
+
+      li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        background: none;
+        @apply(--bwu-column-picker-li);
+      }
+
+      input {
+        margin: 4px;
+        @apply(--bwu-column-picker-input);
+      }
+
+      li a {
+        display: block;
+        padding: 4px;
+        font-weight: bold;
+        @apply(--bwu-column-picker-li-a);
+      }
+
+      li a:hover {
+        background: white;
+        @apply(--bwu-column-picker-li-a-hover);
+      }
+    </style>
 
     <ul>
-      <template repeat='{{col in columnCheckboxes}}'>
+      <template is="dom-repeat" items="{{columnCheckboxes}}" as="col">
         <li>
           <label>
-            <input type='checkbox' checked='{{col.checked}}' on-change='{{updateColumn}}' data-column-id='{{col.id}}'>{{col.text}}
+            <input type="checkbox" checked="{{col.checked::change}}" data-column-id="[[col.id]]"><span>[[col.text]]</span>
           </label>
         </li>
       </template>
@@ -16,15 +65,14 @@
     <ul>
       <li>
         <label>
-          <input type='checkbox' checked='{{isAutoResize}}' on-change='{{autoResizeChangedHandler}}'>Force fit columns
+          <input type="checkbox" checked="{{isAutoResize::change}}">Force fit columns
         </label>
       </li>
       <li>
         <label>
-          <input type='checkbox' checked='{{isSyncResize}}' on-change='{{syncResizeChangedHandler}}'>Synchronous resize
+          <input type="checkbox" checked="{{isSyncResize::change}}">Synchronous resize
         </label>
       </li>
     </ul>
-
   </template>
 </dom-module>

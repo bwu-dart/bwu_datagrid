@@ -5,15 +5,16 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 
 import 'package:polymer/polymer.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart';
 
-class CbData {
-  String id;
-  bool checked;
-  String text;
+class CbData extends JsProxy {
+  @reflectable String id;
+  @reflectable bool checked;
+  @reflectable String text;
   CbData(this.id);
 }
 
@@ -25,6 +26,9 @@ class ColumnPickerOptions {
 
 @PolymerRegister('bwu-column-picker')
 class BwuColumnPicker extends PolymerElement {
+  factory BwuColumnPicker() =>
+      new dom.Element.tag('bwu-column-picker') as BwuColumnPicker;
+
   BwuColumnPicker.created() : super.created();
 
   ColumnPickerOptions _options = new ColumnPickerOptions();
@@ -32,8 +36,8 @@ class BwuColumnPicker extends PolymerElement {
   List<Column> _columns;
 
   @property List<CbData> columnCheckboxes = <CbData>[];
-  @property bool isSyncResize = false;
-  @property bool isAutoResize = false;
+  @Property(observer: 'syncResizeChangedHandler') bool isSyncResize = false;
+  @Property(observer: 'autoResizeChangedHandler') bool isAutoResize = false;
 
   bool _isInitialized = false;
 
@@ -51,28 +55,24 @@ class BwuColumnPicker extends PolymerElement {
       throw '"grid" must not be updated after the control was added to the DOM.';
     }
     _grid = grid;
-    isSyncResize = _grid.getGridOptions.syncColumnCellResize;
-    isAutoResize = _grid.getGridOptions.forceFitColumns;
+    set('isSyncResize', _grid.getGridOptions.syncColumnCellResize);
+    set('isAutoResize', _grid.getGridOptions.forceFitColumns);
   }
 
-// TODO binding to 'checked' of the checkboxes didn't work
-//  void isSyncResizeChanged(old) {
-//    _grid.setGridOptions = new GridOptions(syncColumnCellResize: isSyncResize);
-//  }
-//
-//  void isautoResizeChanged(old) {
-//    _grid.setGridOptions = new GridOptions(forceFitColumns: isAutoResize);
-//  }
-
-  void syncResizeChangedHandler(
-      dom.Event e, Object detail, dom.Element target) {
+  @reflectable
+  void syncResizeChangedHandler(bool checked, [_]) {
+    if (_grid == null) {
+      return;
+    }
     _grid.setGridOptions = new GridOptions.unitialized()
-      ..syncColumnCellResize = (target as dom.CheckboxInputElement).checked;
+      ..syncColumnCellResize = checked;
   }
 
-  void autoResizeChangedHandler(
-      dom.Event e, Object detail, dom.Element target) {
-    final bool checked = (target as dom.CheckboxInputElement).checked;
+  @reflectable
+  void autoResizeChangedHandler(bool checked, [_]) {
+    if (_grid == null) {
+      return;
+    }
     _grid.setGridOptions = new GridOptions.unitialized()
       ..forceFitColumns = checked;
     if (checked) {
@@ -106,16 +106,15 @@ class BwuColumnPicker extends PolymerElement {
 
   void _handleHeaderContextMenu(HeaderContextMenu e) {
     e.preventDefault();
-    columnCheckboxes.clear();
+    clear('columnCheckboxes');
     _updateColumnOrder();
 
-//    var $li, $input; // TODO(zoechi) why is it unused?
     for (int i = 0; i < _columns.length; i++) {
       CbData cb = new CbData(_columns[i].id);
 
       cb.checked = _grid.getColumnIndex(_columns[i].id) != null;
       cb.text = _columns[i].name;
-      columnCheckboxes.add(cb);
+      add('columnCheckboxes', cb);
     }
 
     style
@@ -148,25 +147,26 @@ class BwuColumnPicker extends PolymerElement {
     _columns = ordered;
   }
 
-  void updateColumn(dom.Event e) {
-    final dom.CheckboxInputElement cb = e.target as dom.CheckboxInputElement;
-    CbData curCbData;
+  @Observe('columnCheckboxes.*')
+  void updateColumn(Map e) {
+    if(!(e['path'] as String).endsWith('.checked')) {
+      return;
+    }
+    if (_grid == null || e['path'] == 'columnCheckboxes.splices' || e['path'] == 'columnCheckboxes.length') {
+      return;
+    }
+    final CbData curCbData = (e['base'] as List<CbData>).first;
 
     final List<Column> visibleColumns = <Column>[];
-    for (int i = 0; i < columnCheckboxes.length; i++) {
-      final CbData cbData = columnCheckboxes[i];
-      if (cbData.id == cb.dataset['column-id']) {
-        cbData.checked = cb.checked;
-        curCbData = cbData;
-      }
+    for (final CbData cbData in columnCheckboxes) {
       if (cbData.checked) {
-        visibleColumns.add(_columns[i]);
+        visibleColumns
+            .add(_columns.firstWhere((Column c) => c.id == cbData.id));
       }
     }
 
     if (visibleColumns.length == 0) {
-      curCbData.checked = true;
-      cb.checked = true;
+      set(e['path'], true);
       return;
     }
 

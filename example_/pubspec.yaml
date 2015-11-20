@@ -11,7 +11,7 @@ dependencies:
     path: ..
   bwu_utils: '>=0.1.0 <0.2.0'
   polymer: ^1.0.0-rc.5
-  polymer_interop: ^1.0.0-rc.3
+  polymer_interop: ^1.0.0-rc.5
   quiver: '>=0.21.3 <0.22.0'
   quiver_log: '>=1.0.1 <2.0.0'
   reflectable: ^0.3.2
@@ -26,7 +26,7 @@ dev_dependencies:
   bwu_grinder_tasks: '>=0.1.0 <0.2.0'
 #  bwu_sparkline: '>=0.0.9 <0.1.0' # TODO(zoechi) upgrade to Polymer 1
 #  crypto: '>=0.9.0 <0.10.0' # for Webdriver Firefox profile settings
-  grinder: '>=0.7.2 <0.8.0'
+  grinder: '>=0.7.2 <0.9.0'
      #path: ../bwu_sparkline
   http: '>=0.11.3 <0.12.0'
   test: '>=0.12.0 <0.13.0'
