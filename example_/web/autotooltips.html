@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <title>BWU Datagrid plugin example: AutoTooltips</title>
-
-    <link rel="import" href="packages/bwu_datagrid_examples/autotooltips/app_element.html">
-    <!--<link rel="import" href="packages/core_elements/core_tooltip/core_tooltip.html">-->
-
-    <link rel='stylesheet' href='packages/bwu_datagrid_examples/asset/examples.css'>
+    <script src="packages/web_components/webcomponents.min.js"></script>
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer.dom = 'shadow';
+    </script>
+    <style is="custom-style" include="example-style"></style>
   </head>
   <body>
     <app-element></app-element>

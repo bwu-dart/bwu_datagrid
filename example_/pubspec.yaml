@@ -85,10 +85,10 @@ transformers:
     - web/checkbox_row_select.dart
     - web/spreadsheet.dart
     - web/grouping.dart
-    - web/autotooltips.dartdart
+    - web/autotooltips.dart
 
     - test/checkbox_row_select_test.dart
-    - test/checkbox_row_select_testx.dartdart
+    - test/checkbox_row_select_testx.dart
 
     inline_stylesheets:
       packages/bwu_datagrid_examples/asset/examples.css: false

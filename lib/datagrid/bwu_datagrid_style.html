@@ -3,11 +3,10 @@
   <template>
     <style>
       /* from jquery-ui-1.8.16.custom.css */
-      :host::content .ui-state-default,
-      .ui-state-default {
+      :host(.ui-state-default) {
         border: 1px solid #d3d3d3;
         border-bottom: 0; /* to fix higher selectibility of this outer style */
-        background: #e6e6e6 url('smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png') 50% 50% repeat-x;
+        background: #e6e6e6 url('../asset/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png') 50% 50% repeat-x;
         font-weight: normal;
         color: #555555;
 
@@ -61,12 +60,12 @@
 
       :host::content .bwu-datagrid-sort-indicator-desc,
       .bwu-datagrid-sort-indicator-desc {
-        background: url(images/sort-desc.gif); /* TODO(zoechi) URL */
+        background: url(../asset/images/sort-desc.gif); /* TODO(zoechi) URL */
       }
 
       :host::content .bwu-datagrid-sort-indicator-asc,
       .bwu-datagrid-sort-indicator-asc {
-        background: url(images/sort-asc.gif);
+        background: url(../asset/images/sort-asc.gif);
       }
 
       :host::content .bwu-datagrid-resizable-handle,
