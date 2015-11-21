@@ -42,7 +42,6 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-
       CheckboxSelectColumn checkboxColumn =
           new CheckboxSelectColumn(cssClass: 'bwu-datagrid-cell-checkboxsel');
       columns.add(checkboxColumn);
@@ -67,9 +66,8 @@ class AppElement extends PolymerElement {
         grid.setSelectionModel = (new RowSelectionModel(
             new RowSelectionModelOptions(selectActiveRow: false)));
         grid.registerPlugin(checkboxColumn);
-        //new ColumnPicker(columns, grid, options);
 
-        BwuColumnPicker columnPicker = new BwuColumnPicker()
+        final BwuColumnPicker columnPicker = new BwuColumnPicker()
           ..columns = columns
           ..grid = grid;
         dom.document.body.append(columnPicker);

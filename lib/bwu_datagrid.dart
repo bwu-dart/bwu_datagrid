@@ -168,8 +168,8 @@ class BwuDatagrid extends PolymerElement {
   dom.Element _rowNodeFromLastMouseWheelEvent; // this node must not be deleted while inertial scrolling
   dom.Element _zombieRowNodeFromLastMouseWheelEvent; // node that was hidden instead of getting deleted
 
-  core.EventBus get eventBus => _eventBus;
-  core.EventBus _eventBus = new core.EventBus();
+  core.EventBus<core.EventData> get eventBus => _eventBus;
+  core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   async.Completer _setupCompleter;
 
@@ -275,7 +275,7 @@ class BwuDatagrid extends PolymerElement {
       this.style.position = 'relative';
     }
 
-    _focusSink = $['focusSink'] //new dom.DivElement()
+    _focusSink = ($['focusSink'] as dom.DivElement)
       ..style.position = 'fixed'
       ..style.width = '0'
       ..style.height = '0'
@@ -284,7 +284,7 @@ class BwuDatagrid extends PolymerElement {
       ..style.outline = '0';
     //_container.append(_focusSink);
 
-    _headerScroller = $['headerScroller'] //new dom.DivElement()
+    _headerScroller = ($['headerScroller']  as dom.DivElement)
       //..classes.add('bwu-datagrid-header')
       //..classes.add('ui-state-default')
       ..style.overflow = 'hidden'
@@ -298,7 +298,7 @@ class BwuDatagrid extends PolymerElement {
     //_headerScroller.append(_headers);
     _headers.style.width = "${_getHeadersWidth()}px";
 
-    _headerRowScroller = $['headerRowScroller'] //new dom.DivElement()
+    _headerRowScroller = ($['headerRowScroller'] as dom.DivElement)
 //      ..classes.add('bwu-datagrid-headerrow')
 //      ..classes.add('ui-state-default')
       ..style.overflow = 'hidden'
@@ -309,7 +309,7 @@ class BwuDatagrid extends PolymerElement {
     //..classes.add('bwu-datagrid-headerrow-columns');
     //_headerRowScroller.append(_headerRow);
 
-    _headerRowSpacer = $['spacer'] //new dom.DivElement()
+    _headerRowSpacer = ($['spacer']  as dom.DivElement)
       ..style.display = 'block'
       ..style.height = '1px'
       ..style.position = 'absolute'
@@ -318,13 +318,13 @@ class BwuDatagrid extends PolymerElement {
       ..style.width = '${_getCanvasWidth() + _scrollbarDimensions.x}px';
     //_headerRowScroller.append(_headerRowSpacer);
 
-    _topPanelScroller = $['topPanelScroller'] //new dom.DivElement()
+    _topPanelScroller = ($['topPanelScroller']  as dom.DivElement)
       //..classes.add('bwu-datagrid-top-panel-scroller')
       //..classes.add('ui-state-default')
       ..style.overflow = 'hidden'
       ..style.position = 'relative';
     //_container.append(_topPanelScroller);
-    _topPanel = $['topPanel'] // new dom.DivElement()
+    _topPanel = ($['topPanel']  as dom.DivElement)
       //..classes.add('bwu-datagrid-top-panel')
       ..style.width = '10000px';
     //_topPanelScroller.append(_topPanel);
@@ -337,7 +337,7 @@ class BwuDatagrid extends PolymerElement {
       _headerRowScroller.style.display = 'none'; // hide();
     }
 
-    _viewport = $['viewport'] //new dom.DivElement()
+    _viewport = ($['viewport']  as dom.DivElement)
       //..classes.add('bwu-datagrid-viewport')
       ..style.width = '100%'
       ..style.overflow = 'auto'
@@ -2979,9 +2979,11 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _handleHeaderContextMenu(dom.MouseEvent e) {
+    print('contextMenu');
     var $header = utils.closest((e.target as dom.Element),
             ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/)
         as BwuDatagridHeaderColumn;
+    print('closest');
     var column = $header != null ? $header.column : null;
     _eventBus.fire(core.Events.HEADER_CONTEX_MENU,
         new core.HeaderContextMenu(this, column, causedBy: e));

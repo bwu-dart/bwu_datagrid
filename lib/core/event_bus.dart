@@ -5,12 +5,12 @@ part of bwu_datagrid.core;
 typedef async.StreamController<T> _StreamControllerFactory<T>();
 
 /// [EventBus] is a central event hub.
-class EventBus<T> {
+class EventBus<T extends EventData> {
   final logging.Logger _logger = new logging.Logger("EventBusModel");
 
   /// A [StreamController] is maintained for each event type.
-  final Map<EventType, async.StreamController<EventData>> streamControllers =
-      <EventType, async.StreamController<EventData>>{};
+  final Map<EventType<T>, async.StreamController<T>> streamControllers =
+      <EventType<T>, async.StreamController<T>>{};
 
   //StreamController _historyStreamController = new StreamController();
 
@@ -21,20 +21,24 @@ class EventBus<T> {
   EventBus({this.isSync: true});
 
   ///  [onEvent] allows to access an stream for the specified [eventType].
-  async.Stream/*<T>*/ onEvent(EventType/*<T>*/ eventType) {
+  async.Stream<T> onEvent(EventType<T> eventType) {
     _logger.finest('onEvent');
 
     if (!streamControllers.containsKey(eventType)) {
       _logger.finest('onEvent: new EventType: ${eventType.name}');
     }
 
-    return streamControllers.putIfAbsent(eventType, () {
-      return new async.StreamController.broadcast(sync: isSync);
-    } as _StreamControllerFactory<EventData>).stream as async.Stream/*<T>*/;
+    return streamControllers
+        .putIfAbsent(
+            eventType,
+            () {
+              return new async.StreamController.broadcast(sync: isSync);
+            } as _StreamControllerFactory<T>)
+        .stream as async.Stream<T>;
   }
 
   /// [fire] broadcasts an event of a type [eventType] to all subscribers.
-  EventData fire(EventType/*<T>*/ eventType, EventData data) {
+  T fire(EventType<T> eventType, T data) {
     _logger.finest('event fired: ${eventType.name}');
 
     if (data != null && !eventType.isTypeT(data)) {
@@ -46,9 +50,11 @@ class EventBus<T> {
       _logger.finest('fire: new EventType: ${eventType.name}');
     }
 
-    final async.StreamController<EventData> controller = streamControllers.putIfAbsent(eventType, () {
-      return new async.StreamController.broadcast(sync: isSync);
-    } as _StreamControllerFactory<EventData>);
+    final async.StreamController<T> controller = streamControllers.putIfAbsent(
+        eventType,
+        () {
+          return new async.StreamController.broadcast(sync: isSync);
+        } as _StreamControllerFactory<T>);
 
     controller.add(data);
     return data;

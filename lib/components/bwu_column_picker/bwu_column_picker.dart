@@ -2,10 +2,9 @@
 library bwu_datagrid.components.bwu_column_picker;
 
 import 'dart:html' as dom;
-import 'dart:async' as async;
+import 'dart:async' show Completer, Future, StreamSubscription;
 
 import 'package:polymer/polymer.dart';
-import 'package:polymer_interop/polymer_interop.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
@@ -35,13 +34,20 @@ class BwuColumnPicker extends PolymerElement {
   BwuDatagrid _grid;
   List<Column> _columns;
 
-  @property List<CbData> columnCheckboxes = <CbData>[];
+  @property List columnCheckboxes = [];
   @Property(observer: 'syncResizeChangedHandler') bool isSyncResize = false;
   @Property(observer: 'autoResizeChangedHandler') bool isAutoResize = false;
 
   bool _isInitialized = false;
 
-  List<async.StreamSubscription> _subscriptions = [];
+  List<StreamSubscription> _subscriptions = [];
+
+  void set columns(List<Column> columns) {
+    if (_isInitialized) {
+      throw '"columns" must not be updated after the control was added to the DOM.';
+    }
+    _columns = columns;
+  }
 
   void set options(ColumnPickerOptions options) {
     if (_isInitialized) {
@@ -55,8 +61,12 @@ class BwuColumnPicker extends PolymerElement {
       throw '"grid" must not be updated after the control was added to the DOM.';
     }
     _grid = grid;
-    set('isSyncResize', _grid.getGridOptions.syncColumnCellResize);
-    set('isAutoResize', _grid.getGridOptions.forceFitColumns);
+    // breaks in Firefox when called synchronuously after
+    // `new BwuColumnPicker()`
+    async(() {
+      set('isSyncResize', _grid.getGridOptions.syncColumnCellResize);
+      set('isAutoResize', _grid.getGridOptions.forceFitColumns);
+    });
   }
 
   @reflectable
@@ -80,16 +90,9 @@ class BwuColumnPicker extends PolymerElement {
     }
   }
 
-  void set columns(List<Column> columns) {
-    if (_isInitialized) {
-      throw '"columns" must not be updated after the control was added to the DOM.';
-    }
-    _columns = columns;
-  }
-
+  @override
   void attached() {
     super.attached();
-
     _subscriptions
         .add(_grid.onBwuHeaderContextMenu.listen(_handleHeaderContextMenu));
     _subscriptions.add(_grid.onBwuColumnsReordered.listen(_updateColumnOrder));
@@ -100,12 +103,11 @@ class BwuColumnPicker extends PolymerElement {
   void detached() {
     super.detached();
 
-    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
+    _subscriptions.forEach((StreamSubscription e) => e.cancel());
     remove();
   }
 
   void _handleHeaderContextMenu(HeaderContextMenu e) {
-    e.preventDefault();
     clear('columnCheckboxes');
     _updateColumnOrder();
 
@@ -149,13 +151,14 @@ class BwuColumnPicker extends PolymerElement {
 
   @Observe('columnCheckboxes.*')
   void updateColumn(Map e) {
-    if(!(e['path'] as String).endsWith('.checked')) {
+    if (!(e['path'] as String).endsWith('.checked')) {
       return;
     }
-    if (_grid == null || e['path'] == 'columnCheckboxes.splices' || e['path'] == 'columnCheckboxes.length') {
+    if (_grid == null ||
+        e['path'] == 'columnCheckboxes.splices' ||
+        e['path'] == 'columnCheckboxes.length') {
       return;
     }
-    final CbData curCbData = (e['base'] as List<CbData>).first;
 
     final List<Column> visibleColumns = <Column>[];
     for (final CbData cbData in columnCheckboxes) {
@@ -181,13 +184,13 @@ class BwuColumnPicker extends PolymerElement {
   void fadeIn(int milliseconds) {
     style.display = 'block';
     style.transition = 'opacity ${milliseconds}ms ease-in';
-    new async.Future(() => style.opacity = '1');
+    new Future(() => style.opacity = '1');
     onMouseLeave.first.then((dom.MouseEvent e) => fadeOut(_options.fadeSpeed));
   }
 
   void fadeOut(int milliseconds) {
     style.transition = 'opacity ${milliseconds}ms ease-out';
-    new async.Future(() => style.opacity = '0');
+    new Future(() => style.opacity = '0');
     this
         .onTransitionEnd
         .first
