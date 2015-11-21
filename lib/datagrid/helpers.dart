@@ -18,8 +18,7 @@ abstract class DataProvider<T extends core.ItemBase> {
   T getItem(int index);
   RowMetadata getItemMetadata(int index);
 
-  DataProvider(List<T> items)
-      : _items = (items == null ? <T>[] : items);
+  DataProvider(List<T> items) : _items = (items == null ? <T>[] : items);
 }
 
 class MapDataItemProvider<T extends core.ItemBase> extends DataProvider<T> {
@@ -58,8 +57,14 @@ class NodeBox {
   int height;
   bool visible;
 
-  NodeBox({this.top, this.left, this.bottom, this.right, this.width,
-      this.height, this.visible});
+  NodeBox(
+      {this.top,
+      this.left,
+      this.bottom,
+      this.right,
+      this.width,
+      this.height,
+      this.visible});
 
   @override
   String toString() =>
@@ -88,24 +93,32 @@ class Range extends core.Range {
   int top;
   int bottom;
 
-  Range({int fromRow, int toRow, int fromCell, int toCell, this.rightPx,
-      this.leftPx, this.top, this.bottom}) : super(fromRow, fromCell, toRow: toRow, toCell: toCell);
+  Range(
+      {int fromRow,
+      int toRow,
+      int fromCell,
+      int toCell,
+      this.rightPx,
+      this.leftPx,
+      this.top,
+      this.bottom})
+      : super(fromRow, fromCell, toRow: toRow, toCell: toCell);
 }
 
 typedef Editor EditorFactory(Column column);
 
 typedef Formatter FormatterFactory(Column column);
 
-abstract class DataItem<K,V> extends ItemBase<K,V> {
+abstract class DataItem<K, V> extends ItemBase<K, V> {
   bool collapsed;
 }
 
-class MapDataItem<K,V> extends DelegatingMap<K,V> implements DataItem<K,V> {
+class MapDataItem<K, V> extends DelegatingMap<K, V> implements DataItem<K, V> {
   bool collapsed = false;
 
-  MapDataItem([Map<K,V> base]) : super(base != null ? base : <K,V>{});
+  MapDataItem([Map<K, V> base]) : super(base != null ? base : <K, V>{});
 
-  void extend(MapDataItem<K,V> update) {
+  void extend(MapDataItem<K, V> update) {
     update.keys.forEach((K e) => this[e] = update[e]);
   }
 }
@@ -122,14 +135,21 @@ class EditCommand {
   int row;
   int cell;
   Editor editor;
+
   /// [serializedValue] and [prevSerializedValue] are normally of type [String]
   /// but for example for compound values they are of type [Map]
   dynamic serializedValue;
   dynamic prevSerializedValue;
   Function execute;
   Function undo;
-  EditCommand({this.row, this.cell, this.editor, this.serializedValue,
-      this.prevSerializedValue, this.execute, this.undo});
+  EditCommand(
+      {this.row,
+      this.cell,
+      this.editor,
+      this.serializedValue,
+      this.prevSerializedValue,
+      this.execute,
+      this.undo});
 }
 
 class EditController {
@@ -173,13 +193,31 @@ class Column {
 
   int previousWidth;
 
-  Column({this.id, this.field, this.minWidth: 30, this.maxWidth, this.cssClass,
-      this.formatter, this.editor, this.validator, this.name: '',
-      this.nameElement, this.width, this.resizable: true, this.sortable: false,
-      this.focusable: true, this.selectable: true, this.defaultSortAsc: true,
-      this.rerenderOnResize: false, this.cannotTriggerInsert: false,
-      this.colspan, this.behavior, this.isMovable: true,
-      this.isDraggable: false, this.asyncPostRender, this.toolTip,
+  Column(
+      {this.id,
+      this.field,
+      this.minWidth: 30,
+      this.maxWidth,
+      this.cssClass,
+      this.formatter,
+      this.editor,
+      this.validator,
+      this.name: '',
+      this.nameElement,
+      this.width,
+      this.resizable: true,
+      this.sortable: false,
+      this.focusable: true,
+      this.selectable: true,
+      this.defaultSortAsc: true,
+      this.rerenderOnResize: false,
+      this.cannotTriggerInsert: false,
+      this.colspan,
+      this.behavior,
+      this.isMovable: true,
+      this.isDraggable: false,
+      this.asyncPostRender,
+      this.toolTip,
       this.groupTotalsFormatter});
 
   Column.unititialized();
@@ -256,23 +294,41 @@ class GridOptions {
   bool syncColumnCellResize;
   int topPanelHeight;
 
-  GridOptions({this.addNewRowCssClass: 'new-row', this.asyncEditorLoadDelay,
-      this.asyncEditorLoading: false, this.asyncPostRenderDelay,
-      this.autoEdit: false, this.autoHeight: false,
+  GridOptions(
+      {this.addNewRowCssClass: 'new-row',
+      this.asyncEditorLoadDelay,
+      this.asyncEditorLoading: false,
+      this.asyncPostRenderDelay,
+      this.autoEdit: false,
+      this.autoHeight: false,
       this.cellFlashingCssClass: 'flashing',
       this.cellHighlightCssClass: 'highlight',
-      this.dataItemColumnValueExtractor, this.defaultColumnWidth: 80,
-      this.defaultFormatter, this.editable: false, this.editCommandHandler,
-      this.editorFactory, this.editorLock, this.enableAddRow: false,
-      this.enableAsyncPostRender: false, this.enableCellNavigation: true,
-      this.enableColumnReorder: true, this.enableTextSelectionOnCells: false,
-      this.explicitInitialization: false, this.forceFitColumns: false,
-      this.forceSyncScrolling: false, this.formatterFactory,
-      this.fullWidthRows: false, this.headerRowHeight: 25,
-      this.leaveSpaceForNewRows: false, this.multiColumnSort: false,
-      this.multiSelect: true, this.rowHeight: 25,
-      this.selectedCellCssClass: 'selected', this.showHeaderRow: false,
-      this.showTopPanel: false, this.syncColumnCellResize: false,
+      this.dataItemColumnValueExtractor,
+      this.defaultColumnWidth: 80,
+      this.defaultFormatter,
+      this.editable: false,
+      this.editCommandHandler,
+      this.editorFactory,
+      this.editorLock,
+      this.enableAddRow: false,
+      this.enableAsyncPostRender: false,
+      this.enableCellNavigation: true,
+      this.enableColumnReorder: true,
+      this.enableTextSelectionOnCells: false,
+      this.explicitInitialization: false,
+      this.forceFitColumns: false,
+      this.forceSyncScrolling: false,
+      this.formatterFactory,
+      this.fullWidthRows: false,
+      this.headerRowHeight: 25,
+      this.leaveSpaceForNewRows: false,
+      this.multiColumnSort: false,
+      this.multiSelect: true,
+      this.rowHeight: 25,
+      this.selectedCellCssClass: 'selected',
+      this.showHeaderRow: false,
+      this.showTopPanel: false,
+      this.syncColumnCellResize: false,
       this.topPanelHeight: 25}) {
     if (asyncEditorLoadDelay == null) {
       this.asyncEditorLoadDelay = const Duration(milliseconds: 100);
@@ -345,3 +401,5 @@ class GridOptions {
     if (o.topPanelHeight != null) topPanelHeight = o.topPanelHeight;
   }
 }
+
+typedef CellPos StepFunction(int row, int cell, int posX);

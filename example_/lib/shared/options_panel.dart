@@ -7,7 +7,7 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 @PolymerRegister('options-panel')
 class OptionsPanel extends PolymerElement {
   // TODO(zoechi) fix for release
-  static const _branch = 'polymer1';
+  static const String _branch = 'polymer1';
 
   OptionsPanel.created() : super.created();
 
@@ -16,6 +16,5 @@ class OptionsPanel extends PolymerElement {
 
   @reflectable
   String gitHubSourceUri(String sourceDir) =>
-  'https://github.com/bwu-dart/bwu_datagrid/tree/${_branch}/example_/lib/${sourceDir}';
-
+      'https://github.com/bwu-dart/bwu_datagrid/tree/${_branch}/example_/lib/${sourceDir}';
 }

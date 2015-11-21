@@ -8,6 +8,7 @@ import 'dart:async' as async;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
@@ -15,7 +16,7 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 class CpuUtilizationFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     if (value != null && value > 90) {
       target.children.clear();
       target.append(new dom.SpanElement()
@@ -42,7 +43,7 @@ class AppElement extends PolymerElement {
     new Column(id: "server", name: "Server", field: "server", width: 180),
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: false,
       enableAddRow: false,
       enableCellNavigation: true,
@@ -59,7 +60,7 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      for (var i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; i++) {
         columns.add(new Column(
             id: 'cpu${i}',
             name: 'CPU${i}',
@@ -69,11 +70,11 @@ class AppElement extends PolymerElement {
       }
 
       data = new MapDataItemProvider();
-      for (var i = 0; i < 500; i++) {
-        var item = new MapDataItem({'server': 'Server ${i}',});
+      for (int i = 0; i < 500; i++) {
+        final MapDataItem item = new MapDataItem({'server': 'Server ${i}',});
         data.items.add(item);
 
-        for (var j = 0; j < 4; j++) {
+        for (int j = 0; j < 4; j++) {
           item['cpu${j}'] = rnd.nextInt(100);
         }
       }
@@ -96,17 +97,17 @@ class AppElement extends PolymerElement {
   int currentServer;
 
   void simulateRealTimeUpdates(
-      [dom.MouseEvent e, detail, dom.Element target]) {
-    var changes = new Map<int, Map<String, String>>();
+      [dom.MouseEvent e, Object detail, dom.Element target]) {
+    final Map<int, Map<String, String>> changes = <int, Map<String, String>>{};
     int numberOfUpdates = (rnd.nextDouble() * (data.length / 10)).round();
 
-    for (var i = 0; i < numberOfUpdates; i++) {
-      var server = rnd.nextInt(data.length - 1);
-      var cpu = rnd.nextInt(columns.length - 1);
-      var delta = rnd.nextInt(50) - 25;
+    for (int i = 0; i < numberOfUpdates; i++) {
+      final int server = rnd.nextInt(data.length - 1);
+      final int cpu = rnd.nextInt(columns.length - 1);
+      final int delta = rnd.nextInt(50) - 25;
       //var col = grid.getColumnIndex('cpu${cpu}');
       //print('col: ${col}');
-      var val = data.items[server]['cpu${cpu}'] + delta;
+      int val = data.items[server]['cpu${cpu}'] + delta;
       val = math.max(0, val);
       val = math.min(100, val);
 
@@ -128,7 +129,7 @@ class AppElement extends PolymerElement {
         new Duration(milliseconds: 500), () => simulateRealTimeUpdates());
   }
 
-  void findCurrentServer(dom.MouseEvent e, detail, dom.Element target) {
+  void findCurrentServer(dom.MouseEvent e, Object detail, dom.Element target) {
     grid.scrollRowIntoView(currentServer);
     grid.flashCell(currentServer, grid.getColumnIndex("server"), 100);
   }

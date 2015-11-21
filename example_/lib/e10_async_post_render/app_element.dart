@@ -27,7 +27,7 @@ class WaitingFormatter extends fm.Formatter {
 
 void renderSparkline(
     dom.Element target, int row, DataItem dataContext, Column colDef) {
-  var vals = [
+  final List<num> vals = <num>[
     tools.parseNum(dataContext["n1"], onErrorDefault: 0),
     tools.parseNum(dataContext["n2"], onErrorDefault: 0),
     tools.parseNum(dataContext["n3"], onErrorDefault: 0),
@@ -46,7 +46,7 @@ void renderSparkline(
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "title",
         name: "Title",
@@ -104,7 +104,7 @@ class AppElement extends PolymerElement {
         asyncPostRender: renderSparkline)
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: false,
       enableCellNavigation: true,
@@ -125,7 +125,7 @@ class AppElement extends PolymerElement {
 
       // prepare the data
       data = new MapDataItemProvider();
-      for (var i = 0; i < 500; i++) {
+      for (int i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Record $i',
           'n1': rnd.nextInt(10),

@@ -23,6 +23,7 @@ abstract class Editor {
 
   void destroy();
   void loadValue(DataItem item);
+
   /// Normally returns [String] but for example for
   /// compound editors it may return [Map]
   dynamic serializeValue();
@@ -71,8 +72,15 @@ class EditorArgs {
   CommitChangesFn commitChanges;
   CancelChangesFn cancelChanges;
 
-  EditorArgs({this.grid, this.gridPosition, this.position, this.container,
-      this.column, this.item, this.commitChanges, this.cancelChanges});
+  EditorArgs(
+      {this.grid,
+      this.gridPosition,
+      this.position,
+      this.container,
+      this.column,
+      this.item,
+      this.commitChanges,
+      this.cancelChanges});
 
 //  void extend(EditorArgs c) {
 //      if(c.grid != null) grid = c.grid;
@@ -532,7 +540,7 @@ class PercentCompleteEditor extends Editor {
       ..style.width = '25px'
       ..style.height = '100px'
       ..attributes['orient'] =
-      'vertical' // http://stackoverflow.com/questions/15935837
+          'vertical' // http://stackoverflow.com/questions/15935837
       ..attributes['writing-mode'] = 'bt-lr'
       ..style.appearance = 'slider-vertical'
       ..onChange.listen((e) {
@@ -548,12 +556,13 @@ class PercentCompleteEditor extends Editor {
 //      }
 //    });
 
-    $picker.querySelectorAll(".editor-percentcomplete-buttons button").forEach(
-        (e) => e.onClick.listen((e) {
-      $input.value = (e.target.attributes['val']);
-      $slider.value = _invertedRangeValue($input.value);
-      //$picker.querySelector(".editor-percentcomplete-slider").slider("value", e.target.attributes['val']);
-    }));
+    $picker
+        .querySelectorAll(".editor-percentcomplete-buttons button")
+        .forEach((e) => e.onClick.listen((e) {
+              $input.value = (e.target.attributes['val']);
+              $slider.value = _invertedRangeValue($input.value);
+              //$picker.querySelector(".editor-percentcomplete-slider").slider("value", e.target.attributes['val']);
+            }));
   }
 
   @override

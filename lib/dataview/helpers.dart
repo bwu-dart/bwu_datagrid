@@ -24,10 +24,17 @@ class GroupingInfo {
   bool isDisplayTotalsRow;
   bool isLazyTotalsCalculation;
 
-  GroupingInfo({this.getter, this.formatter, this.comparer,
-      this.predefinedValues, this.aggregators, this.doAggregateEmpty: false,
-      this.doAggregateCollapsed: false, this.doAggregateChildGroups: false,
-      this.isCollapsed: false, this.isDisplayTotalsRow: true,
+  GroupingInfo(
+      {this.getter,
+      this.formatter,
+      this.comparer,
+      this.predefinedValues,
+      this.aggregators,
+      this.doAggregateEmpty: false,
+      this.doAggregateCollapsed: false,
+      this.doAggregateChildGroups: false,
+      this.isCollapsed: false,
+      this.isDisplayTotalsRow: true,
       this.isLazyTotalsCalculation: false}) {
     if (predefinedValues == null) predefinedValues = [];
     if (aggregators == null) aggregators = [];

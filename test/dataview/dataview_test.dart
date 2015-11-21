@@ -540,8 +540,8 @@ void main() {
     });
 
     test("inlining replaces absolute returns", () {
-      final DataView<DataItem> dv =
-          new DataView<DataItem>(options: new DataViewOptions(inlineFilters: true));
+      final DataView<DataItem> dv = new DataView<DataItem>(
+          options: new DataViewOptions(inlineFilters: true));
       dv.setItems([
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
@@ -570,8 +570,8 @@ void main() {
     });
 
     test("inlining replaces evaluated returns", () {
-      final DataView<DataItem> dv =
-          new DataView<DataItem>(options: new DataViewOptions(inlineFilters: true));
+      final DataView<DataItem> dv = new DataView<DataItem>(
+          options: new DataViewOptions(inlineFilters: true));
       dv.setItems([
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),

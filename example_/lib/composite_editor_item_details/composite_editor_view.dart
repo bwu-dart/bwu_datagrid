@@ -11,6 +11,9 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 @PolymerRegister('composite-editor-view')
 class CompositeEditorView extends PolymerElement {
+  factory CompositeEditorView() =>
+      new dom.Element.tag('composite-editor-view') as CompositeEditorView;
+
   CompositeEditorView.created() : super.created();
 
   BwuDatagrid grid;
@@ -48,11 +51,11 @@ class CompositeEditorView extends PolymerElement {
     }
   }
 
-  void btnSaveHandler(dom.MouseEvent e, detail, dom.Element target) {
+  void btnSaveHandler(dom.MouseEvent e, Object detail, dom.Element target) {
     grid.getEditController.commitCurrentEdit();
   }
 
-  void btnCancelHandler(dom.MouseEvent e, detail, dom.Element target) {
+  void btnCancelHandler(dom.MouseEvent e, Object detail, dom.Element target) {
     grid.getEditController.cancelCurrentEdit();
   }
 

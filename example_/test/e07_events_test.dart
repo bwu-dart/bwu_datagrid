@@ -7,7 +7,7 @@ import 'common.dart';
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/e07_events.html';
 
   forEachBrowser(tests);
@@ -28,9 +28,9 @@ void tests(WebBrowser browser) {
     });
 
     test('filter % complete', () async {
-      final app = await driver
+      final WebElement app = await driver
           .findElement(const By.shadow('app-element /deep/ #canvas'));
-      final filterSlider = await driver.findElement(const By.shadow(
+      final WebElement filterSlider = await driver.findElement(const By.shadow(
           'app-element /deep/ div.options-panel #filter-form /deep/ input#txtSearch'));
       await driver.mouse.moveTo(element: app);
       await driver.mouse.click();

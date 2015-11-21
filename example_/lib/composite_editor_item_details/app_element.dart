@@ -23,7 +23,7 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "title",
         name: "Title",
@@ -75,7 +75,7 @@ class AppElement extends PolymerElement {
         editor: new CheckboxEditor())
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: true,
       enableCellNavigation: true,
@@ -94,7 +94,7 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       data = new MapDataItemProvider();
-      for (var i = 0; i < 500; i++) {
+      for (int i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'description':
@@ -124,31 +124,31 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void openDetails(dom.MouseEvent e, detail, dom.Element target) {
+  void openDetails(dom.MouseEvent e, Object detail, dom.Element target) {
     if (grid.getEditorLock.isActive &&
         !grid.getEditorLock.commitCurrentEdit()) {
       return;
     }
 
-    var $modal = (new dom.Element.tag('composite-editor-view')
-        as CompositeEditorView) //$("<div class='item-details-form'></div>");
+    final CompositeEditorView modal = new CompositeEditorView()
+      //$("<div class='item-details-form'></div>");
       ..grid = grid
       ..columns = columns;
-    dom.document.body.append($modal);
+    dom.document.body.append(modal);
 
-    var ceOptions = new CompositeEditorOptions(
-        show: $modal.show,
-        hide: $modal.hide,
+    final CompositeEditorOptions ceOptions = new CompositeEditorOptions(
+        show: modal.show,
+        hide: modal.hide,
         // position: $modal.position, positions the dialog with it's top/left corner above the current field
-        destroy: $modal.destroy);
+        destroy: modal.destroy);
 
-    Map<String, dom.Element> containers = {};
+    final Map<String, dom.Element> containers = <String, dom.Element>{};
 
     new async.Future(() {
-      columns.forEach((c) => containers[c.id] =
-          $modal.shadowRoot.querySelector('[data-editorid="${c.id}"]'));
+      columns.forEach((Column c) => containers[c.id] =
+          modal.shadowRoot.querySelector('[data-editorid="${c.id}"]'));
 
-      var compositeEditor =
+      final CompositeEditor compositeEditor =
           new CompositeEditor.prepare(columns, containers, ceOptions);
       compositeEditor.init();
       grid.editActiveCell(compositeEditor);
@@ -156,7 +156,7 @@ class AppElement extends PolymerElement {
   }
 
   void addNewRowHandler(AddNewRow e) {
-    var item = e.item;
+    final DataItem item = e.item;
 //    var column = e.column;
     grid.invalidateRow(data.length);
     data.items.add(item);
@@ -168,7 +168,7 @@ class AppElement extends PolymerElement {
     // handle validation errors originating from the CompositeEditor
     if (e.editor != null && (e.editor is CompositeEditor)) {
 //      var err;
-      var idx = e.validationResults.errors.length;
+      int idx = e.validationResults.errors.length;
       while (idx-- > 0) {
 //        err = e.validationResults.errors[idx];
         // TODO err.container.stop(true, true).effect('highlight', {'color': 'red'});

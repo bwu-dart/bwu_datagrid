@@ -19,13 +19,13 @@ import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 /// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
-  factory AppElement() => new dom.Element.tag('app-element');
+  factory AppElement() => new dom.Element.tag('app-element') as AppElement;
 
   AppElement.created() : super.created();
 
-  List<Column> columns = [];
+  final List<Column> columns = <Column>[];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableCellNavigation: true,
       asyncEditorLoading: false,
@@ -56,7 +56,7 @@ class AppElement extends PolymerElement {
 
       // prepare the data
       data = new MapDataItemProvider();
-      for (var i = 0; i < 100; i++) {
+      for (int i = 0; i < 100; i++) {
         data.items.add(new MapDataItem({'id': i, '0': 'Row $i'}));
       }
 

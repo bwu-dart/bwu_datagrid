@@ -12,7 +12,7 @@ class InlineFilterPanel extends PolymerElement {
   @property String threshold = '0';
   @property String searchString = '';
 
-  void clearSearch(dom.KeyboardEvent e, detail, dom.Element target) {
+  void clearSearch(dom.KeyboardEvent e, Object detail, dom.Element target) {
     if (e.which == dom.KeyCode.ESC) {
       searchString = '';
     }

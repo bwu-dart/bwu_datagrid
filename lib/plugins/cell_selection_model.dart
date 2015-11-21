@@ -21,8 +21,9 @@ class CellSelectionModel extends SelectionModel {
   BwuDatagrid _grid;
 //  dom.Element _canvas; // TODO(zoechi) why is it unused?
   List<core.Range> _ranges = <core.Range>[];
-  final CellRangeSelector _selector = new CellRangeSelector(new CellRangeDecoratorOptions(
-      selectionCss: {'border': '2px solid black', 'z-index': '9999'}));
+  final CellRangeSelector _selector = new CellRangeSelector(
+      new CellRangeDecoratorOptions(
+          selectionCss: {'border': '2px solid black', 'z-index': '9999'}));
   CellSelectionModelOptions _options;
 //  var _defaults = {'selectActiveCell': true}; // TODO(zoechi) why is it unused?
 
@@ -128,7 +129,7 @@ class CellSelectionModel extends SelectionModel {
 
       int dRow = last.toRow - last.fromRow;
       int dCell = last.toCell - last.fromCell;
-          // walking direction
+      // walking direction
       final int dirRow = active.row == last.fromRow ? 1 : -1;
       final int dirCell = active.cell == last.fromCell ? 1 : -1;
 

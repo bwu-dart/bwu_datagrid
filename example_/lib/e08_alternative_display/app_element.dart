@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
@@ -16,11 +17,10 @@ import 'row_item.dart';
 class CellFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
 
-    target.append(
-        (new dom.Element.tag('row-item') as RowItem)..data = dataContext);
+    target.append(new RowItem()..data = dataContext);
   }
 }
 
@@ -28,7 +28,7 @@ class CellFormatter extends fm.CellFormatter {
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  List<Column> columns = [
+  final List<Column> columns = [
     new Column(
         id: "contact-card",
         name: "Contacts",
@@ -37,7 +37,7 @@ class AppElement extends PolymerElement {
         cssClass: "contact-card-cell")
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       rowHeight: 140,
       editable: false,
       enableAddRow: false,

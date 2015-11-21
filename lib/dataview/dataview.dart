@@ -29,7 +29,6 @@ part 'helpers.dart';
 typedef bool FilterFn(a, b);
 
 class DataView<T extends core.ItemBase> extends DataProvider<T> {
-
   /// A sample Model implementation.
   /// Provides a filtered view of the underlying data.
   ///
@@ -47,8 +46,8 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   String idProperty = "id"; // property holding a unique row id
   //List<T> items = [];         // data by index
   List<T> rows = <T>[]; // data by row
-  Map<dynamic, int> idxById = <dynamic, int>{
-  }; // indexes by id - the id needs to be a valid map key
+  Map<dynamic, int> idxById =
+      <dynamic, int>{}; // indexes by id - the id needs to be a valid map key
   Map<dynamic, int> rowsById =
       null; // rows by id; lazy-calculated - the id needs to be a valid map key
   FilterFn filter = null; // filter function
@@ -58,8 +57,8 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   bool sortAsc = true;
   String fastSortField;
   SortComparerFunc<T> sortComparer;
-  Map<String, dynamic> refreshHints = <String, dynamic>{
-  }; // TODO make class, if this String stores ids it should be dynamic
+  Map<String, dynamic> refreshHints = <String,
+      dynamic>{}; // TODO make class, if this String stores ids it should be dynamic
   Map<String, dynamic> prevRefreshHints = <String, dynamic>{};
   Map filterArgs;
   List<T> filteredItems = <T>[];
@@ -80,16 +79,20 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   core.EventBus _eventBus = new core.EventBus();
 
   async.Stream<core.PagingInfoChanged> get onBwuPagingInfoChanged =>
-      _eventBus.onEvent(core.Events.PAGING_INFO_CHANGED) as async.Stream<core.PagingInfoChanged>;
+      _eventBus.onEvent(core.Events.PAGING_INFO_CHANGED)
+      as async.Stream<core.PagingInfoChanged>;
 
   async.Stream<core.RowCountChanged> get onBwuRowCountChanged =>
-      _eventBus.onEvent(core.Events.ROW_COUNT_CHANGED) as async.Stream<core.RowCountChanged>;
+      _eventBus.onEvent(core.Events.ROW_COUNT_CHANGED)
+      as async.Stream<core.RowCountChanged>;
 
   async.Stream<core.RowsChanged> get onBwuRowsChanged =>
-      _eventBus.onEvent(core.Events.ROWS_CHANGED) as async.Stream<core.RowsChanged>;
+      _eventBus.onEvent(core.Events.ROWS_CHANGED)
+      as async.Stream<core.RowsChanged>;
 
   async.Stream<core.SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
-      _eventBus.onEvent(core.Events.SELECTED_ROW_IDS_CHANGED) as async.Stream<core.SelectedRowIdsChanged>;
+      _eventBus.onEvent(core.Events.SELECTED_ROW_IDS_CHANGED)
+      as async.Stream<core.SelectedRowIdsChanged>;
 
   void beginUpdate() {
     suspend = true;
@@ -152,11 +155,9 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   void setPagingOptions(PagingInfo args) {
     if (args.pageSize != null) {
       pagesize = args.pageSize;
-      pagenum =
-          pagesize != null && pagesize != 0
-              ? math.min(
-                  pagenum, math.max(0, (totalRows / pagesize).ceil() - 1))
-              : 0;
+      pagenum = pagesize != null && pagesize != 0
+          ? math.min(pagenum, math.max(0, (totalRows / pagesize).ceil() - 1))
+          : 0;
     }
 
     if (args.pageNum != null) {
@@ -396,13 +397,11 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     final T item = rows[i];
 
     core.Group group;
-    if(item != null && item is core.Group) {
+    if (item != null && item is core.Group) {
       group = item as core.Group;
     }
     // if this is a group row, make sure totals are calculated and update the title
-    if (group != null &&
-        group.totals != null &&
-        !group.totals.isInitialized) {
+    if (group != null && group.totals != null && !group.totals.isInitialized) {
       GroupingInfo gi = groupingInfos[group.level];
       if (!gi.isDisplayTotalsRow) {
         calculateTotals(group.totals);
@@ -411,7 +410,9 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
       }
     }
     // if this is a totals row, make sure it's calculated
-    else if (item != null && item is core.GroupTotals && !(item as core.GroupTotals).isInitialized) {
+    else if (item != null &&
+        item is core.GroupTotals &&
+        !(item as core.GroupTotals).isInitialized) {
       calculateTotals(item as core.GroupTotals);
     }
 
@@ -464,10 +465,10 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   }
 
   void expandCollapseGroup(int level, String groupingKey, bool collapse) {
-    toggledGroupsByLevel[level][groupingKey] =
-        groupingInfos[level].isCollapsed != collapse
-            ? groupingInfos[level].isCollapsed
-            : null;
+    toggledGroupsByLevel[level]
+        [groupingKey] = groupingInfos[level].isCollapsed != collapse
+        ? groupingInfos[level].isCollapsed
+        : null;
     refresh();
   }
 
@@ -923,8 +924,10 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
       //onPagingInfoChanged.notify(getPagingInfo(), null, self);
     }
     if (countBefore != rows.length) {
-      eventBus.fire(core.Events.ROW_COUNT_CHANGED, new core.RowCountChanged(
-          this, oldCount: countBefore, newCount: rows.length));
+      eventBus.fire(
+          core.Events.ROW_COUNT_CHANGED,
+          new core.RowCountChanged(this,
+              oldCount: countBefore, newCount: rows.length));
       //onRowCountChanged.notify({previous: countBefore, current: rows.length}, null, self);
     }
     if (diff.length > 0) {
@@ -992,8 +995,9 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
         setSelectedRowIds(newSelectedRowIds);
       } else {
         // keep the ones that are hidden
-        List<String> existing =
-            selectedRowIds.where((id) => getRowById(id) == null).toList() as List<String>;
+        List<String> existing = selectedRowIds
+            .where((id) => getRowById(id) == null)
+            .toList() as List<String>;
         // add the newly selected ones
         setSelectedRowIds(existing.addAll(newSelectedRowIds));
       }
@@ -1008,11 +1012,11 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   // TODO(zoechi) set type annotations
   void syncGridCellCssStyles(grid.BwuDatagrid grid, String key) {
-    Map<int,Map<String,String>> hashById;
+    Map<int, Map<String, String>> hashById;
     bool inHandler;
 
-    void storeCellCssStyles(Map <int, Map<String, String>> hash) {
-      hashById = <int,Map<String,String>>{};
+    void storeCellCssStyles(Map<int, Map<String, String>> hash) {
+      hashById = <int, Map<String, String>>{};
       for (int row in hash.keys) {
         final id = rows[row][idProperty];
         hashById[id] = hash[row];

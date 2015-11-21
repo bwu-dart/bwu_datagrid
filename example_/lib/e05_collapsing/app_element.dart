@@ -28,21 +28,21 @@ class TaskNameFormatter extends fm.CellFormatter {
   TaskNameFormatter({this.data, this.dataView});
 
   @override
-  void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+  void format(dom.Element target, int row, int cell, Object value,
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     String val = new HtmlEscape().convert(value.toString());
-    var spacer = new dom.SpanElement()
+    final dom.SpanElement spacer = new dom.SpanElement()
       ..style.display = 'inline-block'
       ..style.height = '1px'
       ..style.width = '${(15 * dataContext["indent"])}px';
     target.append(spacer);
     int idx = dataView.getIdxById(dataContext['id']);
-    var toggle = new dom.SpanElement()..classes.add('toggle');
+    final dom.SpanElement toggle = new dom.SpanElement()..classes.add('toggle');
 
     if (data[idx + 1] != null &&
         data[idx + 1]['indent'] > data[idx]['indent']) {
-      if (dataContext.collapsed) {
+      if ((dataContext as DataItem).collapsed) {
         toggle.classes.add('expand');
       } else {
         toggle.classes.add('collapse');
@@ -60,7 +60,7 @@ class AppElement extends PolymerElement {
   static TaskNameFormatter tnFormatter = new TaskNameFormatter();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "title",
         name: "Title",
@@ -108,7 +108,7 @@ class AppElement extends PolymerElement {
         cannotTriggerInsert: true)
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: true,
       enableCellNavigation: true,
@@ -117,7 +117,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   List<DataItem> data;
-  DataView dataView;
+  DataView<DataItem> dataView;
 
   String sortcol = "title";
   int sortdir = 1;
@@ -130,15 +130,15 @@ class AppElement extends PolymerElement {
     super.attached();
 
     int indent = 0;
-    List<int> parents = [];
+    List<int> parents = <int>[];
 
     try {
       // prepare the data
       data = new List<DataItem>();
       for (int i = 0; i < 1000; i++) {
-        var d = new MapDataItem();
+        final MapDataItem d = new MapDataItem();
         data.add(d);
-        var parent;
+        int parent;
 
         if (rnd.nextDouble() > 0.8 && i > 0) {
           indent++;
@@ -167,7 +167,8 @@ class AppElement extends PolymerElement {
         d['effortDriven'] = (i % 5 == 0);
       }
 
-      dataView = new DataView(options: new DataViewOptions(inlineFilters: true))
+      dataView = new DataView<DataItem>(
+          options: new DataViewOptions(inlineFilters: true))
         ..beginUpdate()
         ..setItems(data)
         ..setFilterArgs({
@@ -188,11 +189,11 @@ class AppElement extends PolymerElement {
               columns: columns,
               gridOptions: gridOptions)
           .then((_) {
-        grid.onBwuCellChange
-            .listen((e) => dataView.updateItem(e.item['id'], e.item));
+        grid.onBwuCellChange.listen(
+            (core.CellChange e) => dataView.updateItem(e.item['id'], e.item));
 
-        grid.onBwuAddNewRow.listen((e) {
-          var item = new MapDataItem({
+        grid.onBwuAddNewRow.listen((core.AddNewRow e) {
+          final MapDataItem item = new MapDataItem({
             "id": "new_${rnd.nextInt(10000)}",
             'indent': 0,
             "title": "New task",
@@ -206,11 +207,9 @@ class AppElement extends PolymerElement {
           dataView.addItem(item);
         });
 
-        grid.onBwuClick.listen((e) {
-          if ((e.causedBy.target as dom.Element)
-              .classes
-              .contains("toggle")) {
-            var item = dataView.getItem(e.cell.row);
+        grid.onBwuClick.listen((core.Click e) {
+          if ((e.causedBy.target as dom.Element).classes.contains("toggle")) {
+            final DataItem item = dataView.getItem(e.cell.row);
             if (item != null) {
               item.collapsed = !item.collapsed;
 
@@ -220,12 +219,12 @@ class AppElement extends PolymerElement {
           }
         });
 
-        dataView.onBwuRowCountChanged.listen((e) {
+        dataView.onBwuRowCountChanged.listen((core.RowCountChanged e) {
           grid.updateRowCount();
           grid.render();
         });
 
-        dataView.onBwuRowsChanged.listen((e) {
+        dataView.onBwuRowsChanged.listen((core.RowsChanged e) {
           grid.invalidateRows(e.changedRows);
           grid.render();
         });
@@ -241,12 +240,12 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void searchStringChanged(old) {
+  void searchStringChanged(_) {
     updateFilter();
   }
 
   async.Timer _pendingUpdateFilter;
-  void percentCompleteThresholdChanged(old) {
+  void percentCompleteThresholdChanged(_) {
     if (_pendingUpdateFilter != null) {
       _pendingUpdateFilter.cancel();
     }
@@ -287,7 +286,7 @@ class AppElement extends PolymerElement {
     }
 
     if (item['parent'] != null) {
-      var parent = data[item['parent']];
+      DataItem parent = data[item['parent']];
 
       while (parent != null) {
         if (parent.collapsed ||

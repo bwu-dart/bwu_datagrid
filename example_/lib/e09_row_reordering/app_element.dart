@@ -23,7 +23,7 @@ import '../required_field_validator.dart';
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "#",
         name: "",
@@ -56,7 +56,7 @@ class AppElement extends PolymerElement {
         behavior: ['drag'])
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: true,
       enableCellNavigation: true,
@@ -66,7 +66,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider data;
+  MapDataItemProvider<core.ItemBase> data;
 
   @override
   void attached() {
@@ -91,10 +91,11 @@ class AppElement extends PolymerElement {
           .then((_) {
         grid.setSelectionModel = new RowSelectionModel();
 
-        var moveRowsPlugin = new RowMoveManager(grid, cancelEditOnDrag: true);
+        final RowMoveManager moveRowsPlugin =
+            new RowMoveManager(grid, cancelEditOnDrag: true);
 
-        moveRowsPlugin.onBwuBeforeMoveRows.listen((e) {
-          for (var i = 0; i < e.rows.length; i++) {
+        moveRowsPlugin.onBwuBeforeMoveRows.listen((core.BeforeMoveRows e) {
+          for (int i = 0; i < e.rows.length; i++) {
             // no point in moving before or after itself
             if (e.rows[i] == e.insertBefore ||
                 e.rows[i] == e.insertBefore - 1) {
@@ -110,7 +111,7 @@ class AppElement extends PolymerElement {
 
         grid.onBwuDragStart.listen(dragStartHandler);
 
-        grid.onBwuDrag.listen((e) {
+        grid.onBwuDrag.listen((core.Drag e) {
           dom.DataTransfer dt = e.causedBy.dataTransfer;
           if (dt.getData('text/bwu-datagrid-recycle') != "recycle") {
             return;
@@ -120,8 +121,9 @@ class AppElement extends PolymerElement {
             ..style.left = '${e.causedBy.page.x + 5}px';
         });
 
-        grid.onBwuAddNewRow.listen((e) {
-          var item = new MapDataItem({'name': "New task", 'complete': false});
+        grid.onBwuAddNewRow.listen((core.AddNewRow e) {
+          MapDataItem item =
+              new MapDataItem({'name': "New task", 'complete': false});
           //$.extend(item, args.item);
           data.items.add(item);
           grid.invalidateRows([data.length - 1]);
@@ -140,15 +142,15 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void zoneDropHandler(dom.MouseEvent e, detail, dom.Element target) {
+  void zoneDropHandler(dom.MouseEvent e, Object detail, dom.Element target) {
     if (e.dataTransfer.getData('text/bwu-datagrid-recycle') != "recycle") {
       return;
     }
 
-    var selectedRows = grid.getSelectedRows();
+    final List<int> selectedRows = grid.getSelectedRows();
 
     List<core.ItemBase> rowsToDelete = <core.ItemBase>[];
-    selectedRows.forEach((r) {
+    selectedRows.forEach((int r) {
       rowsToDelete.add(data.items[r]);
     });
     rowsToDelete.forEach((core.ItemBase r) => data.items.remove(r));
@@ -158,26 +160,26 @@ class AppElement extends PolymerElement {
   }
 
   void moveRowsHandler(core.MoveRows e) {
-    var extractedRows = [];
+    final List<core.ItemBase> extractedRows = <core.ItemBase>[];
     List<core.ItemBase> left, right;
-    var rows = e.rows;
-    var insertBefore = e.insertBefore;
+    List<int> rows = e.rows;
+    final int insertBefore = e.insertBefore;
     if (insertBefore < 0) {
       return;
     }
     left = data.items.getRange(0, insertBefore).toList();
     right = data.items.getRange(insertBefore, data.length).toList();
 
-    rows.sort((a, b) => a - b);
+    rows.sort((int a, int b) => a - b);
 
-    for (var i = 0; i < rows.length; i++) {
+    for (int i = 0; i < rows.length; i++) {
       extractedRows.add(data.items[rows[i]]);
     }
 
     rows = rows.reversed.toList();
 
-    for (var i = 0; i < rows.length; i++) {
-      var row = rows[i];
+    for (int i = 0; i < rows.length; i++) {
+      final int row = rows[i];
       if (row < insertBefore) {
         left.removeAt(row);
       } else {
@@ -190,8 +192,8 @@ class AppElement extends PolymerElement {
       ..addAll(extractedRows)
       ..addAll(right);
 
-    var selectedRows = [];
-    for (var i = 0; i < rows.length; i++) selectedRows.add(left.length + i);
+    final List<int> selectedRows = <int>[];
+    for (int i = 0; i < rows.length; i++) selectedRows.add(left.length + i);
 
     grid.resetActiveCell();
     grid.setData(data);
@@ -224,16 +226,17 @@ class AppElement extends PolymerElement {
       ..dropEffect = 'move'
       ..setData('text/bwu-datagrid-recycle', "recycle");
 
-    var selectedRows = grid.getSelectedRows();
+    List<int> selectedRows = grid.getSelectedRows();
 
     if (selectedRows.length == 0 || !selectedRows.contains(cell.row)) {
       selectedRows = [cell.row];
       grid.setSelectedRows(selectedRows);
     }
 
-    var r = grid.getCanvasNode.getBoundingClientRect();
+    final dom.Rectangle<num> r =
+        grid.getCanvasNode.getBoundingClientRect() as dom.Rectangle<num>;
 
-    var proxy = new dom.SpanElement()
+    final dom.SpanElement proxy = new dom.SpanElement()
       ..style.position = "absolute"
       ..style.left = '${r.left}px'
       ..style.top = '${r.top}px'

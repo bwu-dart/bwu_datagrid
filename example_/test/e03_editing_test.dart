@@ -11,7 +11,7 @@ import 'common.dart';
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/e03_editing.html';
   forEachBrowser(tests);
 //  tests(WebBrowser.chrome);
@@ -40,16 +40,16 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
     group('${autoEdit},', () {
       group('title', () {
-        const titleOldValue = 'Task 7';
-        const titleNewValue = 'New Title';
-        const editorSelector = const By.cssSelector('input[type="text"]');
+        const String titleOldValue = 'Task 7';
+        const String titleNewValue = 'New Title';
+        const By editorSelector = const By.cssSelector('input[type="text"]');
 
         WebElement titleCell;
         WebElement editor;
 
         setUp(() async {
           if (autoEdit == AutoEdit.enabled) {
-            final autoEditEnableButton = await driver
+            final WebElement autoEditEnableButton = await driver
                 .findElements(const By.shadow(
                     'app-element::shadow div.options-panel button'))
                 .first;
@@ -95,16 +95,16 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
       } /*, skip: 'temporary'*/);
 
       group('description', () {
-        const descriptionOldValue =
+        const String descriptionOldValue =
             'This is a sample task description.\n  It can be multiline';
-        final descriptionOldValueOneLine = descriptionOldValue
+        final String descriptionOldValueOneLine = descriptionOldValue
             .replaceAll('\n', ' ')
             .replaceAll('  ', ' ')
             .replaceAll('  ', ' ');
 
-        const descriptionNewValue =
+        const String descriptionNewValue =
             'Some other description\nwhich can also be multiline';
-        const editorSelector = const By.cssSelector('body > div > textarea');
+        const By editorSelector = const By.cssSelector('body > div > textarea');
 
         WebElement editor;
         WebElement titleCell;
@@ -173,15 +173,15 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
       } /*, skip: 'temporary'*/);
 
       group('duration', () {
-        const durationOldValue = '5 days';
-        const durationNewValue = '25 days';
-        const editorSelector = const By.cssSelector('input[type="text"]');
+        const String durationOldValue = '5 days';
+        const String durationNewValue = '25 days';
+        const By editorSelector = const By.cssSelector('input[type="text"]');
 
         WebElement durationCell;
         WebElement editor;
 
         setUp(() async {
-          final firstCell =
+          final WebElement firstCell =
               await (driver.findElements(firstColumnSelector).skip(7).first);
           await firstCell.click();
           durationCell =
@@ -224,13 +224,13 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
       group('percent complete', () {
 //        const durationOldValue = '5 days';
-        const percentCompleteNewValue = 66;
-        const editorSelector = const By.cssSelector('input[type="text"]');
-        const editorPickerSelector =
+        const int percentCompleteNewValue = 66;
+        const By editorSelector = const By.cssSelector('input[type="text"]');
+        const By editorPickerSelector =
             const By.cssSelector('div.editor-percentcomplete-picker');
-        const editorCompleteButtonSelector = const By.cssSelector(
+        const By editorCompleteButtonSelector = const By.cssSelector(
             'div.editor-percentcomplete-picker div.editor-percentcomplete-buttons button[val="100"]');
-        const percentBarSelector =
+        const By percentBarSelector =
             const By.cssSelector('span.percent-complete-bar');
 
         WebElement percentCompleteCell;
@@ -244,7 +244,8 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await firstCell.click();
           percentCompleteCell =
               await driver.findElement(percentCellActiveRowSelector);
-          final bar = await percentCompleteCell.findElement(percentBarSelector);
+          final WebElement bar =
+              await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'], matches(r'width: \d{1,3}%;'));
 
           await driver.mouse.moveTo(element: percentCompleteCell);
@@ -259,17 +260,18 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
         test('edit with picker, accept with clicking on another cell',
             () async {
-          final editorPicker =
+          final WebElement editorPicker =
               await percentCompleteCell.findElement(editorPickerSelector);
           await driver.mouse.moveTo(element: editorPicker);
           await new Future.delayed(const Duration(milliseconds: 100));
-          final editorCompleteButton = await percentCompleteCell
+          final WebElement editorCompleteButton = await percentCompleteCell
               .findElement(editorCompleteButtonSelector);
           await editorCompleteButton.click();
           expect(int.parse(await editor.attributes['value']), 100);
 
           await firstCell.click();
-          final bar = await percentCompleteCell.findElement(percentBarSelector);
+          final WebElement bar =
+              await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'], matches('width: 100%;'));
         });
 
@@ -280,7 +282,8 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
           await new Future.delayed(const Duration(milliseconds: 10));
-          final bar = await percentCompleteCell.findElement(percentBarSelector);
+          final WebElement bar =
+              await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'],
               matches('width: ${percentCompleteNewValue}%;'));
         });
@@ -293,7 +296,8 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
           await new Future.delayed(const Duration(milliseconds: 10));
-          final bar = await percentCompleteCell.findElement(percentBarSelector);
+          final WebElement bar =
+              await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'],
               matches('width: ${percentCompleteNewValue}%;'));
         });
@@ -305,23 +309,24 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
           await new Future.delayed(const Duration(milliseconds: 10));
-          final bar = await percentCompleteCell.findElement(percentBarSelector);
+          final WebElement bar =
+              await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'],
               matches('width: ${percentCompleteOldValue}%;'));
         });
       } /*, skip: 'temporary'*/);
 
       group('start', () {
-        final startOldValue = '2009-01-01';
-        final startNewValue = '2016-08-19';
-        final startNewInput = '08192016';
-        const editorSelector = const By.cssSelector('input[type="date"]');
+        final String startOldValue = '2009-01-01';
+        final String startNewValue = '2016-08-19';
+        final String startNewInput = '08192016';
+        const By editorSelector = const By.cssSelector('input[type="date"]');
 
         WebElement startCell;
         WebElement editor;
 
         setUp(() async {
-          final firstCell =
+          final WebElement firstCell =
               await (driver.findElements(firstColumnSelector).skip(7).first);
           await firstCell.click();
           startCell = await driver.findElement(startCellActiveRowSelector);
@@ -377,16 +382,16 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
       } /*, skip: 'temporary'*/);
 
       group('finish', () {
-        final finishOldValue = '2009-01-05';
-        final finishNewValue = '2016-09-02';
-        final finishNewInput = '09022016';
-        const editorSelector = const By.cssSelector('input[type="date"]');
+        final String finishOldValue = '2009-01-05';
+        final String finishNewValue = '2016-09-02';
+        final String finishNewInput = '09022016';
+        const By editorSelector = const By.cssSelector('input[type="date"]');
 
         WebElement finishCell;
         WebElement editor;
 
         setUp(() async {
-          final firstCell =
+          final WebElement firstCell =
               await (driver.findElements(firstColumnSelector).skip(7).first);
           await firstCell.click();
           finishCell = await driver.findElement(finishCellActiveRowSelector);
@@ -442,15 +447,16 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
       } /*, skip: 'temporary'*/);
 
       group('effort-driven enabled to disabled', () {
-        final effortDrivenOldValue = 'true';
+        final String effortDrivenOldValue = 'true';
 //        final effortDrivenNewValue = null;
-        const editorSelector = const By.cssSelector('input[type="checkbox"]');
+        const By editorSelector =
+            const By.cssSelector('input[type="checkbox"]');
 
         WebElement effortDrivenCell;
         WebElement editor;
 
         setUp(() async {
-          final firstCell =
+          final WebElement firstCell =
               await (driver.findElements(firstColumnSelector).skip(5).first);
           await firstCell.click();
           effortDrivenCell =
@@ -504,15 +510,16 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
       } /*, skip: 'temporary'*/);
 
       group('effort-driven disabled to enabled', () {
-        final effortDrivenOldValue = null;
+        final String effortDrivenOldValue = null;
 //        final effortDrivenNewValue = 'true';
-        const editorSelector = const By.cssSelector('input[type="checkbox"]');
+        const By editorSelector =
+            const By.cssSelector('input[type="checkbox"]');
 
         WebElement effortDrivenCell;
         WebElement editor;
 
         setUp(() async {
-          final firstCell =
+          final WebElement firstCell =
               await (driver.findElements(firstColumnSelector).skip(6).first);
           await firstCell.click();
           effortDrivenCell =
@@ -568,7 +575,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
   }, timeout: const Timeout(const Duration(seconds: 180)));
 }
 
-const buttonsSelector = const By.cssSelector('body > div > div > button');
+const By buttonsSelector = const By.cssSelector('body > div > div > button');
 
 Future<WebElement> findSaveButton(wd.WebDriver driver) =>
     findButton(driver, 'Save');
@@ -579,8 +586,8 @@ Future<WebElement> findCancelButton(wd.WebDriver driver) =>
 Future<WebElement> findButton(wd.WebDriver driver, String text) async {
   return driver
       .findElements(buttonsSelector)
-      .asyncMap((e) async => {'button': e, 'text': await e.text})
-      .where((m) => m['text'] == text)
-      .map((m) => m['button'])
-      .first;
+      .asyncMap((WebElement e) async => {'button': e, 'text': await e.text})
+      .where((Map m) => m['text'] == text)
+      .map((Map m) => m['button'])
+      .first as WebElement;
 }

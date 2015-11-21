@@ -18,8 +18,10 @@ class AutoTooltipsOptions {
   bool enableForHeaderCells;
   int maxTooltipLength;
 
-  AutoTooltipsOptions({this.enableForCells: true,
-      this.enableForHeaderCells: false, this.maxTooltipLength});
+  AutoTooltipsOptions(
+      {this.enableForCells: true,
+      this.enableForHeaderCells: false,
+      this.maxTooltipLength});
 }
 
 /// AutoTooltips plugin to show/hide tooltips when columns are too narrow to fit content.
@@ -71,7 +73,6 @@ class AutoTooltips extends Plugin {
 //      //grid.shadowRoot.append(tooltip);
 //      dom.document.body.append(tooltip);
 //    });
-
   }
 
   /// Destroy plugin.
@@ -146,8 +147,8 @@ class AutoTooltips extends Plugin {
     dom.Element node = utils.closest(
         (e.causedBy.target as dom.Element), '.bwu-datagrid-header-column');
     if (node == null) {
-      node = utils.closest((e.causedBy.target as dom.Element),
-          '.bwu-datagrid-header-column');
+      node = utils.closest(
+          (e.causedBy.target as dom.Element), '.bwu-datagrid-header-column');
     }
     if (column.toolTip == null) {
       node.attributes["title"] =

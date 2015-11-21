@@ -2,59 +2,59 @@
 library bwu_datagrid_examples.test.autotooltips_test;
 
 import 'dart:async' show Future, Stream;
-//import 'dart:math' show Point, Rectangle;
+import 'dart:math' as math;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
 import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
-const openEditDialogButtonSelector =
+const By openEditDialogButtonSelector =
     const By.shadow('app-element::shadow .options-panel button');
-const dialogTitleFieldSelector = const By.shadow(
+const By dialogTitleFieldSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form [data-editorid="title"] input');
-const dialogDescriptionFieldSelector = const By.shadow(
+const By dialogDescriptionFieldSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form [data-editorid="desc"] input');
-const dialogDurationFieldSelector = const By.shadow(
+const By dialogDurationFieldSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form [data-editorid="duration"] input');
-const dialogPercentFieldSelector = const By.shadow(
+const By dialogPercentFieldSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form [data-editorid="percent"] input');
-const dialogStartFieldSelector = const By.shadow(
+const By dialogStartFieldSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form [data-editorid="start"] input');
-const dialogFinishFieldSelector = const By.shadow(
+const By dialogFinishFieldSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form [data-editorid="finish"] input');
-const dialogEffortDrivenFieldSelector = const By.shadow(
+const By dialogEffortDrivenFieldSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form [data-editorid="effort-driven"] input');
 
-const dialogSaveButtonSelector = const By.shadow(
+const By dialogSaveButtonSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form button[data-action="save"]');
-const dialogCancelButtonSelector = const By.shadow(
+const By dialogCancelButtonSelector = const By.shadow(
     'composite-editor-view::shadow div.item-details-form button[data-action="cancel"]');
 
-const titleOldValue = 'Task 3';
-const titleNewValue = 'replacement title';
-const descriptionOldValue =
+const String titleOldValue = 'Task 3';
+const String titleNewValue = 'replacement title';
+const String descriptionOldValue =
     'This is a sample task description.  It can be multiline';
-const descriptionNewValue = 'replacement description.';
-const durationOldValue = '5 days';
-const durationNewValue = 'replacement duration.';
-const percentNewValue = '76';
-const startOldValue = '2009-01-01';
-const startInsertValue = '07/11/2015';
-const startNewValue = '2015-07-11';
-const finishOldValue = '2009-01-05';
-const finishInsertValue = '12/11/2015';
-const finishNewValue = '2015-12-11';
-const effortDrivenOldValue = null;
+const String descriptionNewValue = 'replacement description.';
+const String durationOldValue = '5 days';
+const String durationNewValue = 'replacement duration.';
+const String percentNewValue = '76';
+const String startOldValue = '2009-01-01';
+const String startInsertValue = '07/11/2015';
+const String startNewValue = '2015-07-11';
+const String finishOldValue = '2009-01-05';
+const String finishInsertValue = '12/11/2015';
+const String finishNewValue = '2015-12-11';
+const String effortDrivenOldValue = null;
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/composite_editor_item_details.html';
   forEachBrowser(tests);
 }
 
-tests(WebBrowser browser) {
+void tests(WebBrowser browser) {
   group('composite_editor_item_details', () {
     ExtendedWebDriver driver;
     WebElement titleCell;
@@ -171,7 +171,7 @@ tests(WebBrowser browser) {
           element: await driver.findElement(const By.shadow(
               'composite-editor-view::shadow .editor-percentcomplete-picker')));
 
-      final dialogPercentField =
+      final WebElement dialogPercentField =
           await driver.findElement(dialogPercentFieldSelector);
       await (await driver.findElement(const By.shadow(
               'composite-editor-view::shadow .editor-percentcomplete-picker button[val="0"]')))
@@ -188,9 +188,9 @@ tests(WebBrowser browser) {
           .click();
       expect(await dialogPercentField.attributes['value'], '100');
 
-      final slider = await driver.findElement(const By.shadow(
+      final WebElement slider = await driver.findElement(const By.shadow(
           'composite-editor-view::shadow .editor-percentcomplete-picker input[type="range"]'));
-      final sliderSize = await (slider).size;
+      final math.Rectangle<int> sliderSize = await (slider).size;
       await driver.mouse
           .moveTo(element: slider, xOffset: sliderSize.width ~/ 2, yOffset: 1);
 

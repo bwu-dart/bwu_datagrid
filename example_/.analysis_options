@@ -2,7 +2,7 @@ analyzer:
   strong-mode: true
   exclude:
   # TODO(zoechi) remove
-  - lib/remote_model/remote_model.dart
+  - lib/e10async_post_render/app_element.dart
 #  - **/*.html
 
 linter:

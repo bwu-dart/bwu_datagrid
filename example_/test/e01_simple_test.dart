@@ -9,12 +9,12 @@ import 'common.dart';
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/e01_simple.html';
   forEachBrowser(tests);
 }
 
-tests(WebBrowser browser) {
+void tests(WebBrowser browser) {
   group('e01_simple', () {
     ExtendedWebDriver driver;
     setUp(() async {
@@ -28,7 +28,8 @@ tests(WebBrowser browser) {
     test('scroll', () async {
       WebElement viewPort = await driver.findElement(viewPortSelector);
       expect(viewPort, isNotNull);
-      final maxYScroll = int.parse(await viewPort.attributes['scrollHeight']);
+      final int maxYScroll =
+          int.parse(await viewPort.attributes['scrollHeight']);
       expect(maxYScroll, greaterThan(12000));
 
       await new Future.delayed(const Duration(milliseconds: 100));
@@ -61,7 +62,7 @@ tests(WebBrowser browser) {
 Future<bool> isTaskShown(ExtendedWebDriver driver, int number) {
   return driver
       .findElements(firstColumnSelector)
-      .asyncMap(
-          (e) async => await e.text == 'Task ${number}' && await e.displayed)
+      .asyncMap((WebElement e) async =>
+          await e.text == 'Task ${number}' && await e.displayed)
       .contains(true);
 }

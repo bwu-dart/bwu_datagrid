@@ -21,8 +21,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 
 class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   @override
-  void format(
-      dom.Element target, core.GroupTotals totals, Column columnDef) {
+  void format(dom.Element target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['avg'] != null && totals['avg'][columnDef.field] != null) {
@@ -38,8 +37,7 @@ class AvgTotalsFormatter extends core.GroupTotalsFormatter {
 
 class SumTotalsFormatter extends core.GroupTotalsFormatter {
   @override
-  void format(
-      dom.Element target, core.GroupTotals totals, Column columnDef) {
+  void format(dom.Element target, core.GroupTotals totals, Column columnDef) {
     //target.appendHtml(value);
     double val;
     if (totals['sum'] != null && totals['sum'][columnDef.field] != null) {
@@ -87,7 +85,7 @@ class AppElement extends PolymerElement {
 
   AppElement.created() : super.created();
 
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "sel",
         name: "#",
@@ -152,7 +150,8 @@ class AppElement extends PolymerElement {
         sortable: true)
   ];
 
-  var gridOptions = new GridOptions(enableCellNavigation: true, editable: true);
+  final GridOptions gridOptions =
+      new GridOptions(enableCellNavigation: true, editable: true);
 
   math.Random rnd = new math.Random();
 
@@ -172,7 +171,8 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      var groupItemMetadataProvider = new GroupItemMetadataProvider();
+      final GroupItemMetadataProvider groupItemMetadataProvider =
+          new GroupItemMetadataProvider();
       dataView = new DataView(
           options: new DataViewOptions(
               groupItemMetadataProvider: groupItemMetadataProvider,
@@ -195,7 +195,7 @@ class AppElement extends PolymerElement {
               ..grid = grid;
         dom.document.body.append(columnPicker);
 
-        grid.onBwuSort.listen((e) {
+        grid.onBwuSort.listen((core.Sort e) {
           sortdir = e.sortAsc ? 1 : -1;
           sortcol = e.sortColumn.field;
 
@@ -205,12 +205,12 @@ class AppElement extends PolymerElement {
         });
 
         // wire up model events to drive the grid
-        dataView.onBwuRowCountChanged.listen((e) {
+        dataView.onBwuRowCountChanged.listen((core.RowCountChanged e) {
           grid.updateRowCount();
           grid.render();
         });
 
-        dataView.onBwuRowsChanged.listen((e) {
+        dataView.onBwuRowsChanged.listen((core.RowsChanged e) {
           grid.invalidateRows(e.changedRows);
           grid.render();
         });
@@ -237,7 +237,7 @@ class AppElement extends PolymerElement {
   }
 
   async.Timer _pendingUpdateFilter;
-  void thresholdChanged(old) {
+  void thresholdChanged(_) {
     core.globalEditorLock.cancelCurrentEdit();
 
     if (_pendingUpdateFilter != null) {
@@ -275,7 +275,8 @@ class AppElement extends PolymerElement {
   }
 
   int comparer(DataItem a, DataItem b) {
-    var x = a[sortcol], y = b[sortcol];
+    final int x = a[sortcol];
+    final int y = b[sortcol];
     if (x == y) {
       return 0;
     }
@@ -326,11 +327,12 @@ class AppElement extends PolymerElement {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
-          formatter: new GroupTitleFormatter('Duration'), comparer: (a, b) {
-        return a.count - b.count;
-      },
-          aggregators:
-              [new AvgAggregator("percentComplete"), new SumAggregator("cost")],
+          formatter: new GroupTitleFormatter('Duration'),
+          comparer: (core.ItemBase a, core.ItemBase b) => a.count - b.count,
+          aggregators: [
+            new AvgAggregator("percentComplete"),
+            new SumAggregator("cost")
+          ],
           doAggregateCollapsed: doAggregateCollapsed,
           isLazyTotalsCalculation: true)
     ]);
@@ -394,21 +396,26 @@ class AppElement extends PolymerElement {
   }
 
   void loadData(int count) {
-    var someDates = ["01/01/2009", "02/02/2009", "03/03/2009"];
+    final List<String> someDates = <String>[
+      "01/01/2009",
+      "02/02/2009",
+      "03/03/2009"
+    ];
     //var timer = new Stopwatch()..start();
-    data = new List<MapDataItem>.generate(count, (int i) {
-      return new MapDataItem({
-        "id": "id_${i}",
-        "num": i,
-        "title": "Task ${i}",
-        "duration": rnd.nextInt(30),
-        "percentComplete": rnd.nextInt(100),
-        "start": someDates[(rnd.nextDouble() * 2).floor()],
-        "finish": someDates[(rnd.nextDouble() * 2).floor()],
-        "cost": (rnd.nextDouble() * 10000).round() / 100,
-        "effortDriven": (i % 5 == 0)
-      });
-    }, growable: true);
+    data = new List<MapDataItem>.generate(
+        count,
+        (int i) => new MapDataItem({
+              "id": "id_${i}",
+              "num": i,
+              "title": "Task ${i}",
+              "duration": rnd.nextInt(30),
+              "percentComplete": rnd.nextInt(100),
+              "start": someDates[(rnd.nextDouble() * 2).floor()],
+              "finish": someDates[(rnd.nextDouble() * 2).floor()],
+              "cost": (rnd.nextDouble() * 10000).round() / 100,
+              "effortDriven": (i % 5 == 0)
+            }),
+        growable: true);
     //print(timer.elapsed);
     dataView.setItems(data);
     //print(timer.elapsed);

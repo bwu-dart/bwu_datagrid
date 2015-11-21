@@ -61,11 +61,12 @@ class Range {
   }
 }
 
-abstract class ItemBase<K,V> {
-  Map _values = <K,V>{};
+abstract class ItemBase<K, V> {
+  Map _values = <K, V>{};
   dynamic operator [](K key) {
     return _values[key];
   }
+
   void operator []=(K key, V value) {
     _values[key] = value;
   }

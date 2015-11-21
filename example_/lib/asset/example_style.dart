@@ -8,6 +8,4 @@ import 'bwu_datagrid_example_theme.dart';
 
 /// [Polymer], [bwuDatagridExampleThemeSilence],
 /// [bwuDatagridDefaultThemeSilence]
-const exampleStyleSilence = 0;
-
-
+const int exampleStyleSilence = 0;

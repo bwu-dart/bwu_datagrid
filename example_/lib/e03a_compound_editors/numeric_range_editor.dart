@@ -3,6 +3,7 @@ library bwu_datagrid_examples.e03a_compund_editors.numeric_range_editor;
 import 'dart:html' as dom;
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 class NumericRangeEditor extends Editor {
   EditorArgs args;
@@ -40,7 +41,7 @@ class NumericRangeEditor extends Editor {
   }
 
   @override
-  void applyValue(/*Map/Item*/ item, Map value) {
+  void applyValue(DataItem item, Map value) {
     item['from'] = value['from'];
     item['to'] = value['to'];
   }

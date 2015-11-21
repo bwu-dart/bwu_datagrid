@@ -39,7 +39,7 @@ class AppElement extends PolymerElement {
     new Column(id: "c17", name: "C17", field: "c17", width: 120)
   ];
 
-  var gridOptions =
+  final GridOptions gridOptions =
       new GridOptions(enableCellNavigation: false, enableColumnReorder: false);
 
   math.Random rnd = new math.Random();
@@ -79,7 +79,7 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      dom.window.onResize.listen((e) => grid.resizeCanvas(e));
+      dom.window.onResize.listen((dom.Event e) => grid.resizeCanvas(e));
 
       grid.setup(
           dataProvider: data, columns: columns, gridOptions: gridOptions);

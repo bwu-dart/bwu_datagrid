@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/editors/editors.dart';
@@ -17,9 +18,9 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [];
+  final List<Column> columns = <Column>[];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       enableCellNavigation: true, headerRowHeight: 30, editable: true);
 
   math.Random rnd = new math.Random();
@@ -43,8 +44,8 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       data = new TotalsDataProvider(<MapDataItem>[], columns);
-      for (var i = 0; i < 10; i++) {
-        var d = new MapDataItem({'id': i});
+      for (int i = 0; i < 10; i++) {
+        final MapDataItem d = new MapDataItem({'id': i});
         data.items.add(d);
         for (int j = 0; j < columns.length; j++) {
           d['${j}'] = rnd.nextInt(10);
@@ -55,7 +56,7 @@ class AppElement extends PolymerElement {
       grid.setup(
           dataProvider: data, columns: columns, gridOptions: gridOptions);
 
-      grid.onBwuCellChange.listen((e) {
+      grid.onBwuCellChange.listen((core.CellChange e) {
         // The data has changed - recalculate the totals.
         data.updateTotals();
 

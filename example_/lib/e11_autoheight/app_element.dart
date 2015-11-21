@@ -23,7 +23,7 @@ class AppElement extends PolymerElement {
         id: "effort-driven", name: "Effort Driven", field: "effortDriven")
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: false,
       enableAddRow: false,
       enableCellNavigation: false,

@@ -26,7 +26,7 @@ class AppElement extends PolymerElement {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven')
   ];
 
-  var gridOptions =
+  final GridOptions gridOptions =
       new GridOptions(enableCellNavigation: true, enableColumnReorder: false);
 
   @override
@@ -36,8 +36,9 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      var data = new MapDataItemProvider(); //List<Map>(500);
-      for (var i = 0; i < 500; i++) {
+      final MapDataItemProvider data =
+          new MapDataItemProvider(); //List<Map>(500);
+      for (int i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'duration': '5 days',

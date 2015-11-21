@@ -98,15 +98,16 @@ void forEachBrowser(BrowserTest testsWithBrowser) {
   // https://github.com/SeleniumHQ/selenium/issues/940
 }
 
-final _defaultBrowserCapabilities = {
+final Map<WebBrowser, Map<String, dynamic>> _defaultBrowserCapabilities =
+    <WebBrowser, Map<String, dynamic>>{
   WebBrowser.android: wd.Capabilities.chrome
     ..['chromeOptions'] = {'androidPackage': 'com.android.chrome'},
   WebBrowser.chrome: wd.Capabilities.chrome,
   WebBrowser.edge: {'browserName': WebBrowser.edge.value},
   WebBrowser.firefox: wd.Capabilities.firefox
     ..addAll((new FirefoxProfile()
-          ..setOption(new PrefsOption('devtools.selfxss.count', 100)))
-        .toJson()), // disable paste protection
+          ..setOption(new PrefsOption('devtools.selfxss.count', 100))).toJson()
+        as Map<String, dynamic>), // disable paste protection
   WebBrowser.ie: {'browserName': WebBrowser.ie.value},
   WebBrowser.ipad: {'browserName': WebBrowser.ipad.value},
   WebBrowser.iphone: {'browserName': WebBrowser.iphone.value},
@@ -116,7 +117,7 @@ final _defaultBrowserCapabilities = {
 Future<ExtendedWebDriver> commonSetUp(
     String pageUrl, WebBrowser browser) async {
   // for capabilities see https://code.google.com/p/selenium/wiki/DesiredCapabilities
-  final desired = _defaultBrowserCapabilities[browser];
+  final Map<String, dynamic> desired = _defaultBrowserCapabilities[browser];
   final driver = await ExtendedWebDriver.createNew(
       uri: Uri.parse('http://localhost:4444/wd/hub/'), desired: desired);
   await driver.timeouts.setScriptTimeout(const Duration(milliseconds: 1500));

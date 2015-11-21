@@ -34,7 +34,7 @@ class EventBus<T extends EventData> {
             () {
               return new async.StreamController.broadcast(sync: isSync);
             } as _StreamControllerFactory<T>)
-        .stream as async.Stream<T>;
+        .stream;
   }
 
   /// [fire] broadcasts an event of a type [eventType] to all subscribers.

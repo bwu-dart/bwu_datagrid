@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
@@ -20,9 +21,11 @@ import 'formula_editor.dart';
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  List<Column> columns = [];
+  final List<Column> columns = <Column>[
+    new Column(id: "selector", name: "", field: "num", width: 30)
+  ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: true,
       enableCellNavigation: true,
@@ -51,8 +54,6 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      columns = [new Column(id: "selector", name: "", field: "num", width: 30)];
-
       FormulaEditor formulaEditor = new FormulaEditor();
 
       for (int i = 0; i < 100; i++) {
@@ -66,7 +67,7 @@ class AppElement extends PolymerElement {
 
       // prepare the data
       data = new MapDataItemProvider();
-      for (var i = 0; i < 100; i++) {
+      for (int i = 0; i < 100; i++) {
         data.items.add(new MapDataItem({'num': i,}));
       }
 
@@ -82,16 +83,16 @@ class AppElement extends PolymerElement {
         CellCopyManager copyManager = new CellCopyManager();
         grid.registerPlugin(copyManager);
 
-        copyManager.onBwuPasteCells.listen((e) {
+        copyManager.onBwuPasteCells.listen((core.PasteCells e) {
           if (e.from.length != 1 || e.to.length != 1) {
             throw "This implementation only supports single range copy and paste operations";
           }
 
-          var from = e.from[0];
-          var to = e.to[0];
-          var val;
-          for (var i = 0; i <= from.toRow - from.fromRow; i++) {
-            for (var j = 0; j <= from.toCell - from.fromCell; j++) {
+          final Range from = e.from[0];
+          final Range to = e.to[0];
+          Object val;
+          for (int i = 0; i <= from.toRow - from.fromRow; i++) {
+            for (int j = 0; j <= from.toCell - from.fromCell; j++) {
               if (i <= to.toRow - to.fromRow && j <= to.toCell - to.fromCell) {
                 val = data.items[from.fromRow + i]
                     [columns[from.fromCell + j].field];
@@ -104,8 +105,8 @@ class AppElement extends PolymerElement {
           grid.render();
         });
 
-        grid.onBwuAddNewRow.listen((e) {
-          var item = e.item;
+        grid.onBwuAddNewRow.listen((core.AddNewRow e) {
+          final DataItem item = e.item;
           grid.invalidateRow(data.length);
           data.items.add(item);
           grid.updateRowCount();

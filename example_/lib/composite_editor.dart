@@ -58,7 +58,7 @@ class CompositeEditor extends Editor {
 
   NodeBox getContainerBox(String id) {
     var c = containers[id];
-    math.Rectangle<int> offset = c.offset;
+    math.Rectangle<int> offset = c.offset as math.Rectangle<int>;
     var w = c.offsetWidth.round();
     var h = c.offsetHeight.round();
 
@@ -126,7 +126,7 @@ class CompositeEditor extends Editor {
     return serializedValue;
   }
 
-  void applyValue(/*Item/Map*/ item, state) {
+  void applyValue(DataItem item, state) {
     var idx = editors.length;
     while (idx-- > 0) {
       editors[idx].applyValue(item, state[idx]);

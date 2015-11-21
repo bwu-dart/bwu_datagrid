@@ -6,6 +6,4 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_default_theme.dart';
 
 /// [Polymer], [bwuDatagridDefaultThemeSilence]
-const bwuDatagridExampleThemeSilence = 0;
-
-
+const int bwuDatagridExampleThemeSilence = 0;

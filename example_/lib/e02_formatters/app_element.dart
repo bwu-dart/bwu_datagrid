@@ -7,6 +7,7 @@ import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
@@ -14,7 +15,7 @@ import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 class Formatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.appendHtml(value);
   }
 }
@@ -54,7 +55,7 @@ class AppElement extends PolymerElement {
         formatter: new fm.CheckmarkFormatter())
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: false, enableAddRow: false, enableCellNavigation: true);
 
   @override
@@ -63,8 +64,9 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      var data = new MapDataItemProvider();
-      for (var i = 0; i < 5; i++) {
+      final MapDataItemProvider<DataItem> data =
+          new MapDataItemProvider<DataItem>();
+      for (int i = 0; i < 5; i++) {
         data.items.add(new MapDataItem({
           'title': "<a href='#' tabindex='0'>Task</a> ${i}",
           'duration': "5 days",

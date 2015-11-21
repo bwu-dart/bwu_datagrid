@@ -1,7 +1,7 @@
 import 'package:webdriver/io.dart';
 import 'dart:async';
 
-main() async {
+dynamic main() async {
   WebDriver driver;
   try {
     driver = await createDriver(
@@ -27,7 +27,7 @@ main() async {
     await new Future.delayed(const Duration(milliseconds: 6000));
 //    var x = await driver.pageSource;
     print('a');
-    var element;
+    WebElement element;
 
     while (element == null) {
       try {
@@ -43,7 +43,8 @@ main() async {
       }
     }
     print('found');
-    var ele = await driver.findElement(new By.cssSelector('* /deep/  #myGrid'));
+    final WebElement ele =
+        await driver.findElement(new By.cssSelector('* /deep/  #myGrid'));
     await ele.click();
   } catch (e, s) {
     print(e);

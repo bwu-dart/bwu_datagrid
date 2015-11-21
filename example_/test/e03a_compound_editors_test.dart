@@ -10,7 +10,7 @@ import 'common.dart';
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/e03a_compound_editors.html';
   forEachBrowser(tests);
 //  tests(WebBrowser.chrome);
@@ -32,8 +32,8 @@ void tests(WebBrowser browser) {
 
     group('range', () {
 //      const titleOldValue = 'Task 7';
-      const rangeNewValues = const [37, 70];
-      const editorsSelector = const By.cssSelector('input[type="text"]');
+      const List<int> rangeNewValues = const [37, 70];
+      const By editorsSelector = const By.cssSelector('input[type="text"]');
       List<int> rangeOldValues;
 
       WebElement titleCell;
@@ -47,10 +47,10 @@ void tests(WebBrowser browser) {
         rangeCell = await driver.findElement(rangeCellActiveRowSelector);
         rangeOldValues = (await rangeCell.text)
             .split('-')
-            .map((t) => int.parse(t.trim()))
+            .map((String t) => int.parse(t.trim()))
             .toList();
-        expect(rangeOldValues[0], (e) => e >= 0 && e < 100);
-        expect(rangeOldValues[1], (e) => e >= 0 && e < 200);
+        expect(rangeOldValues[0], (int e) => e >= 0 && e < 100);
+        expect(rangeOldValues[1], (int e) => e >= 0 && e < 200);
 
         await driver.mouse.moveTo(element: rangeCell);
         await driver.mouse.doubleClick();
@@ -60,7 +60,7 @@ void tests(WebBrowser browser) {
             int.parse(await editors[0].attributes['value']), rangeOldValues[0]);
         expect(
             int.parse(await editors[1].attributes['value']), rangeOldValues[1]);
-        for (final e in editors) {
+        for (final WebElement e in editors) {
           e.clear();
         }
       });
@@ -74,7 +74,7 @@ void tests(WebBrowser browser) {
         expect(
             (await rangeCell.text)
                 .split('-')
-                .map((t) => int.parse(t.trim()))
+                .map((String t) => int.parse(t.trim()))
                 .toList(),
             orderedEquals(rangeNewValues));
       } /*, skip: 'temporary'*/);
@@ -89,7 +89,7 @@ void tests(WebBrowser browser) {
         expect(
             (await rangeCell.text)
                 .split('-')
-                .map((t) => int.parse(t.trim()))
+                .map((String t) => int.parse(t.trim()))
                 .toList(),
             orderedEquals(rangeNewValues));
       } /*, skip: 'temporary'*/);
@@ -103,7 +103,7 @@ void tests(WebBrowser browser) {
         expect(
             (await rangeCell.text)
                 .split('-')
-                .map((t) => int.parse(t.trim()))
+                .map((String t) => int.parse(t.trim()))
                 .toList(),
             orderedEquals(rangeOldValues));
       });

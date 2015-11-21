@@ -15,6 +15,7 @@ abstract class Plugin {
   void init(BwuDatagrid grid) {
     this._grid = grid;
   }
+
   void destroy() {}
 }
 

@@ -10,12 +10,12 @@ import 'common.dart';
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/autotooltips.html';
   forEachBrowser(tests);
 }
 
-tests(WebBrowser browser) {
+void tests(WebBrowser browser) {
   group('autotooltips', () {
     ExtendedWebDriver driver;
     setUp(() async {
@@ -38,9 +38,9 @@ tests(WebBrowser browser) {
       WebElement startResizeHandle = await driver.findElement(const By.shadow(
           '* /deep/ bwu-datagrid-header-column#start /deep/ .bwu-datagrid-resizable-handle'));
       expect(startResizeHandle, isNotNull);
-      Rectangle bounds = await start.size;
+      Rectangle<int> bounds = await start.size;
       print('bounds before: ${bounds}');
-      final target = new Point(
+      final Point<int> target = new Point<int>(
           bounds.left + bounds.width ~/ 2, bounds.top + bounds.height ~/ 2);
       // 292-25
       print('target: ${target}');

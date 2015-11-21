@@ -90,8 +90,10 @@ class CellCopyManager extends Plugin {
       _eventBus.onEvent(core.Events.COPY_CELLS) as async.Stream<core.CopyCells>;
 
   async.Stream<core.CopyCancelled> get onBwuCopyCancelled =>
-      _eventBus.onEvent(core.Events.COPY_CANCELLED) as async.Stream<core.CopyCancelled>;
+      _eventBus.onEvent(core.Events.COPY_CANCELLED)
+      as async.Stream<core.CopyCancelled>;
 
   async.Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.PASTE_CELLS) as async.Stream<core.PasteCells>;
+      _eventBus.onEvent(core.Events.PASTE_CELLS)
+      as async.Stream<core.PasteCells>;
 }

@@ -25,7 +25,7 @@ dom.CheckboxInputElement getSelectAllCheckBox() {
 // and when `checkbox_row_select_testx.html` is run from Chrome.
 // Seems to be caused by running within a iframe
 
-main() async {
+dynamic main() async {
   await initPolymer();
 
   group('checkbox_row_select', () {
@@ -50,8 +50,8 @@ main() async {
 
     test('select row', () {
       // set up
-      const sampleRow = 3;
-      const checkBoxCol = 0;
+      const int sampleRow = 3;
+      const int checkBoxCol = 0;
       final dom.CheckboxInputElement checkBox =
           grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
       expect(checkBox, new isInstanceOf<dom.CheckboxInputElement>());
@@ -64,7 +64,7 @@ main() async {
       // verification
       expect(checkBox.checked, isTrue);
       for (int i = 0; i < grid.columns.length; i++) {
-        final node = grid.getCellNode(sampleRow, i);
+        final dom.Element node = grid.getCellNode(sampleRow, i);
         expect(
             node.classes, contains(grid.getGridOptions.selectedCellCssClass));
       }
@@ -73,8 +73,8 @@ main() async {
 
     test('unselect row', () async {
       // set up
-      const sampleRow = 3;
-      const checkBoxCol = 0;
+      const int sampleRow = 3;
+      const int checkBoxCol = 0;
       dom.CheckboxInputElement checkBox =
           grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
       expect(checkBox, new isInstanceOf<dom.CheckboxInputElement>());
@@ -93,7 +93,7 @@ main() async {
       // verification
       expect(checkBox.checked, isFalse);
       for (int i = 0; i < grid.columns.length; i++) {
-        final node = grid.getCellNode(sampleRow, i);
+        final dom.Element node = grid.getCellNode(sampleRow, i);
         expect(node.classes,
             isNot(contains(grid.getGridOptions.selectedCellCssClass)));
       }
@@ -118,9 +118,9 @@ main() async {
           row < grid.getRenderedRange().bottom;
           row++) {
         for (int col = 0; col < grid.columns.length; col++) {
-          final node = grid.getCellNode(row, col);
+          final dom.Element node = grid.getCellNode(row, col);
           if (col == 0) {
-            final rowCheckBox = node.childNodes[0];
+            final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
             expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
             expect(rowCheckBox.checked, isTrue);
           }
@@ -144,8 +144,8 @@ main() async {
       expect(checkBox.checked, isFalse);
       expect(grid.getGridOptions.selectedCellCssClass, isNotEmpty);
       checkBox.click();
-      const sampleRow = 3;
-      const checkBoxCol = 0;
+      const int sampleRow = 3;
+      const int checkBoxCol = 0;
       dom.CheckboxInputElement rowCheckBox =
           grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
       expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
@@ -165,9 +165,9 @@ main() async {
         // deselected row
         if (row == sampleRow) {
           for (int col = 0; col < grid.columns.length; col++) {
-            final node = grid.getCellNode(row, col);
+            final dom.Element node = grid.getCellNode(row, col);
             if (col == 0) {
-              final rowCheckBox = node.childNodes[0];
+              final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
               expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
               expect(rowCheckBox.checked, isFalse);
             }
@@ -178,9 +178,9 @@ main() async {
           // remaining selected rows
         } else {
           for (int col = 0; col < grid.columns.length; col++) {
-            final node = grid.getCellNode(row, col);
+            final dom.Element node = grid.getCellNode(row, col);
             if (col == 0) {
-              final rowCheckBox = node.childNodes[0];
+              final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
               expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
               expect(rowCheckBox.checked, isTrue);
             }
@@ -206,8 +206,8 @@ main() async {
       expect(grid.getGridOptions.selectedCellCssClass, isNotEmpty);
       // select all rows
       checkBox.click();
-      const sampleRow = 3;
-      const checkBoxCol = 0;
+      const int sampleRow = 3;
+      const int checkBoxCol = 0;
       dom.CheckboxInputElement rowCheckBox =
           grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
       expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
@@ -236,9 +236,9 @@ main() async {
           row < grid.getRenderedRange().bottom;
           row++) {
         for (int col = 0; col < grid.columns.length; col++) {
-          final node = grid.getCellNode(row, col);
+          final dom.Element node = grid.getCellNode(row, col);
           if (col == 0) {
-            final rowCheckBox = node.childNodes[0];
+            final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
             expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
             expect(rowCheckBox.checked, isTrue);
           }

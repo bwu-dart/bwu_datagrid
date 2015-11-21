@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
@@ -68,18 +69,18 @@ class AppElement extends PolymerElement {
           grid.render();
         });
 
-        dataView.onBwuRowsChanged.listen((e) {
+        dataView.onBwuRowsChanged.listen((core.RowsChanged e) {
           grid.invalidateRows(e.changedRows);
           grid.render();
         });
 
-        Function filterChangedHandler = (dom.Event e) {
+        filterChangedHandler(dom.Event e) {
           var columnId = (e.target as dom.Element).dataset['columnId'];
           if (columnId != null) {
             columnFilters[columnId] = (e.target as dom.InputElement).value;
             dataView.refresh();
           }
-        };
+        }
 
         grid.onBwuHeaderRowCellRendered.listen((e) {
           e.node.children.clear();

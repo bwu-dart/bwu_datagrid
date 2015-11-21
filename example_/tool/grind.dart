@@ -1,6 +1,6 @@
 library bwu_datagrid_examples.tool.grind;
 
-import 'dart:async' show Completer, Future, Stream;
+import 'dart:async' show Completer, Future, Stream, StreamTransformer;
 import 'dart:collection';
 import 'dart:convert' show LineSplitter, UTF8;
 import 'dart:io' as io;
@@ -69,8 +69,8 @@ seleniumDebug() async {
     _pubServe
         .start(port: pubServePort, hostname: '0.0.0.0', directories: ['web'])
         .then((_) {
-      _pubServe.stdout.listen((e) => io.stdout.add(e));
-      _pubServe.stderr.listen((e) => io.stderr.add(e));
+      _pubServe.stdout.listen((List<int> e) => io.stdout.add(e));
+      _pubServe.stderr.listen((List<int> e) => io.stderr.add(e));
     });
 
     await _startSelenium();
@@ -150,7 +150,10 @@ class PubServe extends RunProcess {
   final _servingMessageRegex = new RegExp(
       r'^Serving [0-9a-zA-Z_]+ ([0-9a-zA-Z_]+) +on https?://.*:(\d{4,5})$');
 
-  Future start({int port, directories: const ['test'], String hostname}) async {
+  Future start(
+      {int port,
+      List<String> directories: const ['test'],
+      String hostname}) async {
     final readyCompleter = new Completer<io.Process>();
     if (port != null && port > 0) {
       _port = port;
@@ -172,7 +175,10 @@ class PubServe extends RunProcess {
     exitCode.then((exitCode) {
       _port = null;
     });
-    stdout.transform(UTF8.decoder).transform(new LineSplitter()).listen((s) {
+    stdout
+        .transform(UTF8.decoder as StreamTransformer<List<int>, dynamic>)
+        .transform(new LineSplitter())
+        .listen((s) {
       //_log.fine(s);
       print(s);
       final match = _servingMessageRegex.firstMatch(s);
@@ -184,7 +190,9 @@ class PubServe extends RunProcess {
         readyCompleter.complete(process);
       }
     });
-    stderr.transform(UTF8.decoder).listen(print);
+    stderr
+        .transform(UTF8.decoder as StreamTransformer<List<int>, dynamic>)
+        .listen(print);
     return readyCompleter.future;
   }
 }

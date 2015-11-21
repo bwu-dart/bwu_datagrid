@@ -24,14 +24,13 @@ import 'inline_filter_panel.dart';
 import '../filter_form.dart';
 import '../required_field_validator.dart';
 
-
 /// Silence analyzer [InlineFilterPanel], [FilterForm]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "sel",
         name: "#",
@@ -97,7 +96,7 @@ class AppElement extends PolymerElement {
         sortable: true)
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: true,
       enableCellNavigation: true,
@@ -123,7 +122,7 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       data = new List<DataItem>();
-      for (var i = 0; i < 50000; i++) {
+      for (int i = 0; i < 50000; i++) {
         data.add(new MapDataItem({
           "id": "id_${i}",
           "num": i,
@@ -154,12 +153,12 @@ class AppElement extends PolymerElement {
         dom.document.body.append(columnPicker);
         //columnPicker.options = new ColumnPickerOptions(/*gridOptions*/);
 
-        grid.onBwuCellChange.listen((e) {
+        grid.onBwuCellChange.listen((core.CellChange e) {
           dataView.updateItem(e.item['id'], e.item);
         });
 
-        grid.onBwuAddNewRow.listen((e) {
-          var item = new MapDataItem({
+        grid.onBwuAddNewRow.listen((core.AddNewRow e) {
+          final MapDataItem item = new MapDataItem({
             "num": data.length,
             "id": "new_${rnd.nextInt(10000)}",
             "title": "New task",
@@ -178,20 +177,21 @@ class AppElement extends PolymerElement {
         grid.onBwuSort.listen(onSort);
 
         // wire up model events to drive the grid
-        dataView.onBwuRowCountChanged.listen((e) {
+        dataView.onBwuRowCountChanged.listen((core.RowCountChanged e) {
           grid.updateRowCount();
           grid.render();
         });
 
-        dataView.onBwuRowsChanged.listen((e) {
+        dataView.onBwuRowsChanged.listen((core.RowsChanged e) {
           grid.invalidateRows(e.changedRows);
           grid.render();
         });
 
-        dataView.onBwuPagingInfoChanged.listen((e) {
-          var isLastPage = e.pagingInfo.pageNum == e.pagingInfo.totalPages - 1;
-          var enableAddRow = isLastPage || e.pagingInfo.pageSize == 0;
-          var options = grid.getGridOptions;
+        dataView.onBwuPagingInfoChanged.listen((core.PagingInfoChanged e) {
+          final bool isLastPage =
+              e.pagingInfo.pageNum == e.pagingInfo.totalPages - 1;
+          final bool enableAddRow = isLastPage || e.pagingInfo.pageSize == 0;
+          final GridOptions options = grid.getGridOptions;
 
           if (options.enableAddRow != enableAddRow) {
             grid.setGridOptions = new GridOptions.unitialized()
@@ -227,26 +227,27 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void btnSelectRowsHandler(dom.MouseEvent e, detail, dom.Element target) {
+  void btnSelectRowsHandler(
+      dom.MouseEvent e, Object detail, dom.Element target) {
 //  $['filter-form'].on['select-rows'].listen((e) {
     if (!core.globalEditorLock.commitCurrentEdit()) {
       return;
     }
 
-    var rows = [];
-    for (var i = 0; i < 10 && i < dataView.length; i++) {
+    final List<int> rows = <int>[];
+    for (int i = 0; i < 10 && i < dataView.length; i++) {
       rows.add(i);
     }
 
     grid.setSelectedRows(rows);
   }
 
-  void searchStringChanged(old) {
+  void searchStringChanged(_) {
     updateFilter();
   }
 
   async.Timer _pendingUpdateFilter;
-  void percentCompleteThresholdChanged(old) {
+  void percentCompleteThresholdChanged(_) {
     if (_pendingUpdateFilter != null) {
       _pendingUpdateFilter.cancel();
     }
@@ -289,7 +290,7 @@ class AppElement extends PolymerElement {
     }
 
     if (args['searchString'] != '' &&
-        item['title'].indexOf(args['searchString']) == -1) {
+        (item['title'] as String).indexOf(args['searchString']) == -1) {
       return false;
     }
 
@@ -301,7 +302,8 @@ class AppElement extends PolymerElement {
   }
 
   int comparer(DataItem a, DataItem b) {
-    var x = a[sortcol], y = b[sortcol];
+    final int x = a[sortcol];
+    final int y = b[sortcol];
     if (x == y) {
       return 0;
     }
@@ -327,15 +329,15 @@ class AppElement extends PolymerElement {
   }
 
   // Header row search icon
-  void toggleFilterRow(dom.MouseEvent e, detail, dom.Element target) {
+  void toggleFilterRow(dom.MouseEvent e, Object detail, dom.Element target) {
     grid.setTopPanelVisibility = !grid.getGridOptions.showTopPanel;
   }
 
-  void iconMouseOver(dom.MouseEvent e, detail, dom.Element target) {
+  void iconMouseOver(dom.MouseEvent e, Object detail, dom.Element target) {
     target.classes.add('ui-state-hover');
   }
 
-  void iconMouseOut(dom.MouseEvent e, detail, dom.Element target) {
+  void iconMouseOut(dom.MouseEvent e, Object detail, dom.Element target) {
     target.classes.remove('ui-state-hover');
   }
 
@@ -345,8 +347,8 @@ class AppElement extends PolymerElement {
       return; // false;
     }
 
-    var rows = [];
-    for (var i = 0; i < dataView.length; i++) {
+    final List<int> rows = <int>[];
+    for (int i = 0; i < dataView.length; i++) {
       rows.add(i);
     }
 

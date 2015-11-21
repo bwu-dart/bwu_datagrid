@@ -28,16 +28,13 @@ class DefaultGroupCellFormatter extends fm.CellFormatter {
     final String indentation = '${group.level * 15}px';
 
     target.innerHtml = '';
-    target
-      ..append(new dom.SpanElement()
-        ..classes.add('${giMetadataProvider.toggleCssClass}')
-        ..classes.add(
-            '${group.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
-        ..style.marginLeft = indentation)
-      ..append(new dom.SpanElement()
-        ..classes.add('${giMetadataProvider.groupTitleCssClass}')
-        ..attributes['level'] = '${group.level}'
-        ..append(group.title));
+    target..append(new dom.SpanElement()
+      ..classes.add('${giMetadataProvider.toggleCssClass}')
+      ..classes.add('${group.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
+      ..style.marginLeft = indentation)..append(new dom.SpanElement()
+      ..classes.add('${giMetadataProvider.groupTitleCssClass}')
+      ..attributes['level'] = '${group.level}'
+      ..append(group.title));
   }
 }
 
@@ -45,8 +42,7 @@ class DefaultTotalsCellFormatter extends core.GroupTotalsFormatter {
   GroupItemMetadataProvider giMetadataProvider;
 
   @override
-  void format(
-      dom.Element target, core.GroupTotals totals, Column columnDef) {
+  void format(dom.Element target, core.GroupTotals totals, Column columnDef) {
     if (columnDef.groupTotalsFormatter != null) {
       columnDef.groupTotalsFormatter.format(target, totals, columnDef);
     } else {
@@ -76,14 +72,17 @@ class GroupItemMetadataProvider extends Plugin {
   fm.Formatter _groupFormatter;
   core.GroupTotalsFormatter _totalsFormatter;
 
-  GroupItemMetadataProvider({this.groupCssClass: "bwu-datagrid-group",
+  GroupItemMetadataProvider(
+      {this.groupCssClass: "bwu-datagrid-group",
       this.groupTitleCssClass: "bwu-datagrid-group-title",
       this.totalsCssClass: "bwu-datagrid-group-totals",
-      this.groupFocusable: true, this.totalsFocusable: false,
+      this.groupFocusable: true,
+      this.totalsFocusable: false,
       this.toggleCssClass: "bwu-datagrid-group-toggle",
       this.toggleExpandedCssClass: "expanded",
       this.toggleCollapsedCssClass: "collapsed",
-      this.enableExpandCollapse: true, fm.Formatter groupFormatter,
+      this.enableExpandCollapse: true,
+      fm.Formatter groupFormatter,
       core.GroupTotalsFormatter totalsFormatter}) {
     _groupFormatter = groupFormatter = new DefaultGroupCellFormatter(this);
     _totalsFormatter = totalsFormatter = new DefaultTotalsCellFormatter();
@@ -128,8 +127,7 @@ class GroupItemMetadataProvider extends Plugin {
     core.ItemBase item = grid.getDataItem(e.cell.row);
     if (item != null &&
         item is core.Group &&
-        (e.causedBy.target as dom.Element).classes
-            .contains(toggleCssClass)) {
+        (e.causedBy.target as dom.Element).classes.contains(toggleCssClass)) {
       final Range range = grid.getRenderedRange();
       if (grid.dataProvider is DataView) {
         final DataView dp = grid.dataProvider as DataView;
@@ -185,9 +183,9 @@ class GroupItemMetadataProvider extends Plugin {
         focusable: groupFocusable,
         cssClasses: groupCssClass,
         columns: {
-      '0':
-          new Column(colspan: "*", formatter: getGroupFormatter(), editor: null)
-    });
+          '0': new Column(
+              colspan: "*", formatter: getGroupFormatter(), editor: null)
+        });
   }
 
   RowMetadata getTotalsRowMetadata(core.ItemBase item) {
@@ -208,6 +206,11 @@ class RowMetadata {
   fm.Formatter formatter;
   ed.Editor editor;
 
-  RowMetadata({this.selectable, this.focusable, this.cssClasses, this.columns,
-      this.formatter, this.editor});
+  RowMetadata(
+      {this.selectable,
+      this.focusable,
+      this.cssClasses,
+      this.columns,
+      this.formatter,
+      this.editor});
 }

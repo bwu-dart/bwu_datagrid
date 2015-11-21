@@ -7,6 +7,7 @@ import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
@@ -15,8 +16,8 @@ import 'numeric_range_editor.dart';
 
 class NumericRangeFormatter extends fm.CellFormatter {
   @override
-  void format(dom.Element target, int row, int cell, value,
-      Column columnDef, dataContext) {
+  void format(dom.Element target, int row, int cell, dynamic value,
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     target.text = "${dataContext['from']} - ${dataContext['to']}";
   }
@@ -27,7 +28,7 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  final List<Column> columns = [
     new Column(
         id: "title",
         name: "Title",
@@ -43,7 +44,7 @@ class AppElement extends PolymerElement {
         editor: new NumericRangeEditor())
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: false,
       enableCellNavigation: true,
@@ -55,8 +56,8 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      var data = new MapDataItemProvider();
-      for (var i = 0; i < 500; i++) {
+      final MapDataItemProvider data = new MapDataItemProvider();
+      for (int i = 0; i < 500; i++) {
         int from = new math.Random().nextInt(100);
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',

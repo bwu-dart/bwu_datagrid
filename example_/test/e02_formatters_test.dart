@@ -9,12 +9,12 @@ import 'common.dart';
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/e02_formatters.html';
   forEachBrowser(tests);
 }
 
-tests(WebBrowser browser) {
+void tests(WebBrowser browser) {
   group('e02_formatters', () {
     ExtendedWebDriver driver;
     setUp(() async {
@@ -26,35 +26,35 @@ tests(WebBrowser browser) {
     });
 
     test('link', () async {
-      const linksInFirstColumnSelector =
+      const By linksInFirstColumnSelector =
           const By.shadow('${gridCellSelectorBase}0 a[href="#"]');
 
-      final linksInFirstColumn =
+      final List<WebElement> linksInFirstColumn =
           await driver.findElements(linksInFirstColumnSelector).toList();
       expect(linksInFirstColumn.length, 5);
-      for (final link in linksInFirstColumn) {
+      for (final WebElement link in linksInFirstColumn) {
         expect(await link.text, 'Task');
       }
     });
 
     test('percentCompleteBar', () async {
-      const barsInPercentCompleteColumnSelector =
+      const By barsInPercentCompleteColumnSelector =
           const By.shadow('${gridCellSelectorBase}2 span.percent-complete-bar');
 
-      final barsInPercentCompleteColumn = await driver
+      final List<WebElement> barsInPercentCompleteColumn = await driver
           .findElements(barsInPercentCompleteColumnSelector)
           .toList();
       expect(barsInPercentCompleteColumn.length, 5);
-      for (final bar in barsInPercentCompleteColumn) {
+      for (final WebElement bar in barsInPercentCompleteColumn) {
         expect(await bar.attributes['style'], matches(r'width: \d{1,3}%;'));
       }
     });
 
     test('checkMark', () async {
-      const checkMarksInEffortDrivenColumnSelector = const By.shadow(
+      const By checkMarksInEffortDrivenColumnSelector = const By.shadow(
           '${gridCellSelectorBase}5 img[src="packages/bwu_datagrid/asset/images/tick.png"]');
 
-      final checkMarkInEffortDrivenColumn = await driver
+      final List<WebElement> checkMarkInEffortDrivenColumn = await driver
           .findElements(checkMarksInEffortDrivenColumnSelector)
           .toList();
       expect(checkMarkInEffortDrivenColumn.length, 1);
@@ -65,7 +65,7 @@ tests(WebBrowser browser) {
 Future<bool> isTaskShown(ExtendedWebDriver driver, int number) {
   return driver
       .findElements(firstColumnSelector)
-      .asyncMap(
-          (e) async => await e.text == 'Task ${number}' && await e.displayed)
+      .asyncMap((WebElement e) async =>
+          await e.text == 'Task ${number}' && await e.displayed)
       .contains(true);
 }

@@ -20,14 +20,14 @@ class DropZone extends PolymerElement {
 
   @property String dropzone;
 
-  void dropzoneChanged(old) {
+  void dropzoneChanged(_) {
     String s = 'move s:text/bwu-datagrid-recycle file:text/blajflaskjfd';
-    var match = new RegExp(r'^(?:copy|link|move)(.*)').firstMatch(s);
-    var matches =
+    final Match match = new RegExp(r'^(?:copy|link|move)(.*)').firstMatch(s);
+    final Iterable<Match> matches =
         new RegExp(r'(?: +[a-z]*:)([^ ]*)').allMatches(match.group(1));
 
     List<String> results = [];
-    matches.forEach((e) {
+    matches.forEach((Match e) {
       results.add(e.group(1));
     });
     _accept = results;
@@ -38,35 +38,35 @@ class DropZone extends PolymerElement {
     super.attached();
 
     try {
-      dom.document.onDragStart.listen((e) {
+      dom.document.onDragStart.listen((dom.MouseEvent e) {
         if (_doAccept(e)) {
           _isAcceptedDragStarted = true;
           this.classes.add('drag-valid');
         }
       });
 
-      dom.document.onDragEnd.listen((e) {
+      dom.document.onDragEnd.listen((dom.MouseEvent e) {
         _dragEnded();
       });
 
-      this.onDragEnter.listen((e) {
+      this.onDragEnter.listen((dom.MouseEvent e) {
         if (_isAcceptedDragStarted) {
           this.classes.add('drag-over');
           e.preventDefault();
         }
       });
 
-      this.onDragLeave.listen((e) {
+      this.onDragLeave.listen((dom.MouseEvent e) {
         this.classes.remove('drag-over');
       });
 
-      this.onDragOver.listen((e) {
+      this.onDragOver.listen((dom.MouseEvent e) {
         if (_isAcceptedDragStarted) {
           e.preventDefault();
         }
       });
 
-      this.onDrop.listen((e) {
+      this.onDrop.listen((dom.MouseEvent e) {
         _dragEnded();
       });
     } catch (e, s) {
@@ -85,7 +85,7 @@ class DropZone extends PolymerElement {
     bool result = false;
 
     if (_accept != null) {
-      _accept.forEach((k) {
+      _accept.forEach((String k) {
         if (e.dataTransfer.types.contains(k)) {
           result = true;
         }

@@ -19,7 +19,10 @@ class NavState extends JsProxy {
   @reflectable bool canGotoNext;
   PagingInfo pagingInfo;
 
-  NavState({this.canGotoFirst, this.canGotoLast, this.canGotoPrev,
+  NavState(
+      {this.canGotoFirst,
+      this.canGotoLast,
+      this.canGotoPrev,
       this.canGotoNext});
 }
 
@@ -68,7 +71,7 @@ class BwuPager extends PolymerElement {
   }
 
   void setPageSize(int n) {
-    _dataView.setRefreshHints(<String,bool>{'isFilterUnchanged': true});
+    _dataView.setRefreshHints(<String, bool>{'isFilterUnchanged': true});
     _dataView.setPagingOptions(new PagingInfo(pageSize: n));
   }
 
@@ -103,9 +106,10 @@ class BwuPager extends PolymerElement {
     }
   }
 
-  void pageSizeClickHandler(dom.MouseEvent e, Object detail, dom.Element target) {
-    int pagesize = utils.parseInt(
-        (e.target as dom.Element).dataset['value'], onErrorDefault: 0);
+  void pageSizeClickHandler(
+      dom.MouseEvent e, Object detail, dom.Element target) {
+    int pagesize = utils.parseInt((e.target as dom.Element).dataset['value'],
+        onErrorDefault: 0);
     //if (pagesize != 0) {
     if (pagesize == -1) {
       Range vp = _grid.getViewport();

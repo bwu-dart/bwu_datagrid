@@ -1,9 +1,11 @@
 @HtmlImport('app_element.html')
 library app_element;
 
+import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/editors/editors.dart';
@@ -15,7 +17,7 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "title",
         name: "Title",
@@ -32,7 +34,7 @@ class AppElement extends PolymerElement {
         resizable: false)
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: false,
       enableCellNavigation: true,
@@ -45,8 +47,8 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      var data = new MapDataItemProvider();
-      for (var i = 0; i < 500; i++) {
+      final MapDataItemProvider data = new MapDataItemProvider();
+      for (int i = 0; i < 500; i++) {
         data.items
             .add(new MapDataItem({'title': 'Task ${i}', 'priority': 'Medium'}));
       }
@@ -55,7 +57,7 @@ class AppElement extends PolymerElement {
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
           .then((_) {
         // setup context menu handler
-        grid.onBwuContextMenu.listen((e) {
+        grid.onBwuContextMenu.listen((core.ContextMenu e) {
           e.stopImmediatePropagation();
           e.preventDefault();
           ($['contextMenu'] as ContextMenu)
@@ -65,24 +67,30 @@ class AppElement extends PolymerElement {
         });
 
         // setup context menu select handler
-        ($['contextMenu'] as ContextMenu).onContextMenuSelect.listen((e) {
+        ($['contextMenu'] as ContextMenu)
+            .onContextMenuSelect
+            .listen((dom.CustomEvent e) {
           if (!grid.getEditorLock.commitCurrentEdit()) {
             return;
           }
-          var cell = ($['contextMenu'] as ContextMenu).cell;
+          final Cell cell = ($['contextMenu'] as ContextMenu).cell;
           data.items[cell.row]['priority'] = e.detail;
           grid.updateRow(cell.row);
           ($['contextMenu'] as ContextMenu).hide();
         });
 
         // setup next value on cell click
-        grid.onBwuClick.listen((e) {
+        grid.onBwuClick.listen((core.Click e) {
           if (grid.getColumns[e.cell.cell].id == 'priority') {
             if (!grid.getEditorLock.commitCurrentEdit()) {
               return;
             }
 
-            var states = {'Low': 'Medium', 'Medium': 'High', 'High': 'Low'};
+            final Map<String, String> states = {
+              'Low': 'Medium',
+              'Medium': 'High',
+              'High': 'Low'
+            };
             data.items[e.cell.row]
                 ['priority'] = states[data.items[e.cell.row]['priority']];
             grid.updateRow(e.cell.row);

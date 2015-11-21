@@ -10,7 +10,7 @@ import 'common.dart';
 
 String pageUrl;
 
-main() async {
+dynamic main() async {
   pageUrl = '${await webServer}/e03b_editing_with_undo.html';
   forEachBrowser(tests);
 }
@@ -30,38 +30,41 @@ void tests(WebBrowser browser) {
     });
 
     test('undo', () async {
-      const textEditorSelector = const By.cssSelector('input[type="text"]');
-      const dateEditorSelector = const By.cssSelector('input[type="date"]');
-      const checkboxEditorSelector =
+      const By textEditorSelector = const By.cssSelector('input[type="text"]');
+      const By dateEditorSelector = const By.cssSelector('input[type="date"]');
+      const By checkboxEditorSelector =
           const By.cssSelector('input[type="checkbox"]');
-      const undoButtonSelector =
+      const By undoButtonSelector =
           const By.cssSelector('app-element::shadow .options-panel button');
 
       // prepare undo
-      final undoButton = await driver.findElement(undoButtonSelector);
+      final WebElement undoButton =
+          await driver.findElement(undoButtonSelector);
       expect(await undoButton.enabled, isFalse,
           reason: 'undo button should be disabled when no call was edited yet');
 
       // prepare scroll
       WebElement viewPort = await driver.findElement(viewPortSelector);
       expect(viewPort, isNotNull);
-      final maxYScroll = int.parse(await viewPort.attributes['scrollHeight']);
+      final int maxYScroll =
+          int.parse(await viewPort.attributes['scrollHeight']);
       expect(maxYScroll, greaterThan(12000));
 
       // title
-      const titleScrollTop = 0;
-      const titleTaskTitle = 'Task 12';
+      const int titleScrollTop = 0;
+      const String titleTaskTitle = 'Task 12';
       await selectRowByTask(driver, titleTaskTitle, scrollTop: titleScrollTop);
       WebElement titleCell =
           await driver.findElement(titleCellActiveRowSelector);
-      final titleOldValue = await titleCell.text;
+      final String titleOldValue = await titleCell.text;
 
       await driver.mouse.moveTo(element: titleCell);
       await driver.mouse.doubleClick();
 
-      final titleEditor = await titleCell.findElement(textEditorSelector);
+      final WebElement titleEditor =
+          await titleCell.findElement(textEditorSelector);
       await titleEditor.clear();
-      final titleNewValue = 'New title';
+      final String titleNewValue = 'New title';
       await titleEditor.sendKeys('${titleNewValue}${Keyboard.enter}');
       expect(await titleCell.elementExists(textEditorSelector), isFalse);
       await new Future.delayed(const Duration(milliseconds: 10));
@@ -72,20 +75,20 @@ void tests(WebBrowser browser) {
               'undo button should be enabled after a cell value was changed');
 
       // description
-      const descriptionScrollTop = 0;
-      const descriptionTaskTitle = 'Task 3';
+      const int descriptionScrollTop = 0;
+      const String descriptionTaskTitle = 'Task 3';
       await selectRowByTask(driver, descriptionTaskTitle,
           scrollTop: descriptionScrollTop);
       WebElement descriptionCell =
           await driver.findElement(descriptionCellActiveRowSelector);
-      final descriptionOldValue = await descriptionCell.text;
-      const descriptionNewValue =
+      final String descriptionOldValue = await descriptionCell.text;
+      const String descriptionNewValue =
           'Some other description\nwhich can also be multiline';
       await driver.mouse.moveTo(element: descriptionCell);
       await driver.mouse.doubleClick();
-      const descriptionEditorSelector =
+      const By descriptionEditorSelector =
           const By.cssSelector('body > div > textarea');
-      final descriptionEditor =
+      final WebElement descriptionEditor =
           await driver.findElement(descriptionEditorSelector);
       await descriptionEditor.clear();
       await descriptionEditor.sendKeys(
@@ -96,41 +99,42 @@ void tests(WebBrowser browser) {
           descriptionNewValue.replaceAll('\n', ' '));
 
       // duration'
-      const durationScrollTop = 0;
-      const durationTaskTitle = 'Task 8';
+      const int durationScrollTop = 0;
+      const String durationTaskTitle = 'Task 8';
       await selectRowByTask(driver, durationTaskTitle,
           scrollTop: durationScrollTop);
       WebElement durationCell =
           await driver.findElement(durationCellActiveRowSelector);
-      final durationOldValue = await durationCell.text;
+      final String durationOldValue = await durationCell.text;
       await driver.mouse.moveTo(element: durationCell);
       await driver.mouse.doubleClick();
-      final durationEditor = await durationCell.findElement(textEditorSelector);
+      final WebElement durationEditor =
+          await durationCell.findElement(textEditorSelector);
       await durationEditor.clear();
-      const durationNewValue = '25 days';
+      const String durationNewValue = '25 days';
       await durationEditor.sendKeys('${durationNewValue}${Keyboard.enter}');
       expect(await durationCell.elementExists(textEditorSelector), isFalse);
       await new Future.delayed(const Duration(milliseconds: 10));
       expect(await durationCell.text, durationNewValue);
 
       //percent complete
-      final percentCompleteScrollTop = maxYScroll ~/ 2;
-      const percentCompleteTaskTitle = 'Task 250';
+      final int percentCompleteScrollTop = maxYScroll ~/ 2;
+      const String percentCompleteTaskTitle = 'Task 250';
       await selectRowByTask(driver, percentCompleteTaskTitle,
           scrollTop: percentCompleteScrollTop);
       WebElement percentCompleteCell =
           await driver.findElement(percentCellActiveRowSelector);
-      const percentBarSelector =
+      const By percentBarSelector =
           const By.cssSelector('span.percent-complete-bar');
       WebElement bar =
           await percentCompleteCell.findElement(percentBarSelector);
-      final percentCompleteOldValue = await bar.attributes['style'];
+      final String percentCompleteOldValue = await bar.attributes['style'];
       await driver.mouse.moveTo(element: percentCompleteCell);
       await driver.mouse.doubleClick();
-      final percentCompleteEditor =
+      final WebElement percentCompleteEditor =
           await percentCompleteCell.findElement(textEditorSelector);
       await percentCompleteEditor.clear();
-      const percentCompleteNewValue = '66';
+      const String percentCompleteNewValue = '66';
       await percentCompleteEditor
           .sendKeys('${percentCompleteNewValue}${Keyboard.enter}');
       expect(
@@ -141,52 +145,54 @@ void tests(WebBrowser browser) {
           matches('width: ${percentCompleteNewValue}%;'));
 
       // start
-      final startScrollTop = maxYScroll ~/ 2;
-      const startTaskTitle = 'Task 260';
+      final int startScrollTop = maxYScroll ~/ 2;
+      const String startTaskTitle = 'Task 260';
       await selectRowByTask(driver, startTaskTitle, scrollTop: startScrollTop);
       WebElement startCell =
           await driver.findElement(startCellActiveRowSelector);
-      final startOldValue = await startCell.text;
+      final String startOldValue = await startCell.text;
       await driver.mouse.moveTo(element: startCell);
       await driver.mouse.doubleClick();
-      final startNewValue = '2016-08-19';
-      final startNewInput = '08192016';
-      final startEditor = await startCell.findElement(dateEditorSelector);
+      final String startNewValue = '2016-08-19';
+      final String startNewInput = '08192016';
+      final WebElement startEditor =
+          await startCell.findElement(dateEditorSelector);
       await startEditor.sendKeys('${startNewInput}${Keyboard.enter}');
       expect(await startCell.elementExists(dateEditorSelector), isFalse);
       await new Future.delayed(const Duration(milliseconds: 10));
       expect(await startCell.text, startNewValue);
 
       // finish
-      final finishScrollTop = maxYScroll ~/ 4;
-      const finishTaskTitle = 'Task 127';
+      final int finishScrollTop = maxYScroll ~/ 4;
+      const String finishTaskTitle = 'Task 127';
       await selectRowByTask(driver, finishTaskTitle,
           scrollTop: finishScrollTop);
       WebElement finishCell =
           await driver.findElement(finishCellActiveRowSelector);
-      final finishOldValue = await finishCell.text;
+      final String finishOldValue = await finishCell.text;
       await driver.mouse.moveTo(element: finishCell);
       await driver.mouse.doubleClick();
-      final finishNewValue = '2016-09-02';
-      final finishNewInput = '09022016';
-      final finishEditor = await finishCell.findElement(dateEditorSelector);
+      final String finishNewValue = '2016-09-02';
+      final String finishNewInput = '09022016';
+      final WebElement finishEditor =
+          await finishCell.findElement(dateEditorSelector);
       await finishEditor.sendKeys('${finishNewInput}${Keyboard.enter}');
       expect(await finishCell.elementExists(dateEditorSelector), isFalse);
       await new Future.delayed(const Duration(milliseconds: 10));
       expect(await finishCell.text, finishNewValue);
 
       // effort-driven
-      const effortDrivenScrollTop = 0;
-      const effortDrivenTaskTitle = 'Task 132';
+      const int effortDrivenScrollTop = 0;
+      const String effortDrivenTaskTitle = 'Task 132';
       await selectRowByTask(driver, effortDrivenTaskTitle,
           scrollTop: effortDrivenScrollTop);
       WebElement effortDrivenCell =
           await driver.findElement(effortDrivenCellActiveRowSelector);
-      final effortDrivenOldValue = await effortDrivenCell
+      final bool effortDrivenOldValue = await effortDrivenCell
           .elementExists(effortDrivenCheckedImageSelector);
       await driver.mouse.moveTo(element: effortDrivenCell);
       await driver.mouse.doubleClick();
-      final effortDrivenEditor =
+      final WebElement effortDrivenEditor =
           await effortDrivenCell.findElement(checkboxEditorSelector);
       await effortDrivenEditor.click();
       await effortDrivenEditor.sendKeys(Keyboard.enter);
@@ -251,19 +257,21 @@ void tests(WebBrowser browser) {
 }
 
 Future selectRowByTask(ExtendedWebDriver driver, String taskTitle,
-    {scrollTop}) async {
+    {int scrollTop}) async {
   if (scrollTop != null) {
     WebElement viewPort = await driver.findElement(viewPortSelector);
     await driver.scrollElementAbsolute(viewPort, y: scrollTop);
     await new Future.delayed(const Duration(milliseconds: 100));
   }
 
-  final cells = await (await driver
-          .findElements(firstColumnSelector)
-          .asyncMap((e) async => {'element': e, 'text': await e.text})
-          .where((item) => item['text'] == taskTitle))
-      .map((item) => item['element'])
-      .toList();
+  final List<WebElement> cells =
+      await (await driver
+              .findElements(firstColumnSelector)
+              .asyncMap(
+                  (WebElement e) async => {'element': e, 'text': await e.text})
+              .where((Map item) => item['text'] == taskTitle))
+          .map((Map item) => item['element'])
+          .toList() as List<WebElement>;
   if (cells.length == 0) {
     throw 'No row with title "${taskTitle}" found.';
   } else if (cells.length > 1) {

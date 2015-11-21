@@ -119,11 +119,17 @@ class RowMoveManager extends Plugin {
 
     _selectionProxy.style.top = '${top - 5}px';
 
-    var insertBefore = math.max(0, math.min(
-        (top / grid.getGridOptions.rowHeight).round(), grid.getDataLength));
+    var insertBefore = math.max(
+        0,
+        math.min(
+            (top / grid.getGridOptions.rowHeight).round(), grid.getDataLength));
     if (insertBefore != _insertBefore) {
-      if (eventBus.fire(core.Events.BEFORE_MOVE_ROWS, new core.BeforeMoveRows(
-              this, rows: _selectedRows, insertBefore: insertBefore)).retVal ==
+      if (eventBus
+              .fire(
+                  core.Events.BEFORE_MOVE_ROWS,
+                  new core.BeforeMoveRows(this,
+                      rows: _selectedRows, insertBefore: insertBefore))
+              .retVal ==
           false) {
         _guide.style.top = '-1000px';
         _canMove = false;
@@ -146,8 +152,10 @@ class RowMoveManager extends Plugin {
 
     if (_canMove) {
       // TODO:  _grid.remapCellCssClasses ?
-      eventBus.fire(core.Events.MOVE_ROWS, new core.MoveRows(this,
-          rows: _selectedRows, insertBefore: _insertBefore));
+      eventBus.fire(
+          core.Events.MOVE_ROWS,
+          new core.MoveRows(this,
+              rows: _selectedRows, insertBefore: _insertBefore));
     }
   }
 
@@ -166,7 +174,8 @@ class RowMoveManager extends Plugin {
   }
 
   async.Stream<core.BeforeMoveRows> get onBwuBeforeMoveRows =>
-      _eventBus.onEvent(core.Events.BEFORE_MOVE_ROWS) as async.Stream<core.BeforeMoveRows>;
+      _eventBus.onEvent(core.Events.BEFORE_MOVE_ROWS)
+      as async.Stream<core.BeforeMoveRows>;
 
   async.Stream<core.MoveRows> get onBwuMoveRows =>
       _eventBus.onEvent(core.Events.MOVE_ROWS) as async.Stream<core.MoveRows>;

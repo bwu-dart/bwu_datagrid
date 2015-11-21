@@ -74,14 +74,14 @@ class AppElement extends PolymerElement {
         editor: new CheckboxEditor())
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: true,
       enableCellNavigation: true,
       asyncEditorLoading: false,
       autoEdit: false);
 
-  MapDataItemProvider data = new MapDataItemProvider();
+  final MapDataItemProvider data = new MapDataItemProvider();
 
   @override
   void attached() {
@@ -90,7 +90,7 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      for (var i = 0; i < 500; i++) {
+      for (int i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'description':
@@ -120,18 +120,16 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void enableAutoEdit(
-      dom.MouseEvent e, dynamic details, dom.Element target) {
+  void enableAutoEdit(dom.MouseEvent e, dynamic details, dom.Element target) {
     grid.setGridOptions = new GridOptions.unitialized()..autoEdit = true;
   }
 
-  void disableAutoEdit(
-      dom.MouseEvent e, dynamic details, dom.Element target) {
+  void disableAutoEdit(dom.MouseEvent e, dynamic details, dom.Element target) {
     grid.setGridOptions = new GridOptions.unitialized()..autoEdit = false;
   }
 
   void addnewRowHandler(AddNewRow e) {
-    var item = e.item;
+    final DataItem item = e.item;
     grid.invalidateRow(data.items.length);
     data.items.add(item);
     grid.updateRowCount();
