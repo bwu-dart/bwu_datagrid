@@ -17,9 +17,9 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
-import '../filter_form.dart';
 
-import '../required_field_validator.dart';
+import 'package:bwu_datagrid_examples/shared/filter_form.dart';
+import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 
 /// Silence analyzer [FilterForm]
 class TaskNameFormatter extends fm.CellFormatter {

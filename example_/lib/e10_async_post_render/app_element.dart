@@ -14,7 +14,7 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
-import '../required_field_validator.dart';
+import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 
 class WaitingFormatter extends fm.Formatter {
   void call(dom.Element target, int row, int cell, dynamic value,

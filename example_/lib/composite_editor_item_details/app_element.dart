@@ -13,12 +13,12 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 
-import 'package:bwu_datagrid_examples/required_field_validator.dart';
-import 'package:bwu_datagrid_examples/composite_editor.dart';
-import 'composite_editor_view.dart';
+import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
+import 'package:bwu_datagrid_examples/shared/composite_editor.dart';
 import 'package:bwu_datagrid/core/core.dart';
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
+import 'composite_editor_view.dart';
 
 /// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')

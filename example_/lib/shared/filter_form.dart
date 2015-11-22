@@ -1,5 +1,5 @@
 @HtmlImport('filter_form.html')
-library bwu_datagrid_examples.e04_model.filter_form;
+library bwu_datagrid_examples.shared.filter_form;
 
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';

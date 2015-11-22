@@ -11,15 +11,19 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
-import '../required_field_validator.dart';
 import 'package:bwu_datagrid/core/core.dart';
 
+import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
+
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "title",
         name: "Title",
@@ -71,7 +75,7 @@ class AppElement extends PolymerElement {
         editor: new CheckboxEditor())
   ];
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       editable: true,
       enableAddRow: false,
       enableCellNavigation: true,
@@ -80,26 +84,28 @@ class AppElement extends PolymerElement {
 
   List<EditCommand> _commandQueue = <EditCommand>[];
 
+  @property
   bool get isUndoItem => !_commandQueue.isEmpty;
 
   void queueAndExecuteCommand(
-      /*Item/Map*/ item,
+      DataItem item,
       Column column,
       EditCommand editCommand) {
     var oldValue = isUndoItem;
     _commandQueue.add(editCommand);
     editCommand.execute();
-    notifyPropertyChange(#isUndoItem, oldValue, isUndoItem);
+    set('isUndoItem', isUndoItem);
   }
 
-  void undo(dom.MouseEvent e, detail, dom.Element target) {
-    var oldValue = isUndoItem;
-    var command = _commandQueue.removeLast();
+  @reflectable
+  void undo([_, __]) {
+    final oldValue = isUndoItem;
+    final EditCommand command = _commandQueue.removeLast();
     if (command != null && globalEditorLock.cancelCurrentEdit()) {
       command.undo();
       grid.gotoCell(command.row, command.cell, false);
     }
-    notifyPropertyChange(#isUndoItem, oldValue, isUndoItem);
+    set('isUndoItem', isUndoItem);
   }
 
   @override

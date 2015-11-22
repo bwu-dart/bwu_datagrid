@@ -1,4 +1,4 @@
-library bwu_datagrid_examples.composite_editor;
+library bwu_datagrid_examples.shared.composite_editor;
 
 import 'dart:html' as dom;
 import 'dart:math' as math;

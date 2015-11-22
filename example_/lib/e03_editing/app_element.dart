@@ -2,7 +2,6 @@
 library app_element;
 
 import 'dart:math' as math;
-import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
@@ -11,9 +10,10 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
-import '../required_field_validator.dart';
 import 'package:bwu_datagrid/core/core.dart';
 import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
+
+import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 

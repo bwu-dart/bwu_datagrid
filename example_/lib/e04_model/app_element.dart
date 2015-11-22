@@ -21,8 +21,8 @@ import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
 import 'inline_filter_panel.dart';
 
-import '../filter_form.dart';
-import '../required_field_validator.dart';
+import 'package:bwu_datagrid_examples/shared/filter_form.dart';
+import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 
 /// Silence analyzer [InlineFilterPanel], [FilterForm]
 @PolymerRegister('app-element')

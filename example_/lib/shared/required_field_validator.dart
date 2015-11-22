@@ -1,4 +1,4 @@
-library bwu_datagrid_examples.required_field_validator;
+library bwu_datagrid_examples.shared.required_field_validator;
 
 import 'package:bwu_datagrid/editors/editors.dart';
 

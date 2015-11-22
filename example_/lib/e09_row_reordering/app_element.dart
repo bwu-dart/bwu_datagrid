@@ -16,7 +16,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/plugins/row_move_manager.dart';
 
 import 'drop_zone.dart';
-import '../required_field_validator.dart';
+import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 
 /// Silence analyzer [DropZone]
 @PolymerRegister('app-element')

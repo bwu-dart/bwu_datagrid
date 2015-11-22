@@ -1,5 +1,5 @@
 @HtmlImport('options_panel.html')
-library options_panel;
+library bwu_datagrid_examples.shared.options_panel;
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;

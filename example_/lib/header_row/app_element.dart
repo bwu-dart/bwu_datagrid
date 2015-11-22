@@ -16,10 +16,10 @@ import 'package:bwu_datagrid/dataview/dataview.dart';
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  List<Column> columns = [];
-  Map<String, String> columnFilters = {};
+  final List<Column> columns = <Column>[];
+  Map<String, String> columnFilters = <String,String>{};
 
-  var gridOptions = new GridOptions(
+  final GridOptions gridOptions = new GridOptions(
       enableCellNavigation: true,
       showHeaderRow: true,
       headerRowHeight: 30,
@@ -47,8 +47,8 @@ class AppElement extends PolymerElement {
 
       // prepare the data
       data = <DataItem>[];
-      for (var i = 0; i < 100; i++) {
-        var d = new MapDataItem();
+      for (int i = 0; i < 100; i++) {
+        final MapDataItem d = new MapDataItem();
         d['id'] = i;
         for (int j = 0; j < columns.length; j++) {
           d[j.toString()] = rnd.nextInt(10);
@@ -64,7 +64,7 @@ class AppElement extends PolymerElement {
               columns: columns,
               gridOptions: gridOptions)
           .then((_) {
-        dataView.onBwuRowCountChanged.listen((e) {
+        dataView.onBwuRowCountChanged.listen((core.RowCountChanged e) {
           grid.updateRowCount();
           grid.render();
         });
@@ -74,15 +74,15 @@ class AppElement extends PolymerElement {
           grid.render();
         });
 
-        filterChangedHandler(dom.Event e) {
-          var columnId = (e.target as dom.Element).dataset['columnId'];
+        void filterChangedHandler(dom.Event e) {
+          final String columnId = (e.target as dom.Element).dataset['columnId'];
           if (columnId != null) {
             columnFilters[columnId] = (e.target as dom.InputElement).value;
             dataView.refresh();
           }
         }
 
-        grid.onBwuHeaderRowCellRendered.listen((e) {
+        grid.onBwuHeaderRowCellRendered.listen((core.HeaderRowCellRendered e) {
           e.node.children.clear();
           String value = columnFilters[e.columnDef.id];
           if (value == null) {
@@ -113,8 +113,8 @@ class AppElement extends PolymerElement {
     }
   }
 
-  bool filter(DataItem item, [args]) {
-    for (final columnId in columnFilters.keys) {
+  bool filter(DataItem item, [Object args]) {
+    for (final String columnId in columnFilters.keys) {
       if (columnId != null && columnFilters[columnId].isNotEmpty) {
         Column c = grid.getColumns[grid.getColumnIndex(columnId)];
         if (item[c.field].toString() != columnFilters[columnId]) {
