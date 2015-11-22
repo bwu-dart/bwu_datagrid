@@ -245,6 +245,23 @@
         border-right-color: silver;
         border-right-style: solid;
       }
+
+      /**
+        Styles for the e04_model and e09_row_reordering examples
+      **/
+      :host::content .cell-selection,
+      .cell-selection {
+        border-right: solid silver;
+        background: #f5f5f5;
+        color: gray;
+        text-align: right;
+        font-size: 10px;
+      }
+
+      :host::content .bwu-datagrid-row.selected .cell-selection,
+      .bwu-datagrid-row.selected .cell-selection {
+        background-color: transparent; /* show default selected row background */
+      }
     </style>
   </template>
 </dom-module>

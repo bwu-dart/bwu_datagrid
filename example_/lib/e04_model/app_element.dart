@@ -16,6 +16,8 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
+import 'package:bwu_datagrid/components/jq_ui_icon/jq_ui_icon.dart';
+import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
@@ -23,8 +25,11 @@ import 'inline_filter_panel.dart';
 
 import 'package:bwu_datagrid_examples/shared/filter_form.dart';
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-/// Silence analyzer [InlineFilterPanel], [FilterForm]
+/// Silence analyzer [InlineFilterPanel], [FilterForm], [exampleStyleSilence],
+/// [OptionsPanel], [JqUiIcon], [jqUiStyleSilence]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
@@ -112,7 +117,7 @@ class AppElement extends PolymerElement {
   String sortcol = "title";
   int sortdir = 1;
   @property String percentCompleteThreshold;
-  @property String searchString;
+  @property String searchString = '';
 
   @override
   void attached() {
@@ -329,16 +334,19 @@ class AppElement extends PolymerElement {
   }
 
   // Header row search icon
-  void toggleFilterRow(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void toggleFilterRow([_, __]) {
     grid.setTopPanelVisibility = !grid.getGridOptions.showTopPanel;
   }
 
-  void iconMouseOver(dom.MouseEvent e, Object detail, dom.Element target) {
-    target.classes.add('ui-state-hover');
+  @reflectable
+  void iconMouseOver(dom.MouseEvent e, [_]) {
+    (e.target as dom.Element).classes.add('ui-state-hover');
   }
 
-  void iconMouseOut(dom.MouseEvent e, Object detail, dom.Element target) {
-    target.classes.remove('ui-state-hover');
+  @reflectable
+  void iconMouseOut(dom.MouseEvent e, [_]) {
+    (e.target as dom.Element).classes.remove('ui-state-hover');
   }
 
   void onKeyDownHandler(core.KeyDown e) {

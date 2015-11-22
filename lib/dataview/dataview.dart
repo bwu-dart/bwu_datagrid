@@ -879,7 +879,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     totalRows = filteredItems['totalRows'];
     List<T> newRows = filteredItems['rows'] as List<T>;
 
-    groups = [];
+    groups = <core.Group>[];
     if (groupingInfos.length > 0) {
       groups = extractGroups(newRows);
       if (groups.length > 0) {

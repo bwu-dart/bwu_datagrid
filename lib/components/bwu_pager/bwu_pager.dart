@@ -11,6 +11,7 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
 
 class NavState extends JsProxy {
   @reflectable bool canGotoFirst;
@@ -20,22 +21,21 @@ class NavState extends JsProxy {
   PagingInfo pagingInfo;
 
   NavState(
-      {this.canGotoFirst,
-      this.canGotoLast,
-      this.canGotoPrev,
-      this.canGotoNext});
+      {this.canGotoFirst: false,
+      this.canGotoLast: false,
+      this.canGotoPrev: false,
+      this.canGotoNext: false});
 }
 
+/// Silence analyzer [jqUiStyleSilence]
 @PolymerRegister('bwu-pager')
 class BwuPager extends PolymerElement {
   BwuPager.created() : super.created();
 
-//  bool _isInitialized = false; // TODO(zoechi) why is it unused?
-
   DataView _dataView;
   BwuDatagrid _grid;
 
-  @property bool pagerSettingsExpanded = true;
+  @property bool pagerSettingsHidden = true;
   @property String pagerStatusText = '';
   @property final NavState navState = new NavState();
 
@@ -56,18 +56,26 @@ class BwuPager extends PolymerElement {
     navState.pagingInfo = _dataView.getPagingInfo();
     int lastPage = navState.pagingInfo.totalPages - 1;
 
-    navState.canGotoFirst = !cannotLeaveEditMode &&
-        navState.pagingInfo.pageSize != 0 &&
-        navState.pagingInfo.pageNum > 0;
-    navState.canGotoLast = !cannotLeaveEditMode &&
-        navState.pagingInfo.pageSize != 0 &&
-        navState.pagingInfo.pageNum != lastPage;
-    navState.canGotoPrev = !cannotLeaveEditMode &&
-        navState.pagingInfo.pageSize != 0 &&
-        navState.pagingInfo.pageNum > 0;
-    navState.canGotoNext = !cannotLeaveEditMode &&
-        navState.pagingInfo.pageSize != 0 &&
-        navState.pagingInfo.pageNum < lastPage;
+    set(
+        'navState.canGotoFirst',
+        !cannotLeaveEditMode &&
+            navState.pagingInfo.pageSize != 0 &&
+            navState.pagingInfo.pageNum > 0);
+    set(
+        'navState.canGotoLast',
+        !cannotLeaveEditMode &&
+            navState.pagingInfo.pageSize != 0 &&
+            navState.pagingInfo.pageNum != lastPage);
+    set(
+        'navState.canGotoPrev',
+        !cannotLeaveEditMode &&
+            navState.pagingInfo.pageSize != 0 &&
+            navState.pagingInfo.pageNum > 0);
+    set(
+        'navState.canGotoNext',
+        !cannotLeaveEditMode &&
+            navState.pagingInfo.pageSize != 0 &&
+            navState.pagingInfo.pageNum < lastPage);
   }
 
   void setPageSize(int n) {
@@ -75,14 +83,16 @@ class BwuPager extends PolymerElement {
     _dataView.setPagingOptions(new PagingInfo(pageSize: n));
   }
 
-  void gotoFirst(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void gotoFirst([_, __]) {
     updateNavState();
     if (navState.canGotoFirst) {
       _dataView.setPagingOptions(new PagingInfo(pageNum: 0));
     }
   }
 
-  void gotoLast(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void gotoLast([_, __]) {
     updateNavState();
     if (navState.canGotoLast) {
       _dataView.setPagingOptions(
@@ -90,7 +100,8 @@ class BwuPager extends PolymerElement {
     }
   }
 
-  void gotoPrev(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void gotoPrev([_, __]) {
     updateNavState();
     if (navState.canGotoPrev) {
       _dataView.setPagingOptions(
@@ -98,7 +109,8 @@ class BwuPager extends PolymerElement {
     }
   }
 
-  void gotoNext(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void gotoNext([_, __]) {
     updateNavState();
     if (navState.canGotoNext) {
       _dataView.setPagingOptions(
@@ -106,8 +118,8 @@ class BwuPager extends PolymerElement {
     }
   }
 
-  void pageSizeClickHandler(
-      dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void pageSizeClickHandler(dom.MouseEvent e, [_]) {
     int pagesize = utils.parseInt((e.target as dom.Element).dataset['value'],
         onErrorDefault: 0);
     //if (pagesize != 0) {
@@ -120,17 +132,21 @@ class BwuPager extends PolymerElement {
     //}
   }
 
-  void toggleMouseOver(dom.MouseEvent e, Object detail, dom.Element target) {
-    target.classes.add('ui-state-hover');
+  // TODO(zoechi) the hover classes should be set on the outer span, not the inner
+  // maybe PolymerDom().. fixes this?
+  @reflectable
+  void toggleMouseOver(dom.MouseEvent e, [_]) {
+    (e.target as dom.Element).classes.add('ui-state-hover');
   }
 
-  void toggleMouseOut(dom.MouseEvent e, Object detail, dom.Element target) {
-    target.classes.remove('ui-state-hover');
+  @reflectable
+  void toggleMouseOut(dom.MouseEvent e, [_]) {
+    (e.target as dom.Element).classes.remove('ui-state-hover');
   }
 
-  void expandPagerSettingsClickHandler(
-      dom.MouseEvent e, Object detail, dom.Element target) {
-    pagerSettingsExpanded = !pagerSettingsExpanded;
+  @reflectable
+  void togglePagerSettingsHidden([_, __]) {
+    set('pagerSettingsHidden', !pagerSettingsHidden);
   }
 
   void updatePager(PagingInfo pagingInfo) {
@@ -140,15 +156,32 @@ class BwuPager extends PolymerElement {
       final int totalRowsCount = _dataView.getItems().length;
       final int visibleRowsCount = pagingInfo.totalRows;
       if (visibleRowsCount < totalRowsCount) {
-        pagerStatusText =
-            'Showing ${visibleRowsCount} of ${totalRowsCount} rows';
+        set('pagerStatusText',
+            'Showing ${visibleRowsCount} of ${totalRowsCount} rows');
       } else {
-        pagerStatusText = 'Showing all ${totalRowsCount} rows';
+        set('pagerStatusText', 'Showing all ${totalRowsCount} rows');
       }
-      pagerStatusText = 'Showing all ${pagingInfo.totalRows} rows';
+      set('pagerStatusText', 'Showing all ${pagingInfo.totalRows} rows');
     } else {
-      pagerStatusText =
-          'Showing page ${pagingInfo.pageNum + 1} of ${pagingInfo.totalPages}';
+      set('pagerStatusText',
+          'Showing page ${pagingInfo.pageNum + 1} of ${pagingInfo.totalPages}');
     }
   }
+
+  @reflectable
+  String firstClasses(bool enabled) =>
+      'ui-icon ui-icon-seek-first ${enabled ? '':  "ui-state-disabled"  }';
+  @reflectable
+  String prevClasses(bool enabled) =>
+      'ui-icon ui-icon-seek-prev ${enabled ? '': "ui-state-disabled" }';
+  @reflectable
+  String nextClasses(bool enabled) =>
+      'ui-icon ui-icon-seek-next ${enabled ? '': "ui-state-disabled" }';
+  @reflectable
+  String lastClasses(bool enabled) =>
+      'ui-icon ui-icon-seek-end ${enabled ? '': "ui-state-disabled" }';
+
+  @reflectable
+  String pagerSettingsHiddenClasses(bool pagerSettingsHidden) =>
+      pagerSettingsHidden ? 'bwu-pager-settings-hidden' : '';
 }

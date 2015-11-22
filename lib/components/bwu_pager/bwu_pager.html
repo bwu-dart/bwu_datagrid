@@ -1,43 +1,88 @@
 <!DOCTYPE html>
 <dom-module id='bwu-pager'>
   <template>
-    <link rel='stylesheet' href='bwu_pager.css'>
+    <style include="jq-ui-style">
+      :host {
+        display: block;
+        width: 100%;
+        height: 26px;
+        border: 1px solid gray;
+        border-top: 0;
+        background: url('../../asset/images/header-columns-bg.gif') repeat-x center bottom;
+        vertical-align: middle;
+      }
 
-    <!--<span class='bwu-pager'>-->
-      <span class='bwu-pager-nav'>
-        <span class='ui-state-default ui-corner-all ui-icon-container' on-click='{{gotoFirst}}' on-mouseover='{{toggleMouseOver}}' on-mouseout='{{toggleMouseOut}}'>
-          <span class='ui-icon ui-icon-seek-first {{ {"ui-state-disabled": !navState.canGotoFirst} }}'></span>
-        </span>
+      .bwu-pager-settings-hidden {
+        display: none;
+      }
 
-        <span class='ui-state-default ui-corner-all ui-icon-container' on-click='{{gotoPrev}}' on-mouseover='{{toggleMouseOver}}' on-mouseout='{{toggleMouseOut}}'>
-          <span class='ui-icon ui-icon-seek-prev {{ {"ui-state-disabled": !navState.canGotoPrev} }}'></span>
-        </span>
+      .bwu-pager-status {
+        display: inline-block;
+        padding: 6px;
+      }
 
-        <span class='ui-state-default ui-corner-all ui-icon-container' on-click='{{gotoNext}}' on-mouseover='{{toggleMouseOver}}' on-mouseout='{{toggleMouseOut}}'>
-          <span class='ui-icon ui-icon-seek-next {{ {"ui-state-disabled": !navState.canGotoNext} }}'></span>
-        </span>
+      .ui-icon-container.ui-state-default { /* second class only to increase selectivity to overrule default ui-state-default border */
+        display: inline-block;
+        margin: 2px;
+        border-color: gray;
+      }
 
-        <span class='ui-state-default ui-corner-all ui-icon-container' on-click='{{gotoLast}}' on-mouseover='{{toggleMouseOver}}' on-mouseout='{{toggleMouseOut}}'>
-          <span class='ui-icon ui-icon-seek-end {{ {"ui-state-disabled": !navState.canGotoLast} }}'></span>
-        </span>
+      .bwu-pager-nav {
+        display: inline-block;
+        float: left;
+        padding: 2px;
+      }
+
+      .bwu-pager-settings {
+        display: block;
+        float: right;
+        padding: 2px;
+      }
+
+      .bwu-pager-settings * {
+        vertical-align: middle;
+      }
+
+      .bwu-pager-settings a {
+        padding: 2px;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    </style>
+
+    <span class='bwu-pager-nav'>
+      <span class='ui-state-default ui-corner-all ui-icon-container' on-click='gotoFirst' on-mouseover='toggleMouseOver' on-mouseout='toggleMouseOut'>
+        <span class$='[[firstClasses(navState.canGotoFirst)]]'></span>
       </span>
 
-      <span class='bwu-pager-settings'>
-        <span class='{{ {"bwu-pager-settings-expanded": pagerSettingsExpanded} }}'>
-          Show:
-          <a data-value='0' on-click='{{pageSizeClickHandler}}'>All</a>
-          <a data-value='-1' on-click='{{pageSizeClickHandler}}'>Auto</a>
-          <a data-value='25' on-click='{{pageSizeClickHandler}}'>25</a>
-          <a data-value='50' on-click='{{pageSizeClickHandler}}'>50</a>
-          <a data-value='100' on-click='{{pageSizeClickHandler}}'>100</a>
-        </span>
-        <span class='ui-state-default ui-corner-all ui-icon-container' on-click='{{expandPagerSettingsClickHandler}}'  on-mouseover='{{toggleMouseOver}}' on-mouseout='{{toggleMouseOut}}'>
-          <span class='ui-icon ui-icon-lightbulb'></span>
-        </span>
+      <span class='ui-state-default ui-corner-all ui-icon-container' on-click='gotoPrev' on-mouseover='toggleMouseOver' on-mouseout='toggleMouseOut'>
+        <span class$='[[prevClasses(navState.canGotoPrev)]]'></span>
       </span>
 
-      <span class='bwu-pager-status'>{{pagerStatusText}}</span>
-    <!--</span>-->
+      <span class='ui-state-default ui-corner-all ui-icon-container' on-click='gotoNext' on-mouseover='toggleMouseOver' on-mouseout='toggleMouseOut'>
+        <span class$='[[nextClasses(navState.canGotoNext)]]'></span>
+      </span>
+
+      <span class='ui-state-default ui-corner-all ui-icon-container' on-click='gotoLast' on-mouseover='toggleMouseOver' on-mouseout='toggleMouseOut'>
+        <span class$='[[lastClasses(navState.canGotoLast)]]'></span>
+      </span>
+    </span>
+
+    <span class='bwu-pager-settings'>
+      <span class$='[[pagerSettingsHiddenClasses(pagerSettingsHidden)]]'>
+        Show:
+        <a data-value='0' on-click='pageSizeClickHandler'>All</a>
+        <a data-value='-1' on-click={pageSizeClickHandler'>Auto</a>
+        <a data-value='25' on-click='pageSizeClickHandler'>25</a>
+        <a data-value='50' on-click='pageSizeClickHandler'>50</a>
+        <a data-value='100' on-click='pageSizeClickHandler'>100</a>
+      </span>
+      <span class='ui-state-default ui-corner-all ui-icon-container' on-tap='togglePagerSettingsHidden' on-mouseover='toggleMouseOver' on-mouseout='toggleMouseOut'>
+        <span class='ui-icon ui-icon-lightbulb'></span>
+      </span>
+    </span>
+
+    <span class='bwu-pager-status'>[[pagerStatusText]]</span>
 
   </template>
 </dom-module>
