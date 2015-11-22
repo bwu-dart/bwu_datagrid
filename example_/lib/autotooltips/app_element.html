@@ -3,6 +3,8 @@
   <template>
     <style include="example-style"></style>
     <options-panel source-dir="autotooltips">
+      <bwu-datagrid id='myGrid' theme="example-style"></bwu-datagrid>
+
       <span class="title">
         AutoTooltips plugin
       </span>
@@ -11,13 +13,12 @@
         <p>Resize the columns until the ellipsis is shown in a cell or the header. Hover over a cell to see tooltip.</p>
 
         <h2>Usage:</h2>
-<!-- TODO(zoechi) check and update -->
+<!-- TODO(zoechi) check usage code example and update -->
         <pre style="background-color: white; font-size: 110%; border-radius: 5px; padding: 20px; ">
 plugin = new AutoTooltips(pluginOptions);
 grid.registerPlugin(plugin);
 grid.render();</pre>
       </div>
-      <bwu-datagrid id='myGrid' theme="example-style"></bwu-datagrid>
     </options-panel>
   </template>
 </dom-module>

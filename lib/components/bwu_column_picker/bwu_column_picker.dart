@@ -108,6 +108,7 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   void _handleHeaderContextMenu(HeaderContextMenu e) {
+    e.preventDefault();
     clear('columnCheckboxes');
     _updateColumnOrder();
 

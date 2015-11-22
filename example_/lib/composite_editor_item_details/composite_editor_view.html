@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <dom-module id='composite-editor-view'>
   <template>
-    <link rel="stylesheet" href='packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
-    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
-    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
-    <link rel='stylesheet' href='../asset/examples.css'>
-
-    <style>
+    <style include="bwu-datagrid-example-theme">
       :host {
         visibility: hidden;
         z-index: 10000;
@@ -16,7 +11,7 @@
         padding: 10px;
         background: #efefef;
         -moz-box-shadow: 0 0 15px black;
-        -webkit-box-shadow: 0x 0x 15px black;
+        -webkit-box-shadow: 0 0 15px black;
         box-shadow: 0 0 15px black;
 
         position: absolute;
@@ -47,17 +42,17 @@
     </style>
 
     <div class='item-details-form'>
-      <template repeat='{{column in columns}}'>
+      <template is="dom-repeat" items='{{columns}}' as="column">
         <div class='item-details-label'>
-          {{column.name}}
+          [[column.name]]
         </div>
-        <div class='item-details-editor-container' data-editorid='{{column.id}}'></div>
+        <div class='item-details-editor-container' data-editorid$='[[column.id]]'></div>
       </template>
 
       <hr/>
       <div class='item-details-form-buttons'>
-        <button data-action='save' on-click='{{btnSaveHandler}}'>Save</button>
-        <button data-action='cancel' on-click='{{btnCancelHandler}}'>Cancel</button>
+        <button data-action='save' on-click='btnSaveHandler'>Save</button>
+        <button data-action='cancel' on-click='btnCancelHandler'>Cancel</button>
       </div>
     </div>
   </template>

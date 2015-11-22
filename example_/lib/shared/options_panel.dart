@@ -6,7 +6,7 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 
 @PolymerRegister('options-panel')
 class OptionsPanel extends PolymerElement {
-  // TODO(zoechi) fix for release
+  // TODO(zoechi) update branch name for release
   static const String _branch = 'polymer1';
 
   OptionsPanel.created() : super.created();

@@ -57,10 +57,10 @@ class CompositeEditor extends Editor {
   List<Editor> editors;
 
   NodeBox getContainerBox(String id) {
-    var c = containers[id];
-    math.Rectangle<int> offset = c.offset as math.Rectangle<int>;
-    var w = c.offsetWidth.round();
-    var h = c.offsetHeight.round();
+    var container = containers[id];
+    math.Rectangle<int> offset = container.offset as math.Rectangle<int>;
+    var w = container.offsetWidth.round();
+    var h = container.offsetHeight.round();
 
     return new NodeBox(
         top: offset.top.round(),

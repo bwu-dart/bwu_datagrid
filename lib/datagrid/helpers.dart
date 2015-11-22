@@ -9,6 +9,7 @@ import 'package:bwu_datagrid/formatters/formatters.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 import 'package:collection/wrappers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:polymer/polymer.dart';
 
 abstract class DataProvider<T extends core.ItemBase> {
   List<T> _items;
@@ -162,9 +163,9 @@ class EditController {
 typedef void AsyncPostRenderFn(
     dom.Element target, int row, DataItem dataContext, Column colDef);
 
-class Column {
-  String id;
-  String name;
+class Column extends JsProxy {
+  @reflectable String id;
+  @reflectable String name;
   dom.Element nameElement;
   String field;
   int width;

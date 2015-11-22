@@ -17,7 +17,10 @@ import 'package:bwu_datagrid_examples/required_field_validator.dart';
 import 'package:bwu_datagrid_examples/composite_editor.dart';
 import 'composite_editor_view.dart';
 import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
@@ -107,8 +110,8 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      grid.onBwuAddNewRow.listen(addNewRowHandler);
-      grid.onBwuValidationError.listen(validationErrorHandler);
+      grid.onBwuAddNewRow.listen(_addNewRowHandler);
+      grid.onBwuValidationError.listen(_validationErrorHandler);
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
@@ -124,7 +127,8 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void openDetails(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void openDetails(dom.MouseEvent e, [_]) {
     if (grid.getEditorLock.isActive &&
         !grid.getEditorLock.commitCurrentEdit()) {
       return;
@@ -133,7 +137,7 @@ class AppElement extends PolymerElement {
     final CompositeEditorView modal = new CompositeEditorView()
       //$("<div class='item-details-form'></div>");
       ..grid = grid
-      ..columns = columns;
+      ..setColumns(columns);
     dom.document.body.append(modal);
 
     final CompositeEditorOptions ceOptions = new CompositeEditorOptions(
@@ -155,7 +159,7 @@ class AppElement extends PolymerElement {
     });
   }
 
-  void addNewRowHandler(AddNewRow e) {
+  void _addNewRowHandler(AddNewRow e) {
     final DataItem item = e.item;
 //    var column = e.column;
     grid.invalidateRow(data.length);
@@ -164,7 +168,7 @@ class AppElement extends PolymerElement {
     grid.render();
   }
 
-  void validationErrorHandler(ValidationError e) {
+  void _validationErrorHandler(ValidationError e) {
     // handle validation errors originating from the CompositeEditor
     if (e.editor != null && (e.editor is CompositeEditor)) {
 //      var err;

@@ -18,6 +18,9 @@ class CompositeEditorView extends PolymerElement {
 
   BwuDatagrid grid;
   @property List<Column> columns;
+  void setColumns(List<Column> value) {
+    async(() => set('columns', value));
+  }
 
   void attached() {
     style.visibility = 'hidden';
@@ -51,11 +54,13 @@ class CompositeEditorView extends PolymerElement {
     }
   }
 
-  void btnSaveHandler(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void btnSaveHandler(dom.MouseEvent e, [_]) {
     grid.getEditController.commitCurrentEdit();
   }
 
-  void btnCancelHandler(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void btnCancelHandler(dom.MouseEvent e, [_]) {
     grid.getEditController.cancelCurrentEdit();
   }
 

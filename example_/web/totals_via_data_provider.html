@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <title>BWU Datagrid example: Implementing totals row via a data provider</title>
-
-    <link rel="import" href="packages/bwu_datagrid_examples/totals_via_data_provider/app_element.html">
-
-    <link rel='stylesheet' href='packages/bwu_datagrid_examples/asset/examples.css'>
+    <script src="packages/web_components/webcomponents.min.js"></script>
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer.dom = 'shadow';
+    </script>
   </head>
-
   <body>
     <app-element></app-element>
-    <script type="application/dart">export 'package:polymer/init.dart';</script>
+    <script type="application/dart" src="totals_via_data_provider.dart"></script>
+    <script src="packages/browser/dart.js"></script>
   </body>
 </html>
