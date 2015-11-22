@@ -221,6 +221,18 @@
       }
 
       /**
+        Styles for cells in examples
+      **/
+      :host::content .cell-title,
+      .cell-title {
+        font-weight: bold;
+      }
+
+      :host::content .cell-effort-driven,
+      .cell-effort-driven {
+        text-align: center;
+      }
+      /**
         Style for the checkbox_column_select example checkbox column
       **/
       :host::content .bwu-datagrid-cell-checkboxsel,
@@ -229,7 +241,6 @@
         border-right-color: silver;
         border-right-style: solid;
       }
-
     </style>
   </template>
 </dom-module>

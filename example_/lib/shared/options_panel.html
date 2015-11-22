@@ -27,6 +27,28 @@
         @apply(--options-panel);
       }
 
+      ::content h2,
+      h2 {
+
+        font-size: 10pt;
+        border-bottom: 1px dotted gray;
+      }
+
+      ::content ul,
+      ul {
+        margin-left: 0;
+        padding: 0;
+        cursor: default;
+      }
+
+      ::content li,
+      li {
+        background: url('../../../packages/bwu_datagrid/asset/images/arrow_right_spearmint.png') no-repeat center left;
+        padding: 0 0 0 14px;
+
+        list-style: none;
+        margin: 0;
+      }
     </style>
     <div class="layout horizontal wrap start">
       <div class="grid">

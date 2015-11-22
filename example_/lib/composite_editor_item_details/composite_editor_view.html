@@ -40,7 +40,6 @@
         padding: 0 4px;
       }
     </style>
-
     <div class='item-details-form'>
       <template is="dom-repeat" items='{{columns}}' as="column">
         <div class='item-details-label'>
@@ -48,7 +47,6 @@
         </div>
         <div class='item-details-editor-container' data-editorid$='[[column.id]]'></div>
       </template>
-
       <hr/>
       <div class='item-details-form-buttons'>
         <button data-action='save' on-click='btnSaveHandler'>Save</button>
