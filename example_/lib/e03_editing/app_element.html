@@ -13,11 +13,8 @@
           <li>custom editors and validators</li>
           <li>auto-edit settings</li>
         </ul>
-
         <h2>Options:</h2>
-        <button on-click="{{enableAutoEdit}}">Auto-edit ON</button>
-        &nbsp;
-        <button on-click="{{disableAutoEdit}}">Auto-edit OFF</button>
+        <button on-click="toggleAutoEdit">[[autoEditButtonLabel]]</button>
       </div>
     </options-panel>
   </template>

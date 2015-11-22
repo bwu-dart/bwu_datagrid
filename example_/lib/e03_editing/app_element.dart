@@ -123,12 +123,16 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void enableAutoEdit(dom.MouseEvent e, dynamic details, dom.Element target) {
-    grid.setGridOptions = new GridOptions.unitialized()..autoEdit = true;
-  }
+  @property String autoEditButtonLabel = 'Auto-edit ON';
 
-  void disableAutoEdit(dom.MouseEvent e, dynamic details, dom.Element target) {
-    grid.setGridOptions = new GridOptions.unitialized()..autoEdit = false;
+  @reflectable
+  void toggleAutoEdit([_, __]) {
+    grid.setGridOptions = new GridOptions.unitialized()..autoEdit = !grid.gridOptions.autoEdit;
+    if(grid.gridOptions.autoEdit) {
+      set('autoEditButtonLabel', 'Auto-edit OFF');
+    } else {
+      set('autoEditButtonLabel', 'Auto-edit OFF');
+    }
   }
 
   void addnewRowHandler(AddNewRow e) {

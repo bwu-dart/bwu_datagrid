@@ -7,7 +7,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 class NumericRangeEditor extends Editor {
   EditorArgs args;
-  dom.TextInputElement $from, $to;
+  dom.TextInputElement fromInput, toInput;
 
   NumericRangeEditor newInstance(EditorArgs args) {
     return new NumericRangeEditor._(args);
@@ -17,17 +17,17 @@ class NumericRangeEditor extends Editor {
 
   NumericRangeEditor._(this.args) {
     args.container.children.clear();
-    $from = new dom.TextInputElement()
+    fromInput = new dom.TextInputElement()
       ..style.width = '40px'
       ..onKeyDown.listen(handleKeyDown);
-    args.container.append($from);
+    args.container.append(fromInput);
 
     args.container.appendHtml("&nbsp; to &nbsp;");
 
-    $to = new dom.TextInputElement()
+    toInput = new dom.TextInputElement()
       ..style.width = '40px'
       ..onKeyDown.listen(handleKeyDown);
-    args.container.append($to);
+    args.container.append(toInput);
 
     focus();
   }
@@ -53,37 +53,37 @@ class NumericRangeEditor extends Editor {
 
   @override
   void focus() {
-    $from.focus();
+    fromInput.focus();
   }
 
   @override
   bool get isValueChanged {
     return args.item['from'] !=
-            tools.parseInt($from.value, onErrorDefault: 0) ||
-        args.item['to'] != tools.parseInt($from.value, onErrorDefault: 0);
+            tools.parseInt(fromInput.value, onErrorDefault: 0) ||
+        args.item['to'] != tools.parseInt(fromInput.value, onErrorDefault: 0);
   }
 
   @override
   void loadValue(item) {
-    $from.value = item['from'].toString();
-    $to.value = item['to'].toString();
+    fromInput.value = item['from'].toString();
+    toInput.value = item['to'].toString();
   }
 
   @override
   Map serializeValue() {
     return {
-      'from': tools.parseInt($from.value, onErrorDefault: 0),
-      'to': tools.parseInt($to.value, onErrorDefault: 0)
+      'from': tools.parseInt(fromInput.value, onErrorDefault: 0),
+      'to': tools.parseInt(toInput.value, onErrorDefault: 0)
     };
   }
 
   @override
   ValidationResult validate() {
-    if (!tools.isInt($from.value) || !tools.isInt($to.value)) {
+    if (!tools.isInt(fromInput.value) || !tools.isInt(toInput.value)) {
       return new ValidationResult(false, 'Please type in valid numbers.');
     }
 
-    if (tools.parseInt($from.value) > tools.parseInt($to.value)) {
+    if (tools.parseInt(fromInput.value) > tools.parseInt(toInput.value)) {
       return new ValidationResult(false, '"from" cannot be greater than "to"');
     }
 
