@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <dom-module id='app-element'>
   <template>
-    <style include="example-style"></style>
+    <style include="example-style">
+      pre {
+        background-color: white;
+        font-size: 110%;
+        border-radius: 5px;
+        padding: 20px;
+      }
+    </style>
     <options-panel source-dir="autotooltips">
       <bwu-datagrid grid id='myGrid' theme="example-style"></bwu-datagrid>
       <span class="title">
@@ -13,7 +20,7 @@
 
         <h2>Usage:</h2>
 <!-- TODO(zoechi) check usage code example and update -->
-        <pre style="background-color: white; font-size: 110%; border-radius: 5px; padding: 20px; ">
+        <pre>
 plugin = new AutoTooltips(pluginOptions);
 grid.registerPlugin(plugin);
 grid.render();</pre>
