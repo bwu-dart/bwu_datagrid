@@ -14,11 +14,13 @@ import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/plugins/row_move_manager.dart';
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
 import 'drop_zone.dart';
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 
-/// Silence analyzer [DropZone]
+/// Silence analyzer [DropZone], [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
@@ -142,7 +144,8 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void zoneDropHandler(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void zoneDropHandler(dom.MouseEvent e, [_]) {
     if (e.dataTransfer.getData('text/bwu-datagrid-recycle') != "recycle") {
       return;
     }

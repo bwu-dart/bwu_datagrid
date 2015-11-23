@@ -8,7 +8,6 @@ import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
-//import 'package:bwu_datagrid/effects/sortable.dart' as sort;
 
 class RowMoveManager extends Plugin {
   static const DRAG_DROP_ID = 'text/bwu-datagrid-row-move';
@@ -22,8 +21,6 @@ class RowMoveManager extends Plugin {
   int _canvasTop;
   bool _dragging = false;
   List<async.StreamSubscription> _subscriptions = [];
-
-//  sort.Sortable _sortable; // TODO(zoechi) why is it unused?
 
   dom.Element _selectionProxy;
   dom.Element _dummyProxy;
@@ -105,6 +102,7 @@ class RowMoveManager extends Plugin {
         ..style.width = '${utils.innerWidth(_canvas)}px'
         ..style.top = '-1000px';
       _canvas.append(_guide);
+      print('DragStart done');
     });
   }
 

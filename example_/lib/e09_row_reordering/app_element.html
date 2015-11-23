@@ -1,40 +1,9 @@
 <!DOCTYPE html>
 <dom-module id='app-element'>
   <template>
-    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
-    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
-    <link rel="stylesheet" href='../../../packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
-    <link rel='stylesheet' href='../asset/examples.css'>
-
-    <style>
-      :host {
-        display: block;
-        width: 100%;
-      }
-    </style>
-    <style>
-      bwu-datagrid /deep/ .cell-effort-driven {
-        text-align: center;
-      }
-
-      bwu-datagrid /deep/ .cell-reorder {
-        cursor: move;
-        background: url("../../../packages/bwu_datagrid/asset/images/drag-handle.png") no-repeat center center;
-      }
-
-      bwu-datagrid /deep/ .cell-selection {
-        border-right: solid silver;
-        background: #f5f5f5;
-        color: gray;
-        text-align: right;
-        font-size: 10px;
-      }
-
-      bwu-datagrid /deep/ .slick-row.selected .cell-selection {
-        background-color: transparent; /* show default selected row background */
-      }
-
-      * /deep/ .recycle-bin {
+    <style include="example-grid-header-style"></style>
+    <style include="example-style">
+      .recycle-bin {
         width: 120px;
         border: 1px solid gray;
         background: beige;
@@ -48,50 +17,37 @@
         -webkit-border-radius: 10px;
       }
 
-      * /deep/ .drag-valid .recycle-bin {
+      .drag-valid .recycle-bin {
         background-color: pink;
       }
 
-      * /deep/ .drag-over .recycle-bin {
+      .drag-over .recycle-bin {
         background-color: yellow;
       }
-
-      bwu-datagrid /deep/ .red {
-        background: red;
-      }
-
-      bwu-datagrid /deep/ .bold {
-        font-weight: bold;
-      }
     </style>
-
-    <div style='position:relative'>
-      <div style='width:600px;'>
-        <div class="grid-header" style="width:100%">
+    <options-panel source-dir="e09_row_reordering">
+      <div grid>
+        <div class="grid-header">
           <label>Santa's TODO list:</label>
         </div>
-        <bwu-datagrid id='myGrid' style='width:100%;height:500px;'></bwu-datagrid>
+        <bwu-datagrid id='myGrid' theme="example-style"></bwu-datagrid>
       </div>
-
-      <div class='options-panel'>
+      <span class="title">
+        Row reordering and drag n' drop
+      </span>
+      <div>
+        <h2>Tips:</h2>
         Click to select, Ctrl-click to toggle selection, Shift-click to select a range.<br/>
         Drag one or more rows by the handle to reorder.<br/>
         Drag one or more rows to the recycle bin to delete.
-
         <br/>
         <br/>
-
-        <drop-zone  dropzone='move s:text/bwu-datagrid-recycle' on-drop="{{zoneDropHandler}}">
+        <drop-zone  dropzone='move s:text/bwu-datagrid-recycle' on-drop="zoneDropHandler">
           <div class="recycle-bin" >
             Recycle Bin
           </div>
         </drop-zone>
-
-        <h2>View Source:</h2>
-        <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e09_row_reordering/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-        </ul>
       </div>
-    </div>
+    </options-panel>
   </template>
 </dom-module>

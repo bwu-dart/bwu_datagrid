@@ -266,7 +266,7 @@
       }
 
       /**
-        Styles for the o05_collapsing example
+        Styles for the e05_collapsing example
       **/
       /* TODO(zoechi) doesn't seem to be used in this example */
       /*:host::content span.highlight,*/
@@ -286,6 +286,14 @@
       :host::content .toggle.collapse,
       .toggle.collapse {
         background: url(../../../packages/bwu_datagrid/asset/images/collapse.gif) no-repeat center center;
+      }
+      /**
+        Styles for the e09_row_reordering example
+      **/
+      :host::content .cell-reorder,
+      .cell-reorder {
+        cursor: move;
+        background: url("../../../packages/bwu_datagrid/asset/images/drag-handle.png") no-repeat center center;
       }
     </style>
   </template>

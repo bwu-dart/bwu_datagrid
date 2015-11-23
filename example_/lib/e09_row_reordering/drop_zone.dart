@@ -18,9 +18,10 @@ class DropZone extends PolymerElement {
   bool _isAcceptedDragStarted = false;
   List<String> _accept;
 
-  @property String dropzone;
+  @Property(observer: 'dropzoneChanged') String dropzone;
 
-  void dropzoneChanged(_) {
+  @reflectable
+  void dropzoneChanged([_, __]) {
     String s = 'move s:text/bwu-datagrid-recycle file:text/blajflaskjfd';
     final Match match = new RegExp(r'^(?:copy|link|move)(.*)').firstMatch(s);
     final Iterable<Match> matches =

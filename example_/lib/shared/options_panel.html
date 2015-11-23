@@ -56,12 +56,18 @@
       </div>
       <div class="options">
         <h2>Demonstrates:</h2>
-          <content select=".title"></content>
+          <ul>
+            <li><content select=".title"></content></li>
+          </ul>
         <div><content></content></div>
         <h2>View Source:</h2>
-        <a href$="[[gitHubSourceUri(sourceDir)]]" target="_sourcewindow">
-          View the source for this example on Github
-        </a>
+        <ul>
+          <li>
+            <a href$="[[gitHubSourceUri(sourceDir)]]" target="_sourcewindow">
+              View the source for this example on Github
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </template>

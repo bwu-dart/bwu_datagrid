@@ -20,39 +20,37 @@
         </bwu-datagrid>
         <bwu-pager id="pager"></bwu-pager>
       </div>
+      <span class="title">
+        Model
+      </span>
       <div>
-        <span class="title">
-          Model
-        </span>
+        <b>Search:</b>
+        <hr/>
         <div>
-          <b>Search:</b>
-          <hr/>
-          <div>
-            <filter-form id="filter-form" threshold="{{percentCompleteThreshold}}" search-string="{{searchString}}"></filter-form>
-            <br/><br/>
+          <filter-form id="filter-form" threshold="{{percentCompleteThreshold}}" search-string="{{searchString}}"></filter-form>
+          <br/><br/>
 
-            <button id="btnSelectRows" on-click="btnSelectRowsHandler">Select first 10 rows</button>
+          <button id="btnSelectRows" on-click="btnSelectRowsHandler">Select first 10 rows</button>
 
-            <br/>
+          <br/>
 
-            <h2>Demonstrates:</h2>
-            <ul>
-              <li>a filtered Model (DataView) as a data source instead of a simple array</li>
-              <li>grid reacting to model events (onRowCountChanged, onRowsChanged)</li>
-              <li>
-                <b>FAST</b> DataView recalculation and <b>real-time</b> grid updating in response to data changes.<br/>
-                The grid holds <b>50'000</b> rows, yet you are able to sort, filter, scroll, navigate and edit as if it had 50
-                rows.
-              </li>
-              <li>adding new rows, bidirectional sorting</li>
-              <li>column options: cannotTriggerInsert</li>
-              <li>events: onCellChange, onAddNewRow, onKeyDown, onSelectedRowsChanged, onSort</li>
-              <li><span class="highlight">NOTE:</span> all filters are immediately applied to new/edited rows</li>
-              <li>Handling row selection against model changes.</li>
-              <li>Paging.</li>
-              <li>inline filter panel</li>
-            </ul>
-          </div>
+          <h2>Demonstrates:</h2>
+          <ul>
+            <li>a filtered Model (DataView) as a data source instead of a simple array</li>
+            <li>grid reacting to model events (onRowCountChanged, onRowsChanged)</li>
+            <li>
+              <b>FAST</b> DataView recalculation and <b>real-time</b> grid updating in response to data changes.<br/>
+              The grid holds <b>50'000</b> rows, yet you are able to sort, filter, scroll, navigate and edit as if it had 50
+              rows.
+            </li>
+            <li>adding new rows, bidirectional sorting</li>
+            <li>column options: cannotTriggerInsert</li>
+            <li>events: onCellChange, onAddNewRow, onKeyDown, onSelectedRowsChanged, onSort</li>
+            <li><span class="highlight">NOTE:</span> all filters are immediately applied to new/edited rows</li>
+            <li>Handling row selection against model changes.</li>
+            <li>Paging.</li>
+            <li>inline filter panel</li>
+          </ul>
         </div>
       </div>
     </options-panel>
