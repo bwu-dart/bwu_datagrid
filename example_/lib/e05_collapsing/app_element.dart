@@ -17,6 +17,7 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
+import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
 
 import 'package:bwu_datagrid_examples/shared/filter_form.dart';
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
@@ -37,7 +38,7 @@ class TaskNameFormatter extends fm.CellFormatter {
     final dom.SpanElement spacer = new dom.SpanElement()
       ..style.display = 'inline-block'
       ..style.height = '1px'
-      ..style.width = '${(15 * dataContext["indent"])}px';
+      ..style.width = '${(15 * dataContext['indent'])}px';
     target.append(spacer);
     int idx = dataView.getIdxById(dataContext['id']);
     final dom.SpanElement toggle = new dom.SpanElement()..classes.add('toggle');
@@ -64,47 +65,47 @@ class AppElement extends PolymerElement {
   BwuDatagrid grid;
   final List<Column> columns = <Column>[
     new Column(
-        id: "title",
-        name: "Title",
-        field: "title",
+        id: 'title',
+        name: 'Title',
+        field: 'title',
         width: 220,
-        cssClass: "cell-title",
+        cssClass: 'cell-title',
         formatter: tnFormatter,
         editor: new TextEditor(),
         validator: new RequiredFieldValidator()),
     new Column(
-        id: "duration",
-        name: "Duration",
-        field: "duration",
+        id: 'duration',
+        name: 'Duration',
+        field: 'duration',
         editor: new TextEditor()),
     new Column(
-        id: "%",
-        name: "% Complete",
-        field: "percentComplete",
+        id: '%',
+        name: '% Complete',
+        field: 'percentComplete',
         width: 80,
         resizable: false,
         formatter: new fm.PercentCompleteBarFormatter(),
         editor: new PercentCompleteEditor()),
     new Column(
-        id: "start",
-        name: "Start",
-        field: "start",
+        id: 'start',
+        name: 'Start',
+        field: 'start',
         minWidth: 60,
         editor: new DateEditor()),
     new Column(
-        id: "finish",
-        name: "Finish",
-        field: "finish",
+        id: 'finish',
+        name: 'Finish',
+        field: 'finish',
         minWidth: 60,
         editor: new DateEditor()),
     new Column(
-        id: "effort-driven",
-        name: "Effort Driven",
+        id: 'effort-driven',
+        name: 'Effort Driven',
         width: 80,
         minWidth: 20,
         maxWidth: 80,
-        cssClass: "cell-effort-driven",
-        field: "effortDriven",
+        cssClass: 'cell-effort-driven',
+        field: 'effortDriven',
         formatter: new fm.CheckmarkFormatter(),
         editor: new CheckboxEditor(),
         cannotTriggerInsert: true)
@@ -121,18 +122,20 @@ class AppElement extends PolymerElement {
   List<DataItem> data;
   DataView<DataItem> dataView;
 
-  String sortcol = "title";
+  String sortcol = 'title';
   int sortdir = 1;
 
-  @property String percentCompleteThreshold;
-  @property String searchString;
+  @Property(observer: 'percentCompleteThresholdChanged')
+  String percentCompleteThreshold;
+  @Property(observer: 'searchStringChanged')
+  String searchString = '';
 
   @override
   void attached() {
     super.attached();
 
     int indent = 0;
-    List<int> parents = <int>[];
+    final List<int> parents = <int>[];
 
     try {
       // prepare the data
@@ -158,14 +161,14 @@ class AppElement extends PolymerElement {
 
         grid = $['myGrid'];
 
-        d['id'] = "id_${i}";
+        d['id'] = 'id_${i}';
         d['indent'] = indent;
         d['parent'] = parent;
         d['title'] = 'Task ${i}';
-        d['duration'] = "5 days";
+        d['duration'] = '5 days';
         d['percentComplete'] = rnd.nextInt(100);
-        d['start'] = "01/01/2009";
-        d['finish'] = "01/05/2009";
+        d['start'] = '01/01/2009';
+        d['finish'] = '01/05/2009';
         d['effortDriven'] = (i % 5 == 0);
       }
 
@@ -196,21 +199,21 @@ class AppElement extends PolymerElement {
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
           final MapDataItem item = new MapDataItem({
-            "id": "new_${rnd.nextInt(10000)}",
+            'id': 'new_${rnd.nextInt(10000)}',
             'indent': 0,
-            "title": "New task",
-            "duration": "1 day",
-            "percentComplete": 0,
-            "start": "01/01/2009",
-            "finish": "01/01/2009",
-            "effortDriven": false
+            'title': 'New task',
+            'duration': '1 day',
+            'percentComplete': 0,
+            'start': '01/01/2009',
+            'finish': '01/01/2009',
+            'effortDriven': false
           });
           item.extend(e.item);
           dataView.addItem(item);
         });
 
         grid.onBwuClick.listen((core.Click e) {
-          if ((e.causedBy.target as dom.Element).classes.contains("toggle")) {
+          if ((e.causedBy.target as dom.Element).classes.contains('toggle')) {
             final DataItem item = dataView.getItem(e.cell.row);
             if (item != null) {
               item.collapsed = !item.collapsed;
@@ -242,12 +245,20 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void searchStringChanged(_) {
+  @reflectable
+  void searchStringChanged([_, __]) {
+    if(dataView == null) {
+      return;
+    }
     updateFilter();
   }
 
   async.Timer _pendingUpdateFilter;
-  void percentCompleteThresholdChanged(_) {
+  @reflectable
+  void percentCompleteThresholdChanged([_, __]) {
+    if(dataView == null) {
+      return;
+    }
     if (_pendingUpdateFilter != null) {
       _pendingUpdateFilter.cancel();
     }
@@ -262,11 +273,11 @@ class AppElement extends PolymerElement {
     core.globalEditorLock.cancelCurrentEdit();
 
     if (searchString == null) {
-      searchString = '';
+      set('searchString', '');
     }
 
     if (percentCompleteThreshold == null) {
-      percentCompleteThreshold = '0';
+      set('percentCompleteThreshold', '0');
     }
 
     dataView.setFilterArgs({
@@ -278,12 +289,12 @@ class AppElement extends PolymerElement {
   }
 
   bool myFilter(DataItem item, Map args) {
-    if (item["percentComplete"] < args['percentCompleteThreshold']) {
+    if (item['percentComplete'] < args['percentCompleteThreshold']) {
       return false;
     }
 
     if (args['searchString'] != '' &&
-        item['title'].indexOf(args['searchString']) == -1) {
+        (item['title'] as String).indexOf(args['searchString']) == -1) {
       return false;
     }
 
@@ -292,10 +303,10 @@ class AppElement extends PolymerElement {
 
       while (parent != null) {
         if (parent.collapsed ||
-            (parent["percentComplete"] <
+            (parent['percentComplete'] <
                 tools.parseInt(percentCompleteThreshold, onErrorDefault: 0)) ||
-            (searchString != "" &&
-                parent["title"].indexOf(searchString) == -1)) {
+            (searchString != '' &&
+                (parent['title'] as String).indexOf(searchString) == -1)) {
           return false;
         }
 
@@ -310,6 +321,6 @@ class AppElement extends PolymerElement {
   }
 
   int percentCompleteSort(Map a, Map b) {
-    return a["percentComplete"] - b["percentComplete"];
+    return a['percentComplete'] - b['percentComplete'];
   }
 }

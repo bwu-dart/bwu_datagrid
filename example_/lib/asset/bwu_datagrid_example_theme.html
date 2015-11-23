@@ -264,6 +264,29 @@
       .bwu-datagrid-row.selected .cell-selection {
         background-color: transparent; /* show default selected row background */
       }
+
+      /**
+        Styles for the o05_collapsing example
+      **/
+      /* TODO(zoechi) doesn't seem to be used in this example */
+      /*:host::content span.highlight,*/
+      /*span.highlight {*/
+        /*color: red;*/
+      /*}*/
+      :host::content .toggle,
+      .toggle {
+        height: 9px;
+        width: 9px;
+        display: inline-block;
+      }
+      :host::content .toggle.expand,
+      .toggle.expand {
+        background: url(../../../packages/bwu_datagrid/asset/images/expand.gif) no-repeat center center;
+      }
+      :host::content .toggle.collapse,
+      .toggle.collapse {
+        background: url(../../../packages/bwu_datagrid/asset/images/collapse.gif) no-repeat center center;
+      }
     </style>
   </template>
 </dom-module>
