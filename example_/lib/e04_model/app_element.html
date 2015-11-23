@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<dom-module id='app-element'>
+<dom-module id="app-element">
   <template>
     <style include="jq-ui-style"></style>
     <style include="example-style"></style>
-    <style include="example-grid-header-style"></style>
+    <style include="example-grid-header-style">
+      #toggleFilterPanel {
+        float: right;
+      }
+    </style>
     <options-panel source-dir="e04_model">
       <div grid>
-        <div class='grid-header'>
+        <div class="grid-header">
           <label>BWU Datagrid</label>
-          <jq-ui-icon style='float:right' class='ui-icon ui-icon-search ui-state-default ui-corner-all' title='Toggle search panel'
-                on-click='toggleFilterRow' on-mouseover='iconMouseOver' on-mouseout='iconMouseOut'></jq-ui-icon>
+          <jq-ui-icon id="toggleFilterPanel" class="ui-icon ui-icon-search ui-state-default ui-corner-all" title="Toggle search panel"
+                on-click="toggleFilterRow" on-mouseover="iconMouseOver" on-mouseout="iconMouseOut"></jq-ui-icon>
         </div>
-        <bwu-datagrid id='myGrid' theme="example-style">
-          <inline-filter-panel id='filter-form' grid-target='toppanel' threshold='{{percentCompleteThreshold}}' searchString='{{searchString}}'></inline-filter-panel>
+        <bwu-datagrid id="myGrid" theme="example-style">
+          <inline-filter-panel id="filter-form" grid-target="toppanel" threshold="{{percentCompleteThreshold}}" search-string="{{searchString}}"></inline-filter-panel>
         </bwu-datagrid>
-        <bwu-pager id='pager'></bwu-pager>
+        <bwu-pager id="pager"></bwu-pager>
       </div>
-
       <div>
         <span class="title">
           Model
@@ -24,11 +27,11 @@
         <div>
           <b>Search:</b>
           <hr/>
-          <div style='padding:6px;'>
-            <filter-form id='filter-form' threshold='{{percentCompleteThreshold}}' searchString='{{searchString}}'></filter-form>
+          <div>
+            <filter-form id="filter-form" threshold="{{percentCompleteThreshold}}" search-string="{{searchString}}"></filter-form>
             <br/><br/>
 
-            <button id='btnSelectRows' on-click='{{btnSelectRowsHandler}}'>Select first 10 rows</button>
+            <button id="btnSelectRows" on-click="btnSelectRowsHandler">Select first 10 rows</button>
 
             <br/>
 
@@ -44,7 +47,7 @@
               <li>adding new rows, bidirectional sorting</li>
               <li>column options: cannotTriggerInsert</li>
               <li>events: onCellChange, onAddNewRow, onKeyDown, onSelectedRowsChanged, onSort</li>
-              <li><span class='highlight'>NOTE:</span> all filters are immediately applied to new/edited rows</li>
+              <li><span class="highlight">NOTE:</span> all filters are immediately applied to new/edited rows</li>
               <li>Handling row selection against model changes.</li>
               <li>Paging.</li>
               <li>inline filter panel</li>

@@ -17,14 +17,10 @@
         width: 100px;
       }
     </style>
-
     <label class='label'>Show tasks with % at least: </label>
-    <input id='slider' type='range' value='{{threshold}}' min='0' max='100'>
-
+    <input id='slider' type='range' value='{{threshold::input}}' min='0' max='100'>
     <br/>
-
     <label class='label'>And title including:</label>
-    <input type=text id='txtSearch' value='{{searchString}}' on-keyup='{{clearSearch}}'>
-
+    <input type=text id='txtSearch' value='{{searchString::input}}' on-keyup='clearSearch'>
   </template>
 </dom-module>

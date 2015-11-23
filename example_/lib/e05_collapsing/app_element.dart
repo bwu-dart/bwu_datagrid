@@ -20,8 +20,10 @@ import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
 
 import 'package:bwu_datagrid_examples/shared/filter_form.dart';
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-/// Silence analyzer [FilterForm]
+/// Silence analyzer [FilterForm], [exampleStyleSilence], [OptionsPanel]
 class TaskNameFormatter extends fm.CellFormatter {
   List<DataItem> data;
   DataView dataView;

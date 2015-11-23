@@ -27,10 +27,9 @@
         background-color: #fff;
       }
     </style>
-
-    <!--<div id="inlineFilterPanel">-->
-      Show tasks with title including <input type="text" id="txtSearch" value='{{searchString}}' on-keyup='{{clearSearch}}'> and % at least &nbsp;
-      <input id='slider' type='range' value='{{threshold}}' min='0' max='100'>
-    <!--</div> -->
+    Show tasks with title including
+    <input type="text" id="txtSearch" value='{{searchString::input}}'
+           on-keyup='clearSearch'> and % at least &nbsp;
+    <input id='slider' type='range' value='{{threshold::input}}' min='0' max='100'>
   </template>
 </dom-module>

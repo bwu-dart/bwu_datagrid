@@ -116,8 +116,10 @@ class AppElement extends PolymerElement {
 
   String sortcol = "title";
   int sortdir = 1;
-  @property String percentCompleteThreshold;
-  @property String searchString = '';
+  @Property(observer: 'percentCompleteThresholdChanged')
+  String percentCompleteThreshold;
+  @Property(observer: 'searchStringChanged')
+  String searchString = '';
 
   @override
   void attached() {
@@ -177,7 +179,7 @@ class AppElement extends PolymerElement {
           dataView.addItem(item);
         });
 
-        grid.onBwuKeyDown.listen(onKeyDownHandler);
+        grid.onBwuKeyDown.listen(_onKeyDownHandler);
 
         grid.onBwuSort.listen(onSort);
 
@@ -232,8 +234,8 @@ class AppElement extends PolymerElement {
     }
   }
 
-  void btnSelectRowsHandler(
-      dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void btnSelectRowsHandler([_, __]) {
 //  $['filter-form'].on['select-rows'].listen((e) {
     if (!core.globalEditorLock.commitCurrentEdit()) {
       return;
@@ -247,12 +249,20 @@ class AppElement extends PolymerElement {
     grid.setSelectedRows(rows);
   }
 
-  void searchStringChanged(_) {
+  @reflectable
+  void searchStringChanged(_, [__]) {
+    if (dataView == null) {
+      return;
+    }
     updateFilter();
   }
 
   async.Timer _pendingUpdateFilter;
-  void percentCompleteThresholdChanged(_) {
+  @reflectable
+  void percentCompleteThresholdChanged(_, [__]) {
+    if (dataView == null) {
+      return;
+    }
     if (_pendingUpdateFilter != null) {
       _pendingUpdateFilter.cancel();
     }
@@ -267,11 +277,11 @@ class AppElement extends PolymerElement {
     core.globalEditorLock.cancelCurrentEdit();
 
     if (searchString == null) {
-      searchString = '';
+      set('searchString', '');
     }
 
     if (percentCompleteThreshold == null) {
-      percentCompleteThreshold = '0';
+      set('percentCompleteThreshold', '0');
     }
 
     dataView.setFilterArgs({
@@ -294,17 +304,12 @@ class AppElement extends PolymerElement {
       return false;
     }
 
-    if (args['searchString'] != '' &&
-        (item['title'] as String).indexOf(args['searchString']) == -1) {
-      return false;
-    }
-
-    return true;
+    return (args['searchString'] == '' ||
+        (item['title'] as String).indexOf(args['searchString']) != -1);
   }
 
-  int percentCompleteSort(Map a, Map b) {
-    return a["percentComplete"] - b["percentComplete"];
-  }
+  int percentCompleteSort(Map a, Map b) =>
+      a["percentComplete"] - b["percentComplete"];
 
   int comparer(DataItem a, DataItem b) {
     final int x = a[sortcol];
@@ -349,7 +354,7 @@ class AppElement extends PolymerElement {
     (e.target as dom.Element).classes.remove('ui-state-hover');
   }
 
-  void onKeyDownHandler(core.KeyDown e) {
+  void _onKeyDownHandler(core.KeyDown e) {
     // select all rows on ctrl-a
     if (e.causedBy.which != dom.KeyCode.A || !e.causedBy.ctrlKey) {
       return; // false;

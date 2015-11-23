@@ -9,12 +9,13 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 class FilterForm extends PolymerElement {
   FilterForm.created() : super.created();
 
-  @property String threshold = '0';
-  @property String searchString = '';
+  @Property(notify: true) String threshold = '0';
+  @Property(notify: true) String searchString = '';
 
-  void clearSearch(dom.KeyboardEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void clearSearch(dom.KeyboardEvent e, [_]) {
     if (e.which == dom.KeyCode.ESC) {
-      searchString = '';
+      set('searchString', '');
     }
   }
 }
