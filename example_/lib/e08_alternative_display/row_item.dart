@@ -12,9 +12,16 @@ class RowItem extends PolymerElement {
 
   RowItem.created() : super.created();
 
+  @property String name;
+  @property String titlex;
+  @property String email;
+  @property String phone;
+
   set data(MapDataItem d) {
-    d.keys.forEach((String e) {
-      ($[e] as dom.Element).text = d[e];
+    async(() {
+      d.keys.forEach((String k) {
+        set(k != 'title' ? k : 'titlex', d[k]);
+      });
     });
   }
 }

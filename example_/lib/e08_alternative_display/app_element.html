@@ -1,93 +1,20 @@
 <!DOCTYPE html>
 <dom-module id='app-element'>
   <template>
-    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
-    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
-    <link rel="stylesheet" href='../../../packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
-    <link rel='stylesheet' href='../asset/examples.css'>
-
-    <style>
-      :host {
-        display: block;
-        width: 100%;
-      }
-    </style>
-    <style>
-      bwu-datagrid /deep/ .bwu-datagrid-cell {
-        background: white !important;
-        border-color: transparent !important;
-        line-height: 19px !important;
-      }
-
-        /* alternating offsets */
-      bwu-datagrid /deep/ .bwu-datagrid-row .cell-inner {
-        margin-right: 60px;
-      }
-
-/*
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="1"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="3"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="5"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="7"] .cell-inner,
-      bwu-datagrid /deep/ .bwu-datagrid-row[row$="9"] .cell-inner {
-        margin-left: 60px;
-        margin-right: 0;
-      }
-*/
-      bwu-datagrid /deep/ .contact-card-cell {
-        border-color: transparent !important;
-      }
-
-      bwu-datagrid /deep/ .cell-inner {
-        height: 80px;
-        margin: 10px;
-        padding: 10px;
-        background: #fafafa;
-        border: 1px solid gray;
-        border-radius: 10px;
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        -moz-box-shadow: 1px 1px 5px silver;
-        -webkit-box-shadow: 1px 1px 5px silver;
-        -webkit-transition: all 0.5s;
-      }
-
-      bwu-datagrid /deep/ .cell-inner:hover {
-        background: #f0f0f0;
-      }
-
-      bwu-datagrid /deep/ .cell-left {
-        width: 40px;
-        height: 100%;
-        float: left;
-        border-right: 1px dotted gray;
-        background: url("../../../packages/bwu_datagrid/asset/images/user_identity.gif") no-repeat top center;
-      }
-
-      bwu-datagrid /deep/ .cell-main {
-        margin-left: 50px;
-      }
-    </style>
-
-    <div style='position:relative'>
-      <div style='width:600px;'>
-        <bwu-datagrid id='myGrid' style='width:100%;height:500px;'></bwu-datagrid>
-      </div>
-
-      <div class='options-panel'>
-        <h2>Demonstrates:</h2>
-
+    <style include="example-style"></style>
+    <options-panel source-dir="e08_alternative_display">
+      <bwu-datagrid grid id='myGrid' theme="custom-style"></bwu-datagrid>
+      <span class="title">
+        Alternative display
+      </span>
+      <div>
         <ul>
           <li>
             Uses a simple custom Polymer element to render a row
             but still using BWU Datagrid's virtual rendering technology.
           </li>
         </ul>
-        <h2>View Source:</h2>
-        <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e08_alternative_display/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-        </ul>
       </div>
-    </div>
+    </options-panel>
   </template>
 </dom-module>

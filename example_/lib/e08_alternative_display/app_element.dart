@@ -12,7 +12,11 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
+
 import 'row_item.dart';
+import 'custom_style.dart';
 
 class CellFormatter extends fm.CellFormatter {
   @override
@@ -23,12 +27,12 @@ class CellFormatter extends fm.CellFormatter {
     target.append(new RowItem()..data = dataContext);
   }
 }
-
+/// Silence analyzer [exampleStyleSilence], [customThemeSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  final List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "contact-card",
         name: "Contacts",

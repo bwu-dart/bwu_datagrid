@@ -5,15 +5,64 @@
       :host {
         display: block;
       }
-    </style>
+      /* alternating offsets */
+      :host::content .bwu-datagrid-row .cell-inner,
+      .bwu-datagrid-row .cell-inner {
+        margin-right: 60px;
+      }
 
+    /*
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="1"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="3"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="5"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="7"] .cell-inner,
+      bwu-datagrid /deep/ .bwu-datagrid-row[row$="9"] .cell-inner {
+        margin-left: 60px;
+        margin-right: 0;
+      }
+    */
+      .cell-inner {
+        height: 80px;
+        margin: 10px;
+        padding: 10px;
+        background: #fafafa;
+        border: 1px solid gray;
+        border-radius: 10px;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-box-shadow: 1px 1px 5px silver;
+        -webkit-box-shadow: 1px 1px 5px silver;
+        -webkit-transition: all 0.5s;
+      }
+      .cell-inner:hover {
+        background: #f0f0f0;
+      }
+      .cell-left {
+        width: 40px;
+        height: 100%;
+        float: left;
+        border-right: 1px dotted gray;
+        background: url("../../../packages/bwu_datagrid/asset/images/user_identity.gif") no-repeat top center;
+      }
+      .cell-main {
+        margin-left: 50px;
+      }
+      p {
+        margin: 1px;
+        margin-bottom: 8px;
+        height: 1em;
+      }
+      .name {
+        font-weight: bold;
+      }
+    </style>
     <div class='cell-inner'>
       <div class='cell-left'></div>
       <div class='cell-main'>
-        <b><span id='name'></span></b><br/>
-        <span id='title'></span><br/>
-        <span id='email'></span><br/>
-        <span id='phone'></span>
+        <p class="name">[[name]]</p>
+        <p>[[titlex]]</p>
+        <p>[[email]]</p>
+        <p>[[phone]]</p>
       </div>
     </div>
   </template>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<dom-module id='custom-style'>
+  <template>
+    <style include="bwu-datagrid-example-theme">
+      :host::content .bwu-datagrid-cell,
+      .bwu-datagrid-cell {
+        background: white !important;
+        border-color: transparent !important;
+        line-height: 19px !important;
+      }
+
+      :host::content .contact-card-cell,
+      .contact-card-cell {
+        border-color: transparent !important;
+      }
+    </style>
+  </template>
+</dom-module>
