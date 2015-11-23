@@ -1,60 +1,70 @@
 <!DOCTYPE html>
+<style>
+  body {
+    margin: 0;
+  }
+</style>
 <dom-module id='app-element'>
   <template>
-    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
-    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
-    <link rel="stylesheet" href='../../../packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
-    <link rel='stylesheet' href='../asset/examples.css'>
-
-    <style>
+    <style include="example-style">
       :host {
         display: block;
         margin: 0;
         padding: 0;
       }
 
-      #description {
+      #myGrid {
+        --bwu-datagrid: {
+          position: absolute;
+          width: auto;
+          height: 100vh;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border: 0;
+
+          opacity: 1;
+          transition: opacity 200ms;
+
+          background: white;
+          outline: 0;
+        };
+      }
+      options-panel {
         position: fixed;
         top: 30px;
         right: 30px;
         width: 25em;
-        background: beige;
-        border: solid 1px gray;
+        /*border: solid 1px gray;*/
         z-index: 1000;
-      }
-
-      #description h2 {
-        padding-left: 0.5em;
-      }
-
-      #myGrid {
-        position: absolute;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 0;
+        --options-panel: {
+          border-radius: 6px;
+          -moz-border-radius: 6px;
+          -webkit-border-radius: 6px;
+          border: 1px solid silver;
+          background-color: beige;
+          padding: 10px;
+          margin-left: 25px;
+          width: 320px;
+        };
       }
     </style>
 
-    <!--<div style='position:relative'>-->
-      <!--<div >-->
-        <bwu-datagrid id='myGrid'></bwu-datagrid>
-      <!--</div>-->
+    <bwu-datagrid id='myGrid'></bwu-datagrid>
 
-      <div id='description'>
-        <h2>Demonstrates:</h2>
+    <options-panel source-dir="e12_fillbrowser">
+      <span class="title">
+        Filling the whole window
+      </span>
+      <div>
+        <h2>Info</h2>
         <ul>
           <li>Grid filling browser window completely (using absolute positioning)</li>
           <li>Grid resizing when browser window changes size</li>
           <li>Overall performance of the grid when displaying large tabular data (17 columns x 10,000 rows)</li>
         </ul>
-        <h2>View Source:</h2>
-        <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e12_fillbrowser/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-        </ul>
       </div>
-    <!--</div>-->
+    </options-panel>
   </template>
 </dom-module>

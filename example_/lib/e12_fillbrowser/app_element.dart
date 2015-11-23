@@ -10,11 +10,15 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
+
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(id: "title", name: "Title", field: "title", width: 120),
     new Column(id: "duration", name: "Duration", field: "duration", width: 120),
     new Column(
