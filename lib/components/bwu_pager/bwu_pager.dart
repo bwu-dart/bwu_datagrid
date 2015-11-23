@@ -132,16 +132,14 @@ class BwuPager extends PolymerElement {
     //}
   }
 
-  // TODO(zoechi) the hover classes should be set on the outer span, not the inner
-  // maybe PolymerDom().. fixes this?
   @reflectable
   void toggleMouseOver(dom.MouseEvent e, [_]) {
-    (e.target as dom.Element).classes.add('ui-state-hover');
+    (e.currentTarget as dom.Element).classes.add('ui-state-hover');
   }
 
   @reflectable
   void toggleMouseOut(dom.MouseEvent e, [_]) {
-    (e.target as dom.Element).classes.remove('ui-state-hover');
+    (e.currentTarget as dom.Element).classes.remove('ui-state-hover');
   }
 
   @reflectable
