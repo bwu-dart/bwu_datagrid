@@ -78,10 +78,10 @@ void main() {
 
     test("basic", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0}),
         new MapDataItem({'id': 1})
-      ]);
+      ];
       expect(dv.length, equals(2), reason: "rows.length");
       expect(dv.getItems().length, equals(2), reason: "getItems().length");
       assertConsistency(dv);
@@ -99,11 +99,11 @@ void main() {
     test("requires an id on objects", () {
       final DataView dv = new DataView();
       expect(
-          () => dv.setItems(<DataItem>[
+          () => dv.items = <DataItem>[
                 new MapDataItem({'a': 1}),
                 new MapDataItem({'b': 2}),
                 new MapDataItem({'c': 3})
-              ]),
+              ],
           throwsA(equals(
               "Each data element must implement a unique 'id' property")),
           reason: "exception expected");
@@ -113,10 +113,10 @@ void main() {
       final DataView dv = new DataView();
       //        try {
       expect(
-          () => dv.setItems(<DataItem>[
+          () => dv.items = <DataItem>[
                 new MapDataItem({'id': 0}),
                 new MapDataItem({'id': 0})
-              ]),
+              ],
           throwsA(equals(
               "Each data element must implement a unique 'id' property")),
           reason: "exception expected");
@@ -158,10 +158,10 @@ void main() {
         expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
         expectPagingInfoChangedCalled();
       });
-      dv.setItems(<DataItem>[
+      dv.items = <DataItem>[
         new MapDataItem({'id': 0}),
         new MapDataItem({'id': 1})
-      ]);
+      ];
       dv.refresh();
     });
 
@@ -173,16 +173,16 @@ void main() {
           .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
       dv.onBwuPagingInfoChanged.first.then(
           (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
-      dv.setItems([]);
+      dv.items = <DataItem>[];
       dv.refresh();
     });
 
     test("no events on setItems followed by refresh", () {
       final DataView dv = new DataView();
-      dv.setItems(<DataItem>[
+      dv.items = <DataItem>[
         new MapDataItem({'id': 0}),
         new MapDataItem({'id': 1})
-      ]);
+      ];
       dv.onBwuRowsChanged.first
           .then((core.RowsChanged e) => fail("onRowsChanged called"));
       dv.onBwuRowCountChanged.first
@@ -201,10 +201,10 @@ void main() {
           .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
       dv.onBwuPagingInfoChanged.first.then(
           (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
-      dv.setItems(<DataItem>[
+      dv.items = <DataItem>[
         new MapDataItem({'id': 0}),
         new MapDataItem({'id': 1})
-      ]);
+      ];
       dv.setFilter((_, __) => true);
       dv.refresh();
       expect(dv.length, equals(0), reason: "rows aren't updated until resumed");
@@ -213,10 +213,10 @@ void main() {
     test("refresh fires after resume", () {
       final DataView dv = new DataView();
       dv.beginUpdate();
-      dv.setItems(<DataItem>[
+      dv.items = <DataItem>[
         new MapDataItem({'id': 0}),
         new MapDataItem({'id': 1})
-      ]);
+      ];
       expect(dv.getItems().length, equals(2),
           reason: "items updated immediately");
       dv.setFilter((_, __) => true);
@@ -265,7 +265,7 @@ void main() {
         itemsList[2]
       ];
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems(items);
+      dv.items = items;
 
       final Function expectRowsChangedCalled =
           expectAsync(() {}, reason: "onRowsChanged called");
@@ -294,7 +294,7 @@ void main() {
       ];
       final List<DataItem> items = [itemsList[0], itemsList[1], itemsList[2]];
       final DataView dv = new DataView();
-      dv.setItems(items);
+      dv.items = items;
       dv.sort((core.ItemBase x, core.ItemBase y) => x['val'] - y['val'] as int);
       expect(items, orderedEquals([itemsList[2], itemsList[1], itemsList[0]]),
           reason: "sort order");
@@ -308,7 +308,7 @@ void main() {
       ];
       final List<DataItem> items = [itemsList[0], itemsList[1], itemsList[2]];
       final DataView dv = new DataView();
-      dv.setItems(items);
+      dv.items = items;
       dv.sort((core.ItemBase x, core.ItemBase y) =>
           -1 * (x['val'] - y['val'] as int));
       expect(items, orderedEquals([itemsList[1], itemsList[2], itemsList[0]]),
@@ -329,7 +329,7 @@ void main() {
         itemsList[3],
       ];
       final DataView dv = new DataView();
-      dv.setItems(items);
+      dv.items = items;
 
       dv.sort((core.ItemBase x, core.ItemBase y) => x['val'] - y['val'] as int);
       expect(
@@ -359,11 +359,11 @@ void main() {
     test("applied immediately", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
 
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 2, 'val': 2}),
         new MapDataItem({'id': 1, 'val': 1})
-      ]);
+      ];
 
       final Function expectRowsChangedCalled =
           expectAsync(() {}, reason: "onRowsChanged called");
@@ -397,11 +397,11 @@ void main() {
 
     test("re-applied on refresh", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
       dv.setFilterArgs({'id': 0});
       dv.setFilter((dynamic o, dynamic args) => o['val'] >= args['id']);
       expect(dv.length, equals(3), reason: "nothing is filtered out");
@@ -440,11 +440,11 @@ void main() {
 
     test("re-applied on sort", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
       dv.setFilter((dynamic o, _) => o['val'] == 1);
       expect(dv.length, equals(1), reason: "one row is remaining");
 
@@ -464,11 +464,11 @@ void main() {
 
     test("all", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
 
       dv.onBwuRowsChanged.first
           .then((core.RowsChanged e) => fail("onRowsChanged called"));
@@ -499,11 +499,11 @@ void main() {
 
     test("all then none", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
       dv.setFilterArgs({'value': false});
       dv.setFilter((dynamic o, dynamic args) => args['value']);
       expect(dv.length, equals(0), reason: "all rows are filtered out");
@@ -542,11 +542,11 @@ void main() {
     test("inlining replaces absolute returns", () {
       final DataView<DataItem> dv = new DataView<DataItem>(
           options: new DataViewOptions(inlineFilters: true));
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
       dv.setFilter((dynamic o, _) {
         if (o['val'] == 1) {
           return true;
@@ -572,11 +572,11 @@ void main() {
     test("inlining replaces evaluated returns", () {
       final DataView<DataItem> dv = new DataView<DataItem>(
           options: new DataViewOptions(inlineFilters: true));
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
       dv.setFilter((Map o, _) {
         if (o['val'] == 0) {
           return o['id'] == 2;
@@ -603,11 +603,11 @@ void main() {
   group("updateItem", () {
     test("basic", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
 
       final Function expectRowsChangedCalled =
           expectAsync(() {}, reason: "onRowsChanged called");
@@ -628,12 +628,12 @@ void main() {
 
     test("updating an item not passing the filter", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
         new MapDataItem({'id': 3, 'val': 1337})
-      ]);
+      ];
       dv.setFilter((dynamic o, _) => o['val'] != 1337);
       dv.onBwuRowsChanged.first
           .then((core.RowsChanged e) => fail("onRowsChanged called"));
@@ -649,12 +649,12 @@ void main() {
 
     test("updating an item to pass the filter", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
         new MapDataItem({'id': 3, 'val': 1337})
-      ]);
+      ];
       dv.setFilter((dynamic o, _) => o['val'] != 1337);
 
       final Function expectRowsChangedCalled =
@@ -688,12 +688,12 @@ void main() {
 
     test("updating an item to not pass the filter", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
         new MapDataItem({'id': 3, 'val': 3})
-      ]);
+      ];
       dv.setFilter((dynamic o, _) => o["val"] != 1337);
 
       dv.onBwuRowsChanged.first
@@ -725,11 +725,11 @@ void main() {
   group("addItem", () {
     test("must have id", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
       expect(
           () => dv.addItem(new MapDataItem({'val': 1337})),
           throwsA(equals(
@@ -753,11 +753,11 @@ void main() {
 
     test("basic", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
 
       final Function expectRowsChangedCalled =
           expectAsync(() {}, reason: "onRowsChanged called");
@@ -792,11 +792,11 @@ void main() {
 
     test("add an item not passing the filter", () {
       final DataView<DataItem> dv = new DataView<DataItem>();
-      dv.setItems([
+      dv.items = [
         new MapDataItem({'id': 0, 'val': 0}),
         new MapDataItem({'id': 1, 'val': 1}),
         new MapDataItem({'id': 2, 'val': 2}),
-      ]);
+      ];
       dv.setFilter((dynamic o, _) => o["val"] != 1337);
       dv.onBwuRowsChanged.first
           .then((core.RowsChanged e) => fail("onRowsChanged called"));
@@ -813,11 +813,11 @@ void main() {
     group("insertItem", () {
       test("must have id", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 0, 'val': 0}),
           new MapDataItem({'id': 1, 'val': 1}),
           new MapDataItem({'id': 2, 'val': 2}),
-        ]);
+        ];
 
         expect(
             () => dv.insertItem(0, new MapDataItem({'val': 1337})),
@@ -843,11 +843,11 @@ void main() {
 
       test("insert at the beginning", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 0, 'val': 0}),
           new MapDataItem({'id': 1, 'val': 1}),
           new MapDataItem({'id': 2, 'val': 2}),
-        ]);
+        ];
 
         final Function expectRowsChangedCalled =
             expectAsync(() {}, reason: "onRowsChanged called");
@@ -882,11 +882,11 @@ void main() {
 
       test("insert in the middle", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 0, 'val': 0}),
           new MapDataItem({'id': 1, 'val': 1}),
           new MapDataItem({'id': 2, 'val': 2}),
-        ]);
+        ];
 
         final Function expectRowsChangedCalled =
             expectAsync(() {}, reason: "onRowsChanged called");
@@ -921,11 +921,11 @@ void main() {
 
       test("insert at the end", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 0, 'val': 0}),
           new MapDataItem({'id': 1, 'val': 1}),
           new MapDataItem({'id': 2, 'val': 2}),
-        ]);
+        ];
 
         final Function expectRowsChangedCalled =
             expectAsync(() {}, reason: "onRowsChanged called");
@@ -962,11 +962,11 @@ void main() {
     group("deleteItem", () {
       test("must have id", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 0, 'val': 0}),
           new MapDataItem({'id': 1, 'val': 1}),
           new MapDataItem({'id': 2, 'val': 2}),
-        ]);
+        ];
         expect(() => dv.deleteItem(-1), throwsA(equals('Invalid id')),
             reason: "exception thrown");
         expect(() => dv.deleteItem(null), throwsA(equals('Invalid id')),
@@ -992,11 +992,11 @@ void main() {
 
       test("delete at the beginning", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 05, 'val': 0}),
           new MapDataItem({'id': 15, 'val': 1}),
           new MapDataItem({'id': 25, 'val': 2})
-        ]);
+        ];
 
         final Function expectRowsChangedCalled =
             expectAsync(() {}, reason: "onRowsChanged called");
@@ -1029,11 +1029,11 @@ void main() {
 
       test("delete in the middle", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 05, 'val': 0}),
           new MapDataItem({'id': 15, 'val': 1}),
           new MapDataItem({'id': 25, 'val': 2})
-        ]);
+        ];
 
         final Function expectRowsChangedCalled =
             expectAsync(() {}, reason: "onRowsChanged called");
@@ -1066,11 +1066,11 @@ void main() {
 
       test("delete at the end", () {
         final DataView<DataItem> dv = new DataView<DataItem>();
-        dv.setItems([
+        dv.items = [
           new MapDataItem({'id': 05, 'val': 0}),
           new MapDataItem({'id': 15, 'val': 1}),
           new MapDataItem({'id': 25, 'val': 2})
-        ]);
+        ];
 
         dv.onBwuRowsChanged.first
             .then((core.RowsChanged e) => fail("onRowsChanged called"));

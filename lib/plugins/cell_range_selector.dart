@@ -5,10 +5,10 @@ import 'dart:async' as async;
 import 'dart:math' as math;
 
 import 'package:bwu_datagrid/plugins/cell_range_decorator.dart';
-import 'package:bwu_datagrid/core/core.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
-import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 class CellRangeSelector extends Plugin {
   BwuDatagrid _grid;
@@ -17,7 +17,7 @@ class CellRangeSelector extends Plugin {
   Decorator _decorator;
   //var _handler = new Slick.EventHandler();
   math.Point<int> _canvasOrigin;
-  Range _range;
+  core.Range _range;
   dom.Element _dummyProxy;
 
   core.EventBus get eventBus => _eventBus;
@@ -34,7 +34,8 @@ class CellRangeSelector extends Plugin {
     }
   }
 
-  var _subscriptions = <async.StreamSubscription>[];
+  final List<async.StreamSubscription> _subscriptions =
+      <async.StreamSubscription>[];
 
   void init(BwuDatagrid grid) {
     // TODO options = $.extend(true, {}, _defaults, options);
@@ -54,7 +55,7 @@ class CellRangeSelector extends Plugin {
   }
 
   void destroy() {
-    _subscriptions.forEach((e) => e.cancel());
+    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
   }
 
 //  void handleDragInit(DragInit e) {
@@ -62,10 +63,10 @@ class CellRangeSelector extends Plugin {
 //    e.stopImmediatePropagation();
 //  }
 
-  dom.Element _handleDragStart(DragStart e) {
+  dom.Element _handleDragStart(core.DragStart e) {
     if (e.isImmediatePropagationStopped || isSuspended) return null;
 
-    var cell = _grid.getCellFromEvent(e.causedBy);
+    Cell cell = _grid.getCellFromEvent(e.causedBy);
     if (eventBus
         .fire(core.Events.BEFORE_CELL_RANGE_SELECTED,
             new core.BeforeCellRangeSelected(this, cell))
@@ -82,26 +83,26 @@ class CellRangeSelector extends Plugin {
 
     _grid.setFocus();
 
-    var canvasBounds = _canvas.getBoundingClientRect();
-    _canvasOrigin =
-        new math.Point(canvasBounds.left.round(), canvasBounds.top.round());
+    dom.Rectangle canvasBounds = _canvas.getBoundingClientRect();
+    _canvasOrigin = new math.Point(
+        (canvasBounds.left as num).round(), (canvasBounds.top as num).round());
     e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
 
-    var start = _grid.getCellFromPoint(e.causedBy.client.x - _canvasOrigin.x,
+    Cell start = _grid.getCellFromPoint(e.causedBy.client.x - _canvasOrigin.x,
         e.causedBy.client.y - _canvasOrigin.y);
 
-    _range = new Range(start.row, start.cell);
+    _range = new core.Range(start.row, start.cell);
 
     return _decorator.show(_range);
   }
 
-  void _handleDrag(Drag e) {
+  void _handleDrag(core.Drag e) {
     if (!_dragging) {
       return;
     }
     e.preventDefault();
 
-    var end = _grid.getCellFromPoint(e.causedBy.page.x - _canvasOrigin.x,
+    final Cell end = _grid.getCellFromPoint(e.causedBy.page.x - _canvasOrigin.x,
         e.causedBy.page.y - _canvasOrigin.y);
 
     if (!_grid.canCellBeSelected(end.row, end.cell)) {
@@ -115,7 +116,7 @@ class CellRangeSelector extends Plugin {
     _decorator.show(_range);
   }
 
-  void _handleDragEnd(DragEnd e) {
+  void _handleDragEnd(core.DragEnd e) {
     if (_dragging == null || !_dragging) {
       return;
     }

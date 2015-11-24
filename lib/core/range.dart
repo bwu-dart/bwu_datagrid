@@ -13,7 +13,7 @@ class Range {
   int _toRow;
   int _toCell;
 
-  Range(this._fromRow, this._fromCell, {toRow: null, toCell: null}) {
+  Range(this._fromRow, this._fromCell, {int toRow: null, int toCell: null}) {
     if (toRow != null) {
       _toRow = toRow;
     } else {
@@ -34,8 +34,13 @@ class Range {
 
   int get toCell => math.max(_fromCell, _toCell);
 
-  set toCell(int cell) => _toCell = cell;
-  set toRow(int row) => _toRow = row;
+  void set toCell(int cell) {
+    _toCell = cell;
+  }
+
+  void set toRow(int row) {
+    _toRow = row;
+  }
 
   /// Returns whether a range represents a single row.
   bool get isSingleRow => _fromRow == _toRow;
@@ -106,12 +111,12 @@ class Group extends NonDataItem {
   String groupingKey;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is! Group) {
       return false;
     }
 
-    var o = other as Group;
+    final Group o = other as Group;
     return count == o.count && isCollapsed == o.isCollapsed && title == o.title;
   }
 

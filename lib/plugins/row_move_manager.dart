@@ -7,10 +7,11 @@ import 'dart:math' as math;
 import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 class RowMoveManager extends Plugin {
-  static const DRAG_DROP_ID = 'text/bwu-datagrid-row-move';
+  static const String dragDropId = 'text/bwu-datagrid-row-move';
 
   bool cancelEditOnDrag = false;
 
@@ -20,7 +21,8 @@ class RowMoveManager extends Plugin {
   dom.Element _canvas;
   int _canvasTop;
   bool _dragging = false;
-  List<async.StreamSubscription> _subscriptions = [];
+  final List<async.StreamSubscription> _subscriptions =
+      <async.StreamSubscription>[];
 
   dom.Element _selectionProxy;
   dom.Element _dummyProxy;
@@ -45,11 +47,11 @@ class RowMoveManager extends Plugin {
   }
 
   void destroy() {
-    _subscriptions.forEach((e) => e.cancel());
+    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
   }
 
   void _handleDragStart(core.DragStart e) {
-    var cell = grid.getCellFromTarget(e.causedBy.target);
+    Cell cell = grid.getCellFromTarget(e.causedBy.target);
 
     if (cancelEditOnDrag && grid.getEditorLock.isActive) {
       grid.getEditorLock.cancelCurrentEdit();
@@ -68,17 +70,17 @@ class RowMoveManager extends Plugin {
     e.causedBy.dataTransfer
       ..effectAllowed = 'move'
       ..dropEffect = 'move'
-      ..setData(DRAG_DROP_ID, "move");
+      ..setData(dragDropId, "move");
 
-    var selectedRows = grid.getSelectedRows();
+    List<int> selectedRows = grid.getSelectedRows();
 
     if (selectedRows.length == 0 || !selectedRows.contains(cell.row)) {
       selectedRows = [cell.row];
       grid.setSelectedRows(selectedRows);
     }
 
-    var rowHeight = grid.getGridOptions.rowHeight;
-    _canvasTop = _canvas.getBoundingClientRect().top.round();
+    final int rowHeight = grid.getGridOptions.rowHeight;
+    _canvasTop = (_canvas.getBoundingClientRect().top as num).round();
 
     _selectedRows = selectedRows;
     e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
@@ -113,21 +115,20 @@ class RowMoveManager extends Plugin {
 
     e.preventDefault();
 
-    var top = e.causedBy.client.y - _canvasTop;
+    final int top = e.causedBy.client.y - _canvasTop;
 
     _selectionProxy.style.top = '${top - 5}px';
 
-    var insertBefore = math.max(
+    final int insertBefore = math.max(
         0,
         math.min(
             (top / grid.getGridOptions.rowHeight).round(), grid.getDataLength));
     if (insertBefore != _insertBefore) {
-      if (eventBus
-              .fire(
-                  core.Events.BEFORE_MOVE_ROWS,
-                  new core.BeforeMoveRows(this,
-                      rows: _selectedRows, insertBefore: insertBefore))
-              .retVal ==
+      if ((eventBus.fire(
+              core.Events.BEFORE_MOVE_ROWS,
+              new core.BeforeMoveRows(this,
+                  rows: _selectedRows,
+                  insertBefore: insertBefore)) as core.EventData).retVal ==
           false) {
         _guide.style.top = '-1000px';
         _canMove = false;
@@ -158,14 +159,14 @@ class RowMoveManager extends Plugin {
   }
 
   void _handleDragOver(core.DragOver e) {
-    if (!_dragging || !e.causedBy.dataTransfer.types.contains(DRAG_DROP_ID)) {
+    if (!_dragging || !e.causedBy.dataTransfer.types.contains(dragDropId)) {
       return;
     }
     e.preventDefault();
   }
 
   void _handleDrop(core.Drop e) {
-    if (!_dragging || !e.causedBy.dataTransfer.types.contains(DRAG_DROP_ID)) {
+    if (!_dragging || !e.causedBy.dataTransfer.types.contains(dragDropId)) {
       return;
     }
     e.preventDefault();

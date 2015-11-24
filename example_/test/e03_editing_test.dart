@@ -583,10 +583,10 @@ Future<WebElement> findCancelButton(wd.WebDriver driver) =>
     findButton(driver, 'Cancel');
 
 /// Find the buttons in the multiline text editor.
-Future<WebElement> findButton(wd.WebDriver driver, String text) async {
+Future<WebElement> findButton(ExtendedWebDriver driver, String text) async {
   return driver
       .findElements(buttonsSelector)
-      .asyncMap((WebElement e) async => {'button': e, 'text': await e.text})
+      .asyncMap((wd.WebElement e) async => {'button': e, 'text': await e.text})
       .where((Map m) => m['text'] == text)
       .map((Map m) => m['button'])
       .first as WebElement;

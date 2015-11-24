@@ -6,6 +6,7 @@ import 'dart:async' as async;
 import 'package:bwu_datagrid/plugins/plugin.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 class CellCopyManager extends Plugin {
   List<core.Range> _copiedRanges;
@@ -69,12 +70,12 @@ class CellCopyManager extends Plugin {
   }
 
   void _markCopySelection(List<core.Range> ranges) {
-    var columns = grid.getColumns;
-    var hash = <int, Map<String, String>>{};
-    for (var i = 0; i < ranges.length; i++) {
-      for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
+    final List<Column> columns = grid.getColumns;
+    final Map<int, Map<String, String>> hash = <int, Map<String, String>>{};
+    for (int i = 0; i < ranges.length; i++) {
+      for (int j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
         hash[j] = {};
-        for (var k = ranges[i].fromCell; k <= ranges[i].toCell; k++) {
+        for (int k = ranges[i].fromCell; k <= ranges[i].toCell; k++) {
           hash[j][columns[k].id] = "copied";
         }
       }

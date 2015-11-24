@@ -63,7 +63,7 @@ class EventBus<T extends EventData> {
 
 ///  Type class used to publish events with an [EventBus].
 ///  [T] is the type of data that is provided when an event is fired.
-class EventType<T> {
+class EventType<T extends EventData> {
   final String name;
 
   /// Constructor with an optional [name] for logging purposes.

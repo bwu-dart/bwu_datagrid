@@ -27,6 +27,7 @@ class CellFormatter extends fm.CellFormatter {
     target.append(new RowItem()..data = dataContext);
   }
 }
+
 /// Silence analyzer [exampleStyleSilence], [customThemeSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {

@@ -208,7 +208,7 @@ class AppElement extends PolymerElement {
 
         // initialize the model after all the events have been hooked up
         dataView.beginUpdate();
-        dataView.setItems(data);
+        dataView.items = data;
         dataView.setFilterArgs({
           'percentCompleteThreshold':
               tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),

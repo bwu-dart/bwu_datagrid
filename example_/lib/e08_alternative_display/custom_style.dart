@@ -5,5 +5,5 @@ import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
 
-/// [Polymer], [bwuDatagridExampleThemeSilence],
+/// [Polymer], [exampleStyleSilence],
 const int customThemeSilence = 0;

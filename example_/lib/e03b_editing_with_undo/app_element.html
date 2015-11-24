@@ -12,7 +12,10 @@
           <li>Using "editCommandHandler" option to intercept edit commands and implement undo support</li>
         </ul>
         <h2>Controls:</h2>
-        <button on-click="undo" disabled$="!isUndoItem"><img src="packages/bwu_datagrid/asset/images/arrow_undo.png" align="absmiddle">Undo</button>
+        <button on-click="undo" disabled$="{{!isUndoItem}}">
+          <img src="packages/bwu_datagrid/asset/images/arrow_undo.png" align="absmiddle">
+          Undo
+        </button>
       </div>
     </options-panel>
   </template>

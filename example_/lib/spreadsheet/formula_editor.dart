@@ -40,7 +40,7 @@ class FormulaEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, value) {
+  void applyValue(DataItem item, Object value) {
     return _editor.applyValue(item, value);
   }
 
@@ -55,25 +55,17 @@ class FormulaEditor extends Editor {
   }
 
   @override
-  void focus() {
-    _editor.focus();
-  }
+  void focus() => _editor.focus();
 
   @override
   bool get isValueChanged => _editor.isValueChanged;
 
   @override
-  void loadValue(DataItem item) {
-    return _editor.loadValue(item);
-  }
+  void loadValue(DataItem item) => _editor.loadValue(item);
 
   @override
-  serializeValue() {
-    return _editor.serializeValue();
-  }
+  String serializeValue() => _editor.serializeValue();
 
   @override
-  ValidationResult validate() {
-    return _editor.validate();
-  }
+  ValidationResult validate() => _editor.validate();
 }

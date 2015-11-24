@@ -17,7 +17,7 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   final List<Column> columns = <Column>[];
-  Map<String, String> columnFilters = <String,String>{};
+  Map<String, String> columnFilters = <String, String>{};
 
   final GridOptions gridOptions = new GridOptions(
       enableCellNavigation: true,
@@ -98,7 +98,7 @@ class AppElement extends PolymerElement {
         grid.init();
 
         dataView.beginUpdate();
-        dataView.setItems(data);
+        dataView.items = data;
         dataView.setFilter(filter);
         dataView.endUpdate();
       });

@@ -19,7 +19,7 @@ class Sortable {
   final String tolerance;
   final String helper;
   final String placeholderCssClass;
-  final List<String> reorderedIds = [];
+  final List<Object> reorderedIds = [];
 
   SortableStartFn start;
   SortableBeforeStopFn beforeStop;

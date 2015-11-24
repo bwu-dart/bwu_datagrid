@@ -127,8 +127,9 @@ class AppElement extends PolymerElement {
 
   @reflectable
   void toggleAutoEdit([_, __]) {
-    grid.setGridOptions = new GridOptions.unitialized()..autoEdit = !grid.gridOptions.autoEdit;
-    if(grid.gridOptions.autoEdit) {
+    grid.setGridOptions = new GridOptions.unitialized()
+      ..autoEdit = !grid.gridOptions.autoEdit;
+    if (grid.gridOptions.autoEdit) {
       set('autoEditButtonLabel', 'Auto-edit OFF');
     } else {
       set('autoEditButtonLabel', 'Auto-edit OFF');

@@ -41,7 +41,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
   CheckboxSelectColumn(
       {String id: '_checkbox_selector',
       String cssClass,
-      toolTip: 'Select/Deselect All',
+      String toolTip: 'Select/Deselect All',
       int width: 30})
       : super(
             id: id,
@@ -72,7 +72,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
   void destroy() {
     //_handler.unsubscribeAll();
-    _subscriptions.forEach((e) => e.cancel());
+    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
   }
 
   void handleSelectedRowsChanged(core.SelectedRowsChanged e) {
@@ -87,7 +87,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
         selectedRowsLookup.remove(row);
       }
     }
-    for (final i in selectedRowsLookup.keys) {
+    for (int i in selectedRowsLookup.keys) {
       _grid.invalidateRow(i);
     }
     selectedRowsLookup = lookup;
@@ -162,7 +162,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
       if ((e.causedBy.target as dom.CheckboxInputElement).checked) {
         final List<int> rows = <int>[];
-        for (var i = 0; i < _grid.getDataLength; i++) {
+        for (int i = 0; i < _grid.getDataLength; i++) {
           rows.add(i);
         }
         _grid.setSelectedRows(rows);

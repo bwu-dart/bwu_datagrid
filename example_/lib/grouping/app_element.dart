@@ -328,7 +328,8 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
-          comparer: (core.ItemBase a, core.ItemBase b) => a.count - b.count,
+          comparer: (core.ItemBase a, core.ItemBase b) =>
+              (a as core.Group).count - (b as core.Group).count,
           aggregators: [
             new AvgAggregator("percentComplete"),
             new SumAggregator("cost")
@@ -417,7 +418,7 @@ class AppElement extends PolymerElement {
             }),
         growable: true);
     //print(timer.elapsed);
-    dataView.setItems(data);
+    dataView.items = data;
     //print(timer.elapsed);
     //timer.stop();
   }

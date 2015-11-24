@@ -14,7 +14,10 @@ import 'package:polymer/polymer.dart';
 abstract class DataProvider<T extends core.ItemBase> {
   List<T> _items;
   List<T> get items => _items;
-  set items(List<T> items) => _items = items;
+  void set items(List<T> items) {
+    _items = items;
+  }
+
   int get length;
   T getItem(int index);
   RowMetadata getItemMetadata(int index);
@@ -75,10 +78,10 @@ class NodeBox {
 class Row {}
 
 class RowCache {
-  coll.Queue cellRenderQueue = new coll.Queue();
-  Map<int, String> cellColSpans = {};
+  coll.Queue<int> cellRenderQueue = new coll.Queue<int>();
+  Map<int, String> cellColSpans = <int, String>{};
   dom.Element rowNode;
-  List<dom.Element> cellNodes = [];
+  List<dom.Element> cellNodes = <dom.Element>[];
   Map<int, dom.Element> cellNodesByColumnIdx = {};
 
   RowCache();
@@ -139,8 +142,8 @@ class EditCommand {
 
   /// [serializedValue] and [prevSerializedValue] are normally of type [String]
   /// but for example for compound values they are of type [Map]
-  dynamic serializedValue;
-  dynamic prevSerializedValue;
+  Object serializedValue;
+  Object prevSerializedValue;
   Function execute;
   Function undo;
   EditCommand(

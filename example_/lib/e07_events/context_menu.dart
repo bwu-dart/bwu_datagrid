@@ -12,9 +12,9 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 class ContextMenu extends PolymerElement {
   ContextMenu.created() : super.created();
 
-  static const CONTEXT_MENU_SELECT = 'context-menu-select';
+  static const String contextMenuSelect = 'context-menu-select';
   static const dom.EventStreamProvider<dom.CustomEvent> _contextMenuSelect =
-      const dom.EventStreamProvider<dom.CustomEvent>(CONTEXT_MENU_SELECT);
+      const dom.EventStreamProvider<dom.CustomEvent>(contextMenuSelect);
 
   async.Stream<dom.CustomEvent> get onContextMenuSelect =>
       ContextMenu._contextMenuSelect.forTarget(this);
@@ -24,13 +24,13 @@ class ContextMenu extends PolymerElement {
   void attached() {
     super.attached();
 
-    dom.document.body.onClick.listen((e) => hide());
+    dom.document.body.onClick.listen((_) => hide());
 
-    onClick.listen((e) {
+    onClick.listen((dom.MouseEvent e) {
       if (!(e.target is dom.LIElement)) {
         return;
       }
-      fire(CONTEXT_MENU_SELECT,
+      fire(contextMenuSelect,
           detail: ((e.target as dom.LIElement).attributes['value']));
     });
   }

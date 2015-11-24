@@ -176,7 +176,7 @@ class AppElement extends PolymerElement {
       dataView = new DataView<DataItem>(
           options: new DataViewOptions(inlineFilters: true))
         ..beginUpdate()
-        ..setItems(data)
+        ..items = data
         ..setFilterArgs({
           'percentCompleteThreshold':
               tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
@@ -248,7 +248,7 @@ class AppElement extends PolymerElement {
 
   @reflectable
   void searchStringChanged([_, __]) {
-    if(dataView == null) {
+    if (dataView == null) {
       return;
     }
     updateFilter();
@@ -257,7 +257,7 @@ class AppElement extends PolymerElement {
   async.Timer _pendingUpdateFilter;
   @reflectable
   void percentCompleteThresholdChanged([_, __]) {
-    if(dataView == null) {
+    if (dataView == null) {
       return;
     }
     if (_pendingUpdateFilter != null) {

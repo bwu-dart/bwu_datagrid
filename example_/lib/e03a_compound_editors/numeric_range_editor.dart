@@ -64,9 +64,9 @@ class NumericRangeEditor extends Editor {
   }
 
   @override
-  void loadValue(item) {
-    fromInput.value = item['from'].toString();
-    toInput.value = item['to'].toString();
+  void loadValue(DataItem item) {
+    fromInput.value = '${item['from']}';
+    toInput.value = '${item['to']}';
   }
 
   @override

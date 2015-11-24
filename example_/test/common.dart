@@ -8,20 +8,22 @@ import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:bwu_webdriver/firefox.dart';
 import 'package:test/test.dart';
 
-const pubServePort = 21234;
+const int pubServePort = 21234;
 
 Future<String> get webServer async =>
     'http://${await pubServeIp}:${pubServePort}';
 
 Future<String> get pubServeIp async {
-  const prioritize = const ['eth0', 'eth1', 'wlan0'];
-  const ignoreList = const ['docker0'];
+  const List<String> prioritize = const ['eth0', 'eth1', 'wlan0'];
+  const List<String> ignoreList = const ['docker0'];
   String ip = io.Platform.environment['PUB_SERVE_IP'];
   if (ip == null) {
     ip = (await io.NetworkInterface.list())
-        .where((ni) => !ignoreList.contains(ni.name))
-        .reduce((n1, n2) =>
-            prioritize.indexOf(n1) >= prioritize.indexOf(n2) ? n1 : n2)
+        .where((io.NetworkInterface ni) => !ignoreList.contains(ni.name))
+        .reduce((io.NetworkInterface n1, io.NetworkInterface n2) =>
+            prioritize.indexOf(n1.name) >= prioritize.indexOf(n2.name)
+                ? n1
+                : n2)
         .addresses
         .first
         .address;
@@ -38,42 +40,42 @@ Future<String> get pubServeIp async {
 //    'accessible from within Docker containers. Example '
 //    '"export PUB_SERVE_URL=http://192.168.1.1:21234".';
 
-const gridCellSelectorBase =
+const String gridCellSelectorBase =
     'app-element::shadow #myGrid::shadow #viewport #canvas div.bwu-datagrid-row div.bwu-datagrid-cell.l';
-const gridCellSelectorBaseNoShadow =
+const String gridCellSelectorBaseNoShadow =
     'app-element > #myGrid > #viewport #canvas div.bwu-datagrid-row div.bwu-datagrid-cell.l';
 
-const viewPortSelector =
+const By viewPortSelector =
     const By.shadow('app-element::shadow #myGrid::shadow #viewport');
-const firstColumnSelector = const By.shadow('${gridCellSelectorBase}0');
+const By firstColumnSelector = const By.shadow('${gridCellSelectorBase}0');
 
-const gridActiveRowCellSelectorBase =
+const String gridActiveRowCellSelectorBase =
     'app-element::shadow #myGrid::shadow div.bwu-datagrid-row.active div.bwu-datagrid-cell.l';
-const titleCellActiveRowSelector =
+const By titleCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}0');
-const descriptionCellActiveRowSelector =
+const By descriptionCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}1');
 // e03a_compound_editors
-const rangeCellActiveRowSelector =
+const By rangeCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}1');
-const durationCellActiveRowSelector =
+const By durationCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}2');
-const percentCellActiveRowSelector =
+const By percentCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}3');
 
-const percentCellActiveRowPercentBarSelector = const By.shadow(
+const By percentCellActiveRowPercentBarSelector = const By.shadow(
     '${gridActiveRowCellSelectorBase}3 span.percent-complete-bar');
 
-const startCellActiveRowSelector =
+const By startCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}4');
-const finishCellActiveRowSelector =
+const By finishCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}5');
-const effortDrivenCellActiveRowSelector =
+const By effortDrivenCellActiveRowSelector =
     const By.shadow('${gridActiveRowCellSelectorBase}6');
-const effortDrivenCellActiveRowCheckedSelector = const By.shadow(
+const By effortDrivenCellActiveRowCheckedSelector = const By.shadow(
     '${gridActiveRowCellSelectorBase}6 img[src="packages/bwu_datagrid/asset/images/tick.png"]');
 
-const effortDrivenCheckedImageSelector = const By.cssSelector(
+const By effortDrivenCheckedImageSelector = const By.cssSelector(
     'img[src="packages/bwu_datagrid/asset/images/tick.png"]');
 
 typedef dynamic BrowserTest(WebBrowser browser);
@@ -118,7 +120,7 @@ Future<ExtendedWebDriver> commonSetUp(
     String pageUrl, WebBrowser browser) async {
   // for capabilities see https://code.google.com/p/selenium/wiki/DesiredCapabilities
   final Map<String, dynamic> desired = _defaultBrowserCapabilities[browser];
-  final driver = await ExtendedWebDriver.createNew(
+  final ExtendedWebDriver driver = await ExtendedWebDriver.createNew(
       uri: Uri.parse('http://localhost:4444/wd/hub/'), desired: desired);
   await driver.timeouts.setScriptTimeout(const Duration(milliseconds: 1500));
 //  await driver.timeouts.setPageLoadTimeout(const Duration(seconds: 90));

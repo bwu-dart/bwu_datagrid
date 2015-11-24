@@ -7,5 +7,4 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 @PolymerRegister('jq-ui-icon')
 class JqUiIcon extends PolymerElement {
   JqUiIcon.created() : super.created();
-
 }

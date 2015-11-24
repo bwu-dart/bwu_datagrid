@@ -2,7 +2,6 @@
 library app_element;
 
 import 'dart:math' as math;
-import 'dart:html' as dom;
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
@@ -85,27 +84,24 @@ class AppElement extends PolymerElement {
   List<EditCommand> _commandQueue = <EditCommand>[];
 
   @property
-  bool get isUndoItem => !_commandQueue.isEmpty;
+  bool get isUndoItem => _commandQueue.isNotEmpty;
 
   void queueAndExecuteCommand(
-      DataItem item,
-      Column column,
-      EditCommand editCommand) {
-    var oldValue = isUndoItem;
+      DataItem item, Column column, EditCommand editCommand) {
+//    final bool oldValue = isUndoItem;
     _commandQueue.add(editCommand);
     editCommand.execute();
-    set('isUndoItem', isUndoItem);
+    notifyPath('isUndoItem', isUndoItem);
   }
 
   @reflectable
   void undo([_, __]) {
-    final oldValue = isUndoItem;
     final EditCommand command = _commandQueue.removeLast();
     if (command != null && globalEditorLock.cancelCurrentEdit()) {
       command.undo();
       grid.gotoCell(command.row, command.cell, false);
     }
-    set('isUndoItem', isUndoItem);
+    notifyPath('isUndoItem', isUndoItem);
   }
 
   @override
@@ -116,8 +112,8 @@ class AppElement extends PolymerElement {
       gridOptions.editCommandHandler = queueAndExecuteCommand;
 
       grid = $['myGrid'];
-      var data = new MapDataItemProvider();
-      for (var i = 0; i < 500; i++) {
+      final DataProvider data = new MapDataItemProvider();
+      for (int i = 0; i < 500; i++) {
         data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           "description":

@@ -9,7 +9,7 @@ abstract class Aggregator {
 
   void call(List<core.ItemBase> rows) {
     if (rows != null) {
-      rows.forEach((r) => accumulate(r));
+      rows.forEach((core.ItemBase r) => accumulate(r));
     }
     _isCalculated = true;
   }
@@ -35,7 +35,7 @@ class AvgAggregator extends Aggregator {
 
   @override
   void accumulate(core.ItemBase item) {
-    var val = item[_field];
+    Object val = item[_field];
     _count++;
     if (val != null) {
       _nonNullCount++;
@@ -128,7 +128,7 @@ class SumAggregator extends Aggregator {
 
   @override
   void accumulate(core.ItemBase item) {
-    var val = item[_field];
+    final Object val = item[_field];
     if (val != null) {
       if (val is String && val.isNotEmpty) {
         _sum += double.parse(val);

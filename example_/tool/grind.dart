@@ -13,23 +13,23 @@ import 'package:bwu_utils/bwu_utils_server.dart' as utils;
 export 'package:bwu_grinder_tasks/bwu_grinder_tasks.dart' hide main;
 
 //const seleniumImageVersion = ':2.47.1';
-const seleniumImageVersion = ':local';
+const String seleniumImageVersion = ':local';
 
-const _seleniumHubImage = 'selenium/hub${seleniumImageVersion}';
-const _hubContainerName = 'selenium-hub';
+const String _seleniumHubImage = 'selenium/hub${seleniumImageVersion}';
+const String _hubContainerName = 'selenium-hub';
 
 //const seleniumChromeImage = 'selenium/node-chrome${seleniumImageVersion}';
-const _seleniumChromeImage =
+const String _seleniumChromeImage =
     'selenium/node-chrome-android-debug${seleniumImageVersion}';
 
 //const seleniumFirefoxImage = 'selenium/node-firefox${seleniumImageVersion}';
-const _seleniumFirefoxImage =
+const String _seleniumFirefoxImage =
     'selenium/node-firefox-debug${seleniumImageVersion}';
 
 //const webServer = 'webserver:192.168.2.96';
-const pubServePort = 21234;
+const int pubServePort = 21234;
 
-main(List<String> args) async {
+dynamic main(List<String> args) async {
 //  final origTestTask = grinderTasks.testTask;
 //  grinderTasks.testTask = (List<String> platforms) async {
   try {
@@ -43,7 +43,7 @@ main(List<String> args) async {
 }
 
 @Task('dummy')
-dummy() {}
+void dummy() {}
 
 DockerConnection _dockerConnection;
 CreateResponse _createdHubContainer;
@@ -52,16 +52,16 @@ CreateResponse _createdFirefoxNodeContainer;
 PubServe _pubServe;
 
 @Task('start-selenium')
-startSelenium() => _startSelenium();
+dynamic startSelenium() => _startSelenium();
 
 @Task('selenium-debug')
-seleniumDebug() async {
-  io.ProcessSignal.SIGINT.watch().listen((e) => _stopServices());
-  io.ProcessSignal.SIGHUP.watch().listen((e) => _stopServices());
-  io.ProcessSignal.SIGTERM.watch().listen((e) => _stopServices());
-  io.ProcessSignal.SIGUSR1.watch().listen((e) => _stopServices());
-  io.ProcessSignal.SIGUSR2.watch().listen((e) => _stopServices());
-  io.ProcessSignal.SIGWINCH.watch().listen((e) => _stopServices());
+Future seleniumDebug() async {
+  io.ProcessSignal.SIGINT.watch().listen((_) => _stopServices());
+  io.ProcessSignal.SIGHUP.watch().listen((_) => _stopServices());
+  io.ProcessSignal.SIGTERM.watch().listen((_) => _stopServices());
+  io.ProcessSignal.SIGUSR1.watch().listen((_) => _stopServices());
+  io.ProcessSignal.SIGUSR2.watch().listen((_) => _stopServices());
+  io.ProcessSignal.SIGWINCH.watch().listen((_) => _stopServices());
 
   try {
     _pubServe = new PubServe();
@@ -74,18 +74,18 @@ seleniumDebug() async {
     });
 
     await _startSelenium();
-    final chromeInfo = await _dockerConnection
+    final ContainerInfo chromeInfo = await _dockerConnection
         .container(_createdChromeNodeContainer.container);
-    final chromePort = chromeInfo.networkSettings.ports['5900/tcp'][0]
+    final int chromePort = chromeInfo.networkSettings.ports['5900/tcp'][0]
         ['HostPort'];
     print('Chrome: ${chromePort}');
     io.Process.start('vinagre',
         ['--vnc-scale', '--geometry', '1280x1024+200+0', ':${chromePort}']);
 //    io.Process.start('krdc', ['vnc://:${chromePort}']);
 //    io.Process.start('xvnc4viewer', ['-Shared', ':${chromePort}']);
-    final firefoxInfo = await _dockerConnection
+    final ContainerInfo firefoxInfo = await _dockerConnection
         .container(_createdFirefoxNodeContainer.container);
-    final firefoxPort = firefoxInfo.networkSettings.ports['5900/tcp'][0]
+    final int firefoxPort = firefoxInfo.networkSettings.ports['5900/tcp'][0]
         ['HostPort'];
     print('Firefox: ${firefoxPort}');
     await new Future.delayed(const Duration(seconds: 1));
@@ -106,8 +106,9 @@ void _stopServices() {
   _dockerConnection?.stop(_createdHubContainer.container);
 }
 
-_startSelenium({bool wait: true}) async {
-  final dockerHostStr = io.Platform.environment[dockerHostFromEnvironment];
+Future _startSelenium({bool wait: true}) async {
+  final String dockerHostStr =
+      io.Platform.environment[dockerHostFromEnvironment];
   assert(dockerHostStr != null && dockerHostStr.isNotEmpty);
 //  final dockerHost = Uri.parse(dockerHostStr);
 
@@ -144,17 +145,17 @@ _startSelenium({bool wait: true}) async {
 // A copy is still in bwu_utils_dev
 class PubServe extends RunProcess {
   int _port;
-  final _directoryPorts = <String, int>{};
+  final Map<String, int> _directoryPorts = <String, int>{};
   Map<String, int> get directoryPorts =>
       new UnmodifiableMapView(_directoryPorts);
-  final _servingMessageRegex = new RegExp(
+  final RegExp _servingMessageRegex = new RegExp(
       r'^Serving [0-9a-zA-Z_]+ ([0-9a-zA-Z_]+) +on https?://.*:(\d{4,5})$');
 
   Future start(
       {int port,
       List<String> directories: const ['test'],
       String hostname}) async {
-    final readyCompleter = new Completer<io.Process>();
+    final Completer<io.Process> readyCompleter = new Completer<io.Process>();
     if (port != null && port > 0) {
       _port = port;
     } else {
@@ -163,7 +164,7 @@ class PubServe extends RunProcess {
     if (directories == null || directories.isEmpty) {
       directories = ['test'];
     }
-    directories.forEach((d) => _directoryPorts[d] = null);
+    directories.forEach((String d) => _directoryPorts[d] = null);
     String packageRoot = utils.packageRoot().path;
     //_process = await io.Process.start(
     List<String> args = ['serve', '--port=${_port}'];
@@ -172,16 +173,16 @@ class PubServe extends RunProcess {
     }
     args.addAll(directories);
     await super._run('pub', args, workingDirectory: packageRoot);
-    exitCode.then((exitCode) {
+    exitCode.then((int exitCode) {
       _port = null;
     });
     stdout
         .transform(UTF8.decoder as StreamTransformer<List<int>, dynamic>)
         .transform(new LineSplitter())
-        .listen((s) {
+        .listen((String s) {
       //_log.fine(s);
       print(s);
-      final match = _servingMessageRegex.firstMatch(s);
+      final Match match = _servingMessageRegex.firstMatch(s);
       if (match != null) {
         _directoryPorts[match.group(1)] = int.parse(match.group(2));
       }
@@ -218,7 +219,7 @@ class RunProcess {
     _process = await io.Process
         .start(executable, args, workingDirectory: workingDirectory);
     _exitCode = process.exitCode;
-    process.exitCode.then((exitCode) {
+    process.exitCode.then((int exitCode) {
       _process = null;
     });
 

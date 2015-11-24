@@ -117,7 +117,7 @@ class AppElement extends PolymerElement {
 
   // Copies and shuffles the specified array and returns a new shuffled array.
   List<int> randomize(List<int> items) {
-    var randomItems = items.toList();
+    final List<int> randomItems = items.toList();
     int randomIndex;
     int temp;
     int index;

@@ -16,7 +16,7 @@ class TotalsDataProvider extends MapDataItemProvider {
 
   TotalsDataProvider(List<MapDataItem> data, this._columns) : super(data) {
     // Make the totals not editable.
-    for (var i = 0; i < _columns.length; i++) {
+    for (int i = 0; i < _columns.length; i++) {
       totalsMetadata.columns['${i}'] = new Column(editor: null);
     }
 
@@ -29,13 +29,13 @@ class TotalsDataProvider extends MapDataItemProvider {
   }
 
   void updateTotals() {
-    var columnIdx = _columns.length;
+    int columnIdx = _columns.length;
     while (columnIdx-- > 0) {
-      var columnId = _columns[columnIdx].id;
-      var total = 0;
-      var i = items.length;
+      final String columnId = _columns[columnIdx].id;
+      int total = 0;
+      int i = items.length;
       while (i-- > 0) {
-        var val = items[i][columnId];
+        Object val = items[i][columnId];
         if (val != null) {
           if (val is String) {
             total += (tools.parseInt(items[i][columnId], onErrorDefault: 0));

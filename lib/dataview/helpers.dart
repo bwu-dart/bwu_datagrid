@@ -11,7 +11,7 @@ class DataViewOptions {
 typedef int SortComparerFunc<T>(T a, T b);
 
 class GroupingInfo {
-  var getter;
+  Object getter;
   bool getterIsAFn = false;
   fm.GroupTitleFormatter formatter;
   SortComparerFunc<core.ItemBase> comparer;

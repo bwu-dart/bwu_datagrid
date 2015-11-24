@@ -21,28 +21,26 @@ class CompositeEditorOptions {
       this.destroy});
 }
 
-/***
- * A composite Bwu Datagrid editor factory.
- * Generates an editor that is composed of multiple editors for given columns.
- * Individual editors are provided given containers instead of the original cell.
- * Validation will be performed on all editors individually and the results will be aggregated into one
- * validation result.
- *
- *
- * The returned editor will have its prototype set to CompositeEditor, so you can use the "instanceof" check.
- *
- * NOTE:  This doesn't work for detached editors since they will be created and positioned relative to the
- *        active cell and not the provided container.
- *
- * @param columns {Array} Column definitions from which editors will be pulled.
- * @param containers {Array} Container HTMLElements in which editors will be placed.
- * @param options {Object} Options hash:
- *  validationFailedMsg     -   A generic failed validation message set on the aggregated validation resuls.
- *  hide                    -   A function to be called when the grid asks the editor to hide itself.
- *  show                    -   A function to be called when the grid asks the editor to show itself.
- *  position                -   A function to be called when the grid asks the editor to reposition itself.
- *  destroy                 -   A function to be called when the editor is destroyed.
- */
+/// A composite Bwu Datagrid editor factory.
+/// Generates an editor that is composed of multiple editors for given columns.
+/// Individual editors are provided given containers instead of the original cell.
+/// Validation will be performed on all editors individually and the results will be aggregated into one
+/// validation result.
+///
+///
+/// The returned editor will have its prototype set to CompositeEditor, so you can use the "instanceof" check.
+///
+/// NOTE:  This doesn't work for detached editors since they will be created and positioned relative to the
+///        active cell and not the provided container.
+///
+/// @param columns {Array} Column definitions from which editors will be pulled.
+/// @param containers {Array} Container HTMLElements in which editors will be placed.
+/// @param options {Object} Options hash:
+///  validationFailedMsg     -   A generic failed validation message set on the aggregated validation resuls.
+///  hide                    -   A function to be called when the grid asks the editor to hide itself.
+///  show                    -   A function to be called when the grid asks the editor to show itself.
+///  position                -   A function to be called when the grid asks the editor to reposition itself.
+///  destroy                 -   A function to be called when the editor is destroyed.
 class CompositeEditor extends Editor {
   List<Column> columns;
   CompositeEditorOptions options;
@@ -57,10 +55,10 @@ class CompositeEditor extends Editor {
   List<Editor> editors;
 
   NodeBox getContainerBox(String id) {
-    var container = containers[id];
+    final dom.Element container = containers[id];
     math.Rectangle<int> offset = container.offset as math.Rectangle<int>;
-    var w = container.offsetWidth.round();
-    var h = container.offsetHeight.round();
+    final int w = container.offsetWidth.round();
+    final int h = container.offsetHeight.round();
 
     return new NodeBox(
         top: offset.top.round(),
@@ -73,7 +71,7 @@ class CompositeEditor extends Editor {
   }
 
   void init() {
-    var idx = columns.length;
+    int idx = columns.length;
     editors = new List<Editor>(columns.length);
     EditorArgs newArgs;
     while (idx-- > 0) {
@@ -90,7 +88,7 @@ class CompositeEditor extends Editor {
   }
 
   void destroy() {
-    var idx = editors.length;
+    int idx = editors.length;
     while (idx-- > 0) {
       editors[idx].destroy();
     }
@@ -108,7 +106,7 @@ class CompositeEditor extends Editor {
   }
 
   bool get isValueChanged {
-    var idx = editors.length;
+    int idx = editors.length;
     while (idx-- > 0) {
       if (editors[idx].isValueChanged) {
         return true;
@@ -118,35 +116,35 @@ class CompositeEditor extends Editor {
   }
 
   dynamic serializeValue() {
-    var serializedValue = new List(columns.length);
-    var idx = editors.length;
+    final List<int> serializedValue = new List(columns.length);
+    int idx = editors.length;
     while (idx-- > 0) {
       serializedValue[idx] = editors[idx].serializeValue();
     }
     return serializedValue;
   }
 
-  void applyValue(DataItem item, state) {
-    var idx = editors.length;
+  void applyValue(DataItem item, List<Object> state) {
+    int idx = editors.length;
     while (idx-- > 0) {
       editors[idx].applyValue(item, state[idx]);
     }
   }
 
-  void loadValue(/*Item/Map*/ item) {
-    var idx = editors.length;
+  void loadValue(DataItem item) {
+    int idx = editors.length;
     while (idx-- > 0) {
       editors[idx].loadValue(item);
     }
   }
 
   ValidationResult validate() {
-    var validationResults;
+    ValidationResult validationResults;
     List<ValidationErrorSource> errors = [];
 
     firstInvalidEditor = null;
 
-    var idx = editors.length;
+    int idx = editors.length;
     while (idx-- > 0) {
       validationResults = editors[idx].validate();
       if (!validationResults.isValid) {
@@ -167,7 +165,7 @@ class CompositeEditor extends Editor {
   }
 
   void hide() {
-    var idx = editors.length;
+    int idx = editors.length;
     while (idx-- > 0) {
       if (editors[idx].hide != null) editors[idx].hide();
     }
@@ -175,7 +173,7 @@ class CompositeEditor extends Editor {
   }
 
   void show() {
-    var idx = editors.length;
+    int idx = editors.length;
     while (idx-- > 0) {
       if (editors[idx].show != null) editors[idx].show();
     }
