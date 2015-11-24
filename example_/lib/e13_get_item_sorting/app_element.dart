@@ -10,6 +10,8 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
 class CustomMapDataItemProvider extends DataProvider {
   Function _getItem;
@@ -27,11 +29,12 @@ class CustomMapDataItemProvider extends DataProvider {
   RowMetadata getItemMetadata(int index) => null;
 }
 
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(
         id: "title", name: "Title", field: "title", width: 240, sortable: true),
     new Column(
@@ -42,12 +45,12 @@ class AppElement extends PolymerElement {
         id: "c3", name: "Sort 3", field: "c3", width: 240, sortable: true)
   ];
 
-  var gridOptions =
+  final GridOptions gridOptions =
       new GridOptions(enableCellNavigation: false, enableColumnReorder: false);
 
   math.Random rnd = new math.Random();
-  static const int NUMBER_OF_ITEMS = 25000;
-  List<int> items = new List<int>(NUMBER_OF_ITEMS);
+  static const int numberOfItems = 25000;
+  List<int> items = new List<int>(numberOfItems);
   Map indices;
   bool isAsc = true;
   Column currentSortCol = new Column(id: "title");
@@ -65,7 +68,7 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new MapDataItemProvider();
 
-      for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
+      for (int i = 0; i < numberOfItems; i++) {
         items[i] = i;
 
         data.items.add(new MapDataItem({'title': 'Task ${i}'}));
@@ -79,7 +82,7 @@ class AppElement extends PolymerElement {
       };
 
       // Assign values to the data.
-      for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
+      for (int i = 0; i < numberOfItems; i++) {
         data.items[indices['c1'][i]]['c1'] = "Value ${i + 1}";
         data.items[indices['c2'][i]]['c2'] = "Value ${i + 1}";
         data.items[indices['c3'][i]]['c3'] = "Value ${i + 1}";
@@ -93,7 +96,7 @@ class AppElement extends PolymerElement {
               dataProvider: dataProvider,
               columns: columns,
               gridOptions: gridOptions)
-          .then((e) {
+          .then((_) {
         grid.onBwuSort.listen((core.Sort args) {
           currentSortCol = args.sortColumn;
           isAsc = args.sortAsc;

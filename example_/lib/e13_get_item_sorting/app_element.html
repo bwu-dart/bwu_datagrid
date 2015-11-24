@@ -1,58 +1,68 @@
 <!DOCTYPE html>
+<style>
+  body {
+    margin: 0;
+  }
+</style>
 <dom-module id='app-element'>
   <template>
-    <!--<link rel='stylesheet' href='packages/bwu_datagrid/asset/grid.css'>
-    <link rel='stylesheet' href='packages/bwu_datagrid/asset/default_theme.css' > -->
-    <link rel="stylesheet" href='../../../packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css'>
-    <link rel='stylesheet' href='../asset/examples.css'>
+      <style include="example-style">
+        :host {
+          display: block;
+          margin: 0;
+          padding: 0;
+        }
 
-    <style>
-      :host {
-        display: block;
-        width: 100%;
-      }
+        #myGrid {
+          --bwu-datagrid: {
+            position: absolute;
+            width: auto;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 0;
 
-      #description {
-        position: fixed;
-        top: 30px;
-        right: 30px;
-        width: 25em;
-        background: beige;
-        border: solid 1px gray;
-        z-index: 1000;
-      }
+            opacity: 1;
+            transition: opacity 200ms;
 
-      #description h2 {
-        padding-left: 0.5em;
-      }
+            background: white;
+            outline: 0;
+          };
+        }
+        options-panel {
+          position: fixed;
+          top: 30px;
+          right: 30px;
+          width: 25em;
+          /*border: solid 1px gray;*/
+          z-index: 1000;
+          --options-panel: {
+            border-radius: 6px;
+            -moz-border-radius: 6px;
+            -webkit-border-radius: 6px;
+            border: 1px solid gray;
+            background-color: beige;
+            padding: 10px;
+            margin-left: 25px;
+            width: 320px;
+          };
+        }
+      </style>
+      <bwu-datagrid id='myGrid' theme="example-style"></bwu-datagrid>
 
-      #myGrid {
-        position: absolute;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 0;
-      }
-    </style>
-
-    <!-- <div style='position:relative'>
-      <div style='width:600px;'>-->
-        <bwu-datagrid id='myGrid' ></bwu-datagrid>
-      <!--</div> -->
-
-      <div id='description'>
-        <h2>Demonstrates:</h2>
+      <options-panel source-dir="e13_get_item_sorting">
+        <span class="title">
+          getItem, sorting
+        </span>
+        <div>
         <ul>
           <li>Sorting grid items by an index</li>
           <li>Using the getItem method to provide data</li>
         </ul>
         <h2>View Source:</h2>
-        <ul>
-          <li><A href="https://github.com/bwu-dart/bwu_datagrid/blob/master/example/src/e12_get_item_sorting/app_element.dart" target="_sourcewindow"> View the source for this example on Github</a></li>
-        </ul>
       </div>
-    <!--</div>-->
+    </options-panel>
   </template>
 </dom-module>
