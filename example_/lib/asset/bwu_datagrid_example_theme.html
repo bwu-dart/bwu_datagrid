@@ -295,6 +295,31 @@
         cursor: move;
         background: url("../../../packages/bwu_datagrid/asset/images/drag-handle.png") no-repeat center center;
       }
+
+      /**
+        Styles for the e14_highlighting example
+      **/
+      :host::content .load-medium,
+      .load-medium {
+        color: orange;
+        font-weight: bold;
+      }
+      :host::content .load-hi,
+      .load-hi {
+        color: red;
+        font-weight: bold;
+      }
+
+      :host::content .changed,
+      .changed {
+        background: pink;
+      }
+
+      :host::content .current-server,
+      .current-server {
+        border: 1px solid black;
+        background: orange;
+      }
     </style>
   </template>
 </dom-module>

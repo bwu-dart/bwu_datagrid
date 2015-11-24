@@ -12,7 +12,10 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 class CpuUtilizationFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
@@ -39,7 +42,7 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  final List<Column> columns = <Column>[
     new Column(id: "server", name: "Server", field: "server", width: 180),
   ];
 
@@ -96,8 +99,8 @@ class AppElement extends PolymerElement {
 
   int currentServer;
 
-  void simulateRealTimeUpdates(
-      [dom.MouseEvent e, Object detail, dom.Element target]) {
+  @reflectable
+  void simulateRealTimeUpdates([_, __]) {
     final Map<int, Map<String, String>> changes = <int, Map<String, String>>{};
     int numberOfUpdates = (rnd.nextDouble() * (data.length / 10)).round();
 
@@ -129,7 +132,8 @@ class AppElement extends PolymerElement {
         new Duration(milliseconds: 500), () => simulateRealTimeUpdates());
   }
 
-  void findCurrentServer(dom.MouseEvent e, Object detail, dom.Element target) {
+  @reflectable
+  void findCurrentServer([_, __]) {
     grid.scrollRowIntoView(currentServer);
     grid.flashCell(currentServer, grid.getColumnIndex("server"), 100);
   }
