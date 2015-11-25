@@ -13,9 +13,13 @@ BWU Datagrid is a Dart port from [SlickGrid](https://github.com/mleibman/SlickGr
 Find **examples** in [the wiki](https://github.com/bwu-dart/bwu_datagrid/wiki).  
 The source code for the examples was moved to https://github.com/bwu-dart/bwu_datagrid_examples
 
-**UPDATE:  May 10th, 2015
+**UPDATE:  Nov 25th, 2015**
 
 ### Status
+
+#### Polymer compatibility: 
+- Polymer >= 1.0.0: BWU Datagrid versions >= 0.1.0  
+- Polymer <= 0.16.4 BWU Datagrid versions <= 0.0.30
 
 #### Most things are already working:
 
@@ -30,6 +34,12 @@ The source code for the examples was moved to https://github.com/bwu-dart/bwu_da
 * Support for editing and creating new rows.
 * Advanced detached & multi-field editors with undo/redo support.
 * Background post-rendering for richer cells
+* Configurable & customizable
+* Grouping, filtering, custom aggregators, and more!
+* “GlobalEditorLock” to manage concurrent edits in cases where multiple Views on a page can edit the same data.
+
+**Works best in Chrome** 
+Better support for other browsers is work-in-progress.
 
 ### Some highlights (when it's ready):
 
@@ -38,9 +48,6 @@ The source code for the examples was moved to https://github.com/bwu-dart/bwu_da
 * Adaptive virtual scrolling (handle hundreds of thousands of rows with extreme responsiveness)
 * Extremely fast rendering speed
 * ~~Supports jQuery UI Themes~~ (not sure yet)
-* Configurable & customizable
-* Grouping, filtering, custom aggregators, and more!
-* “GlobalEditorLock” to manage concurrent edits in cases where multiple Views on a page can edit the same data.
 * Support for [millions of rows](http://stackoverflow.com/a/2569488/1269037)
 
 ## Screenshots

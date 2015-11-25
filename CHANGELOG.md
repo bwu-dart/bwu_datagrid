@@ -1,3 +1,10 @@
+## 0.1.0-dev.0
+- Ported to Polymer 1.0.0-rc.6
+- Styling using Polymer 1.0 DOM modules
+- theming
+- a few smaller bugs fixed found while porting, and probably a few more introduced
+- added type annotations to satisfy strong-mode checks 
+
 ## 0.0.22
 - fix for breaking change in Dart 1.10.0 in `classes.add`
 
