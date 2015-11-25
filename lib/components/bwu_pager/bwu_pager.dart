@@ -35,9 +35,14 @@ class BwuPager extends PolymerElement {
   DataView _dataView;
   BwuDatagrid _grid;
 
-  @property bool pagerSettingsHidden = true;
-  @property String pagerStatusText = '';
-  @property final NavState navState = new NavState();
+  @property
+  bool pagerSettingsHidden = true;
+
+  @property
+  String pagerStatusText = '';
+
+  @property
+  final NavState navState = new NavState();
 
   dom.Element status;
 

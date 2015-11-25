@@ -34,9 +34,14 @@ class BwuColumnPicker extends PolymerElement {
   BwuDatagrid _grid;
   List<Column> _columns;
 
-  @property List<CbData> columnCheckboxes = <CbData>[];
-  @Property(observer: 'syncResizeChangedHandler') bool isSyncResize = false;
-  @Property(observer: 'autoResizeChangedHandler') bool isAutoResize = false;
+  @property
+  List<CbData> columnCheckboxes = <CbData>[];
+
+  @Property(observer: 'syncResizeChangedHandler')
+  bool isSyncResize = false;
+
+  @Property(observer: 'autoResizeChangedHandler')
+  bool isAutoResize = false;
 
   bool _isInitialized = false;
 

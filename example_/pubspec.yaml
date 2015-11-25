@@ -14,7 +14,7 @@ dependencies:
   polymer_interop: ^1.0.0-rc.5
   quiver: '>=0.21.3 <0.22.0'
   quiver_log: '>=1.0.1 <2.0.0'
-  reflectable: ^0.3.2
+  reflectable: '>=0.3.2 <0.3.4'
   web_components: ^0.12.0
 
 dev_dependencies:
@@ -88,7 +88,6 @@ transformers:
     - web/autotooltips.dart
 
     - test/checkbox_row_select_test.dart
-    - test/checkbox_row_select_testx.dart
 
     inline_stylesheets:
       packages/bwu_datagrid_examples/asset/examples.css: false

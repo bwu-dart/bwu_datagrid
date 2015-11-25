@@ -18,11 +18,14 @@ import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel], [jqUiStyleSilence],
 class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   @override
   void format(dom.Element target, core.GroupTotals totals, Column columnDef) {
-    //target.appendHtml(value);
     double val;
     if (totals['avg'] != null && totals['avg'][columnDef.field] != null) {
       val = totals['avg'][columnDef.field];
@@ -81,7 +84,8 @@ class BooleanGroupTitleFormatter extends fm.GroupTitleFormatter {
 
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
-  @property String threshold = '0';
+  @Property(observer: 'thresholdChanged')
+  String threshold = '0';
 
   AppElement.created() : super.created();
 
@@ -237,7 +241,8 @@ class AppElement extends PolymerElement {
   }
 
   async.Timer _pendingUpdateFilter;
-  void thresholdChanged(_) {
+  @reflectable
+  void thresholdChanged([_, __]) {
     core.globalEditorLock.cancelCurrentEdit();
 
     if (_pendingUpdateFilter != null) {
@@ -301,7 +306,8 @@ class AppElement extends PolymerElement {
     return (x == y ? 0 : (x > y ? 1 : -1));
   }
 
-  void groupByDuration() {
+  @reflectable
+  void groupByDuration([_, __]) {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
@@ -315,11 +321,13 @@ class AppElement extends PolymerElement {
     ]);
   }
 
-  void groupByDurationOrderByCountHandler() {
+  @reflectable
+  void groupByDurationOrderByCountHandler([_, __]) {
     groupByDurationOrderByCount();
   }
 
-  void groupByDurationOrderByCountDoAggregateHandler() {
+  @reflectable
+  void groupByDurationOrderByCountDoAggregateHandler([_, __]) {
     groupByDurationOrderByCount(true);
   }
 
@@ -339,7 +347,8 @@ class AppElement extends PolymerElement {
     ]);
   }
 
-  void groupByDurationEffortDriven() {
+  @reflectable
+  void groupByDurationEffortDriven([_, __]) {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
@@ -362,7 +371,8 @@ class AppElement extends PolymerElement {
     ]);
   }
 
-  void groupByDurationEffortDrivenPercent() {
+  @reflectable
+  void groupByDurationEffortDrivenPercent([_, __]) {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
@@ -391,7 +401,8 @@ class AppElement extends PolymerElement {
     ]);
   }
 
-  void loadDataHandler(dom.Event e) {
+  @reflectable
+  void loadDataHandler(dom.Event e, [_]) {
     int count = int.parse((e.target as dom.Element).dataset['count']);
     loadData(count);
   }
@@ -423,15 +434,18 @@ class AppElement extends PolymerElement {
     //timer.stop();
   }
 
-  void groupClearHandler() {
-    dataView.setGrouping([]);
+  @reflectable
+  void groupClearHandler([_, __]) {
+    dataView.setGrouping(<GroupingInfo>[]);
   }
 
-  void collapseAllGroupsHandler() {
+  @reflectable
+  void collapseAllGroupsHandler([_, __]) {
     dataView.collapseAllGroups();
   }
 
-  void expandAllGroupsHandler() {
+  @reflectable
+  void expandAllGroupsHandler([_, __]) {
     dataView.expandAllGroups();
   }
 }

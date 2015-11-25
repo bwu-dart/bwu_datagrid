@@ -18,7 +18,8 @@ class DropZone extends PolymerElement {
   bool _isAcceptedDragStarted = false;
   List<String> _accept;
 
-  @Property(observer: 'dropzoneChanged') String dropzone;
+  @Property(observer: 'dropzoneChanged')
+  String dropzone;
 
   @reflectable
   void dropzoneChanged([_, __]) {

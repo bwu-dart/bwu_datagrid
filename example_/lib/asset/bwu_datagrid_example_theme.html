@@ -259,8 +259,8 @@
         Styles for the e04_model and e09_row_reordering examples
       **/
       /*noinspection CssOptimizeSimilarProperties*/
-      :host::content .cell-selection,
-      .cell-selection {
+      :host(.e09_row_reordering)::content .cell-selection,
+      :host(.e09_row_reordering) .cell-selection {
         border-right-color: silver;
         border-right-style: solid;
         background: #f5f5f5;
@@ -328,6 +328,36 @@
       .current-server {
         border: 1px solid black;
         background: orange;
+      }
+
+      /**
+        Styles for the grouping example
+      **/
+      :host::content .bwu-datagrid-group-title[level='0'],
+      .bwu-datagrid-group-title[level='0'] {
+        font-weight: bold;
+      }
+
+      :host::content .bwu-datagrid-group-title[level='1'],
+      .bwu-datagrid-group-title[level='1'] {
+        text-decoration: underline;
+      }
+
+      :host::content .bwu-datagrid-group-title[level='2'],
+      .bwu-datagrid-group-title[level='2'] {
+        font-style: italic;
+      }
+
+      /**
+        Styles for the header_row example
+      **/
+      bwu-datagrid-headerrow-column input {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
       }
     </style>
   </template>

@@ -56,16 +56,21 @@ class BwuDatagrid extends PolymerElement {
 
   // DataGrid(dom.Element container, String data, int columns, Options options);
   DataProvider _dataProvider;
-  @property DataProvider get dataProvider => _dataProvider;
+
+  @property
+  DataProvider get dataProvider => _dataProvider;
   void set data(DataProvider data) {
     setData(data, true);
   }
 
   List<Column> _columns;
-  @property List<Column> get columns => _columns;
+  @property
+  List<Column> get columns => _columns;
 
   GridOptions _gridOptions = new GridOptions();
-  @property GridOptions get gridOptions => _gridOptions;
+
+  @property
+  GridOptions get gridOptions => _gridOptions;
   void set gridOptions(GridOptions options) {
     setGridOptions = options;
   }
@@ -1014,7 +1019,7 @@ class BwuDatagrid extends PolymerElement {
                 }
               }
               shrinkLeewayOnLeft += c.previousWidth -
-                  math.max(c.minWidth != null ? c.minWidth : 0,
+                  math.max /*<int>*/ (c.minWidth != null ? c.minWidth : 0,
                       _absoluteColumnMinWidth);
             }
           }
@@ -1030,8 +1035,10 @@ class BwuDatagrid extends PolymerElement {
           if (stretchLeewayOnLeft == null) {
             stretchLeewayOnLeft = 100000;
           }
-          maxPageX = pageX + math.min(shrinkLeewayOnRight, stretchLeewayOnLeft);
-          minPageX = pageX - math.min(shrinkLeewayOnLeft, stretchLeewayOnRight);
+          maxPageX = pageX +
+              math.min /*<int>*/ (shrinkLeewayOnRight, stretchLeewayOnLeft);
+          minPageX = pageX -
+              math.min /*<int>*/ (shrinkLeewayOnLeft, stretchLeewayOnRight);
         })
         ..onDrag.listen((dom.MouseEvent e) {
           int actualMinWidth;

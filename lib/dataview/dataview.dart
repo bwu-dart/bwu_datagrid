@@ -72,7 +72,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   List<GroupingInfo> groupingInfos = <GroupingInfo>[];
   List<core.Group> groups = <core.Group>[];
-  List<Map<String, bool>> toggledGroupsByLevel = [];
+  List<Map<String, bool>> toggledGroupsByLevel = <Map<String, bool>>[];
   String groupingDelimiter = ':|:';
 
   int pagesize = 0;
@@ -256,9 +256,9 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
       options.groupItemMetadataProvider = new GroupItemMetadataProvider();
     }
 
-    groups = [];
-    toggledGroupsByLevel = [];
-    groupingInfo = groupingInfo != null ? groupingInfo : <GroupingInfo>[];
+    groups = <core.Group>[];
+    toggledGroupsByLevel = <Map<String, bool>>[];
+    groupingInfos = groupingInfo != null ? groupingInfo : <GroupingInfo>[];
 
     for (int i = 0; i < groupingInfos.length; i++) {
       GroupingInfo gi = groupingInfos[i];

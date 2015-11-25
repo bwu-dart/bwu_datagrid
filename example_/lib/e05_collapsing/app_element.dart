@@ -128,6 +128,7 @@ class AppElement extends PolymerElement {
 
   @Property(observer: 'percentCompleteThresholdChanged')
   String percentCompleteThreshold;
+
   @Property(observer: 'searchStringChanged')
   String searchString = '';
 

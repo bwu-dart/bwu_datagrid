@@ -121,7 +121,7 @@ class RowMoveManager extends Plugin {
 
     final int insertBefore = math.max(
         0,
-        math.min(
+        math.min/*<int>*/(
             (top / grid.getGridOptions.rowHeight).round(), grid.getDataLength));
     if (insertBefore != _insertBefore) {
       if ((eventBus.fire(

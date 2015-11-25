@@ -9,8 +9,11 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 class FilterForm extends PolymerElement {
   FilterForm.created() : super.created();
 
-  @Property(notify: true) String threshold = '0';
-  @Property(notify: true) String searchString = '';
+  @Property(notify: true)
+  String threshold = '0';
+
+  @Property(notify: true)
+  String searchString = '';
 
   @reflectable
   void clearSearch(dom.KeyboardEvent e, [_]) {

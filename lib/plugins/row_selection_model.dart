@@ -177,8 +177,8 @@ class RowSelectionModel extends SelectionModel {
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (selection.length > 0 && e.causedBy.shiftKey) {
       final int last = selection.removeLast();
-      final int from = math.min(cell.row, last);
-      final int to = math.max(cell.row, last);
+      final int from = math.min/*<int>*/(cell.row, last);
+      final int to = math.max/*<int>*/(cell.row, last);
       selection = [];
       for (int i = from; i <= to; i++) {
         if (i != last) {

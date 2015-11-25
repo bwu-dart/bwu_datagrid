@@ -116,8 +116,10 @@ class AppElement extends PolymerElement {
 
   String sortcol = "title";
   int sortdir = 1;
+
   @Property(observer: 'percentCompleteThresholdChanged')
   String percentCompleteThreshold;
+
   @Property(observer: 'searchStringChanged')
   String searchString = '';
 

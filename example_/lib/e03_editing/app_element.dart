@@ -123,7 +123,8 @@ class AppElement extends PolymerElement {
     }
   }
 
-  @property String autoEditButtonLabel = 'Auto-edit ON';
+  @property
+  String autoEditButtonLabel = 'Auto-edit ON';
 
   @reflectable
   void toggleAutoEdit([_, __]) {

@@ -15,7 +15,7 @@ class GroupingInfo {
   bool getterIsAFn = false;
   fm.GroupTitleFormatter formatter;
   SortComparerFunc<core.ItemBase> comparer;
-  List predefinedValues;
+  List<Object> predefinedValues;
   List<Aggregator> aggregators;
   bool doAggregateEmpty;
   bool doAggregateCollapsed;
@@ -36,8 +36,8 @@ class GroupingInfo {
       this.isCollapsed: false,
       this.isDisplayTotalsRow: true,
       this.isLazyTotalsCalculation: false}) {
-    if (predefinedValues == null) predefinedValues = [];
-    if (aggregators == null) aggregators = [];
+    if (predefinedValues == null) predefinedValues = <Object>[];
+    if (aggregators == null) aggregators = <Aggregator>[];
     if (comparer == null) comparer = (core.ItemBase a, core.ItemBase b) {
       if (a['value'] is bool && b['value'] is bool) {
         return (a['value'] ? 1 : 0) - (b['value'] ? 1 : 0);
