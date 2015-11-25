@@ -26,7 +26,7 @@ class Range {
     }
   }
 
-  int get fromRow => math.min/*<int>*/(_fromRow, _toRow);
+  int get fromRow => math.min /*<int>*/ (_fromRow, _toRow);
 
   int get toRow => math.max(_fromRow, _toRow);
 

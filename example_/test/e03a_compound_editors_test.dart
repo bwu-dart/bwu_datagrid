@@ -89,7 +89,7 @@ void tests(WebBrowser browser) {
         expect(
             (await rangeCell.text)
                 .split('-')
-                .map /*<String>*/((String t) => int.parse(t.trim()))
+                .map /*<String>*/ ((String t) => int.parse(t.trim()))
                 .toList(),
             orderedEquals(rangeNewValues));
       } /*, skip: 'temporary'*/);

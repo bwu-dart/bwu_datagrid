@@ -111,7 +111,7 @@ class AppElement extends PolymerElement {
       //var col = grid.getColumnIndex('cpu${cpu}');
       //print('col: ${col}');
       int val = data.items[server]['cpu${cpu}'] + delta;
-      val = math.max/*<int>*/(0, val);
+      val = math.max /*<int>*/ (0, val);
       val = math.min(100, val);
 
       data.items[server]['cpu${cpu}'] = val;
