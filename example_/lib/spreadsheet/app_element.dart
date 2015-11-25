@@ -14,8 +14,12 @@ import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
 import 'package:bwu_datagrid/plugins/bwu_auto_tooltips.dart';
 import 'package:bwu_datagrid/plugins/cell_copymanager.dart';
 
+import 'package:bwu_datagrid_examples/asset/example_style.dart';
+import 'package:bwu_datagrid_examples/shared/options_panel.dart';
+
 import 'formula_editor.dart';
 
+/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 /// Silence analyzer [BwuColumnPicker]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {

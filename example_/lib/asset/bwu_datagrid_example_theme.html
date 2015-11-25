@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <!-- theme the grid in the examples -->
+<!--suppress CssUnusedSymbol -->
 <dom-module id='bwu-datagrid-example-theme'>
   <template>
     <style include="bwu-datagrid-default-theme">
@@ -248,6 +249,7 @@
       /**
         Style for the checkbox_column_select example checkbox column
       **/
+      /*noinspection CssOptimizeSimilarProperties*/
       :host::content .bwu-datagrid-cell-checkboxsel,
       .bwu-datagrid-cell-checkboxsel {
         background: #f0f0f0;
@@ -358,6 +360,16 @@
         height: 100%;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+      }
+
+      /**
+        Styles for the spreadsheet example
+      **/
+      :host::content .bwu-datagrid-cell.copied,
+      .bwu-datagrid-cell.copied {
+        background: blue;
+        background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
       }
     </style>
   </template>
