@@ -173,7 +173,7 @@ class RowSelectionModel extends SelectionModel {
       selection.add(cell.row);
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (idx != -1 && (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
-      selection = selection.where((int o) => o != cell.row);
+      selection = selection.where((int o) => o != cell.row).toList();
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (selection.length > 0 && e.causedBy.shiftKey) {
       final int last = selection.removeLast();

@@ -2,7 +2,12 @@
 <!-- for manual execution (debugging) only -->
 <html>
   <head>
-    <link rel='stylesheet' href='packages/bwu_datagrid_examples/asset/examples.css'>
+    <script src="packages/web_components/webcomponents.min.js"></script>
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer.dom = 'shadow';
+    </script>
+    <style is="custom-style" include="example-style"></style>
 
     <!--<link rel="x-dart-test" href="html_test.dart">-->
     <!--<script src="packages/browser/dart.js"></script>-->

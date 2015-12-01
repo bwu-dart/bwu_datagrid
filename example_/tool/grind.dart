@@ -101,9 +101,11 @@ Future seleniumDebug() async {
 
 void _stopServices() {
   _pubServe?.stop();
-  _dockerConnection?.stop(_createdChromeNodeContainer.container);
-  _dockerConnection?.stop(_createdFirefoxNodeContainer.container);
-  _dockerConnection?.stop(_createdHubContainer.container);
+  if(_dockerConnection != null) {
+    _dockerConnection.stop(_createdChromeNodeContainer.container);
+    _dockerConnection.stop(_createdFirefoxNodeContainer.container);
+    _dockerConnection.stop(_createdHubContainer.container);
+  }
 }
 
 Future _startSelenium({bool wait: true}) async {
