@@ -312,7 +312,7 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
-          aggregators: [
+          aggregators: <Aggregator>[
             new AvgAggregator("percentComplete"),
             new SumAggregator("cost")
           ],
@@ -338,7 +338,7 @@ class AppElement extends PolymerElement {
           formatter: new GroupTitleFormatter('Duration'),
           comparer: (core.ItemBase a, core.ItemBase b) =>
               (a as core.Group).count - (b as core.Group).count,
-          aggregators: [
+          aggregators: <Aggregator>[
             new AvgAggregator("percentComplete"),
             new SumAggregator("cost")
           ],
@@ -353,7 +353,7 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
-          aggregators: [
+          aggregators: <Aggregator>[
             new SumAggregator("duration"),
             new SumAggregator("cost")
           ],
@@ -362,7 +362,7 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "effortDriven",
           formatter: new BooleanGroupTitleFormatter('Effort-Driven'),
-          aggregators: [
+          aggregators: <Aggregator>[
             new AvgAggregator("percentComplete"),
             new SumAggregator("cost")
           ],
@@ -377,7 +377,7 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
-          aggregators: [
+          aggregators: <Aggregator>[
             new SumAggregator("duration"),
             new SumAggregator("cost")
           ],
@@ -386,7 +386,7 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "effortDriven",
           formatter: new BooleanGroupTitleFormatter('Effort-Driven'),
-          aggregators: [
+          aggregators: <Aggregator>[
             new SumAggregator("duration"),
             new SumAggregator("cost")
           ],
@@ -394,7 +394,7 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "percentComplete",
           formatter: new GroupTitleFormatter('% Complete'),
-          aggregators: [new AvgAggregator("percentComplete")],
+          aggregators: <Aggregator>[new AvgAggregator("percentComplete")],
           doAggregateCollapsed: true,
           isCollapsed: true,
           isLazyTotalsCalculation: true)

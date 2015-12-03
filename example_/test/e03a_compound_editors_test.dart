@@ -47,7 +47,7 @@ void tests(WebBrowser browser) {
         rangeCell = await driver.findElement(rangeCellActiveRowSelector);
         rangeOldValues = (await rangeCell.text)
             .split('-')
-            .map((String t) => int.parse(t.trim()))
+            .map/*<int>*/((String t) => int.parse(t.trim()))
             .toList();
         expect(rangeOldValues[0], (int e) => e >= 0 && e < 100);
         expect(rangeOldValues[1], (int e) => e >= 0 && e < 200);

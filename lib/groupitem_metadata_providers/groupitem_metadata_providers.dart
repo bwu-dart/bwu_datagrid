@@ -182,7 +182,7 @@ class GroupItemMetadataProvider extends Plugin {
         selectable: false,
         focusable: groupFocusable,
         cssClasses: groupCssClass,
-        columns: {
+        columns: <String,Column>{
           '0': new Column(
               colspan: "*", formatter: getGroupFormatter(), editor: null)
         });

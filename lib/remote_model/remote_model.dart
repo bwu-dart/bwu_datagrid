@@ -10,8 +10,14 @@ import 'dart:math' as math;
 /// Right now, it's hooked up to load Hackernews stories, but can
 /// easily be extended to support any JSONP-compatible backend that accepts paging parameters.
 class RemoteModel {
+  @Deprecated('See "pageSize"')
+  int get PAGESIZE => pageSize;
+  @Deprecated('See "pageSize"')
+  set PAGESIZE(int value) {
+    pageSize = value;
+  }
   // private
-  int PAGESIZE = 50;
+  int pageSize = 50;
   Map data = {'length': 0};
   String searchstr = "";
   int sortcol = null;
@@ -36,7 +42,7 @@ class RemoteModel {
   }
 
   void clear() {
-    for (final key in data) {
+    for (final dynamic key in data.keys) {
       data.remove(key);
     }
     data['length'] = 0;
@@ -47,7 +53,7 @@ class RemoteModel {
       req.abort();
       for (var i = req.fromPage;
           i <= req.toPage;
-          i++) data[i * PAGESIZE] = null;
+          i++) data[i * pageSize] = null;
     }
 
     if (from < 0) {
@@ -58,15 +64,15 @@ class RemoteModel {
       to = math.min(to, data.length - 1);
     }
 
-    var fromPage = (from / PAGESIZE).floor();
-    var toPage = (to / PAGESIZE).floor();
+    var fromPage = (from / pageSize).floor();
+    var toPage = (to / pageSize).floor();
 
-    while (data[fromPage * PAGESIZE] != null && fromPage < toPage) fromPage++;
+    while (data[fromPage * pageSize] != null && fromPage < toPage) fromPage++;
 
-    while (data[toPage * PAGESIZE] != null && fromPage < toPage) toPage--;
+    while (data[toPage * pageSize] != null && fromPage < toPage) toPage--;
 
     if (fromPage > toPage ||
-        ((fromPage == toPage) && data[fromPage * PAGESIZE] != null)) {
+        ((fromPage == toPage) && data[fromPage * pageSize] != null)) {
       // TODO:  look-ahead
       onDataLoaded.notify({from: from, to: to});
       return;
@@ -90,7 +96,7 @@ class RemoteModel {
     }
 
     h_request = new async.Timer(new Duration(milliseconds: 50), () {
-      for (var i = fromPage; i <= toPage; i++) data[i * PAGESIZE] =
+      for (var i = fromPage; i <= toPage; i++) data[i * pageSize] =
           null; // null indicates a 'requested but not available yet'
 
       onDataLoading.notify({from: from, to: to});

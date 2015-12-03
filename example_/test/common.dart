@@ -105,15 +105,15 @@ final Map<WebBrowser, Map<String, dynamic>> _defaultBrowserCapabilities =
   WebBrowser.android: wd.Capabilities.chrome
     ..['chromeOptions'] = {'androidPackage': 'com.android.chrome'},
   WebBrowser.chrome: wd.Capabilities.chrome,
-  WebBrowser.edge: {'browserName': WebBrowser.edge.value},
+  WebBrowser.edge: <String,String>{'browserName': WebBrowser.edge.value},
   WebBrowser.firefox: wd.Capabilities.firefox
     ..addAll((new FirefoxProfile()
           ..setOption(new PrefsOption('devtools.selfxss.count', 100))).toJson()
         as Map<String, dynamic>), // disable paste protection
-  WebBrowser.ie: {'browserName': WebBrowser.ie.value},
-  WebBrowser.ipad: {'browserName': WebBrowser.ipad.value},
-  WebBrowser.iphone: {'browserName': WebBrowser.iphone.value},
-  WebBrowser.safari: {'browserName': WebBrowser.safari.value},
+  WebBrowser.ie: <String,String>{'browserName': WebBrowser.ie.value},
+  WebBrowser.ipad: <String,String>{'browserName': WebBrowser.ipad.value},
+  WebBrowser.iphone: <String,String>{'browserName': WebBrowser.iphone.value},
+  WebBrowser.safari: <String,String>{'browserName': WebBrowser.safari.value},
 };
 
 Future<ExtendedWebDriver> commonSetUp(

@@ -49,7 +49,7 @@ class GroupingInfo {
         return b['value'] == null ? 0 : -1;
       }
       return a['value'] - b['value'];
-    } as SortComparerFunc<core.ItemBase>;
+    };
   }
 }
 

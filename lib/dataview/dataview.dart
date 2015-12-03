@@ -147,7 +147,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   }
 
   void setItems(List<T> data, [String objectIdProperty]) {
-    assert(!data.map((Object d) => d is T).contains(false));
+    assert(!data.map/*<bool>*/((Object d) => d is T).contains(false));
     if (objectIdProperty != null) {
       idProperty = objectIdProperty;
     }

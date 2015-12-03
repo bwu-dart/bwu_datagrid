@@ -30,7 +30,7 @@ class AppElement extends PolymerElement {
         id: "#",
         name: "",
         width: 40,
-        behavior: ["select", 'move'], //AndMove",
+        behavior: <String>["select", 'move'], //AndMove",
         selectable: false,
         resizable: false,
         isDraggable: true,
@@ -44,7 +44,7 @@ class AppElement extends PolymerElement {
         editor: new TextEditor(),
         validator: new RequiredFieldValidator(),
         isDraggable: true,
-        behavior: ['drag']),
+        behavior: <String>['drag']),
     new Column(
         id: "complete",
         name: "Complete",
@@ -55,7 +55,7 @@ class AppElement extends PolymerElement {
         formatter: new fm.CheckmarkFormatter(),
         editor: new CheckboxEditor(),
         isDraggable: true,
-        behavior: ['drag'])
+        behavior: <String>['drag'])
   ];
 
   final GridOptions gridOptions = new GridOptions(

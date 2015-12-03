@@ -586,8 +586,8 @@ Future<WebElement> findCancelButton(wd.WebDriver driver) =>
 Future<WebElement> findButton(ExtendedWebDriver driver, String text) async {
   return driver
       .findElements(buttonsSelector)
-      .asyncMap((wd.WebElement e) async => {'button': e, 'text': await e.text})
+      .asyncMap((wd.WebElement e) async => <String,dynamic>{'button': e, 'text': await e.text})
       .where((Map m) => m['text'] == text)
-      .map((Map m) => m['button'])
+      .map/*<String>*/((Map m) => m['button'] as String)
       .first as WebElement;
 }

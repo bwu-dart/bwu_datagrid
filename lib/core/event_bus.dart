@@ -1,9 +1,5 @@
 part of bwu_datagrid.core;
 
-//const EventBus EVENT_BUS = const EventBus();
-
-typedef async.StreamController<T> _StreamControllerFactory<T>();
-
 /// [EventBus] is a central event hub.
 class EventBus<T extends EventData> {
   final logging.Logger _logger = new logging.Logger("EventBusModel");
@@ -33,7 +29,7 @@ class EventBus<T extends EventData> {
             eventType,
             () {
               return new async.StreamController.broadcast(sync: isSync);
-            } as _StreamControllerFactory<T>)
+            })
         .stream;
   }
 
@@ -54,7 +50,7 @@ class EventBus<T extends EventData> {
         eventType,
         () {
           return new async.StreamController.broadcast(sync: isSync);
-        } as _StreamControllerFactory<T>);
+        });
 
     controller.add(data);
     return data;

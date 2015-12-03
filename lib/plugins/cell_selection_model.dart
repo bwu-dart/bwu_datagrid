@@ -23,7 +23,7 @@ class CellSelectionModel extends SelectionModel {
   List<core.Range> _ranges = <core.Range>[];
   final CellRangeSelector _selector = new CellRangeSelector(
       new CellRangeDecoratorOptions(
-          selectionCss: {'border': '2px solid black', 'z-index': '9999'}));
+          selectionCss: <String,String>{'border': '2px solid black', 'z-index': '9999'}));
   CellSelectionModelOptions _options;
 //  var _defaults = {'selectActiveCell': true}; // TODO(zoechi) why is it unused?
 

@@ -553,7 +553,7 @@ void main() {
           return true;
         }
         return false;
-      } as FilterFn);
+      });
       expect(dv.length, equals(1), reason: "one row is remaining");
 
       dv.onBwuRowsChanged.first
@@ -583,7 +583,7 @@ void main() {
           return o['id'] == 2;
         }
         return o['val'] == 2;
-      } as FilterFn);
+      });
       expect(dv.length, equals(1), reason: "one row is remaining");
 
       dv.onBwuRowsChanged.first

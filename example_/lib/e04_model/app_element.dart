@@ -40,7 +40,7 @@ class AppElement extends PolymerElement {
         id: "sel",
         name: "#",
         field: "num",
-        behavior: ["select"],
+        behavior: <String>["select"],
         cssClass: "cell-selection",
         width: 40,
         cannotTriggerInsert: true,

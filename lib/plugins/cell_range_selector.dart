@@ -30,7 +30,7 @@ class CellRangeSelector extends Plugin {
       _options = options;
     } else {
       _options = new CellRangeDecoratorOptions(
-          selectionCss: {'border': '2px dashed blue', 'z-index': '9999'});
+          selectionCss: <String,String>{'border': '2px dashed blue', 'z-index': '9999'});
     }
   }
 
