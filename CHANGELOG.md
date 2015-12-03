@@ -1,3 +1,6 @@
+## 0.0.24
+- Fix #125 (missing `.toList()`
+
 ## 0.0.23
 - Fix #121 (Unhandled exception: type 'int' is not a subtype of type 'double'.)
   in newer Dartium versions (1.13.0-devx)

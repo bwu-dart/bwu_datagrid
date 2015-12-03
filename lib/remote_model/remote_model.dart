@@ -116,8 +116,7 @@ class RemoteModel {
   }
 
   void onSuccess(int resp) {
-    var from = resp.request.start,
-        to = from + resp.results.length;
+    var from = resp.request.start, to = from + resp.results.length;
     data['length'] =
         math.min(int.parse(resp.hits), 1000); // limitation of the API
 

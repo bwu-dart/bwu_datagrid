@@ -15,7 +15,10 @@ class CompositeEditorOptions {
 
   CompositeEditorOptions(
       {this.validationFailedMsg: 'Some of the fields have failed validation',
-      this.show, this.hide, this.position, this.destroy});
+      this.show,
+      this.hide,
+      this.position,
+      this.destroy});
 }
 
 /***

@@ -38,18 +38,21 @@ class CheckboxSelectColumn extends Column implements Plugin {
   //var _handler = new Slick.EventHandler();
   List<async.StreamSubscription> _subscriptions = [];
   Map<int, bool> selectedRowsLookup = {};
-  CheckboxSelectColumn({String id: '_checkbox_selector', String cssClass,
-      toolTip: 'Select/Deselect All', int width: 30})
+  CheckboxSelectColumn(
+      {String id: '_checkbox_selector',
+      String cssClass,
+      toolTip: 'Select/Deselect All',
+      int width: 30})
       : super(
-          id: id,
-          cssClass: cssClass,
-          toolTip: toolTip,
-          width: width,
-          name: 'Column selector',
-          nameElement: new dom.CheckboxInputElement(),
-          field: 'sel',
-          resizable: false,
-          sortable: false) {
+            id: id,
+            cssClass: cssClass,
+            toolTip: toolTip,
+            width: width,
+            name: 'Column selector',
+            nameElement: new dom.CheckboxInputElement(),
+            field: 'sel',
+            resizable: false,
+            sortable: false) {
     if (formatter != null) {
       this.formatter = formatter;
     } else {
@@ -117,7 +120,8 @@ class CheckboxSelectColumn extends Column implements Plugin {
   void handleClick(core.Click e) {
     // clicking on a row select checkbox
     if (_grid.getColumns[e.cell.cell].id == id &&
-        (e.causedBy.target as dom.Element).attributes
+        (e.causedBy.target as dom.Element)
+            .attributes
             .containsKey('selectColumn')) {
       // if editing, try to commit
       if (_grid.getEditorLock.isActive &&

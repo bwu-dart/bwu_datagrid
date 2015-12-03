@@ -84,14 +84,68 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   List<Column> columns = [
-    new Column(id: "sel", name: "#", field: "num", cssClass: "cell-selection", width: 40, resizable: false, selectable: false, focusable: false),
-    new Column(id: "title", name: "Title", field: "title", width: 70, minWidth: 50, cssClass: "cell-title", sortable: true, editor: new ed.TextEditor()),
-    new Column(id: "duration", name: "Duration", field: "duration", width: 70, sortable: true, groupTotalsFormatter: new SumTotalsFormatter()),
-    new Column(id: "%", name: "% Complete", field: "percentComplete", width: 80, formatter: new fm.PercentCompleteBarFormatter(), sortable: true, groupTotalsFormatter: new AvgTotalsFormatter()),
-    new Column(id: "start", name: "Start", field: "start", minWidth: 60, sortable: true),
-    new Column(id: "finish", name: "Finish", field: "finish", minWidth: 60, sortable: true),
-    new Column(id: "cost", name: "Cost", field: "cost", width: 90, sortable: true, groupTotalsFormatter: new SumTotalsFormatter()),
-    new Column(id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: new fm.CheckmarkFormatter(), sortable: true)
+    new Column(
+        id: "sel",
+        name: "#",
+        field: "num",
+        cssClass: "cell-selection",
+        width: 40,
+        resizable: false,
+        selectable: false,
+        focusable: false),
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 70,
+        minWidth: 50,
+        cssClass: "cell-title",
+        sortable: true,
+        editor: new ed.TextEditor()),
+    new Column(
+        id: "duration",
+        name: "Duration",
+        field: "duration",
+        width: 70,
+        sortable: true,
+        groupTotalsFormatter: new SumTotalsFormatter()),
+    new Column(
+        id: "%",
+        name: "% Complete",
+        field: "percentComplete",
+        width: 80,
+        formatter: new fm.PercentCompleteBarFormatter(),
+        sortable: true,
+        groupTotalsFormatter: new AvgTotalsFormatter()),
+    new Column(
+        id: "start",
+        name: "Start",
+        field: "start",
+        minWidth: 60,
+        sortable: true),
+    new Column(
+        id: "finish",
+        name: "Finish",
+        field: "finish",
+        minWidth: 60,
+        sortable: true),
+    new Column(
+        id: "cost",
+        name: "Cost",
+        field: "cost",
+        width: 90,
+        sortable: true,
+        groupTotalsFormatter: new SumTotalsFormatter()),
+    new Column(
+        id: "effort-driven",
+        name: "Effort Driven",
+        width: 80,
+        minWidth: 20,
+        maxWidth: 80,
+        cssClass: "cell-effort-driven",
+        field: "effortDriven",
+        formatter: new fm.CheckmarkFormatter(),
+        sortable: true)
   ];
 
   var gridOptions = new GridOptions(enableCellNavigation: true, editable: true);
@@ -133,8 +187,8 @@ class AppElement extends PolymerElement {
 
         BwuColumnPicker columnPicker =
             (new dom.Element.tag('bwu-column-picker') as BwuColumnPicker)
-          ..columns = columns
-          ..grid = grid;
+              ..columns = columns
+              ..grid = grid;
         dom.document.body.append(columnPicker);
 
         grid.onBwuSort.listen((e) {
@@ -217,8 +271,7 @@ class AppElement extends PolymerElement {
   }
 
   int comparer(DataItem a, DataItem b) {
-    var x = a[sortcol],
-        y = b[sortcol];
+    var x = a[sortcol], y = b[sortcol];
     if (x == y) {
       return 0;
     }
@@ -249,9 +302,9 @@ class AppElement extends PolymerElement {
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
           aggregators: [
-        new AvgAggregator("percentComplete"),
-        new SumAggregator("cost")
-      ],
+            new AvgAggregator("percentComplete"),
+            new SumAggregator("cost")
+          ],
           doAggregateCollapsed: false,
           isLazyTotalsCalculation: true)
     ]);
@@ -269,14 +322,11 @@ class AppElement extends PolymerElement {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
-          formatter: new GroupTitleFormatter('Duration'),
-          comparer: (a, b) {
+          formatter: new GroupTitleFormatter('Duration'), comparer: (a, b) {
         return a.count - b.count;
       },
-          aggregators: [
-        new AvgAggregator("percentComplete"),
-        new SumAggregator("cost")
-      ],
+          aggregators:
+              [new AvgAggregator("percentComplete"), new SumAggregator("cost")],
           doAggregateCollapsed: doAggregateCollapsed,
           isLazyTotalsCalculation: true)
     ]);
@@ -288,18 +338,18 @@ class AppElement extends PolymerElement {
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
           aggregators: [
-        new SumAggregator("duration"),
-        new SumAggregator("cost")
-      ],
+            new SumAggregator("duration"),
+            new SumAggregator("cost")
+          ],
           doAggregateCollapsed: true,
           isLazyTotalsCalculation: true),
       new GroupingInfo(
           getter: "effortDriven",
           formatter: new BooleanGroupTitleFormatter('Effort-Driven'),
           aggregators: [
-        new AvgAggregator("percentComplete"),
-        new SumAggregator("cost")
-      ],
+            new AvgAggregator("percentComplete"),
+            new SumAggregator("cost")
+          ],
           isCollapsed: true,
           isLazyTotalsCalculation: true)
     ]);
@@ -311,18 +361,18 @@ class AppElement extends PolymerElement {
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
           aggregators: [
-        new SumAggregator("duration"),
-        new SumAggregator("cost")
-      ],
+            new SumAggregator("duration"),
+            new SumAggregator("cost")
+          ],
           doAggregateCollapsed: true,
           isLazyTotalsCalculation: true),
       new GroupingInfo(
           getter: "effortDriven",
           formatter: new BooleanGroupTitleFormatter('Effort-Driven'),
           aggregators: [
-        new SumAggregator("duration"),
-        new SumAggregator("cost")
-      ],
+            new SumAggregator("duration"),
+            new SumAggregator("cost")
+          ],
           isLazyTotalsCalculation: true),
       new GroupingInfo(
           getter: "percentComplete",

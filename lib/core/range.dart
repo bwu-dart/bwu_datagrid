@@ -74,6 +74,7 @@ abstract class ItemBase {
   dynamic operator [](String key) {
     return _values[key];
   }
+
   void operator []=(String key, value) {
     _values[key] = value;
   }

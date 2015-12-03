@@ -66,8 +66,10 @@ class CellRangeSelector extends Plugin {
     if (e.isImmediatePropagationStopped || isSuspended) return null;
 
     var cell = _grid.getCellFromEvent(e.causedBy);
-    if (eventBus.fire(core.Events.BEFORE_CELL_RANGE_SELECTED,
-        new core.BeforeCellRangeSelected(this, cell)).retVal) {
+    if (eventBus
+        .fire(core.Events.BEFORE_CELL_RANGE_SELECTED,
+            new core.BeforeCellRangeSelected(this, cell))
+        .retVal) {
       if (_grid.canCellBeSelected(cell.row, cell.cell)) {
         _dragging = true;
         e.stopImmediatePropagation();

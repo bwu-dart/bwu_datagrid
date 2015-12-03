@@ -45,14 +45,62 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", sortable: false, width: 120, cssClass: "cell-title"),
-    new Column(id: "n1", name: "1", field: "n1", sortable: false, editor: new IntegerEditor(), width: 40, validator: new RequiredFieldValidator()),
-    new Column(id: "n2", name: "2", field: "n2", sortable: false, editor: new IntegerEditor(), width: 40, validator: new RequiredFieldValidator()),
-    new Column(id: "n3", name: "3", field: "n3", sortable: false, editor: new IntegerEditor(), width: 40, validator: new RequiredFieldValidator()),
-    new Column(id: "n4", name: "4", field: "n4", sortable: false, editor: new IntegerEditor(), width: 40, validator: new RequiredFieldValidator()),
-    new Column(id: "n5", name: "5", field: "n5", sortable: false, editor: new IntegerEditor(), width: 40, validator: new RequiredFieldValidator()),
-    new Column(id: "chart", name: "Chart", sortable: false, width: 60, formatter: new WaitingFormatter(), rerenderOnResize: true, asyncPostRender: renderSparkline)
-    ];
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        sortable: false,
+        width: 120,
+        cssClass: "cell-title"),
+    new Column(
+        id: "n1",
+        name: "1",
+        field: "n1",
+        sortable: false,
+        editor: new IntegerEditor(),
+        width: 40,
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "n2",
+        name: "2",
+        field: "n2",
+        sortable: false,
+        editor: new IntegerEditor(),
+        width: 40,
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "n3",
+        name: "3",
+        field: "n3",
+        sortable: false,
+        editor: new IntegerEditor(),
+        width: 40,
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "n4",
+        name: "4",
+        field: "n4",
+        sortable: false,
+        editor: new IntegerEditor(),
+        width: 40,
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "n5",
+        name: "5",
+        field: "n5",
+        sortable: false,
+        editor: new IntegerEditor(),
+        width: 40,
+        validator: new RequiredFieldValidator()),
+    new Column(
+        id: "chart",
+        name: "Chart",
+        sortable: false,
+        width: 60,
+        formatter: new WaitingFormatter(),
+        rerenderOnResize: true,
+        asyncPostRender: renderSparkline)
+  ];
 
   var gridOptions = new GridOptions(
       editable: true,

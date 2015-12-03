@@ -43,9 +43,18 @@ class Sortable {
   async.StreamSubscription _mouseMoveSubscr;
   List<async.StreamSubscription> _mouseDownSubscr = [];
 
-  Sortable({this.sortable, this.containment: 'parent', this.distance, this.axis,
-      this.cursor, this.tolerance, this.helper, this.placeholderCssClass,
-      this.start, this.beforeStop, this.stop}) {
+  Sortable(
+      {this.sortable,
+      this.containment: 'parent',
+      this.distance,
+      this.axis,
+      this.cursor,
+      this.tolerance,
+      this.helper,
+      this.placeholderCssClass,
+      this.start,
+      this.beforeStop,
+      this.stop}) {
     init();
 //    _mObserver = new dom.MutationObserver((mutations, _) {
 //      if(!_isDragActive && !const collEqu.IterableEquality().equals(sortable.children.where((e) => e.attributes['isMovable'] == 'true'), _items)) {

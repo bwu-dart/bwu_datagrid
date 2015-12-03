@@ -17,7 +17,10 @@ class NavState extends Observable {
   @observable bool canGotoNext;
   PagingInfo pagingInfo;
 
-  NavState({this.canGotoFirst, this.canGotoLast, this.canGotoPrev,
+  NavState(
+      {this.canGotoFirst,
+      this.canGotoLast,
+      this.canGotoPrev,
       this.canGotoNext});
 }
 
@@ -103,7 +106,8 @@ class BwuPager extends PolymerElement {
 
   void pageSizeClickHandler(dom.MouseEvent e, detail, dom.HtmlElement target) {
     int pagesize = tools.parseInt(
-        (e.target as dom.HtmlElement).dataset['value'], onErrorDefault: 0);
+        (e.target as dom.HtmlElement).dataset['value'],
+        onErrorDefault: 0);
     //if (pagesize != 0) {
     if (pagesize == -1) {
       Range vp = _grid.getViewport();

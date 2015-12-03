@@ -76,8 +76,7 @@ class RowSelectionModel extends SelectionModel {
   }
 
   List<int> _getRowsRange(int from, int to) {
-    var i,
-        rows = [];
+    var i, rows = [];
     for (i = from; i <= to; i++) {
       rows.add(i);
     }

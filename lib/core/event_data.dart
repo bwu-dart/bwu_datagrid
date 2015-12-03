@@ -4,21 +4,18 @@ abstract class Events {
   static const ACTIVE_CELL_CHANGED =
       const EventType<ActiveCellChanged>('bwu-active-cell-changed');
 
-  static const ACTIVE_CELL_POSITION_CHANGED =
-      const EventType<ActiveCellPositionChanged>(
-          'bwu-active-cell-position-changed');
+  static const ACTIVE_CELL_POSITION_CHANGED = const EventType<
+      ActiveCellPositionChanged>('bwu-active-cell-position-changed');
 
   static const ADD_NEW_ROW = const EventType<AddNewRow>('bwu-add-new-row');
 
   static const ATTACHED = const EventType<Attached>('bwu-attached');
 
-  static const BEFORE_CELL_EDITOR_DESTROY =
-      const EventType<BeforeCellEditorDestroy>(
-          'bwu-before-cell-editor-destroy');
+  static const BEFORE_CELL_EDITOR_DESTROY = const EventType<
+      BeforeCellEditorDestroy>('bwu-before-cell-editor-destroy');
 
-  static const BEFORE_CELL_RANGE_SELECTED =
-      const EventType<BeforeCellRangeSelected>(
-          'bwu-before-cell-range-selected');
+  static const BEFORE_CELL_RANGE_SELECTED = const EventType<
+      BeforeCellRangeSelected>('bwu-before-cell-range-selected');
 
   static const BEFORE_DESTROY =
       const EventType<BeforeDestroy>('bwu-before-destroy');
@@ -26,13 +23,11 @@ abstract class Events {
   static const BEFORE_EDIT_CELL =
       const EventType<BeforeEditCell>('bwu-before-edit-cell');
 
-  static const BEFORE_HEADER_CELL_DESTROY =
-      const EventType<BeforeHeaderCellDestroy>(
-          'bwu-before-header-cell-destroy');
+  static const BEFORE_HEADER_CELL_DESTROY = const EventType<
+      BeforeHeaderCellDestroy>('bwu-before-header-cell-destroy');
 
-  static const BEFORE_HEADER_ROW_CELL_DESTROY =
-      const EventType<BeforeHeaderRowCellDestroy>(
-          'bwu-before-header-row-cell-destroy');
+  static const BEFORE_HEADER_ROW_CELL_DESTROY = const EventType<
+      BeforeHeaderRowCellDestroy>('bwu-before-header-row-cell-destroy');
 
   static const BEFORE_MOVE_ROWS =
       const EventType<BeforeMoveRows>('bwu-before-move-rows');
@@ -408,8 +403,14 @@ class Drag extends EventData {
   bool canMove;
   String mode;
 
-  Drag(sender, {/*this.dd,*/ this.guide, this.selectionProxy, this.insertBefore,
-      this.selectedRows, this.canMove, this.mode, dom.MouseEvent causedBy})
+  Drag(sender,
+      {/*this.dd,*/ this.guide,
+      this.selectionProxy,
+      this.insertBefore,
+      this.selectedRows,
+      this.canMove,
+      this.mode,
+      dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
 }
 
@@ -424,8 +425,13 @@ class DragEnd extends EventData {
   int insertBefore;
   String mode;
 
-  DragEnd(sender, {this.selectedRows, this.insertBefore,
-      /*this.dd,*/ this.guide, this.selectionProxy, this.canMove, this.mode,
+  DragEnd(sender,
+      {this.selectedRows,
+      this.insertBefore,
+      /*this.dd,*/ this.guide,
+      this.selectionProxy,
+      this.canMove,
+      this.mode,
       dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
 }
@@ -474,8 +480,12 @@ class DragStart extends EventData {
   dom.HtmlElement selectionProxy;
   dom.HtmlElement guide;
 
-  DragStart(sender, {this.selectedRows, this.insertBefore, this.selectionProxy,
-      this.guide, dom.MouseEvent causedBy})
+  DragStart(sender,
+      {this.selectedRows,
+      this.insertBefore,
+      this.selectionProxy,
+      this.guide,
+      dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
 }
 
@@ -632,8 +642,12 @@ class ValidationError extends EventData {
   final Cell cell;
   final Column column;
 
-  ValidationError(sender, {this.editor, this.cellNode, this.validationResults,
-      this.cell, this.column})
+  ValidationError(sender,
+      {this.editor,
+      this.cellNode,
+      this.validationResults,
+      this.cell,
+      this.column})
       : super(sender: sender);
 }
 

@@ -17,8 +17,10 @@ class AutoTooltipsOptions {
   bool enableForHeaderCells;
   int maxTooltipLength;
 
-  AutoTooltipsOptions({this.enableForCells: true,
-      this.enableForHeaderCells: false, this.maxTooltipLength});
+  AutoTooltipsOptions(
+      {this.enableForCells: true,
+      this.enableForHeaderCells: false,
+      this.maxTooltipLength});
 }
 
 /**
@@ -73,7 +75,6 @@ class AutoTooltips extends Plugin {
 //      //grid.shadowRoot.append(tooltip);
 //      dom.document.body.append(tooltip);
 //    });
-
   }
 
   /**

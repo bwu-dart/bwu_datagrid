@@ -14,8 +14,20 @@ class AppElement extends PolymerElement {
 
   BwuDatagrid grid;
   List<Column> columns = [
-    new Column(id: "title", name: "Title", field: "title", width: 200, cssClass: "cell-title", editor: new TextEditor()),
-    new Column(id: "priority", name: "Priority", field: "priority", width: 80, selectable: false, resizable: false)
+    new Column(
+        id: "title",
+        name: "Title",
+        field: "title",
+        width: 200,
+        cssClass: "cell-title",
+        editor: new TextEditor()),
+    new Column(
+        id: "priority",
+        name: "Priority",
+        field: "priority",
+        width: 80,
+        selectable: false,
+        resizable: false)
   ];
 
   var gridOptions = new GridOptions(
@@ -40,7 +52,6 @@ class AppElement extends PolymerElement {
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
           .then((_) {
-
         // setup context menu handler
         grid.onBwuContextMenu.listen((e) {
           e.stopImmediatePropagation();
@@ -70,8 +81,8 @@ class AppElement extends PolymerElement {
             }
 
             var states = {'Low': 'Medium', 'Medium': 'High', 'High': 'Low'};
-            data.items[e.cell.row]['priority'] =
-                states[data.items[e.cell.row]['priority']];
+            data.items[e.cell.row]
+                ['priority'] = states[data.items[e.cell.row]['priority']];
             grid.updateRow(e.cell.row);
             e.stopPropagation();
           }

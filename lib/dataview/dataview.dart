@@ -28,7 +28,6 @@ part 'helpers.dart';
 typedef bool FilterFn(a, b);
 
 class DataView extends DataProvider {
-
   /***
    * A sample Model implementation.
    * Provides a filtered view of the underlying data.
@@ -49,8 +48,8 @@ class DataView extends DataProvider {
   String idProperty = "id"; // property holding a unique row id
   //List<core.ItemBase> items = [];         // data by index
   List<core.ItemBase> rows = []; // data by row
-  Map<dynamic, int> idxById = {
-  }; // indexes by id - the id needs to be a valid map key
+  Map<dynamic, int> idxById =
+      {}; // indexes by id - the id needs to be a valid map key
   Map<dynamic, int> rowsById =
       null; // rows by id; lazy-calculated - the id needs to be a valid map key
   FilterFn filter = null; // filter function
@@ -60,8 +59,8 @@ class DataView extends DataProvider {
   bool sortAsc = true;
   String fastSortField;
   SortComparerFunc sortComparer;
-  Map<String, int> refreshHints = {
-  }; // TODO make class, if this String stores ids it should be dynamic
+  Map<String, int> refreshHints =
+      {}; // TODO make class, if this String stores ids it should be dynamic
   Map<String, int> prevRefreshHints = {};
   Map filterArgs;
   List<core.ItemBase> filteredItems = [];
@@ -467,10 +466,10 @@ class DataView extends DataProvider {
   }
 
   void expandCollapseGroup(int level, String groupingKey, bool collapse) {
-    toggledGroupsByLevel[level][groupingKey] =
-        groupingInfos[level].isCollapsed != collapse
-            ? groupingInfos[level].isCollapsed
-            : null;
+    toggledGroupsByLevel[level]
+        [groupingKey] = groupingInfos[level].isCollapsed != collapse
+        ? groupingInfos[level].isCollapsed
+        : null;
     refresh();
   }
 
@@ -929,8 +928,10 @@ class DataView extends DataProvider {
       //onPagingInfoChanged.notify(getPagingInfo(), null, self);
     }
     if (countBefore != rows.length) {
-      eventBus.fire(core.Events.ROW_COUNT_CHANGED, new core.RowCountChanged(
-          this, oldCount: countBefore, newCount: rows.length));
+      eventBus.fire(
+          core.Events.ROW_COUNT_CHANGED,
+          new core.RowCountChanged(this,
+              oldCount: countBefore, newCount: rows.length));
       //onRowCountChanged.notify({previous: countBefore, current: rows.length}, null, self);
     }
     if (diff.length > 0) {

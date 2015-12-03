@@ -11,7 +11,8 @@ class TotalsDataProvider extends MapDataItemProvider {
 
   RowMetadata totalsMetadata = new RowMetadata(
       // Style the totals row differently.
-      cssClasses: 'totals', columns: new Map<String, Column>());
+      cssClasses: 'totals',
+      columns: new Map<String, Column>());
 
   TotalsDataProvider(List<MapDataItem> data, this._columns) : super(data) {
     // Make the totals not editable.

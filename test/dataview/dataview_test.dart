@@ -14,40 +14,45 @@ import 'package:quiver_log/log.dart';
 var _log = new Logger('bwu_datagrid.dataview_test');
 
 void assertEmpty(DataView dv) {
-  expect(0, equals(dv.getLength), reason: ".rows is initialized to an empty array");
+  expect(0, equals(dv.getLength),
+      reason: ".rows is initialized to an empty array");
   expect(dv.getItems().length, equals(0), reason: "getItems().length");
-  expect(dv.getIdxById("id"), isNull, reason: "getIdxById should return undefined if not found");
-  expect(dv.getRowById("id"), isNull, reason: "getRowById should return undefined if not found");
-  expect(dv.getItemById("id"), isNull, reason: "getItemById should return undefined if not found");
-  expect(dv.getItemByIdx(0), isNull, reason: "getItemByIdx should return undefined if not found");
+  expect(dv.getIdxById("id"), isNull,
+      reason: "getIdxById should return undefined if not found");
+  expect(dv.getRowById("id"), isNull,
+      reason: "getRowById should return undefined if not found");
+  expect(dv.getItemById("id"), isNull,
+      reason: "getItemById should return undefined if not found");
+  expect(dv.getItemByIdx(0), isNull,
+      reason: "getItemByIdx should return undefined if not found");
 }
 
-
 void assertConsistency(DataView dv, [String idProperty]) {
-  if(idProperty == null || idProperty.isEmpty) {
+  if (idProperty == null || idProperty.isEmpty) {
     idProperty = "id";
   }
   List<core.ItemBase> items = dv.getItems();
-      int filteredOut = 0;
-      int row;
-      String id;
+  int filteredOut = 0;
+  int row;
+  String id;
 
-  for (var i=0; i < items.length; i++) {
+  for (var i = 0; i < items.length; i++) {
     _log.fine(items[i][idProperty]);
-      id = items[i][idProperty];
-      expect(dv.getItemByIdx(i), equals(items[i]), reason: "getItemByIdx");
-      expect(dv.getItemById(id), equals([i]), reason: "getItemById");
-      expect(dv.getIdxById(id), equals(i), reason: "getIdxById");
+    id = items[i][idProperty];
+    expect(dv.getItemByIdx(i), equals(items[i]), reason: "getItemByIdx");
+    expect(dv.getItemById(id), equals([i]), reason: "getItemById");
+    expect(dv.getIdxById(id), equals(i), reason: "getIdxById");
 
-      row = dv.getRowById(id);
-      if (row == null) {
-          filteredOut++;
-      }      else {
-          expect(dv.getItem(row), equals(items[i]), reason: "getRowById");
-      }
+    row = dv.getRowById(id);
+    if (row == null) {
+      filteredOut++;
+    } else {
+      expect(dv.getItem(row), equals(items[i]), reason: "getRowById");
+    }
   }
 
-  expect(items.length-dv.getLength, equals(filteredOut), reason: "filtered rows");
+  expect(items.length - dv.getLength, equals(filteredOut),
+      reason: "filtered rows");
 }
 
 void main() {
@@ -57,64 +62,72 @@ void main() {
   //useHtmlEnhancedConfiguration();
   //initPolymer().run(() {
 
-    group('basic', () {
-      test("initial setup", () {
-        var dv = new DataView();
-        assertEmpty(dv);
-      });
-
-      test("initial setup, refresh", () {
-          var dv = new DataView();
-          dv.refresh();
-          assertEmpty(dv);
-      });
+  group('basic', () {
+    test("initial setup", () {
+      var dv = new DataView();
+      assertEmpty(dv);
     });
 
-
-    group('setItems', () {
-      test("empty", () {
-          var dv = new DataView();
-          dv.setItems([]);
-          assertEmpty(dv);
-      });
-
-      test("basic", () {
-          var dv = new DataView();
-          dv.setItems([new MapDataItem({'id':0}), new MapDataItem({'id':1})]);
-          expect(dv.getLength, equals(2), reason: "rows.length");
-          expect(dv.getItems().length, equals(2), reason: "getItems().length");
-          assertConsistency(dv);
-      });
-
-      test("alternative idProperty", () {
-          var dv = new DataView();
-          dv.setItems([{'uid':0},{'uid':1}], "uid");
-          assertConsistency(dv,"uid");
-      });
-
-      test("requires an id on objects", () {
-          var dv = new DataView();
-          //try {
-          expect(dv.setItems([1,2,3]), throws, reason:  "exception expected");
-  //            ok(false, "exception expected")
-  //        }
-  //        catch (ex) {}
-      });
-
-      test("requires a unique id on objects", () {
-          var dv = new DataView();
-  //        try {
-              expect(dv.setItems([{'id':0},{'id':0}]), throws, reason: "exception expected");
-  //            ok(false, "exception expected")
-  //        }
-  //        catch (ex) {}
-      });
-
+    test("initial setup, refresh", () {
+      var dv = new DataView();
+      dv.refresh();
+      assertEmpty(dv);
     });
+  });
+
+  group('setItems', () {
+    test("empty", () {
+      var dv = new DataView();
+      dv.setItems([]);
+      assertEmpty(dv);
+    });
+
+    test("basic", () {
+      var dv = new DataView();
+      dv.setItems([
+        new MapDataItem({'id': 0}),
+        new MapDataItem({'id': 1})
+      ]);
+      expect(dv.getLength, equals(2), reason: "rows.length");
+      expect(dv.getItems().length, equals(2), reason: "getItems().length");
+      assertConsistency(dv);
+    });
+
+    test("alternative idProperty", () {
+      var dv = new DataView();
+      dv.setItems([
+        {'uid': 0},
+        {'uid': 1}
+      ], "uid");
+      assertConsistency(dv, "uid");
+    });
+
+    test("requires an id on objects", () {
+      var dv = new DataView();
+      //try {
+      expect(dv.setItems([1, 2, 3]), throws, reason: "exception expected");
+      //            ok(false, "exception expected")
+      //        }
+      //        catch (ex) {}
+    });
+
+    test("requires a unique id on objects", () {
+      var dv = new DataView();
+      //        try {
+      expect(
+          dv.setItems([
+            {'id': 0},
+            {'id': 0}
+          ]),
+          throws,
+          reason: "exception expected");
+      //            ok(false, "exception expected")
+      //        }
+      //        catch (ex) {}
+    });
+  });
   //});
 }
-
-
 
 //test("requires a unique id on objects (alternative idProperty)", function() {
 //    var dv = new Slick.Data.DataView();

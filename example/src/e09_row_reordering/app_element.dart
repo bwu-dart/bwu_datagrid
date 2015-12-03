@@ -21,7 +21,10 @@ class AppElement extends PolymerElement {
 
   List<Column> columns = [
     new Column(
-        id: "#", name: "", width: 40, behavior: ["select", 'move'], //AndMove",
+        id: "#",
+        name: "",
+        width: 40,
+        behavior: ["select", 'move'], //AndMove",
         selectable: false,
         resizable: false,
         isDraggable: true,
@@ -238,7 +241,7 @@ class AppElement extends PolymerElement {
       ..style.borderRadius = "8px"
       ..style.boxShadow = "2px 2px 6px silver"
       ..text =
-      "Drag to Recycle Bin to delete ${selectedRows.length} selected row(s)";
+          "Drag to Recycle Bin to delete ${selectedRows.length} selected row(s)";
     dom.document.body.append(proxy);
 
     e.causedBy.dataTransfer.setDragImage(proxy, 0, 0);

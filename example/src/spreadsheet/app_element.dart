@@ -89,10 +89,10 @@ class AppElement extends PolymerElement {
           for (var i = 0; i <= from.toRow - from.fromRow; i++) {
             for (var j = 0; j <= from.toCell - from.fromCell; j++) {
               if (i <= to.toRow - to.fromRow && j <= to.toCell - to.fromCell) {
-                val = data.items[from.fromRow + i][
-                    columns[from.fromCell + j].field];
-                data.items[to.fromRow + i][columns[to.fromCell + j].field] =
-                    val;
+                val = data.items[from.fromRow + i]
+                    [columns[from.fromCell + j].field];
+                data.items[to.fromRow + i]
+                    [columns[to.fromCell + j].field] = val;
                 grid.invalidateRow(to.fromRow + i);
               }
             }

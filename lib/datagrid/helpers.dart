@@ -58,8 +58,14 @@ class NodeBox {
   int height;
   bool visible;
 
-  NodeBox({this.top, this.left, this.bottom, this.right, this.width,
-      this.height, this.visible});
+  NodeBox(
+      {this.top,
+      this.left,
+      this.bottom,
+      this.right,
+      this.width,
+      this.height,
+      this.visible});
 
   @override
   String toString() =>
@@ -88,8 +94,15 @@ class Range {
   int top;
   int bottom;
 
-  Range({this.fromRow, this.toRow, this.fromCell, this.toCell, this.rightPx,
-      this.leftPx, this.top, this.bottom});
+  Range(
+      {this.fromRow,
+      this.toRow,
+      this.fromCell,
+      this.toCell,
+      this.rightPx,
+      this.leftPx,
+      this.top,
+      this.bottom});
 }
 
 abstract class EditorFactory {
@@ -133,8 +146,14 @@ class EditCommand {
   dynamic prevSerializedValue;
   Function execute;
   Function undo;
-  EditCommand({this.row, this.cell, this.editor, this.serializedValue,
-      this.prevSerializedValue, this.execute, this.undo});
+  EditCommand(
+      {this.row,
+      this.cell,
+      this.editor,
+      this.serializedValue,
+      this.prevSerializedValue,
+      this.execute,
+      this.undo});
 }
 
 class EditController {
@@ -178,13 +197,31 @@ class Column {
 
   int previousWidth;
 
-  Column({this.id, this.field, this.minWidth: 30, this.maxWidth, this.cssClass,
-      this.formatter, this.editor, this.validator, this.name: '',
-      this.nameElement, this.width, this.resizable: true, this.sortable: false,
-      this.focusable: true, this.selectable: true, this.defaultSortAsc: true,
-      this.rerenderOnResize: false, this.cannotTriggerInsert: false,
-      this.colspan, this.behavior, this.isMovable: true,
-      this.isDraggable: false, this.asyncPostRender, this.toolTip,
+  Column(
+      {this.id,
+      this.field,
+      this.minWidth: 30,
+      this.maxWidth,
+      this.cssClass,
+      this.formatter,
+      this.editor,
+      this.validator,
+      this.name: '',
+      this.nameElement,
+      this.width,
+      this.resizable: true,
+      this.sortable: false,
+      this.focusable: true,
+      this.selectable: true,
+      this.defaultSortAsc: true,
+      this.rerenderOnResize: false,
+      this.cannotTriggerInsert: false,
+      this.colspan,
+      this.behavior,
+      this.isMovable: true,
+      this.isDraggable: false,
+      this.asyncPostRender,
+      this.toolTip,
       this.groupTotalsFormatter});
 
   Column.unititialized();
@@ -261,23 +298,41 @@ class GridOptions {
   bool syncColumnCellResize;
   int topPanelHeight;
 
-  GridOptions({this.addNewRowCssClass: 'new-row', this.asyncEditorLoadDelay,
-      this.asyncEditorLoading: false, this.asyncPostRenderDelay,
-      this.autoEdit: false, this.autoHeight: false,
+  GridOptions(
+      {this.addNewRowCssClass: 'new-row',
+      this.asyncEditorLoadDelay,
+      this.asyncEditorLoading: false,
+      this.asyncPostRenderDelay,
+      this.autoEdit: false,
+      this.autoHeight: false,
       this.cellFlashingCssClass: 'flashing',
       this.cellHighlightCssClass: 'highlight',
-      this.dataItemColumnValueExtractor, this.defaultColumnWidth: 80,
-      this.defaultFormatter, this.editable: false, this.editCommandHandler,
-      this.editorFactory, this.editorLock, this.enableAddRow: false,
-      this.enableAsyncPostRender: false, this.enableCellNavigation: true,
-      this.enableColumnReorder: true, this.enableTextSelectionOnCells: false,
-      this.explicitInitialization: false, this.forceFitColumns: false,
-      this.forceSyncScrolling: false, this.formatterFactory,
-      this.fullWidthRows: false, this.headerRowHeight: 25,
-      this.leaveSpaceForNewRows: false, this.multiColumnSort: false,
-      this.multiSelect: true, this.rowHeight: 25,
-      this.selectedCellCssClass: 'selected', this.showHeaderRow: false,
-      this.showTopPanel: false, this.syncColumnCellResize: false,
+      this.dataItemColumnValueExtractor,
+      this.defaultColumnWidth: 80,
+      this.defaultFormatter,
+      this.editable: false,
+      this.editCommandHandler,
+      this.editorFactory,
+      this.editorLock,
+      this.enableAddRow: false,
+      this.enableAsyncPostRender: false,
+      this.enableCellNavigation: true,
+      this.enableColumnReorder: true,
+      this.enableTextSelectionOnCells: false,
+      this.explicitInitialization: false,
+      this.forceFitColumns: false,
+      this.forceSyncScrolling: false,
+      this.formatterFactory,
+      this.fullWidthRows: false,
+      this.headerRowHeight: 25,
+      this.leaveSpaceForNewRows: false,
+      this.multiColumnSort: false,
+      this.multiSelect: true,
+      this.rowHeight: 25,
+      this.selectedCellCssClass: 'selected',
+      this.showHeaderRow: false,
+      this.showTopPanel: false,
+      this.syncColumnCellResize: false,
       this.topPanelHeight: 25}) {
     if (asyncEditorLoadDelay == null) {
       this.asyncEditorLoadDelay = const Duration(milliseconds: 100);
