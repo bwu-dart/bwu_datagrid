@@ -32,26 +32,26 @@ void tests(WebBrowser browser) {
           int.parse(await viewPort.attributes['scrollHeight']);
       expect(maxYScroll, greaterThan(12000));
 
-      await new Future.delayed(const Duration(milliseconds: 100));
+      await new Future<Null>.delayed(const Duration(milliseconds: 100));
 
       expect(await isTaskShown(driver, 0), isTrue);
       expect(await isTaskShown(driver, 499), isFalse);
 
       await driver.scrollElementAbsolute(viewPort, y: maxYScroll);
-      await new Future.delayed(const Duration(milliseconds: 100));
+      await new Future<Null>.delayed(const Duration(milliseconds: 100));
 
       expect(await isTaskShown(driver, 0), isFalse);
       expect(await isTaskShown(driver, 499), isTrue);
 
       await driver.scrollElementAbsolute(viewPort, y: 0);
-      await new Future.delayed(const Duration(milliseconds: 100));
+      await new Future<Null>.delayed(const Duration(milliseconds: 100));
 
       expect(await isTaskShown(driver, 0), isTrue);
       // this element is still contained in the DOM
       // expect(await isTaskShown(driver, 499), isFalse);
 
       await driver.scrollElementAbsolute(viewPort, y: maxYScroll ~/ 2);
-      await new Future.delayed(const Duration(milliseconds: 100));
+      await new Future<Null>.delayed(const Duration(milliseconds: 100));
 
       expect(await isTaskShown(driver, 250), isTrue);
 //      await new Future.delayed(const Duration(seconds: 200));

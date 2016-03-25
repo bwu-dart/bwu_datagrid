@@ -111,8 +111,8 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  List<DataItem> data;
-  DataView dataView;
+  List<DataItem<dynamic, dynamic>> data;
+  DataView<core.ItemBase<dynamic, dynamic>> dataView;
 
   String sortcol = "title";
   int sortdir = 1;
@@ -130,9 +130,9 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      data = new List<DataItem>();
+      data = new List<DataItem<String, dynamic>>();
       for (int i = 0; i < 50000; i++) {
-        data.add(new MapDataItem({
+        data.add(new MapDataItem<String, dynamic>({
           "id": "id_${i}",
           "num": i,
           "title": 'Task ${i}',
@@ -144,8 +144,8 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      dataView =
-          new DataView(options: new DataViewOptions(inlineFilters: true));
+      dataView = new DataView<core.ItemBase<dynamic, dynamic>>(
+          options: new DataViewOptions(inlineFilters: true));
       grid
           .setup(
               dataProvider: dataView,
@@ -167,7 +167,8 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          final MapDataItem item = new MapDataItem({
+          final MapDataItem<String, dynamic> item =
+              new MapDataItem<String, dynamic>({
             "num": data.length,
             "id": "new_${rnd.nextInt(10000)}",
             "title": "New task",
@@ -177,7 +178,7 @@ class AppElement extends PolymerElement {
             "finish": "01/01/2009",
             "effortDriven": false
           });
-          item.extend(e.item);
+          item.extend(e.item as MapDataItem<String, dynamic>);
           dataView.addItem(item);
         });
 
@@ -260,6 +261,7 @@ class AppElement extends PolymerElement {
   }
 
   async.Timer _pendingUpdateFilter;
+
   @reflectable
   void percentCompleteThresholdChanged(_, [__]) {
     if (dataView == null) {
@@ -301,7 +303,7 @@ class AppElement extends PolymerElement {
     dataView.sort(comparer, e.sortAsc);
   }
 
-  bool myFilter(DataItem item, Map args) {
+  bool myFilter(DataItem<dynamic, dynamic> item, Map<dynamic, dynamic> args) {
     if (item["percentComplete"] < args['percentCompleteThreshold']) {
       return false;
     }
@@ -310,21 +312,22 @@ class AppElement extends PolymerElement {
         (item['title'] as String).indexOf(args['searchString']) != -1);
   }
 
-  int percentCompleteSort(Map a, Map b) =>
+  int percentCompleteSort(Map<dynamic, dynamic> a, Map<dynamic, dynamic> b) =>
       a["percentComplete"] - b["percentComplete"];
 
-  int comparer(DataItem a, DataItem b) {
+  int comparer(
+      core.ItemBase<dynamic, dynamic> a, core.ItemBase<dynamic, dynamic> b) {
     final int x = a[sortcol];
     final int y = b[sortcol];
     if (x == y) {
       return 0;
     }
 
-    if (x is Comparable) {
+    if (x is Comparable<core.ItemBase<dynamic, dynamic>>) {
       return x.compareTo(y);
     }
 
-    if (y is Comparable) {
+    if (y is Comparable<core.ItemBase<dynamic, dynamic>>) {
       return 1;
     }
 

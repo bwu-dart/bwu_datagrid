@@ -20,8 +20,8 @@ class CellRangeSelector extends Plugin {
   core.Range _range;
   dom.Element _dummyProxy;
 
-  core.EventBus get eventBus => _eventBus;
-  core.EventBus _eventBus = new core.EventBus();
+  core.EventBus<core.EventData> get eventBus => _eventBus;
+  core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   CellRangeDecoratorOptions _options;
 
@@ -29,13 +29,15 @@ class CellRangeSelector extends Plugin {
     if (options != null) {
       _options = options;
     } else {
-      _options = new CellRangeDecoratorOptions(
-          selectionCss: <String,String>{'border': '2px dashed blue', 'z-index': '9999'});
+      _options = new CellRangeDecoratorOptions(selectionCss: <String, String>{
+        'border': '2px dashed blue',
+        'z-index': '9999'
+      });
     }
   }
 
-  final List<async.StreamSubscription> _subscriptions =
-      <async.StreamSubscription>[];
+  final List<async.StreamSubscription<core.EventData>> _subscriptions =
+      <async.StreamSubscription<core.EventData>>[];
 
   void init(BwuDatagrid grid) {
     // TODO options = $.extend(true, {}, _defaults, options);
@@ -55,7 +57,8 @@ class CellRangeSelector extends Plugin {
   }
 
   void destroy() {
-    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
+    _subscriptions
+        .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
   }
 
 //  void handleDragInit(DragInit e) {
@@ -68,7 +71,7 @@ class CellRangeSelector extends Plugin {
 
     Cell cell = _grid.getCellFromEvent(e.causedBy);
     if (eventBus
-        .fire(core.Events.BEFORE_CELL_RANGE_SELECTED,
+        .fire(core.Events.beforeCellRangeSelected,
             new core.BeforeCellRangeSelected(this, cell))
         .retVal) {
       if (_grid.canCellBeSelected(cell.row, cell.cell)) {
@@ -83,9 +86,9 @@ class CellRangeSelector extends Plugin {
 
     _grid.setFocus();
 
-    dom.Rectangle canvasBounds = _canvas.getBoundingClientRect();
-    _canvasOrigin = new math.Point(
-        (canvasBounds.left as num).round(), (canvasBounds.top as num).round());
+    dom.Rectangle<num> canvasBounds = _canvas.getBoundingClientRect();
+    _canvasOrigin = new math.Point<int>(
+        canvasBounds.left.round(), canvasBounds.top.round());
     e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
 
     Cell start = _grid.getCellFromPoint(e.causedBy.client.x - _canvasOrigin.x,
@@ -125,16 +128,16 @@ class CellRangeSelector extends Plugin {
     e.preventDefault();
 
     _decorator.hide();
-    eventBus.fire(core.Events.CELL_RANGE_SELECTED,
+    eventBus.fire(core.Events.cellRangeSelected,
         new core.CellRangeSelected(this, _range));
   }
 
   async.Stream<core.BeforeCellRangeSelected> get onBwuBeforeCellRangeSelected =>
-      _eventBus.onEvent(core.Events.BEFORE_CELL_RANGE_SELECTED)
+      _eventBus.onEvent(core.Events.beforeCellRangeSelected)
       as async.Stream<core.BeforeCellRangeSelected>;
 
   async.Stream<core.CellRangeSelected> get onBwuCellRangeSelected =>
-      _eventBus.onEvent(core.Events.CELL_RANGE_SELECTED)
+      _eventBus.onEvent(core.Events.cellRangeSelected)
       as async.Stream<core.CellRangeSelected>;
 }
 

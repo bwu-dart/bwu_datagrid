@@ -87,7 +87,7 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  MapDataItemProvider data;
+  MapDataItemProvider<ItemBase<dynamic, dynamic>> data;
 
   @override
   void attached() {
@@ -96,9 +96,9 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      data = new MapDataItemProvider();
+      data = new MapDataItemProvider<ItemBase<dynamic, dynamic>>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem<dynamic, dynamic>({
           'title': 'Task ${i}',
           'description':
               'This is a sample task description.\n  It can be multiline',
@@ -148,7 +148,7 @@ class AppElement extends PolymerElement {
 
     final Map<String, dom.Element> containers = <String, dom.Element>{};
 
-    new async.Future(() {
+    new async.Future<Null>(() {
       columns.forEach((Column c) => containers[c.id] =
           modal.shadowRoot.querySelector('[data-editorid="${c.id}"]'));
 
@@ -160,7 +160,7 @@ class AppElement extends PolymerElement {
   }
 
   void _addNewRowHandler(AddNewRow e) {
-    final DataItem item = e.item;
+    final DataItem<dynamic, dynamic> item = e.item;
 //    var column = e.column;
     grid.invalidateRow(data.length);
     data.items.add(item);

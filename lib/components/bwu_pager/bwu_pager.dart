@@ -14,10 +14,14 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
 
 class NavState extends JsProxy {
-  @reflectable bool canGotoFirst;
-  @reflectable bool canGotoLast;
-  @reflectable bool canGotoPrev;
-  @reflectable bool canGotoNext;
+  @reflectable
+  bool canGotoFirst;
+  @reflectable
+  bool canGotoLast;
+  @reflectable
+  bool canGotoPrev;
+  @reflectable
+  bool canGotoNext;
   PagingInfo pagingInfo;
 
   NavState(
@@ -32,7 +36,7 @@ class NavState extends JsProxy {
 class BwuPager extends PolymerElement {
   BwuPager.created() : super.created();
 
-  DataView _dataView;
+  DataView<core.ItemBase<dynamic, dynamic>> _dataView;
   BwuDatagrid _grid;
 
   @property
@@ -46,7 +50,8 @@ class BwuPager extends PolymerElement {
 
   dom.Element status;
 
-  void init(DataView dataView, BwuDatagrid grid) {
+  void init(
+      DataView<core.ItemBase<dynamic, dynamic>> dataView, BwuDatagrid grid) {
     _dataView = dataView;
     _grid = grid;
     _dataView.onBwuPagingInfoChanged.listen((core.PagingInfoChanged e) {

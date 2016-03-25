@@ -36,7 +36,7 @@ dynamic main() async {
       appElement = new AppElement();
       dom.document.body.append(appElement);
       // allow the grid finish initialization
-      await new Future(() {});
+      await new Future<Null>(() {});
 
       grid = dom.querySelector('app-element /deep/ #myGrid');
       expect(grid, new isInstanceOf<BwuDatagrid>());

@@ -19,7 +19,7 @@ import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 class CpuUtilizationFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase dataContext) {
+      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     if (value != null && value > 90) {
       target.children.clear();
       target.append(new dom.SpanElement()
@@ -53,7 +53,7 @@ class AppElement extends PolymerElement {
       cellHighlightCssClass: 'changed',
       cellFlashingCssClass: 'current-server');
 
-  MapDataItemProvider data;
+  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
   math.Random rnd = new math.Random();
 
   @override
@@ -72,9 +72,10 @@ class AppElement extends PolymerElement {
             formatter: new CpuUtilizationFormatter()));
       }
 
-      data = new MapDataItemProvider();
+      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
       for (int i = 0; i < 500; i++) {
-        final MapDataItem item = new MapDataItem({'server': 'Server ${i}',});
+        final MapDataItem<dynamic, dynamic> item =
+            new MapDataItem<dynamic, dynamic>({'server': 'Server ${i}',});
         data.items.add(item);
 
         for (int j = 0; j < 4; j++) {
@@ -111,7 +112,7 @@ class AppElement extends PolymerElement {
       //var col = grid.getColumnIndex('cpu${cpu}');
       //print('col: ${col}');
       int val = data.items[server]['cpu${cpu}'] + delta;
-      val = math.max /*<int>*/ (0, val);
+      val = math.max/*<int>*/(0, val);
       val = math.min(100, val);
 
       data.items[server]['cpu${cpu}'] = val;
@@ -128,7 +129,7 @@ class AppElement extends PolymerElement {
     grid.setCellCssStyles('highlight', changes);
     grid.render();
 
-    new async.Future.delayed(
+    new async.Future<Null>.delayed(
         new Duration(milliseconds: 500), () => simulateRealTimeUpdates());
   }
 

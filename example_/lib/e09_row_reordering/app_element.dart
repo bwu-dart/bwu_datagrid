@@ -68,7 +68,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider<core.ItemBase> data;
+  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
 
   @override
   void attached() {
@@ -78,15 +78,15 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       // prepare the data
-      data = new MapDataItemProvider();
-      data.items
-          .add(new MapDataItem({'name': "Make a list", 'complete': true}));
-      data.items
-          .add(new MapDataItem({'name': "Check it twice", 'complete': false}));
-      data.items.add(new MapDataItem(
+      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      data.items.add(new MapDataItem<dynamic, dynamic>(
+          {'name': "Make a list", 'complete': true}));
+      data.items.add(new MapDataItem<dynamic, dynamic>(
+          {'name': "Check it twice", 'complete': false}));
+      data.items.add(new MapDataItem<dynamic, dynamic>(
           {'name': "Find out who's naughty", 'complete': false}));
-      data.items.add(
-          new MapDataItem({'name': "Find out who's nice", 'complete': false}));
+      data.items.add(new MapDataItem<dynamic, dynamic>(
+          {'name': "Find out who's nice", 'complete': false}));
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
@@ -124,8 +124,9 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          MapDataItem item =
-              new MapDataItem({'name': "New task", 'complete': false});
+          MapDataItem<dynamic, dynamic> item =
+              new MapDataItem<dynamic, dynamic>(
+                  {'name': "New task", 'complete': false});
           //$.extend(item, args.item);
           data.items.add(item);
           grid.invalidateRows([data.length - 1]);
@@ -152,19 +153,22 @@ class AppElement extends PolymerElement {
 
     final List<int> selectedRows = grid.getSelectedRows();
 
-    List<core.ItemBase> rowsToDelete = <core.ItemBase>[];
+    List<core.ItemBase<dynamic, dynamic>> rowsToDelete =
+        <core.ItemBase<dynamic, dynamic>>[];
     selectedRows.forEach((int r) {
       rowsToDelete.add(data.items[r]);
     });
-    rowsToDelete.forEach((core.ItemBase r) => data.items.remove(r));
+    rowsToDelete
+        .forEach((core.ItemBase<dynamic, dynamic> r) => data.items.remove(r));
 
     grid.invalidate();
     grid.setSelectedRows([]);
   }
 
   void moveRowsHandler(core.MoveRows e) {
-    final List<core.ItemBase> extractedRows = <core.ItemBase>[];
-    List<core.ItemBase> left, right;
+    final List<core.ItemBase<dynamic, dynamic>> extractedRows =
+        <core.ItemBase<dynamic, dynamic>>[];
+    List<core.ItemBase<dynamic, dynamic>> left, right;
     List<int> rows = e.rows;
     final int insertBefore = e.insertBefore;
     if (insertBefore < 0) {
@@ -190,7 +194,7 @@ class AppElement extends PolymerElement {
       }
     }
 
-    data.items = new List<core.ItemBase>()
+    data.items = new List<core.ItemBase<dynamic, dynamic>>()
       ..addAll(left)
       ..addAll(extractedRows)
       ..addAll(right);
@@ -213,7 +217,7 @@ class AppElement extends PolymerElement {
       return;
     }
 
-    Map dragData = new Map();
+    Map<dynamic, dynamic> dragData = new Map<dynamic, dynamic>();
     dragData['row'] = cell.row;
 
     if (cell.row >= data.items.length) {
@@ -236,8 +240,7 @@ class AppElement extends PolymerElement {
       grid.setSelectedRows(selectedRows);
     }
 
-    final dom.Rectangle<num> r =
-        grid.getCanvasNode.getBoundingClientRect() as dom.Rectangle<num>;
+    final dom.Rectangle<num> r = grid.getCanvasNode.getBoundingClientRect();
 
     final dom.SpanElement proxy = new dom.SpanElement()
       ..style.position = "absolute"

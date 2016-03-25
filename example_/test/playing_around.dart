@@ -24,7 +24,7 @@ dynamic main() async {
 
 //        .get('http://www.google.com');
     print(driver.capabilities);
-    await new Future.delayed(const Duration(milliseconds: 6000));
+    await new Future<Null>.delayed(const Duration(milliseconds: 6000));
 //    var x = await driver.pageSource;
     print('a');
     WebElement element;
@@ -33,9 +33,9 @@ dynamic main() async {
       try {
         element = await driver.findElement(new By.cssSelector('script'));
       } on NoSuchWindowException catch (_) {
-        await new Future.delayed(const Duration(milliseconds: 50));
+        await new Future<Null>.delayed(const Duration(milliseconds: 50));
       } on NoSuchElementException catch (_) {
-        await new Future.delayed(const Duration(milliseconds: 50));
+        await new Future<Null>.delayed(const Duration(milliseconds: 50));
       } catch (e, s) {
         print('x');
         print(e);

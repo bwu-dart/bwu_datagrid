@@ -19,7 +19,7 @@ class CheckboxSelectionFormatter extends CellFormatter {
   /// to be recognized by the [CheckboxSelectColumn] click handler.
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase dataContext) {
+      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     target.children.clear();
 
     if (dataContext != null) {
@@ -36,7 +36,8 @@ class CheckboxSelectColumn extends Column implements Plugin {
   BwuDatagrid get grid => _grid;
 
   //var _handler = new Slick.EventHandler();
-  List<async.StreamSubscription> _subscriptions = [];
+  List<async.StreamSubscription<core.EventData>> _subscriptions =
+      <async.StreamSubscription<core.EventData>>[];
   Map<int, bool> selectedRowsLookup = {};
   CheckboxSelectColumn(
       {String id: '_checkbox_selector',
@@ -72,7 +73,8 @@ class CheckboxSelectColumn extends Column implements Plugin {
 
   void destroy() {
     //_handler.unsubscribeAll();
-    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
+    _subscriptions
+        .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
   }
 
   void handleSelectedRowsChanged(core.SelectedRowsChanged e) {

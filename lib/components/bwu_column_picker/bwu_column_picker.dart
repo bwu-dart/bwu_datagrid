@@ -11,9 +11,12 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart';
 
 class CbData extends JsProxy {
-  @reflectable String id;
-  @reflectable bool checked;
-  @reflectable String text;
+  @reflectable
+  String id;
+  @reflectable
+  bool checked;
+  @reflectable
+  String text;
   CbData(this.id);
 }
 
@@ -45,7 +48,8 @@ class BwuColumnPicker extends PolymerElement {
 
   bool _isInitialized = false;
 
-  List<StreamSubscription> _subscriptions = [];
+  List<StreamSubscription<EventData>> _subscriptions =
+      <StreamSubscription<EventData>>[];
 
   void set columns(List<Column> columns) {
     if (_isInitialized) {
@@ -108,7 +112,7 @@ class BwuColumnPicker extends PolymerElement {
   void detached() {
     super.detached();
 
-    _subscriptions.forEach((StreamSubscription e) => e.cancel());
+    _subscriptions.forEach((StreamSubscription<EventData> e) => e.cancel());
     remove();
   }
 
@@ -156,7 +160,7 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   @Observe('columnCheckboxes.*')
-  void updateColumn(Map e) {
+  void updateColumn(Map<dynamic, dynamic> e) {
     if (!(e['path'] as String).endsWith('.checked')) {
       return;
     }
@@ -190,13 +194,13 @@ class BwuColumnPicker extends PolymerElement {
   void fadeIn(int milliseconds) {
     style.display = 'block';
     style.transition = 'opacity ${milliseconds}ms ease-in';
-    new Future(() => style.opacity = '1');
+    new Future<Null>(() => style.opacity = '1');
     onMouseLeave.first.then((dom.MouseEvent e) => fadeOut(_options.fadeSpeed));
   }
 
   void fadeOut(int milliseconds) {
     style.transition = 'opacity ${milliseconds}ms ease-out';
-    new Future(() => style.opacity = '0');
+    new Future<Null>(() => style.opacity = '0');
     this
         .onTransitionEnd
         .first

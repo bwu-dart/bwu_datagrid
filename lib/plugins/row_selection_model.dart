@@ -31,7 +31,8 @@ class RowSelectionModel extends SelectionModel {
     }
   }
 
-  List<async.StreamSubscription> _subscriptions = [];
+  List<async.StreamSubscription<core.EventData>> _subscriptions =
+      <async.StreamSubscription<core.EventData>>[];
 
   void init(BwuDatagrid grid) {
     // TODO(zoechi) _options = $.extend(true, {}, _defaults, options);
@@ -43,7 +44,8 @@ class RowSelectionModel extends SelectionModel {
   }
 
   void destroy() {
-    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
+    _subscriptions
+        .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
   }
 
 // TODO(zoechi)
@@ -98,7 +100,7 @@ class RowSelectionModel extends SelectionModel {
 
   void setSelectedRanges(List<core.Range> ranges) {
     _ranges = ranges;
-    _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED,
+    _grid.eventBus.fire(core.Events.selectedRangesChanged,
         new SelectedRangesChanged(this, _ranges));
     // TODO(zoechi) _self.onSelectedRangesChanged.notify(_ranges);
   }
@@ -177,8 +179,8 @@ class RowSelectionModel extends SelectionModel {
       _grid.setActiveCell(cell.row, cell.cell);
     } else if (selection.length > 0 && e.causedBy.shiftKey) {
       final int last = selection.removeLast();
-      final int from = math.min /*<int>*/ (cell.row, last);
-      final int to = math.max /*<int>*/ (cell.row, last);
+      final int from = math.min/*<int>*/(cell.row, last);
+      final int to = math.max/*<int>*/(cell.row, last);
       selection = [];
       for (int i = from; i <= to; i++) {
         if (i != last) {

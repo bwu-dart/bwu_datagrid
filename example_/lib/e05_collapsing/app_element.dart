@@ -27,13 +27,14 @@ import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 /// Silence analyzer [FilterForm], [exampleStyleSilence], [jqUiStyleSilence],
 /// [OptionsPanel]
 class TaskNameFormatter extends fm.CellFormatter {
-  List<DataItem> data;
-  DataView dataView;
+  List<DataItem<dynamic, dynamic>> data;
+  DataView<core.ItemBase<dynamic, dynamic>> dataView;
+
   TaskNameFormatter({this.data, this.dataView});
 
   @override
   void format(dom.Element target, int row, int cell, Object value,
-      Column columnDef, core.ItemBase dataContext) {
+      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     target.children.clear();
     String val = new HtmlEscape().convert(value.toString());
     final dom.SpanElement spacer = new dom.SpanElement()
@@ -46,7 +47,7 @@ class TaskNameFormatter extends fm.CellFormatter {
 
     if (data[idx + 1] != null &&
         data[idx + 1]['indent'] > data[idx]['indent']) {
-      if ((dataContext as DataItem).collapsed) {
+      if ((dataContext as DataItem<dynamic, dynamic>).collapsed) {
         toggle.classes.add('expand');
       } else {
         toggle.classes.add('collapse');
@@ -120,8 +121,8 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  List<DataItem> data;
-  DataView<DataItem> dataView;
+  List<DataItem<dynamic, dynamic>> data;
+  DataView<DataItem<dynamic, dynamic>> dataView;
 
   String sortcol = 'title';
   int sortdir = 1;
@@ -141,9 +142,10 @@ class AppElement extends PolymerElement {
 
     try {
       // prepare the data
-      data = new List<DataItem>();
+      data = new List<DataItem<dynamic, dynamic>>();
       for (int i = 0; i < 1000; i++) {
-        final MapDataItem d = new MapDataItem();
+        final MapDataItem<dynamic, dynamic> d =
+            new MapDataItem<dynamic, dynamic>();
         data.add(d);
         int parent;
 
@@ -174,7 +176,7 @@ class AppElement extends PolymerElement {
         d['effortDriven'] = (i % 5 == 0);
       }
 
-      dataView = new DataView<DataItem>(
+      dataView = new DataView<DataItem<dynamic, dynamic>>(
           options: new DataViewOptions(inlineFilters: true))
         ..beginUpdate()
         ..items = data
@@ -200,7 +202,8 @@ class AppElement extends PolymerElement {
             (core.CellChange e) => dataView.updateItem(e.item['id'], e.item));
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          final MapDataItem item = new MapDataItem({
+          final MapDataItem<dynamic, dynamic> item =
+              new MapDataItem<dynamic, dynamic>({
             'id': 'new_${rnd.nextInt(10000)}',
             'indent': 0,
             'title': 'New task',
@@ -216,7 +219,8 @@ class AppElement extends PolymerElement {
 
         grid.onBwuClick.listen((core.Click e) {
           if ((e.causedBy.target as dom.Element).classes.contains('toggle')) {
-            final DataItem item = dataView.getItem(e.cell.row);
+            final DataItem<dynamic, dynamic> item =
+                dataView.getItem(e.cell.row);
             if (item != null) {
               item.collapsed = !item.collapsed;
 
@@ -256,6 +260,7 @@ class AppElement extends PolymerElement {
   }
 
   async.Timer _pendingUpdateFilter;
+
   @reflectable
   void percentCompleteThresholdChanged([_, __]) {
     if (dataView == null) {
@@ -290,7 +295,7 @@ class AppElement extends PolymerElement {
     dataView.refresh();
   }
 
-  bool myFilter(DataItem item, Map args) {
+  bool myFilter(DataItem<dynamic, dynamic> item, Map<dynamic, dynamic> args) {
     if (item['percentComplete'] < args['percentCompleteThreshold']) {
       return false;
     }
@@ -301,7 +306,7 @@ class AppElement extends PolymerElement {
     }
 
     if (item['parent'] != null) {
-      DataItem parent = data[item['parent']];
+      DataItem<dynamic, dynamic> parent = data[item['parent']];
 
       while (parent != null) {
         if (parent.collapsed ||
@@ -322,7 +327,7 @@ class AppElement extends PolymerElement {
     return true;
   }
 
-  int percentCompleteSort(Map a, Map b) {
+  int percentCompleteSort(Map<dynamic, dynamic> a, Map<dynamic, dynamic> b) {
     return a['percentComplete'] - b['percentComplete'];
   }
 }

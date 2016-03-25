@@ -17,9 +17,9 @@ class CellRangeDecoratorOptions {
   CellRangeDecoratorOptions(
       {this.selectionCssClass: 'bwu-datagrid-range-decorator',
       this.selectionCss: const {
-    'z-index': '9999',
-    'border': '2px dashed red'
-  }});
+        'z-index': '9999',
+        'border': '2px dashed red'
+      }});
 }
 
 class CellRangeDecorator extends Decorator {

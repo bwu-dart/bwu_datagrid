@@ -15,18 +15,19 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 
 class WaitingFormatter extends fm.Formatter {
   void call(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, DataItem dataContext) {
+      Column columnDef, DataItem<dynamic, dynamic> dataContext) {
     target
       ..children.clear()
       ..appendText('wait...');
   }
 }
 
-void renderSparkline(
-    dom.Element target, int row, DataItem dataContext, Column colDef) {
+void renderSparkline(dom.Element target, int row,
+    DataItem<dynamic, dynamic> dataContext, Column colDef) {
   final List<num> vals = <num>[
     tools.parseNum(dataContext["n1"], onErrorDefault: 0),
     tools.parseNum(dataContext["n2"], onErrorDefault: 0),
@@ -114,7 +115,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider data;
+  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
 
   @override
   void attached() {
@@ -124,9 +125,9 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       // prepare the data
-      data = new MapDataItemProvider();
+      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem<dynamic, dynamic>({
           'title': 'Record $i',
           'n1': rnd.nextInt(10),
           'n2': rnd.nextInt(10),

@@ -26,7 +26,7 @@ class Range {
     }
   }
 
-  int get fromRow => math.min /*<int>*/ (_fromRow, _toRow);
+  int get fromRow => math.min/*<int>*/(_fromRow, _toRow);
 
   int get toRow => math.max(_fromRow, _toRow);
 
@@ -67,7 +67,7 @@ class Range {
 }
 
 abstract class ItemBase<K, V> {
-  Map _values = <K, V>{};
+  Map<K, V> _values = <K, V>{};
   dynamic operator [](K key) {
     return _values[key];
   }
@@ -78,7 +78,7 @@ abstract class ItemBase<K, V> {
 }
 
 /// A base class that all special / non-data rows (like Group and GroupTotals) derive from.
-abstract class NonDataItem extends ItemBase {}
+abstract class NonDataItem extends ItemBase<dynamic, dynamic> {}
 
 /// Information about a group of rows.
 class Group extends NonDataItem {
@@ -101,7 +101,7 @@ class Group extends NonDataItem {
   GroupTotals totals;
 
   /// Rows that are part of the group.
-  List<ItemBase> rows = <ItemBase>[];
+  List<ItemBase<dynamic, dynamic>> rows = <ItemBase<dynamic, dynamic>>[];
 
   /// Sub-groups that are part of the group.
   List<Group> groups;

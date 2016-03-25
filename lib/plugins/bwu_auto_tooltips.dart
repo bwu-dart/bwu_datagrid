@@ -41,9 +41,9 @@ class AutoTooltips extends Plugin {
     }
   }
 
-  async.StreamSubscription mouseEnterSubscription;
+  async.StreamSubscription<core.MouseEnter> mouseEnterSubscription;
   //async.StreamSubscription mouseLeaveSubscription;
-  async.StreamSubscription headerMouseEnterSubscription;
+  async.StreamSubscription<core.HeaderMouseEnter> headerMouseEnterSubscription;
   //async.StreamSubscription headerMouseLeaveSubscription;
 
   /// Initialize plugin.

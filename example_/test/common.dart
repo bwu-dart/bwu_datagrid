@@ -87,8 +87,8 @@ void forEachBrowser(BrowserTest testsWithBrowser) {
       () => testsWithBrowser(WebBrowser.chrome) /*, skip: 'temporary'*/);
   group(
       'Firefox,',
-      () => testsWithBrowser(
-          WebBrowser.firefox) /*,
+      () => testsWithBrowser(WebBrowser
+          .firefox) /*,
       skip: 'blocked by FirefoxDriver issue - s'*/
       );
   group('Edge,', () => testsWithBrowser(WebBrowser.edge),
@@ -105,15 +105,15 @@ final Map<WebBrowser, Map<String, dynamic>> _defaultBrowserCapabilities =
   WebBrowser.android: wd.Capabilities.chrome
     ..['chromeOptions'] = {'androidPackage': 'com.android.chrome'},
   WebBrowser.chrome: wd.Capabilities.chrome,
-  WebBrowser.edge: <String,String>{'browserName': WebBrowser.edge.value},
+  WebBrowser.edge: <String, String>{'browserName': WebBrowser.edge.value},
   WebBrowser.firefox: wd.Capabilities.firefox
     ..addAll((new FirefoxProfile()
-          ..setOption(new PrefsOption('devtools.selfxss.count', 100))).toJson()
-        as Map<String, dynamic>), // disable paste protection
-  WebBrowser.ie: <String,String>{'browserName': WebBrowser.ie.value},
-  WebBrowser.ipad: <String,String>{'browserName': WebBrowser.ipad.value},
-  WebBrowser.iphone: <String,String>{'browserName': WebBrowser.iphone.value},
-  WebBrowser.safari: <String,String>{'browserName': WebBrowser.safari.value},
+          ..setOption(new PrefsOption<int>('devtools.selfxss.count', 100)))
+        .toJson() as Map<String, dynamic>), // disable paste protection
+  WebBrowser.ie: <String, String>{'browserName': WebBrowser.ie.value},
+  WebBrowser.ipad: <String, String>{'browserName': WebBrowser.ipad.value},
+  WebBrowser.iphone: <String, String>{'browserName': WebBrowser.iphone.value},
+  WebBrowser.safari: <String, String>{'browserName': WebBrowser.safari.value},
 };
 
 Future<ExtendedWebDriver> commonSetUp(
@@ -129,6 +129,6 @@ Future<ExtendedWebDriver> commonSetUp(
   //      print('Capabilities: ${driver.capabilities}');
   await driver.get(pageUrl);
   expect(await driver.currentUrl, pageUrl);
-  await new Future.delayed(const Duration(milliseconds: 100));
+  await new Future<Null>.delayed(const Duration(milliseconds: 100));
   return driver;
 }

@@ -56,7 +56,7 @@ void tests(WebBrowser browser) {
 //      startColumnWidth = (await driver.getBoundingClientRect(start)).width;
       startColumnWidth = (await start.size).width;
 
-      await new Future.delayed(const Duration(seconds: 150), () {});
+      await new Future<Null>.delayed(const Duration(seconds: 150), () {});
       expect(startColumnWidth, lessThan(80));
     });
   },

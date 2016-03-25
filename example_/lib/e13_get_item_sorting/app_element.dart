@@ -13,7 +13,8 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-class CustomMapDataItemProvider extends DataProvider {
+class CustomMapDataItemProvider
+    extends DataProvider<core.ItemBase<dynamic, dynamic>> {
   Function _getItem;
   Function _getLength;
 
@@ -23,7 +24,7 @@ class CustomMapDataItemProvider extends DataProvider {
   int get length => _getLength();
 
   @override
-  DataItem getItem(int index) => _getItem(index);
+  DataItem<dynamic, dynamic> getItem(int index) => _getItem(index);
 
   @override
   RowMetadata getItemMetadata(int index) => null;
@@ -51,13 +52,13 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
   static const int numberOfItems = 25000;
   List<int> items = new List<int>(numberOfItems);
-  Map indices;
+  Map<dynamic, dynamic> indices;
   bool isAsc = true;
   Column currentSortCol = new Column(id: "title");
   int i;
 
   BwuDatagrid grid;
-  MapDataItemProvider data;
+  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
 
   @override
   void attached() {
@@ -66,12 +67,13 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
       // prepare the data
-      data = new MapDataItemProvider();
+      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
 
       for (int i = 0; i < numberOfItems; i++) {
         items[i] = i;
 
-        data.items.add(new MapDataItem({'title': 'Task ${i}'}));
+        data.items
+            .add(new MapDataItem<dynamic, dynamic>({'title': 'Task ${i}'}));
       }
 
       indices = {
@@ -133,7 +135,7 @@ class AppElement extends PolymerElement {
   }
 
   // Define function used to get the data and sort it.
-  core.ItemBase getItem(int index) {
+  core.ItemBase<dynamic, dynamic> getItem(int index) {
     return isAsc
         ? data.items[indices[currentSortCol.id][index]]
         : data.items[indices[currentSortCol.id][(data.length - 1) - index]];

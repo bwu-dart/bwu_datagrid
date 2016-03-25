@@ -16,6 +16,7 @@ class RemoteModel {
   set PAGESIZE(int value) {
     pageSize = value;
   }
+
   // private
   int pageSize = 50;
   Map data = {'length': 0};
@@ -51,9 +52,8 @@ class RemoteModel {
   void ensureData(int from, int to) {
     if (req != null) {
       req.abort();
-      for (var i = req.fromPage;
-          i <= req.toPage;
-          i++) data[i * pageSize] = null;
+      for (var i = req.fromPage; i <= req.toPage; i++)
+        data[i * pageSize] = null;
     }
 
     if (from < 0) {
@@ -96,8 +96,9 @@ class RemoteModel {
     }
 
     h_request = new async.Timer(new Duration(milliseconds: 50), () {
-      for (var i = fromPage; i <= toPage; i++) data[i * pageSize] =
-          null; // null indicates a 'requested but not available yet'
+      for (var i = fromPage; i <= toPage; i++)
+        data[i * pageSize] =
+            null; // null indicates a 'requested but not available yet'
 
       onDataLoading.notify({from: from, to: to});
 

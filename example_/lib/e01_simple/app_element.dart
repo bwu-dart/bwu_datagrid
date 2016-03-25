@@ -9,6 +9,7 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 
 /// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
@@ -36,10 +37,11 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      final MapDataItemProvider data =
-          new MapDataItemProvider(); //List<Map>(500);
+      final MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data =
+          new MapDataItemProvider<
+              core.ItemBase<dynamic, dynamic>>(); //List<Map>(500);
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem<dynamic, dynamic>({
           'title': 'Task ${i}',
           'duration': '5 days',
           'percentComplete': new math.Random().nextInt(100).round(),

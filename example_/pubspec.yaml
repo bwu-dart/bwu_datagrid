@@ -14,9 +14,11 @@ dependencies:
   polymer_interop: ^1.0.0-rc.5
   quiver: '>=0.21.3 <0.22.0'
   quiver_log: '>=1.0.1 <2.0.0'
-  reflectable: '>=0.3.2 <0.3.4'
+  reflectable: '0.5.2'
   web_components: ^0.12.0
 
+  dart_to_js_script_rewriter: '^1.0.1'
+  browser: '^0.10.0+2'
 dev_dependencies:
 #  bwu_docker: '>=0.2.1 <0.3.0'
   bwu_webdriver:
@@ -34,7 +36,7 @@ dev_dependencies:
 
 
 transformers:
-- web_components:
+- polymer:
     entry_points:
     - web/e01_simple.html
     - web/e02_formatters.html
@@ -49,7 +51,7 @@ transformers:
     - web/e05_collapsing.html
     - web/e08_alternative_display.html
     - web/e09_row_reordering.html
-    - web/e10_async_post_render.html
+  #    - web/e10_async_post_render.html
     - web/e11_autoheight.html
     - web/e12_fillbrowser.html
     - web/e13_get_item_sorting.html
@@ -62,42 +64,25 @@ transformers:
     - test/checkbox_row_select_test.html
     - test/checkbox_row_select_testx.html
 
-- reflectable:
-    entry_points:
-    - web/e01_simple.dart
-    - web/e02_formatters.dart
-    - web/e07_events.dart
-    - web/e14_highlighting.dart
-    - web/e03_editing.dart
-    - web/e03a_compound_editors.dart
-    - web/e03b_editing_with_undo.dart
-    - web/composite_editor_item_details.dart
-    - web/totals_via_data_provider.dart
-    - web/e04_model.dart
-    - web/e05_collapsing.dart
-    - web/e08_alternative_display.dart
-    - web/e09_row_reordering.dart
-    - web/e10_async_post_render.dart
-    - web/e11_autoheight.dart
-    - web/e12_fillbrowser.dart
-    - web/e13_get_item_sorting.dart
-    - web/header_row.dart
-    - web/checkbox_row_select.dart
-    - web/spreadsheet.dart
-    - web/grouping.dart
-    - web/autotooltips.dart
+    $exclude:
+    - 'web/e10_async_post_render.html'
+    - 'web/e10_async_post_render.dart'
 
-    - test/checkbox_row_select_test.dart
-
-    inline_stylesheets:
-      packages/bwu_datagrid_examples/asset/examples.css: false
-      packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css: false
+#    inline_stylesheets:
+#      packages/bwu_datagrid_examples/asset/examples.css: false
+#      packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css: false
 
 - test/pub_serve:
     $include: test/**_test{.*,}.dart
 
 - $dart2js:
-   commandLineOptions: ['--trust-type-annotations', '--trust-primitives']
+    commandLineOptions: ['--trust-type-annotations', '--trust-primitives']
+
+    $exclude:
+    - 'web/e10_async_post_render.html'
+    - 'web/e10_async_post_render.dart'
+
+- dart_to_js_script_rewriter
 
 
 

@@ -41,7 +41,8 @@ class NumericRangeEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, Map value) {
+  void applyValue(
+      DataItem<dynamic, dynamic> item, Map<dynamic, dynamic> value) {
     item['from'] = value['from'];
     item['to'] = value['to'];
   }
@@ -64,13 +65,13 @@ class NumericRangeEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     fromInput.value = '${item['from']}';
     toInput.value = '${item['to']}';
   }
 
   @override
-  Map serializeValue() {
+  Map<String, int> serializeValue() {
     return {
       'from': tools.parseInt(fromInput.value, onErrorDefault: 0),
       'to': tools.parseInt(toInput.value, onErrorDefault: 0)

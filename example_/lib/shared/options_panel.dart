@@ -11,7 +11,8 @@ class OptionsPanel extends PolymerElement {
 
   OptionsPanel.created() : super.created();
 
-  @property String sourceDir;
+  @property
+  String sourceDir;
 
   @reflectable
   String gitHubSourceUri(String sourceDir) =>

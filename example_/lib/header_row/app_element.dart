@@ -31,7 +31,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  List<DataItem> data;
+  List<DataItem<dynamic, dynamic>> data;
 
   @override
   void attached() {
@@ -49,9 +49,10 @@ class AppElement extends PolymerElement {
       }
 
       // prepare the data
-      data = <DataItem>[];
+      data = <DataItem<dynamic, dynamic>>[];
       for (int i = 0; i < 100; i++) {
-        final MapDataItem d = new MapDataItem();
+        final MapDataItem<dynamic, dynamic> d =
+            new MapDataItem<dynamic, dynamic>();
         d['id'] = i;
         for (int j = 0; j < columns.length; j++) {
           d[j.toString()] = rnd.nextInt(10);
@@ -59,7 +60,8 @@ class AppElement extends PolymerElement {
         data.add(d);
       }
 
-      DataView dataView = new DataView();
+      DataView<core.ItemBase<dynamic, dynamic>> dataView =
+          new DataView<core.ItemBase<dynamic, dynamic>>();
 
       grid
           .setup(
@@ -116,7 +118,7 @@ class AppElement extends PolymerElement {
     }
   }
 
-  bool filter(DataItem item, [Object args]) {
+  bool filter(DataItem<dynamic, dynamic> item, [Object args]) {
     for (final String columnId in columnFilters.keys) {
       if (columnId != null && columnFilters[columnId].isNotEmpty) {
         Column c = grid.getColumns[grid.getColumnIndex(columnId)];

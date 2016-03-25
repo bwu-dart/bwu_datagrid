@@ -67,7 +67,7 @@ void tests(WebBrowser browser) {
       final String titleNewValue = 'New title';
       await titleEditor.sendKeys('${titleNewValue}${Keyboard.enter}');
       expect(await titleCell.elementExists(textEditorSelector), isFalse);
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       expect(await titleCell.text, titleNewValue);
 
       expect(await undoButton.enabled, isTrue,
@@ -94,7 +94,7 @@ void tests(WebBrowser browser) {
       await descriptionEditor.sendKeys(
           '${descriptionNewValue}${Keyboard.control}${Keyboard.enter}');
       expect(await driver.elementExists(descriptionEditorSelector), isFalse);
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       expect(await descriptionCell.text,
           descriptionNewValue.replaceAll('\n', ' '));
 
@@ -114,7 +114,7 @@ void tests(WebBrowser browser) {
       const String durationNewValue = '25 days';
       await durationEditor.sendKeys('${durationNewValue}${Keyboard.enter}');
       expect(await durationCell.elementExists(textEditorSelector), isFalse);
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       expect(await durationCell.text, durationNewValue);
 
       //percent complete
@@ -139,7 +139,7 @@ void tests(WebBrowser browser) {
           .sendKeys('${percentCompleteNewValue}${Keyboard.enter}');
       expect(
           await percentCompleteCell.elementExists(textEditorSelector), isFalse);
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       bar = await percentCompleteCell.findElement(percentBarSelector);
       expect(await bar.attributes['style'],
           matches('width: ${percentCompleteNewValue}%;'));
@@ -159,7 +159,7 @@ void tests(WebBrowser browser) {
           await startCell.findElement(dateEditorSelector);
       await startEditor.sendKeys('${startNewInput}${Keyboard.enter}');
       expect(await startCell.elementExists(dateEditorSelector), isFalse);
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       expect(await startCell.text, startNewValue);
 
       // finish
@@ -178,7 +178,7 @@ void tests(WebBrowser browser) {
           await finishCell.findElement(dateEditorSelector);
       await finishEditor.sendKeys('${finishNewInput}${Keyboard.enter}');
       expect(await finishCell.elementExists(dateEditorSelector), isFalse);
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       expect(await finishCell.text, finishNewValue);
 
       // effort-driven
@@ -198,7 +198,7 @@ void tests(WebBrowser browser) {
       await effortDrivenEditor.sendKeys(Keyboard.enter);
       expect(await effortDrivenCell.elementExists(checkboxEditorSelector),
           isFalse);
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       expect(
           await effortDrivenCell
               .elementExists(effortDrivenCheckedImageSelector),
@@ -256,22 +256,21 @@ void tests(WebBrowser browser) {
   }, timeout: const Timeout(const Duration(seconds: 180)));
 }
 
-Future selectRowByTask(ExtendedWebDriver driver, String taskTitle,
+Future<Null> selectRowByTask(ExtendedWebDriver driver, String taskTitle,
     {int scrollTop}) async {
   if (scrollTop != null) {
     WebElement viewPort = await driver.findElement(viewPortSelector);
     await driver.scrollElementAbsolute(viewPort, y: scrollTop);
-    await new Future.delayed(const Duration(milliseconds: 100));
+    await new Future<Null>.delayed(const Duration(milliseconds: 100));
   }
 
-  final List<WebElement> cells =
-      await (await driver
-              .findElements(firstColumnSelector)
-              .asyncMap(
-                  (WebElement e) async => {'element': e, 'text': await e.text})
-              .where((Map item) => item['text'] == taskTitle))
-          .map((Map item) => item['element'])
-          .toList() as List<WebElement>;
+  final List<WebElement> cells = await (await driver
+          .findElements(firstColumnSelector)
+          .asyncMap(
+              (WebElement e) async => {'element': e, 'text': await e.text})
+          .where((Map<dynamic, dynamic> item) => item['text'] == taskTitle))
+      .map((Map<dynamic, dynamic> item) => item['element'])
+      .toList() as List<WebElement>;
   if (cells.length == 0) {
     throw 'No row with title "${taskTitle}" found.';
   } else if (cells.length > 1) {

@@ -70,7 +70,7 @@ void tests(WebBrowser browser) {
         await editors[1].sendKeys('${rangeNewValues[1]}${Keyboard.enter}');
         expect(await rangeCell.elementExists(editorsSelector), isFalse);
 
-        await new Future.delayed(const Duration(milliseconds: 10));
+        await new Future<Null>.delayed(const Duration(milliseconds: 10));
         expect(
             (await rangeCell.text)
                 .split('-')
@@ -85,11 +85,11 @@ void tests(WebBrowser browser) {
         await editors[1].sendKeys('${rangeNewValues[1]}');
         await titleCell.click();
 
-        await new Future.delayed(const Duration(milliseconds: 10));
+        await new Future<Null>.delayed(const Duration(milliseconds: 10));
         expect(
             (await rangeCell.text)
                 .split('-')
-                .map /*<String>*/ ((String t) => int.parse(t.trim()))
+                .map/*<String>*/((String t) => int.parse(t.trim()))
                 .toList(),
             orderedEquals(rangeNewValues));
       } /*, skip: 'temporary'*/);
@@ -99,7 +99,7 @@ void tests(WebBrowser browser) {
         await editors[1].sendKeys('${rangeNewValues[1]}${Keyboard.escape}');
         expect(await titleCell.elementExists(editorsSelector), isFalse);
 
-        await new Future.delayed(const Duration(milliseconds: 10));
+        await new Future<Null>.delayed(const Duration(milliseconds: 10));
         expect(
             (await rangeCell.text)
                 .split('-')

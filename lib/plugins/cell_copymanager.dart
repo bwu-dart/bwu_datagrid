@@ -11,12 +11,12 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 class CellCopyManager extends Plugin {
   List<core.Range> _copiedRanges;
 
-  core.EventBus get eventBus => _eventBus;
-  core.EventBus _eventBus = new core.EventBus();
+  core.EventBus<core.EventData> get eventBus => _eventBus;
+  core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   CellCopyManager();
 
-  async.StreamSubscription keyDownSubscription;
+  async.StreamSubscription<core.KeyDown> keyDownSubscription;
 
   @override
   void init(BwuDatagrid grid) {
@@ -37,7 +37,7 @@ class CellCopyManager extends Plugin {
         if (_copiedRanges != null) {
           e.preventDefault();
           clearCopySelection();
-          eventBus.fire(core.Events.COPY_CANCELLED,
+          eventBus.fire(core.Events.copyCancelled,
               new core.CopyCancelled(this, _copiedRanges));
           _copiedRanges = null;
         }
@@ -51,7 +51,7 @@ class CellCopyManager extends Plugin {
           _copiedRanges = ranges;
           _markCopySelection(ranges);
           eventBus.fire(
-              core.Events.COPY_CELLS, new core.CopyCells(this, ranges));
+              core.Events.copyCells, new core.CopyCells(this, ranges));
         }
       }
 
@@ -61,7 +61,7 @@ class CellCopyManager extends Plugin {
           e.preventDefault();
           clearCopySelection();
           ranges = grid.getSelectionModel.getSelectedRanges();
-          eventBus.fire(core.Events.PASTE_CELLS,
+          eventBus.fire(core.Events.pasteCells,
               new core.PasteCells(this, _copiedRanges, ranges));
           _copiedRanges = null;
         }
@@ -88,13 +88,13 @@ class CellCopyManager extends Plugin {
   }
 
   async.Stream<core.CopyCells> get onBwuCopyCells =>
-      _eventBus.onEvent(core.Events.COPY_CELLS) as async.Stream<core.CopyCells>;
+      _eventBus.onEvent(core.Events.copyCells) as async.Stream<core.CopyCells>;
 
   async.Stream<core.CopyCancelled> get onBwuCopyCancelled =>
-      _eventBus.onEvent(core.Events.COPY_CANCELLED)
+      _eventBus.onEvent(core.Events.copyCancelled)
       as async.Stream<core.CopyCancelled>;
 
   async.Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.PASTE_CELLS)
+      _eventBus.onEvent(core.Events.pasteCells)
       as async.Stream<core.PasteCells>;
 }

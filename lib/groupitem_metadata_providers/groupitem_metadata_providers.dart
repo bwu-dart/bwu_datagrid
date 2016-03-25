@@ -18,7 +18,7 @@ class DefaultGroupCellFormatter extends fm.CellFormatter {
 
   @override
   void format(dom.Element target, int row, int cell, String value,
-      Column columnDef, core.ItemBase item) {
+      Column columnDef, core.ItemBase<dynamic, dynamic> item) {
     final core.Group group = item as core.Group;
     if (!giMetadataProvider.enableExpandCollapse) {
       target.append(group.title);
@@ -28,13 +28,16 @@ class DefaultGroupCellFormatter extends fm.CellFormatter {
     final String indentation = '${group.level * 15}px';
 
     target.innerHtml = '';
-    target..append(new dom.SpanElement()
-      ..classes.add('${giMetadataProvider.toggleCssClass}')
-      ..classes.add('${group.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
-      ..style.marginLeft = indentation)..append(new dom.SpanElement()
-      ..classes.add('${giMetadataProvider.groupTitleCssClass}')
-      ..attributes['level'] = '${group.level}'
-      ..append(group.title));
+    target
+      ..append(new dom.SpanElement()
+        ..classes.add('${giMetadataProvider.toggleCssClass}')
+        ..classes.add(
+            '${group.isCollapsed ? giMetadataProvider.toggleCollapsedCssClass : giMetadataProvider.toggleExpandedCssClass}')
+        ..style.marginLeft = indentation)
+      ..append(new dom.SpanElement()
+        ..classes.add('${giMetadataProvider.groupTitleCssClass}')
+        ..attributes['level'] = '${group.level}'
+        ..append(group.title));
   }
 }
 
@@ -109,8 +112,8 @@ class GroupItemMetadataProvider extends Plugin {
     return new DefaultTotalsCellFormatter();
   }
 
-  async.StreamSubscription _gridClickSubscription;
-  async.StreamSubscription _gridKeyDownSubscription;
+  async.StreamSubscription<core.Click> _gridClickSubscription;
+  async.StreamSubscription<core.KeyDown> _gridKeyDownSubscription;
 
   @override
   void destroy() {
@@ -124,13 +127,14 @@ class GroupItemMetadataProvider extends Plugin {
 
   void _handleGridClick(core.Click e) {
     BwuDatagrid grid = e.sender;
-    core.ItemBase item = grid.getDataItem(e.cell.row);
+    core.ItemBase<dynamic, dynamic> item = grid.getDataItem(e.cell.row);
     if (item != null &&
         item is core.Group &&
         (e.causedBy.target as dom.Element).classes.contains(toggleCssClass)) {
       final Range range = grid.getRenderedRange();
-      if (grid.dataProvider is DataView) {
-        final DataView dp = grid.dataProvider as DataView;
+      if (grid.dataProvider is DataView<core.ItemBase<dynamic, dynamic>>) {
+        final DataView<core.ItemBase<dynamic, dynamic>> dp =
+            grid.dataProvider as DataView<core.ItemBase<dynamic, dynamic>>;
         dp.setRefreshHints(
             {'ignoreDiffsBefore': range.top, 'ignoreDiffsAfter': range.bottom});
 
@@ -151,14 +155,16 @@ class GroupItemMetadataProvider extends Plugin {
     if (enableExpandCollapse && (e.causedBy.which == dom.KeyCode.SPACE)) {
       final Cell activeCell = grid.getActiveCell();
       if (activeCell != null) {
-        core.ItemBase item = grid.getDataItem(activeCell.row);
+        core.ItemBase<dynamic, dynamic> item = grid.getDataItem(activeCell.row);
         if (item != null && item is core.Group) {
           final Range range = grid.getRenderedRange();
 
-          if (grid.dataProvider is DataView) {
-            final DataView dp = grid.dataProvider as DataView;
+          if (grid.dataProvider is DataView<core.ItemBase<dynamic, dynamic>>) {
+            final DataView<core.ItemBase<dynamic, dynamic>> dp =
+                grid.dataProvider as DataView<core.ItemBase<dynamic, dynamic>>;
 
-            (grid.dataProvider as DataView).setRefreshHints({
+            (grid.dataProvider as DataView<core.ItemBase<dynamic, dynamic>>)
+                .setRefreshHints({
               'ignoreDiffsBefore': range.top,
               'ignoreDiffsAfter': range.bottom
             });
@@ -177,18 +183,18 @@ class GroupItemMetadataProvider extends Plugin {
     }
   }
 
-  RowMetadata getGroupRowMetadata(core.ItemBase item) {
+  RowMetadata getGroupRowMetadata(core.ItemBase<dynamic, dynamic> item) {
     return new RowMetadata(
         selectable: false,
         focusable: groupFocusable,
         cssClasses: groupCssClass,
-        columns: <String,Column>{
+        columns: <String, Column>{
           '0': new Column(
               colspan: "*", formatter: getGroupFormatter(), editor: null)
         });
   }
 
-  RowMetadata getTotalsRowMetadata(core.ItemBase item) {
+  RowMetadata getTotalsRowMetadata(core.ItemBase<dynamic, dynamic> item) {
     return new RowMetadata(
         selectable: false,
         focusable: totalsFocusable,

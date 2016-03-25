@@ -10,8 +10,10 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 class FormulaEditor extends Editor {
   EditorArgs args;
   CellRangeSelector _selector;
-  TextEditor _editor; // = new TextEditor();
-  async.StreamSubscription _cellRangeSelectedSubscr;
+  TextEditor _editor;
+
+  // = new TextEditor();
+  async.StreamSubscription<core.EventData> _cellRangeSelectedSubscr;
 
   FormulaEditor newInstance(EditorArgs args) {
     return new FormulaEditor._(args);
@@ -36,11 +38,12 @@ class FormulaEditor extends Editor {
 
   void _handleCellRangeSelected(core.CellRangeSelected e) {
     _editor.value =
-        '${_editor.value}${grid.getColumns[e.range.fromCell].name}${e.range.fromRow}:${grid.getColumns[e.range.toCell].name}${e.range.toRow}';
+        '${_editor.value}${grid.getColumns[e.range.fromCell].name}${e.range
+        .fromRow}:${grid.getColumns[e.range.toCell].name}${e.range.toRow}';
   }
 
   @override
-  void applyValue(DataItem item, Object value) {
+  void applyValue(DataItem<dynamic, dynamic> item, Object value) {
     return _editor.applyValue(item, value);
   }
 
@@ -61,7 +64,7 @@ class FormulaEditor extends Editor {
   bool get isValueChanged => _editor.isValueChanged;
 
   @override
-  void loadValue(DataItem item) => _editor.loadValue(item);
+  void loadValue(DataItem<dynamic, dynamic> item) => _editor.loadValue(item);
 
   @override
   String serializeValue() => _editor.serializeValue();

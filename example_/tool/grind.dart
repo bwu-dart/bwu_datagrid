@@ -55,7 +55,7 @@ PubServe _pubServe;
 dynamic startSelenium() => _startSelenium();
 
 @Task('selenium-debug')
-Future seleniumDebug() async {
+Future<Null> seleniumDebug() async {
   io.ProcessSignal.SIGINT.watch().listen((_) => _stopServices());
   io.ProcessSignal.SIGHUP.watch().listen((_) => _stopServices());
   io.ProcessSignal.SIGTERM.watch().listen((_) => _stopServices());
@@ -66,9 +66,10 @@ Future seleniumDebug() async {
   try {
     _pubServe = new PubServe();
     log('start pub serve');
-    _pubServe
-        .start(port: pubServePort, hostname: '0.0.0.0', directories: ['web'])
-        .then((_) {
+    _pubServe.start(
+        port: pubServePort,
+        hostname: '0.0.0.0',
+        directories: ['web']).then((_) {
       _pubServe.stdout.listen((List<int> e) => io.stdout.add(e));
       _pubServe.stderr.listen((List<int> e) => io.stderr.add(e));
     });
@@ -76,8 +77,8 @@ Future seleniumDebug() async {
     await _startSelenium();
     final ContainerInfo chromeInfo = await _dockerConnection
         .container(_createdChromeNodeContainer.container);
-    final int chromePort = chromeInfo.networkSettings.ports['5900/tcp'][0]
-        ['HostPort'];
+    final int chromePort =
+        chromeInfo.networkSettings.ports['5900/tcp'][0]['HostPort'];
     print('Chrome: ${chromePort}');
     io.Process.start('vinagre',
         ['--vnc-scale', '--geometry', '1280x1024+200+0', ':${chromePort}']);
@@ -85,10 +86,10 @@ Future seleniumDebug() async {
 //    io.Process.start('xvnc4viewer', ['-Shared', ':${chromePort}']);
     final ContainerInfo firefoxInfo = await _dockerConnection
         .container(_createdFirefoxNodeContainer.container);
-    final int firefoxPort = firefoxInfo.networkSettings.ports['5900/tcp'][0]
-        ['HostPort'];
+    final int firefoxPort =
+        firefoxInfo.networkSettings.ports['5900/tcp'][0]['HostPort'];
     print('Firefox: ${firefoxPort}');
-    await new Future.delayed(const Duration(seconds: 1));
+    await new Future<Null>.delayed(const Duration(seconds: 1));
     io.Process.start('vinagre',
         ['--vnc-scale', '--geometry', '1280x1024+300+0', ':${firefoxPort}']);
 //    io.Process.start('krdc', ['vnc://:${firefoxPort}']);
@@ -101,14 +102,14 @@ Future seleniumDebug() async {
 
 void _stopServices() {
   _pubServe?.stop();
-  if(_dockerConnection != null) {
+  if (_dockerConnection != null) {
     _dockerConnection.stop(_createdChromeNodeContainer.container);
     _dockerConnection.stop(_createdFirefoxNodeContainer.container);
     _dockerConnection.stop(_createdHubContainer.container);
   }
 }
 
-Future _startSelenium({bool wait: true}) async {
+Future<Null> _startSelenium({bool wait: true}) async {
   final String dockerHostStr =
       io.Platform.environment[dockerHostFromEnvironment];
   assert(dockerHostStr != null && dockerHostStr.isNotEmpty);
@@ -148,12 +149,13 @@ Future _startSelenium({bool wait: true}) async {
 class PubServe extends RunProcess {
   int _port;
   final Map<String, int> _directoryPorts = <String, int>{};
+
   Map<String, int> get directoryPorts =>
-      new UnmodifiableMapView(_directoryPorts);
+      new UnmodifiableMapView<String, int>(_directoryPorts);
   final RegExp _servingMessageRegex = new RegExp(
       r'^Serving [0-9a-zA-Z_]+ ([0-9a-zA-Z_]+) +on https?://.*:(\d{4,5})$');
 
-  Future start(
+  Future<io.Process> start(
       {int port,
       List<String> directories: const ['test'],
       String hostname}) async {
@@ -202,18 +204,22 @@ class PubServe extends RunProcess {
 
 class RunProcess {
   io.Process _process;
+
   io.Process get process => _process;
 
   Stream<List<int>> _stdoutStream;
+
   Stream<List<int>> get stdout => _stdoutStream;
 
   Stream<List<int>> _stderrStream;
+
   Stream<List<int>> get stderr => _stderrStream;
 
   Future<int> _exitCode;
+
   Future<int> get exitCode => _exitCode;
 
-  Future _run(String executable, List<String> args,
+  Future<io.Process> _run(String executable, List<String> args,
       {String workingDirectory}) async {
     if (process != null) {
       return process;
@@ -227,6 +233,7 @@ class RunProcess {
 
     _stdoutStream = process.stdout.asBroadcastStream();
     _stderrStream = process.stderr.asBroadcastStream();
+    return null;
   }
 
   bool stop() {

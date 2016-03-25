@@ -15,14 +15,14 @@ class RowMoveManager extends Plugin {
 
   bool cancelEditOnDrag = false;
 
-  core.EventBus get eventBus => _eventBus;
-  core.EventBus _eventBus = new core.EventBus();
+  core.EventBus<core.EventData> get eventBus => _eventBus;
+  core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   dom.Element _canvas;
   int _canvasTop;
   bool _dragging = false;
-  final List<async.StreamSubscription> _subscriptions =
-      <async.StreamSubscription>[];
+  final List<async.StreamSubscription<core.EventData>> _subscriptions =
+      <async.StreamSubscription<core.EventData>>[];
 
   dom.Element _selectionProxy;
   dom.Element _dummyProxy;
@@ -47,7 +47,8 @@ class RowMoveManager extends Plugin {
   }
 
   void destroy() {
-    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
+    _subscriptions
+        .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
   }
 
   void _handleDragStart(core.DragStart e) {
@@ -80,7 +81,7 @@ class RowMoveManager extends Plugin {
     }
 
     final int rowHeight = grid.getGridOptions.rowHeight;
-    _canvasTop = (_canvas.getBoundingClientRect().top as num).round();
+    _canvasTop = _canvas.getBoundingClientRect().top.round();
 
     _selectedRows = selectedRows;
     e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
@@ -88,7 +89,7 @@ class RowMoveManager extends Plugin {
 
     // run DOM modification async because modifying the DOM in DragStart
     // causes the browser to fire DragEnd immediately
-    new async.Future.delayed(new Duration(milliseconds: 10), () {
+    new async.Future<Null>.delayed(new Duration(milliseconds: 10), () {
       _selectionProxy = new dom.DivElement()
         ..classes.add('bwu-datagrid-reorder-proxy')
         ..style.position = "absolute"
@@ -121,14 +122,15 @@ class RowMoveManager extends Plugin {
 
     final int insertBefore = math.max(
         0,
-        math.min /*<int>*/ (
+        math.min/*<int>*/(
             (top / grid.getGridOptions.rowHeight).round(), grid.getDataLength));
     if (insertBefore != _insertBefore) {
-      if ((eventBus.fire(
-              core.Events.BEFORE_MOVE_ROWS,
-              new core.BeforeMoveRows(this,
-                  rows: _selectedRows,
-                  insertBefore: insertBefore)) as core.EventData).retVal ==
+      if (eventBus
+              .fire(
+                  core.Events.beforeMoveRows,
+                  new core.BeforeMoveRows(this,
+                      rows: _selectedRows, insertBefore: insertBefore))
+              .retVal ==
           false) {
         _guide.style.top = '-1000px';
         _canMove = false;
@@ -152,7 +154,7 @@ class RowMoveManager extends Plugin {
     if (_canMove) {
       // TODO:  _grid.remapCellCssClasses ?
       eventBus.fire(
-          core.Events.MOVE_ROWS,
+          core.Events.moveRows,
           new core.MoveRows(this,
               rows: _selectedRows, insertBefore: _insertBefore));
     }
@@ -173,9 +175,9 @@ class RowMoveManager extends Plugin {
   }
 
   async.Stream<core.BeforeMoveRows> get onBwuBeforeMoveRows =>
-      _eventBus.onEvent(core.Events.BEFORE_MOVE_ROWS)
+      _eventBus.onEvent(core.Events.beforeMoveRows)
       as async.Stream<core.BeforeMoveRows>;
 
   async.Stream<core.MoveRows> get onBwuMoveRows =>
-      _eventBus.onEvent(core.Events.MOVE_ROWS) as async.Stream<core.MoveRows>;
+      _eventBus.onEvent(core.Events.moveRows) as async.Stream<core.MoveRows>;
 }

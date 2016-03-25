@@ -22,8 +22,10 @@ class CellSelectionModel extends SelectionModel {
 //  dom.Element _canvas; // TODO(zoechi) why is it unused?
   List<core.Range> _ranges = <core.Range>[];
   final CellRangeSelector _selector = new CellRangeSelector(
-      new CellRangeDecoratorOptions(
-          selectionCss: <String,String>{'border': '2px solid black', 'z-index': '9999'}));
+      new CellRangeDecoratorOptions(selectionCss: <String, String>{
+    'border': '2px solid black',
+    'z-index': '9999'
+  }));
   CellSelectionModelOptions _options;
 //  var _defaults = {'selectActiveCell': true}; // TODO(zoechi) why is it unused?
 
@@ -38,7 +40,8 @@ class CellSelectionModel extends SelectionModel {
 //  async.StreamSubscription _cellRangeSelectedSubscription; // TODO(zoechi) why is it unused?
 //  async.StreamSubscription _beforeCellRangeSelectedSubscription; // TODO(zoechi) why is it unused?
 
-  List<async.StreamSubscription> _subscriptions = <async.StreamSubscription>[];
+  List<async.StreamSubscription<core.EventData>> _subscriptions =
+      <async.StreamSubscription<core.EventData>>[];
 
   void init(BwuDatagrid grid) {
     // TODO _options = $.extend(true, {}, _defaults, options);
@@ -55,7 +58,8 @@ class CellSelectionModel extends SelectionModel {
   }
 
   void destroy() {
-    _subscriptions.forEach((async.StreamSubscription e) => e.cancel());
+    _subscriptions
+        .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
     _grid.unregisterPlugin(_selector);
   }
 
@@ -75,7 +79,7 @@ class CellSelectionModel extends SelectionModel {
 
   void setSelectedRanges(List<core.Range> ranges) {
     _ranges = removeInvalidRanges(ranges);
-    _grid.eventBus.fire(core.Events.SELECTED_RANGES_CHANGED,
+    _grid.eventBus.fire(core.Events.selectedRangesChanged,
         new core.SelectedRangesChanged(this, _ranges));
 //    _self.onSelectedRangesChanged.notify(_ranges);
   }
@@ -117,15 +121,15 @@ class CellSelectionModel extends SelectionModel {
             e.causedBy.which == dom.KeyCode.UP ||
             e.causedBy.which == dom.KeyCode.DOWN)) {
       ranges = getSelectedRanges();
-      if (ranges.length == 0) ranges
-          .add(new core.Range(active.row, active.cell));
+      if (ranges.length == 0)
+        ranges.add(new core.Range(active.row, active.cell));
 
       // keyboard can work with last range only
       last = ranges.removeLast();
 
       // can't handle selection out of active cell
-      if (!last.contains(active.row, active.cell)) last =
-          new core.Range(active.row, active.cell);
+      if (!last.contains(active.row, active.cell))
+        last = new core.Range(active.row, active.cell);
 
       int dRow = last.toRow - last.fromRow;
       int dCell = last.toCell - last.fromCell;

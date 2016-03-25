@@ -65,7 +65,7 @@ class Sortable {
     // every mouse-up stops a drag operation
     dom.document.onMouseUp.listen((dom.MouseEvent e) {
       if (_isDragActive) {
-        if (e.which != 1) {
+        if (e.button != 0) {
           cancel();
         } else {
           _dragEnd(e);
@@ -134,7 +134,7 @@ class Sortable {
     _mouseDownSubscr.clear();
     _items.forEach((dom.Element e) {
       _mouseDownSubscr.add(e.onMouseDown.listen((dom.MouseEvent e) {
-        if (e.which == 1) {
+        if (e.button == 0) {
           _draggedElement = e.target as dom.Element;
           if (_draggedElement.attributes.containsKey('draggable')) {
             return;
@@ -265,20 +265,20 @@ class Sortable {
         _draggedElementStartPos.y + e.client.y - _dragStartPos.y);
     if (axis == null || axis.isEmpty || axis == 'x') {
       if (_newPos.x < _minLeft) {
-        _newPos = new math.Point(_minLeft, _newPos.y);
+        _newPos = new math.Point<int>(_minLeft, _newPos.y);
       }
       if (_newPos.x + _placeholder.offsetWidth > _maxLeft) {
-        _newPos = new math.Point(
+        _newPos = new math.Point<int>(
             (_maxLeft - _placeholder.offsetWidth).round(), _newPos.y);
       }
       _draggedHelper.style.left = '${_newPos.x}px';
     }
     if (axis == null || axis.isEmpty || axis == 'y') {
       if (_newPos.y < _minTop) {
-        _newPos = new math.Point(_newPos.x, _minTop);
+        _newPos = new math.Point<int>(_newPos.x, _minTop);
       }
       if (_newPos.y + _placeholder.offsetHeight > _maxTop) {
-        _newPos = new math.Point(
+        _newPos = new math.Point<int>(
             _newPos.x, (_maxTop - _placeholder.offsetHeight).round());
       }
       _draggedHelper.style.top = '${_newPos.y}px';

@@ -72,7 +72,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys('${titleNewValue}${Keyboard.enter}');
           expect(await titleCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await titleCell.text, titleNewValue);
         });
 
@@ -81,7 +81,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await titleCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await titleCell.text, titleNewValue);
         });
 
@@ -89,7 +89,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys('${titleNewValue}${Keyboard.escape}');
           expect(await titleCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await titleCell.text, titleOldValue);
         });
       } /*, skip: 'temporary'*/);
@@ -134,7 +134,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
             expect(await driver.elementExists(editorSelector), isFalse);
           }
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await descriptionCell.text,
               descriptionNewValue.replaceAll('\n', ' '));
         });
@@ -148,7 +148,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
             expect(await driver.elementExists(editorSelector), isFalse);
           }
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await descriptionCell.text,
               descriptionNewValue.replaceAll('\n', ' '));
         });
@@ -157,7 +157,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys('${descriptionNewValue}${Keyboard.escape}');
           expect(await driver.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await descriptionCell.text, descriptionOldValueOneLine);
         });
 
@@ -167,7 +167,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           cancelButton.click();
           expect(await driver.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await descriptionCell.text, descriptionOldValueOneLine);
         });
       } /*, skip: 'temporary'*/);
@@ -200,7 +200,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys('${durationNewValue}${Keyboard.enter}');
           expect(await durationCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await durationCell.text, durationNewValue);
         });
 
@@ -209,7 +209,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await durationCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await durationCell.text, durationNewValue);
         });
 
@@ -217,7 +217,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys('${durationNewValue}${Keyboard.escape}');
           expect(await durationCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await durationCell.text, durationOldValue);
         });
       } /*, skip: 'temporary'*/);
@@ -263,7 +263,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           final WebElement editorPicker =
               await percentCompleteCell.findElement(editorPickerSelector);
           await driver.mouse.moveTo(element: editorPicker);
-          await new Future.delayed(const Duration(milliseconds: 100));
+          await new Future<Null>.delayed(const Duration(milliseconds: 100));
           final WebElement editorCompleteButton = await percentCompleteCell
               .findElement(editorCompleteButtonSelector);
           await editorCompleteButton.click();
@@ -281,7 +281,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           expect(
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           final WebElement bar =
               await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'],
@@ -295,7 +295,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           expect(
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           final WebElement bar =
               await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'],
@@ -308,7 +308,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           expect(
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           final WebElement bar =
               await percentCompleteCell.findElement(percentBarSelector);
           expect(await bar.attributes['style'],
@@ -349,7 +349,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           }
           expect(await startCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await startCell.text, startNewValue);
         });
 
@@ -363,7 +363,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await startCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await startCell.text, startNewValue);
         });
 
@@ -376,7 +376,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           }
           expect(await startCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await startCell.text, startOldValue);
         });
       } /*, skip: 'temporary'*/);
@@ -414,7 +414,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           }
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await finishCell.text, finishNewValue);
         });
 
@@ -428,7 +428,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await finishCell.text, finishNewValue);
         });
 
@@ -441,7 +441,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           }
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(await finishCell.text, finishOldValue);
         });
       } /*, skip: 'temporary'*/);
@@ -481,7 +481,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(
               await effortDrivenCell
                   .elementExists(effortDrivenCheckedImageSelector),
@@ -492,7 +492,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(
               await effortDrivenCell
                   .elementExists(effortDrivenCheckedImageSelector),
@@ -503,7 +503,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys(Keyboard.escape);
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(effortDrivenCell.findElement(effortDrivenCheckedImageSelector),
               isNotNull);
         });
@@ -546,7 +546,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(effortDrivenCell.findElement(effortDrivenCheckedImageSelector),
               isNotNull);
         });
@@ -555,7 +555,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           (await driver.findElement(descriptionCellActiveRowSelector)).click();
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(effortDrivenCell.findElement(effortDrivenCheckedImageSelector),
               isNotNull);
         });
@@ -564,7 +564,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
           await editor.sendKeys(Keyboard.escape);
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
-          await new Future.delayed(const Duration(milliseconds: 10));
+          await new Future<Null>.delayed(const Duration(milliseconds: 10));
           expect(
               await effortDrivenCell
                   .elementExists(effortDrivenCheckedImageSelector),
@@ -579,6 +579,7 @@ const By buttonsSelector = const By.cssSelector('body > div > div > button');
 
 Future<WebElement> findSaveButton(wd.WebDriver driver) =>
     findButton(driver, 'Save');
+
 Future<WebElement> findCancelButton(wd.WebDriver driver) =>
     findButton(driver, 'Cancel');
 
@@ -586,8 +587,9 @@ Future<WebElement> findCancelButton(wd.WebDriver driver) =>
 Future<WebElement> findButton(ExtendedWebDriver driver, String text) async {
   return driver
       .findElements(buttonsSelector)
-      .asyncMap((wd.WebElement e) async => <String,dynamic>{'button': e, 'text': await e.text})
-      .where((Map m) => m['text'] == text)
-      .map/*<String>*/((Map m) => m['button'] as String)
+      .asyncMap((wd.WebElement e) async =>
+          <String, dynamic>{'button': e, 'text': await e.text})
+      .where((Map<dynamic, dynamic> m) => m['text'] == text)
+      .map/*<String>*/((Map<dynamic, dynamic> m) => m['button'] as String)
       .first as WebElement;
 }

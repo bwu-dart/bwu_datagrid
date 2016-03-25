@@ -17,18 +17,18 @@ abstract class Editor {
   NodeBox gridPosition;
   dom.Element container;
   Column column;
-  DataItem item;
+  DataItem<dynamic, dynamic> item;
   Function commitChanges;
   Function cancelChanges;
 
   void destroy();
-  void loadValue(DataItem item);
+  void loadValue(DataItem<dynamic, dynamic> item);
 
   /// Normally returns [String] but for example for
   /// compound editors it may return [Map]
   dynamic serializeValue();
   bool get isValueChanged;
-  void applyValue(DataItem item, dynamic value);
+  void applyValue(DataItem<dynamic, dynamic> item, dynamic value);
   void focus();
   void show() {}
   void hide() {}
@@ -67,7 +67,7 @@ class EditorArgs {
   NodeBox position;
   dom.Element container;
   Column column;
-  DataItem item;
+  DataItem<dynamic, dynamic> item;
 
   CommitChangesFn commitChanges;
   CancelChangesFn cancelChanges;
@@ -138,7 +138,7 @@ class TextEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     defaultValue =
         item[args.column.field] != null ? item[args.column.field] : "";
     input.value = defaultValue;
@@ -150,7 +150,7 @@ class TextEditor extends Editor {
   String serializeValue() => input.value;
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem<dynamic, dynamic> item, String state) {
     item[args.column.field] = state;
   }
 
@@ -211,7 +211,7 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     defaultValue = item[args.column.field].toString();
     input.value = defaultValue;
     input.defaultValue = defaultValue;
@@ -224,7 +224,7 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(DataItem<dynamic, dynamic> item, dynamic state) {
     int val;
     if (state is int) {
       val = state;
@@ -324,7 +324,7 @@ class DateEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     defaultValue = item[args.column.field] != null
         ? item[args.column.field].toString()
         : '';
@@ -339,7 +339,7 @@ class DateEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem<dynamic, dynamic> item, String state) {
     item[args.column.field] = state;
   }
 
@@ -391,7 +391,7 @@ class YesNoSelectEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     defaultValue = item[args.column.field];
     select.value = defaultValue != null ? "yes" : "no";
     //$select.select();
@@ -403,7 +403,7 @@ class YesNoSelectEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, int state) {
+  void applyValue(DataItem<dynamic, dynamic> item, int state) {
     item[args.column.field] = state;
   }
 
@@ -449,7 +449,7 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     final Object val = item[args.column.field];
     defaultValue = (val is bool && val) ||
         (val is String &&
@@ -468,7 +468,7 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem<dynamic, dynamic> item, String state) {
     item[args.column.field] = state.toLowerCase() == 'true' ? true : false;
   }
 
@@ -578,7 +578,7 @@ class PercentCompleteEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     Object val = item[args.column.field];
     if (val == null) {
       val = 0;
@@ -607,7 +607,7 @@ class PercentCompleteEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem<dynamic, dynamic> item, String state) {
     item[args.column.field] = utils.parseInt(state);
   }
 
@@ -736,7 +736,7 @@ class LongTextEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(DataItem<dynamic, dynamic> item) {
     input.value = (defaultValue = item[args.column.field]);
     input.select();
   }
@@ -747,7 +747,7 @@ class LongTextEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem<dynamic, dynamic> item, String state) {
     item[args.column.field] = state;
   }
 

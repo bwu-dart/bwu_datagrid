@@ -27,12 +27,15 @@ part 'helpers.dart';
 //  });
 
 typedef bool FilterFn(dynamic a, dynamic b);
-typedef List<core.ItemBase> _UncompiledFilterFn(
-    List<core.ItemBase> items, Map args);
-typedef List<core.ItemBase> _UncompiledFilterWithCacheFn(
-    List<core.ItemBase> items, Map args, Map<int, bool> cache);
+typedef List<core.ItemBase<dynamic, dynamic>> _UncompiledFilterFn(
+    List<core.ItemBase<dynamic, dynamic>> items, Map<dynamic, dynamic> args);
+typedef List<core.ItemBase<dynamic, dynamic>> _UncompiledFilterWithCacheFn(
+    List<core.ItemBase<dynamic, dynamic>> items,
+    Map<dynamic, dynamic> args,
+    Map<int, bool> cache);
 
-class DataView<T extends core.ItemBase> extends DataProvider<T> {
+class DataView<T extends core.ItemBase<dynamic, dynamic>>
+    extends DataProvider<T> {
   /// A sample Model implementation.
   /// Provides a filtered view of the underlying data.
   ///
@@ -64,7 +67,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   Map<String, dynamic> refreshHints = <String,
       dynamic>{}; // TODO make class, if this String stores ids it should be dynamic
   Map<String, dynamic> prevRefreshHints = <String, dynamic>{};
-  Map filterArgs;
+  Map<dynamic, dynamic> filterArgs;
   List<T> filteredItems = <T>[];
   FilterFn compiledFilter;
   FilterFn compiledFilterWithCaching;
@@ -79,23 +82,23 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   int pagenum = 0;
   int totalRows = 0;
 
-  core.EventBus get eventBus => _eventBus;
-  core.EventBus _eventBus = new core.EventBus();
+  core.EventBus<core.EventData> get eventBus => _eventBus;
+  core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   async.Stream<core.PagingInfoChanged> get onBwuPagingInfoChanged =>
-      _eventBus.onEvent(core.Events.PAGING_INFO_CHANGED)
+      _eventBus.onEvent(core.Events.pagingInfoChanged)
       as async.Stream<core.PagingInfoChanged>;
 
   async.Stream<core.RowCountChanged> get onBwuRowCountChanged =>
-      _eventBus.onEvent(core.Events.ROW_COUNT_CHANGED)
+      _eventBus.onEvent(core.Events.rowCountChanged)
       as async.Stream<core.RowCountChanged>;
 
   async.Stream<core.RowsChanged> get onBwuRowsChanged =>
-      _eventBus.onEvent(core.Events.ROWS_CHANGED)
+      _eventBus.onEvent(core.Events.rowsChanged)
       as async.Stream<core.RowsChanged>;
 
   async.Stream<core.SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
-      _eventBus.onEvent(core.Events.SELECTED_ROW_IDS_CHANGED)
+      _eventBus.onEvent(core.Events.selectedRowIdsChanged)
       as async.Stream<core.SelectedRowIdsChanged>;
 
   void beginUpdate() {
@@ -111,7 +114,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     refreshHints = hints;
   }
 
-  void setFilterArgs(Map args) {
+  void setFilterArgs(Map<dynamic, dynamic> args) {
     filterArgs = args;
   }
 
@@ -171,7 +174,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
           args.pageNum, math.max(0, (totalRows / pagesize).ceil() - 1));
     }
 
-    eventBus.fire(core.Events.PAGING_INFO_CHANGED,
+    eventBus.fire(core.Events.pagingInfoChanged,
         new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
     refresh();
   }
@@ -337,7 +340,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   }
 
   // the id needs to be a valid map key
-  List<int> mapIdsToRows(List idArray) {
+  List<int> mapIdsToRows(List<dynamic> idArray) {
     List<int> rows = [];
     ensureRowsByIdCache();
     for (int i = 0; i < idArray.length; i++) {
@@ -471,10 +474,10 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   }
 
   void expandCollapseGroup(int level, String groupingKey, bool collapse) {
-    toggledGroupsByLevel[level]
-        [groupingKey] = groupingInfos[level].isCollapsed != collapse
-        ? groupingInfos[level].isCollapsed
-        : null;
+    toggledGroupsByLevel[level][groupingKey] =
+        groupingInfos[level].isCollapsed != collapse
+            ? groupingInfos[level].isCollapsed
+            : null;
     refresh();
   }
 
@@ -511,13 +514,13 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   List<core.Group> get getGroups => groups;
 
-  List<core.Group> extractGroups(List<core.ItemBase> rows,
+  List<core.Group> extractGroups(List<core.ItemBase<dynamic, dynamic>> rows,
       [core.Group parentGroup]) {
     core.Group group;
     Object val;
     final List<core.Group> groups = <core.Group>[];
     Map<int, core.Group> groupsByVal = {};
-    core.ItemBase r;
+    core.ItemBase<dynamic, dynamic> r;
     int level = parentGroup != null ? parentGroup.level + 1 : 0;
     GroupingInfo gi = groupingInfos[level];
 
@@ -636,11 +639,13 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     }
   }
 
-  List<core.ItemBase> flattenGroupedRows(List<core.Group> groups, [int level]) {
+  List<core.ItemBase<dynamic, dynamic>> flattenGroupedRows(
+      List<core.Group> groups,
+      [int level]) {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
-    List<core.ItemBase> groupedRows = [];
-    List<core.ItemBase> rows;
+    List<core.ItemBase<dynamic, dynamic>> groupedRows = [];
+    List<core.ItemBase<dynamic, dynamic>> rows;
 //    int gl = 0; // TODO(zoechi) why is it unused?
     core.Group g;
     for (int i = 0; i < groups.length; i++) {
@@ -752,8 +757,9 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 //    return fn;
 //  }
 
-  List<core.ItemBase> uncompiledFilter(List<core.ItemBase> items, Map args) {
-    List<core.ItemBase> retval = [];
+  List<core.ItemBase<dynamic, dynamic>> uncompiledFilter(
+      List<core.ItemBase<dynamic, dynamic>> items, Map<dynamic, dynamic> args) {
+    List<core.ItemBase<dynamic, dynamic>> retval = [];
 //    int idx = 0; // TODO(zoechi) why is it unused?
 
     try {
@@ -770,11 +776,13 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     return retval;
   }
 
-  List<core.ItemBase> uncompiledFilterWithCaching(
-      List<core.ItemBase> items, Map args, Map<int, bool> cache) {
-    List<core.ItemBase> retval = [];
+  List<core.ItemBase<dynamic, dynamic>> uncompiledFilterWithCaching(
+      List<core.ItemBase<dynamic, dynamic>> items,
+      Map<dynamic, dynamic> args,
+      Map<int, bool> cache) {
+    List<core.ItemBase<dynamic, dynamic>> retval = [];
 //    int idx = 0; // TODO(zoechi) why is it unused?
-    core.ItemBase item;
+    core.ItemBase<dynamic, dynamic> item;
 
     for (int i = 0; i < items.length; i++) {
       item = items[i];
@@ -789,10 +797,13 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     return retval;
   }
 
-  Map getFilteredAndPagedItems(List<core.ItemBase> items) {
+  Map<dynamic, dynamic> getFilteredAndPagedItems(
+      List<core.ItemBase<dynamic, dynamic>> items) {
     if (filter != null) {
-      final _UncompiledFilterFn batchFilter = /*options.inlineFilters ? compiledFilter :*/ uncompiledFilter;
-      final _UncompiledFilterWithCacheFn batchFilterWithCaching = /*options.inlineFilters ? compiledFilterWithCaching :*/ uncompiledFilterWithCaching;
+      final _UncompiledFilterFn
+          batchFilter = /*options.inlineFilters ? compiledFilter :*/ uncompiledFilter;
+      final _UncompiledFilterWithCacheFn
+          batchFilterWithCaching = /*options.inlineFilters ? compiledFilterWithCaching :*/ uncompiledFilterWithCaching;
 
       if (refreshHints['isFilterNarrowing'] == true) {
         filteredItems = batchFilter(filteredItems, filterArgs);
@@ -810,7 +821,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     }
 
     // get the current page
-    List<core.ItemBase> paged;
+    List<core.ItemBase<dynamic, dynamic>> paged;
     if (pagesize != 0) {
       if (filteredItems.length < pagenum * pagesize) {
         pagenum = (filteredItems.length / pagesize).floor();
@@ -826,9 +837,10 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     return {'totalRows': filteredItems.length, 'rows': paged};
   }
 
-  List<int> getRowDiffs(List<core.ItemBase> rows, List<core.ItemBase> newRows) {
-    core.ItemBase item;
-    core.ItemBase r;
+  List<int> getRowDiffs(List<core.ItemBase<dynamic, dynamic>> rows,
+      List<core.ItemBase<dynamic, dynamic>> newRows) {
+    core.ItemBase<dynamic, dynamic> item;
+    core.ItemBase<dynamic, dynamic> r;
     bool eitherIsNonData;
     List<int> diff = [];
     int from = 0;
@@ -881,7 +893,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
       filterCache = {};
     }
 
-    Map filteredItems = getFilteredAndPagedItems(items);
+    Map<dynamic, dynamic> filteredItems = getFilteredAndPagedItems(items);
     totalRows = filteredItems['totalRows'];
     List<T> newRows = filteredItems['rows'] as List<T>;
 
@@ -925,19 +937,19 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     refreshHints = {};
 
     if (totalRowsBefore != totalRows) {
-      eventBus.fire(core.Events.PAGING_INFO_CHANGED,
+      eventBus.fire(core.Events.pagingInfoChanged,
           new core.PagingInfoChanged(this, pagingInfo: getPagingInfo()));
       //onPagingInfoChanged.notify(getPagingInfo(), null, self);
     }
     if (countBefore != rows.length) {
       eventBus.fire(
-          core.Events.ROW_COUNT_CHANGED,
+          core.Events.rowCountChanged,
           new core.RowCountChanged(this,
               oldCount: countBefore, newCount: rows.length));
       //onRowCountChanged.notify({previous: countBefore, current: rows.length}, null, self);
     }
     if (diff.length > 0) {
-      eventBus.fire(core.Events.ROWS_CHANGED,
+      eventBus.fire(core.Events.rowsChanged,
           new core.RowsChanged(this, changedRows: diff));
       //onRowsChanged.notify({rows: diff}, null, self);
     }
@@ -960,11 +972,12 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   ///     changes.  This is useful since, in combination with the above two options, it allows
   ///     access to the full list selected row ids, and not just the ones visible to the grid.
   /// @method syncGridSelection
-  async.Stream syncGridSelection(grid.BwuDatagrid grid, bool preserveHidden,
+  async.Stream<dynamic> syncGridSelection(
+      grid.BwuDatagrid grid, bool preserveHidden,
       {bool preserveHiddenOnSelectionChange: false}) {
     bool inHandler = false;
     // the id needs to be a valid map key
-    List selectedRowIds = mapRowsToIds(grid.getSelectedRows());
+    List<dynamic> selectedRowIds = mapRowsToIds(grid.getSelectedRows());
     //var onSelectedRowIdsChanged = new Event();
 
     void setSelectedRowIds(List<Object> rowIds) {
@@ -975,7 +988,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
       selectedRowIds = rowIds;
 
-      eventBus.fire(core.Events.SELECTED_ROW_IDS_CHANGED,
+      eventBus.fire(core.Events.selectedRowIdsChanged,
           new core.SelectedRowIdsChanged(this, grid, selectedRowIds));
     }
 

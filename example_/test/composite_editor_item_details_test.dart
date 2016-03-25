@@ -66,7 +66,7 @@ void tests(WebBrowser browser) {
       print(await titleCell.text);
       expect(await titleCell.text, titleOldValue);
       // make 3rd row active
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await new Future<Null>.delayed(const Duration(milliseconds: 10));
       await titleCell.click();
       expect(await titleCell.attributes['class'], contains('active'));
     });
@@ -94,8 +94,9 @@ void tests(WebBrowser browser) {
           await (await driver.findElement(durationCellActiveRowSelector)).text,
           durationNewValue);
       expect(
-          await (await driver.findElement(
-              percentCellActiveRowPercentBarSelector)).attributes['style'],
+          await (await driver
+                  .findElement(percentCellActiveRowPercentBarSelector))
+              .attributes['style'],
           contains('width: ${percentNewValue}%'));
 
       // TODO(zoechi) shouldn't be browser dependent. Needs a common
@@ -124,8 +125,9 @@ void tests(WebBrowser browser) {
     } /*, skip: 'temporary'*/);
 
     test('edit and cancel', () async {
-      final String percentOldValue = await (await driver.findElement(
-          percentCellActiveRowPercentBarSelector)).attributes['style'];
+      final String percentOldValue = await (await driver
+              .findElement(percentCellActiveRowPercentBarSelector))
+          .attributes['style'];
 
       await editRow(driver, browser);
 
@@ -145,8 +147,9 @@ void tests(WebBrowser browser) {
           await (await driver.findElement(durationCellActiveRowSelector)).text,
           durationOldValue);
       expect(
-          await (await driver.findElement(
-              percentCellActiveRowPercentBarSelector)).attributes['style'],
+          await (await driver
+                  .findElement(percentCellActiveRowPercentBarSelector))
+              .attributes['style'],
           percentOldValue);
 
       expect(await (await driver.findElement(startCellActiveRowSelector)).text,
@@ -167,8 +170,8 @@ void tests(WebBrowser browser) {
       expect(editButton, isNotNull);
       await editButton.click();
 
-      await driver.mouse.moveTo(
-          element: await driver.findElement(const By.shadow(
+      await driver.mouse.moveTo(element: await driver.findElement(
+          const By.shadow(
               'composite-editor-view::shadow .editor-percentcomplete-picker')));
 
       final WebElement dialogPercentField =
@@ -217,18 +220,20 @@ void tests(WebBrowser browser) {
       await saveButton.click();
 
       expect(
-          await (await driver.findElement(
-              percentCellActiveRowPercentBarSelector)).attributes['style'],
+          await (await driver
+                  .findElement(percentCellActiveRowPercentBarSelector))
+              .attributes['style'],
           contains('width: 100%'));
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
     },
         skip: browser ==
-            WebBrowser.firefox /*TODO(zoechi) try to make it work in Firefox (clicking in the slider doesn't work in FF)*/);
+            WebBrowser
+                .firefox /*TODO(zoechi) try to make it work in Firefox (clicking in the slider doesn't work in FF)*/);
   }, timeout: const Timeout(const Duration(seconds: 180)));
 }
 
-Future editRow(ExtendedWebDriver driver, WebBrowser browser) async {
+Future<Null> editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   WebElement editButton =
       await driver.findElement(openEditDialogButtonSelector);
   expect(editButton, isNotNull);

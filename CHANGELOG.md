@@ -1,9 +1,14 @@
+## 0.1.0-dev.1
+- upgrade dependency on reflectable to 0.5.2 (currently only 0.5.2 because there is an issue with 0.5.3)
+- fix strong mode hints and warnings.
+- added generic type annotations to a lot of celarations.
+
 ## 0.1.0-dev.0
 - Ported to Polymer 1.0.0-rc.6
 - Styling using Polymer 1.0 DOM modules
 - theming
 - a few smaller bugs fixed found while porting, and probably a few more introduced
-- added type annotations to satisfy strong-mode checks 
+- added type annotations to satisfy strong-mode checks
 
 ## 0.0.22
 - fix for breaking change in Dart 1.10.0 in `classes.add`

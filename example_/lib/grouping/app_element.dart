@@ -56,6 +56,7 @@ class SumTotalsFormatter extends core.GroupTotalsFormatter {
 
 class GroupTitleFormatter extends fm.GroupTitleFormatter {
   String name;
+
   GroupTitleFormatter([this.name = '']);
 
   @override
@@ -70,6 +71,7 @@ class GroupTitleFormatter extends fm.GroupTitleFormatter {
 
 class BooleanGroupTitleFormatter extends fm.GroupTitleFormatter {
   String name;
+
   BooleanGroupTitleFormatter([this.name = '']);
 
   @override
@@ -160,8 +162,8 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  List<MapDataItem> data;
-  DataView dataView;
+  List<MapDataItem<dynamic, dynamic>> data;
+  DataView<core.ItemBase<dynamic, dynamic>> dataView;
 
   String sortcol = "title";
   int sortdir = 1;
@@ -177,7 +179,7 @@ class AppElement extends PolymerElement {
 
       final GroupItemMetadataProvider groupItemMetadataProvider =
           new GroupItemMetadataProvider();
-      dataView = new DataView(
+      dataView = new DataView<core.ItemBase<dynamic, dynamic>>(
           options: new DataViewOptions(
               groupItemMetadataProvider: groupItemMetadataProvider,
               inlineFilters: true));
@@ -241,6 +243,7 @@ class AppElement extends PolymerElement {
   }
 
   async.Timer _pendingUpdateFilter;
+
   @reflectable
   void thresholdChanged([_, __]) {
     core.globalEditorLock.cancelCurrentEdit();
@@ -271,26 +274,28 @@ class AppElement extends PolymerElement {
     prevPercentCompleteThreshold = percentCompleteThreshold;
   }
 
-  bool myFilter(DataItem item, Map args) {
+  bool myFilter(
+      core.ItemBase<dynamic, dynamic> item, Map<dynamic, dynamic> args) {
     return item["percentComplete"] >= args['percentComplete'];
   }
 
-  int percentCompleteSort(Map a, Map b) {
+  int percentCompleteSort(Map<dynamic, dynamic> a, Map<dynamic, dynamic> b) {
     return a["percentComplete"] - b["percentComplete"];
   }
 
-  int comparer(DataItem a, DataItem b) {
+  int comparer(
+      core.ItemBase<dynamic, dynamic> a, core.ItemBase<dynamic, dynamic> b) {
     final int x = a[sortcol];
     final int y = b[sortcol];
     if (x == y) {
       return 0;
     }
 
-    if (x is Comparable) {
+    if (x is Comparable<core.ItemBase<dynamic, dynamic>>) {
       return x.compareTo(y);
     }
 
-    if (y is Comparable) {
+    if (y is Comparable<core.ItemBase<dynamic, dynamic>>) {
       return 1;
     }
 
@@ -336,7 +341,8 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
-          comparer: (core.ItemBase a, core.ItemBase b) =>
+          comparer: (core.ItemBase<dynamic, dynamic> a,
+                  core.ItemBase<dynamic, dynamic> b) =>
               (a as core.Group).count - (b as core.Group).count,
           aggregators: <Aggregator>[
             new AvgAggregator("percentComplete"),
@@ -414,9 +420,9 @@ class AppElement extends PolymerElement {
       "03/03/2009"
     ];
     //var timer = new Stopwatch()..start();
-    data = new List<MapDataItem>.generate(
+    data = new List<MapDataItem<dynamic, dynamic>>.generate(
         count,
-        (int i) => new MapDataItem({
+        (int i) => new MapDataItem<dynamic, dynamic>({
               "id": "id_${i}",
               "num": i,
               "title": "Task ${i}",

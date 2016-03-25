@@ -17,7 +17,7 @@ import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 class Formatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase dataContext) {
+      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     target.appendHtml(value);
   }
 }
@@ -67,10 +67,10 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      final MapDataItemProvider<DataItem> data =
-          new MapDataItemProvider<DataItem>();
+      final MapDataItemProvider<DataItem<dynamic, dynamic>> data =
+          new MapDataItemProvider<DataItem<dynamic, dynamic>>();
       for (int i = 0; i < 5; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem<dynamic, dynamic>({
           'title': "<a href='#' tabindex='0'>Task</a> ${i}",
           'duration': "5 days",
           'percentComplete':

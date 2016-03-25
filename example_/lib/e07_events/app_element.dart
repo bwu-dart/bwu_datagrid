@@ -51,10 +51,11 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      final MapDataItemProvider data = new MapDataItemProvider();
+      final MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data =
+          new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
       for (int i = 0; i < 500; i++) {
-        data.items
-            .add(new MapDataItem({'title': 'Task ${i}', 'priority': 'Medium'}));
+        data.items.add(new MapDataItem<dynamic, dynamic>(
+            {'title': 'Task ${i}', 'priority': 'Medium'}));
       }
 
       grid
@@ -95,8 +96,8 @@ class AppElement extends PolymerElement {
               'Medium': 'High',
               'High': 'Low'
             };
-            data.items[e.cell.row]
-                ['priority'] = states[data.items[e.cell.row]['priority']];
+            data.items[e.cell.row]['priority'] =
+                states[data.items[e.cell.row]['priority']];
             grid.updateRow(e.cell.row);
             e.stopPropagation();
           }

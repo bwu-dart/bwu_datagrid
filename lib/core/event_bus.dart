@@ -24,13 +24,9 @@ class EventBus<T extends EventData> {
       _logger.finest('onEvent: new EventType: ${eventType.name}');
     }
 
-    return streamControllers
-        .putIfAbsent(
-            eventType,
-            () {
-              return new async.StreamController.broadcast(sync: isSync);
-            })
-        .stream;
+    return streamControllers.putIfAbsent(eventType, () {
+      return new async.StreamController<T>.broadcast(sync: isSync);
+    }).stream;
   }
 
   /// [fire] broadcasts an event of a type [eventType] to all subscribers.
@@ -46,11 +42,10 @@ class EventBus<T extends EventData> {
       _logger.finest('fire: new EventType: ${eventType.name}');
     }
 
-    final async.StreamController<T> controller = streamControllers.putIfAbsent(
-        eventType,
-        () {
-          return new async.StreamController.broadcast(sync: isSync);
-        });
+    final async.StreamController<T> controller =
+        streamControllers.putIfAbsent(eventType, () {
+      return new async.StreamController<T>.broadcast(sync: isSync);
+    });
 
     controller.add(data);
     return data;

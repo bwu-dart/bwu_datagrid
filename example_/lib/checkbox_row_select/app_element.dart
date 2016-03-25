@@ -15,6 +15,7 @@ import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
+import 'package:bwu_datagrid/core/core.dart' as core;
 
 /// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
@@ -34,7 +35,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider data;
+  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
 
   @override
   void attached() {
@@ -55,9 +56,10 @@ class AppElement extends PolymerElement {
       }
 
       // prepare the data
-      data = new MapDataItemProvider();
+      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
       for (int i = 0; i < 100; i++) {
-        data.items.add(new MapDataItem({'id': i, '0': 'Row $i'}));
+        data.items
+            .add(new MapDataItem<String, dynamic>({'id': i, '0': 'Row $i'}));
       }
 
       grid

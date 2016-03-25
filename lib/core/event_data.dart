@@ -1,73 +1,140 @@
 part of bwu_datagrid.core;
 
 abstract class Events {
-  static const EventType<ActiveCellChanged> ACTIVE_CELL_CHANGED =
+  static const EventType<ActiveCellChanged> activeCellChanged =
       const EventType<ActiveCellChanged>('bwu-active-cell-changed');
+  @Deprecated('Use activeCellChanged')
+  static const EventType<ActiveCellChanged> ACTIVE_CELL_CHANGED =
+      activeCellChanged;
 
-  static const EventType<
-      ActiveCellPositionChanged> ACTIVE_CELL_POSITION_CHANGED = const EventType<
-      ActiveCellPositionChanged>('bwu-active-cell-position-changed');
+  static const EventType<ActiveCellPositionChanged> activeCellPositionChanged =
+      const EventType<ActiveCellPositionChanged>(
+          'bwu-active-cell-position-changed');
+  @Deprecated('Use activeCellPositionChanged')
+  static const EventType<ActiveCellPositionChanged>
+      ACTIVE_CELL_POSITION_CHANGED = activeCellPositionChanged;
 
-  static const EventType<AddNewRow> ADD_NEW_ROW =
+  static const EventType<AddNewRow> addNewRow =
       const EventType<AddNewRow>('bwu-add-new-row');
 
-  static const EventType<Attached> ATTACHED =
+  @Deprecated('Use addNewRow')
+  static const EventType<AddNewRow> ADD_NEW_ROW = addNewRow;
+
+  static const EventType<Attached> attached =
       const EventType<Attached>('bwu-attached');
 
-  static const EventType<BeforeCellEditorDestroy> BEFORE_CELL_EDITOR_DESTROY =
+  @Deprecated('Use attached')
+  static const EventType<Attached> ATTACHED = attached;
+
+  static const EventType<BeforeCellEditorDestroy> beforeCellEditorDestroy =
       const EventType<BeforeCellEditorDestroy>(
           'bwu-before-cell-editor-destroy');
 
-  static const EventType<BeforeCellRangeSelected> BEFORE_CELL_RANGE_SELECTED =
+  @Deprecated('Use beforeCellEditorDestroy')
+  static const EventType<BeforeCellEditorDestroy> BEFORE_CELL_EDITOR_DESTROY =
+      beforeCellEditorDestroy;
+
+  static const EventType<BeforeCellRangeSelected> beforeCellRangeSelected =
       const EventType<BeforeCellRangeSelected>(
           'bwu-before-cell-range-selected');
 
-  static const EventType<BeforeDestroy> BEFORE_DESTROY =
+  @Deprecated('Use beforeCellRangeSelected')
+  static const EventType<BeforeCellRangeSelected> BEFORE_CELL_RANGE_SELECTED =
+      beforeCellRangeSelected;
+
+  static const EventType<BeforeDestroy> beforeDestroy =
       const EventType<BeforeDestroy>('bwu-before-destroy');
 
-  static const EventType<BeforeEditCell> BEFORE_EDIT_CELL =
+  @Deprecated('Use beforeDestroy')
+  static const EventType<BeforeDestroy> BEFORE_DESTROY = beforeDestroy;
+
+  static const EventType<BeforeEditCell> beforeEditCell =
       const EventType<BeforeEditCell>('bwu-before-edit-cell');
 
-  static const EventType<BeforeHeaderCellDestroy> BEFORE_HEADER_CELL_DESTROY =
+  @Deprecated('Use beforeEditCell')
+  static const EventType<BeforeEditCell> BEFORE_EDIT_CELL = beforeEditCell;
+
+  static const EventType<BeforeHeaderCellDestroy> beforeHeaderCellDestroy =
       const EventType<BeforeHeaderCellDestroy>(
           'bwu-before-header-cell-destroy');
 
-  static const EventType<
-          BeforeHeaderRowCellDestroy> BEFORE_HEADER_ROW_CELL_DESTROY =
-      const EventType<BeforeHeaderRowCellDestroy>(
+  @Deprecated('Use beforeHeaderCellDestroy')
+  static const EventType<BeforeHeaderCellDestroy> BEFORE_HEADER_CELL_DESTROY =
+      beforeHeaderCellDestroy;
+
+  static const EventType<BeforeHeaderRowCellDestroy>
+      beforeHeaderRowCellDestroy = const EventType<BeforeHeaderRowCellDestroy>(
           'bwu-before-header-row-cell-destroy');
 
-  static const EventType<BeforeMoveRows> BEFORE_MOVE_ROWS =
+  @Deprecated('Use beforeHeaderRowCellDestroy')
+  static const EventType<BeforeHeaderRowCellDestroy>
+      BEFORE_HEADER_ROW_CELL_DESTROY = beforeHeaderRowCellDestroy;
+
+  static const EventType<BeforeMoveRows> beforeMoveRows =
       const EventType<BeforeMoveRows>('bwu-before-move-rows');
 
-  static const EventType<CellChange> CELL_CHANGE =
+  @Deprecated('Use beforeMoveRows')
+  static const EventType<BeforeMoveRows> BEFORE_MOVE_ROWS = beforeMoveRows;
+
+  static const EventType<CellChange> cellChange =
       const EventType<CellChange>('bwu-cell-changed');
 
-  static const EventType<CellRangeSelected> CELL_RANGE_SELECTED =
-      const EventType<CellRangeSelected>('bwu-cell-range-selected');
+  @Deprecated('Use cellChange')
+  static const EventType<CellChange> CELL_CHANGE = cellChange;
 
-  static const EventType<CellCssStylesChanged> CELL_CSS_STYLES_CHANGED =
+  static const EventType<CellRangeSelected> cellRangeSelected =
+      const EventType<CellRangeSelected>('bwu-cell-range-selected');
+  @Deprecated('Use cellRangeSelected')
+  static const EventType<CellRangeSelected> CELL_RANGE_SELECTED =
+      cellRangeSelected;
+
+  static const EventType<CellCssStylesChanged> cellCssStylesChanged =
       const EventType<CellCssStylesChanged>('bwu-cell-css-styles-changed');
 
-  static const EventType<Click> CLICK = const EventType<Click>('bwu-click');
+  @Deprecated('Use cellCssStylesChanged')
+  static const EventType<CellCssStylesChanged> CELL_CSS_STYLES_CHANGED =
+      cellCssStylesChanged;
 
-  static const EventType<ColumnsReordered> COLUMNS_REORDERED =
+  static const EventType<Click> click = const EventType<Click>('bwu-click');
+
+  @Deprecated('Use click')
+  static const EventType<Click> CLICK = click;
+
+  static const EventType<ColumnsReordered> columnsReordered =
       const EventType<ColumnsReordered>('bwu-columns-reordered');
 
-  static const EventType<ColumnsResized> COLUMNS_RESIZED =
+  @Deprecated('Use columnsReordered')
+  static const EventType<ColumnsReordered> COLUMNS_REORDERED = columnsReordered;
+
+  static const EventType<ColumnsResized> columnsResized =
       const EventType<ColumnsResized>('bwu-columns-resized');
 
-  static const EventType<ContextMenu> CONTEXT_MENU =
+  @Deprecated('Use columnsResized')
+  static const EventType<ColumnsResized> COLUMNS_RESIZED = columnsResized;
+
+  static const EventType<ContextMenu> contextMenu =
       const EventType<ContextMenu>('bwu-context-menu');
 
-  static const EventType<CopyCancelled> COPY_CANCELLED =
+  @Deprecated('Use contextMenu')
+  static const EventType<ContextMenu> CONTEXT_MENU = contextMenu;
+
+  static const EventType<CopyCancelled> copyCancelled =
       const EventType<CopyCancelled>('bwu-copy-cancelled');
 
-  static const EventType<CopyCells> COPY_CELLS =
+  @Deprecated('Use copyCancelled')
+  static const EventType<CopyCancelled> COPY_CANCELLED = copyCancelled;
+
+  static const EventType<CopyCells> copyCells =
       const EventType<CopyCells>('bwu-copy-cells');
 
-  static const EventType<DoubleClick> DOUBLE_CLICK =
+  @Deprecated('Use copyCells')
+  static const EventType<CopyCells> COPY_CELLS = copyCells;
+
+  static const EventType<DoubleClick> doubleClick =
       const EventType<DoubleClick>('bwu-double-click');
+
+  @Deprecated('Use doubleClick')
+  static const EventType<DoubleClick> DOUBLE_CLICK = doubleClick;
 
 //  static const EventType<CustomDrag> CUSTOM_DRAG = const EventType<CustomDrag>('bwu-custom-drag');
 //
@@ -75,88 +142,181 @@ abstract class Events {
 //
 //  static const  EventType<CustomDragStart> CUSTOM_DRAG_START = const EventType<CustomDragStart>('bwu-custom-drag-start');
 //
-  static const EventType<Drag> DRAG = const EventType<Drag>('bwu-drag');
+  static const EventType<Drag> drag = const EventType<Drag>('bwu-drag');
 
-  static const EventType<DragEnd> DRAG_END =
+  @Deprecated('Use drag')
+  static const EventType<Drag> DRAG = drag;
+
+  static const EventType<DragEnd> dragEnd =
       const EventType<DragEnd>('bwu-drag-end');
 
-  static const EventType<DragEnter> DRAG_ENTER =
+  @Deprecated('Use dragEnd')
+  static const EventType<DragEnd> DRAG_END = dragEnd;
+
+  static const EventType<DragEnter> dragEnter =
       const EventType<DragEnter>('bwu-drag-enter');
 
-  static const EventType<DragLeave> DRAG_LEAVE =
+  @Deprecated('Use dragEnter')
+  static const EventType<DragEnter> DRAG_ENTER = dragEnter;
+
+  static const EventType<DragLeave> dragLeave =
       const EventType<DragLeave>('bwu-drag-leave');
 
-  static const EventType<DragOver> DRAG_OVER =
+  @Deprecated('Use dragLeave')
+  static const EventType<DragLeave> DRAG_LEAVE = dragLeave;
+
+  static const EventType<DragOver> dragOver =
       const EventType<DragOver>('bwu-drag-over');
 
-  static const EventType<Drop> DROP = const EventType<Drop>('bwu-drop');
+  @Deprecated('Use dragOver')
+  static const EventType<DragOver> DRAG_OVER = dragOver;
+
+  static const EventType<Drop> drop = const EventType<Drop>('bwu-drop');
+
+  @Deprecated('Use drop')
+  static const EventType<Drop> DROP = drop;
 
   // TODO this is a jQuery specific event, there is no replacement for it
   //static const DRAG_INIT = const EventType<DragInit>('bwu-drag-init');
 
-  static const EventType<DragStart> DRAG_START =
+  static const EventType<DragStart> dragStart =
       const EventType<DragStart>('bwu-drag-start');
 
-  static const EventType<HeaderCellRendered> HEADER_CELL_RENDERED =
+  @Deprecated('Use dragStart')
+  static const EventType<DragStart> DRAG_START = dragStart;
+
+  static const EventType<HeaderCellRendered> headerCellRendered =
       const EventType<HeaderCellRendered>('bwu-header-cell-rendered');
 
-  static const EventType<HeaderClick> HEADER_CLICK =
+  @Deprecated('Use headerCellRenderer')
+  static const EventType<HeaderCellRendered> HEADER_CELL_RENDERED =
+      headerCellRendered;
+
+  static const EventType<HeaderClick> headerClick =
       const EventType<HeaderClick>('bwu-header-click');
 
-  static const EventType<HeaderContextMenu> HEADER_CONTEX_MENU =
+  @Deprecated('Use headerClick')
+  static const EventType<HeaderClick> HEADER_CLICK = headerClick;
+
+  static const EventType<HeaderContextMenu> headerContextMenu =
       const EventType<HeaderContextMenu>('bwu-header-context-menu');
 
-  static const EventType<HeaderMouseEnter> HEADER_MOUSE_ENTER =
+  @Deprecated('Use headerContextMenu')
+  static const EventType<HeaderContextMenu> HEADER_CONTEX_MENU =
+      headerContextMenu;
+
+  static const EventType<HeaderMouseEnter> headerMouseEnter =
       const EventType<HeaderMouseEnter>('bwu-header-mouse-enter');
 
-  static const EventType<HeaderMouseLeave> HEADER_MOUSE_LEAVE =
+  @Deprecated('Use headerMouseEnter')
+  static const EventType<HeaderMouseEnter> HEADER_MOUSE_ENTER =
+      headerMouseEnter;
+
+  static const EventType<HeaderMouseLeave> headerMouseLeave =
       const EventType<HeaderMouseLeave>('bwu-header-mouse-leave');
 
-  static const EventType<HeaderRowCellRendered> HEADER_ROW_CELL_RENDERED =
+  @Deprecated('Use headerMouseLeave')
+  static const EventType<HeaderMouseLeave> HEADER_MOUSE_LEAVE =
+      headerMouseLeave;
+
+  static const EventType<HeaderRowCellRendered> headerRowCellRendered =
       const EventType<HeaderRowCellRendered>('bwu-header-row-cell-rendered');
 
-  static const EventType<KeyDown> KEY_DOWN =
+  @Deprecated('Use headerRowCellRenderer')
+  static const EventType<HeaderRowCellRendered> HEADER_ROW_CELL_RENDERED =
+      headerRowCellRendered;
+
+  static const EventType<KeyDown> keyDown =
       const EventType<KeyDown>('bwu-key-down');
 
-  static const EventType<MouseEnter> MOUSE_ENTER =
+  @Deprecated('Use keyDown')
+  static const EventType<KeyDown> KEY_DOWN = keyDown;
+
+  static const EventType<MouseEnter> mouseEnter =
       const EventType<MouseEnter>('bwu-mouse-enter');
 
-  static const EventType<MouseLeave> MOUSE_LEAVE =
+  @Deprecated('Use mouseEnter')
+  static const EventType<MouseEnter> MOUSE_ENTER = mouseEnter;
+
+  static const EventType<MouseLeave> mouseLeave =
       const EventType<MouseLeave>('bwu-mouse-leave');
 
-  static const EventType<MoveRows> MOVE_ROWS =
+  @Deprecated('Use mouseLeave')
+  static const EventType<MouseLeave> MOUSE_LEAVE = mouseLeave;
+
+  static const EventType<MoveRows> moveRows =
       const EventType<MoveRows>('bwu-move-rows');
 
-  static const EventType<PagingInfoChanged> PAGING_INFO_CHANGED =
+  @Deprecated('Use moveRows')
+  static const EventType<MoveRows> MOVE_ROWS = moveRows;
+
+  static const EventType<PagingInfoChanged> pagingInfoChanged =
       const EventType<PagingInfoChanged>('bwu-paging-info-changed');
 
-  static const EventType<PasteCells> PASTE_CELLS =
+  @Deprecated('Use pagingInfoChanged')
+  static const EventType<PagingInfoChanged> PAGING_INFO_CHANGED =
+      pagingInfoChanged;
+
+  static const EventType<PasteCells> pasteCells =
       const EventType<PasteCells>('bwu-paste-cells');
 
-  static const EventType<RowsChanged> ROWS_CHANGED =
+  @Deprecated('Use pasteCells')
+  static const EventType<PasteCells> PASTE_CELLS = pasteCells;
+
+  static const EventType<RowsChanged> rowsChanged =
       const EventType<RowsChanged>('bwu-rows-changed');
 
-  static const EventType<RowCountChanged> ROW_COUNT_CHANGED =
+  @Deprecated('Use rowsChanged')
+  static const EventType<RowsChanged> ROWS_CHANGED = rowsChanged;
+
+  static const EventType<RowCountChanged> rowCountChanged =
       const EventType<RowCountChanged>('bwu-row-count-changed');
 
-  static const EventType<Scroll> SCROLL = const EventType<Scroll>('bwu-scroll');
+  @Deprecated('Use rowCountChanged')
+  static const EventType<RowCountChanged> ROW_COUNT_CHANGED = rowCountChanged;
 
-  static const EventType<SelectedRangesChanged> SELECTED_RANGES_CHANGED =
+  static const EventType<Scroll> scroll = const EventType<Scroll>('bwu-scroll');
+
+  @Deprecated('Use scroll')
+  static const EventType<Scroll> SCROLL = scroll;
+
+  static const EventType<SelectedRangesChanged> selectedRangesChanged =
       const EventType<SelectedRangesChanged>('bwu-selected-ranges-changed');
 
-  static const EventType<SelectedRowIdsChanged> SELECTED_ROW_IDS_CHANGED =
+  @Deprecated('Use selectedRangesChanged')
+  static const EventType<SelectedRangesChanged> SELECTED_RANGES_CHANGED =
+      selectedRangesChanged;
+
+  static const EventType<SelectedRowIdsChanged> selectedRowIdsChanged =
       const EventType<SelectedRowIdsChanged>('selected-row-ids-changed');
 
-  static const EventType<SelectedRowsChanged> SELECTED_ROWS_CHANGED =
+  @Deprecated('Use selectedRowIdsChanged')
+  static const EventType<SelectedRowIdsChanged> SELECTED_ROW_IDS_CHANGED =
+      selectedRowIdsChanged;
+
+  static const EventType<SelectedRowsChanged> selectedRowsChanged =
       const EventType<SelectedRowsChanged>('bwu-selected-rows-changed');
 
-  static const EventType<Sort> SORT = const EventType<Sort>('bwu-sort');
+  @Deprecated('Use selectedRowsChanged')
+  static const EventType<SelectedRowsChanged> SELECTED_ROWS_CHANGED =
+      selectedRowsChanged;
 
-  static const EventType<ValidationError> VALIDATION_ERROR =
+  static const EventType<Sort> sort = const EventType<Sort>('bwu-sort');
+
+  @Deprecated('Use sort')
+  static const EventType<Sort> SORT = sort;
+
+  static const EventType<ValidationError> validationError =
       const EventType<ValidationError>('bwu-validation-error');
 
-  static const EventType<ViewportChanged> VIEWPORT_CHANGED =
+  @Deprecated('Use validationError')
+  static const EventType<ValidationError> VALIDATION_ERROR = validationError;
+
+  static const EventType<ViewportChanged> viewportChanged =
       const EventType<ViewportChanged>('bwu-viewport-changed');
+
+  @Deprecated('Use viewportChanged')
+  static const EventType<ViewportChanged> VIEWPORT_CHANGED = viewportChanged;
 }
 
 /// An event object for passing data to event handlers and letting them control propagation.
@@ -166,8 +326,9 @@ abstract class Events {
 class EventData {
   final Object sender;
   final dom.Event _causedBy;
+
   dom.Event get causedBy => _causedBy;
-  Map detail = {};
+  Map<String, dynamic> detail = {};
   bool retVal = true;
 
   bool _isPropagationStopped = false;
@@ -231,7 +392,7 @@ class ActiveCellPositionChanged extends EventData {
 }
 
 class AddNewRow extends EventData {
-  final DataItem item;
+  final DataItem<dynamic, dynamic> item;
   final Column column;
 
   AddNewRow(Object sender, this.item, this.column) : super(sender: sender);
@@ -255,7 +416,7 @@ class BeforeDestroy extends EventData {
 
 class BeforeEditCell extends EventData {
   final Cell cell;
-  final DataItem item;
+  final DataItem<dynamic, dynamic> item;
   final Column column;
 
   BeforeEditCell(Object sender, {this.cell, this.item, this.column})
@@ -264,7 +425,7 @@ class BeforeEditCell extends EventData {
 
 class CellChange extends EventData {
   final Cell cell;
-  final DataItem item;
+  final DataItem<dynamic, dynamic> item;
 
   CellChange(Object sender, this.cell, this.item) : super(sender: sender);
 }
@@ -310,6 +471,7 @@ class CellRangeSelected extends EventData {
 
 class Click extends EventData {
   final Cell cell;
+
   @override
   dom.MouseEvent get causedBy => super.causedBy;
 
@@ -327,6 +489,7 @@ class ColumnsReordered extends EventData {
 
 class ContextMenu extends EventData {
   final Cell cell;
+
   @override
   dom.MouseEvent get causedBy => super.causedBy;
 
@@ -348,6 +511,7 @@ class CopyCells extends EventData {
 
 class DoubleClick extends EventData {
   final Cell cell;
+
   @override
   dom.MouseEvent get causedBy => super.causedBy;
 
@@ -521,6 +685,7 @@ class HeaderCellRendered extends EventData {
 
 class HeaderClick extends EventData {
   final Column column;
+
   @override
   dom.MouseEvent get causedBy => super.causedBy;
 
@@ -530,6 +695,7 @@ class HeaderClick extends EventData {
 
 class HeaderContextMenu extends EventData {
   final Column column;
+
   @override
   dom.MouseEvent get causedBy => super.causedBy;
 
@@ -539,6 +705,7 @@ class HeaderContextMenu extends EventData {
 
 class HeaderMouseEnter extends EventData {
   final Column data;
+
   @override
   dom.MouseEvent get causedBy => super.causedBy;
 
@@ -548,6 +715,7 @@ class HeaderMouseEnter extends EventData {
 
 class HeaderMouseLeave extends EventData {
   final String data;
+
   @override
   dom.MouseEvent get causedBy => super.causedBy;
 
@@ -565,6 +733,7 @@ class HeaderRowCellRendered extends EventData {
 
 class KeyDown extends EventData {
   final Cell cell;
+
   @override
   dom.KeyboardEvent get causedBy => super.causedBy;
 
@@ -628,9 +797,11 @@ class SelectedRangesChanged extends EventData {
 }
 
 class SelectedRowIdsChanged extends EventData {
-  final BwuDatagrid grid; // TODO isn't this the sender (probably not when sent from DataView)
+  final BwuDatagrid grid;
+
+  // TODO isn't this the sender (probably not when sent from DataView)
   // the id needs to be a valid map key
-  final List ids;
+  final List<dynamic> ids;
 
   SelectedRowIdsChanged(Object sender, this.grid, this.ids)
       : super(sender: sender);
@@ -638,6 +809,7 @@ class SelectedRowIdsChanged extends EventData {
 
 class SelectedRowsChanged extends EventData {
   final List<int> rows;
+
   @override
   dom.CustomEvent get causedBy => super.causedBy;
 
@@ -659,6 +831,7 @@ class Sort extends EventData {
 class RowCountChanged extends EventData {
   final int oldCount;
   final int newCount;
+
   RowCountChanged(Object sender, {this.oldCount, this.newCount})
       : super(sender: sender);
 }

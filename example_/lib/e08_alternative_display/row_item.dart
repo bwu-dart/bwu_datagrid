@@ -12,12 +12,16 @@ class RowItem extends PolymerElement {
 
   RowItem.created() : super.created();
 
-  @property String name;
-  @property String titlex;
-  @property String email;
-  @property String phone;
+  @property
+  String name;
+  @property
+  String titlex;
+  @property
+  String email;
+  @property
+  String phone;
 
-  void set data(MapDataItem d) {
+  void set data(MapDataItem<dynamic, dynamic> d) {
     async(() {
       d.keys.forEach((String k) {
         set(k != 'title' ? k : 'titlex', d[k]);

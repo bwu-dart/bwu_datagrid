@@ -17,7 +17,8 @@ class CompositeEditorView extends PolymerElement {
   CompositeEditorView.created() : super.created();
 
   BwuDatagrid grid;
-  @property List<Column> columns;
+  @property
+  List<Column> columns;
   void setColumns(List<Column> value) {
     async(() => set('columns', value));
   }
