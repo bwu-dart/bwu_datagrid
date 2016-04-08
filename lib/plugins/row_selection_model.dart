@@ -34,6 +34,7 @@ class RowSelectionModel extends SelectionModel {
   List<async.StreamSubscription<core.EventData>> _subscriptions =
       <async.StreamSubscription<core.EventData>>[];
 
+  @override
   void init(BwuDatagrid grid) {
     // TODO(zoechi) _options = $.extend(true, {}, _defaults, options);
     _grid = grid;
@@ -43,6 +44,7 @@ class RowSelectionModel extends SelectionModel {
     _subscriptions.add(_grid.onBwuClick.listen(_handleClick));
   }
 
+  @override
   void destroy() {
     _subscriptions
         .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
@@ -98,6 +100,7 @@ class RowSelectionModel extends SelectionModel {
     setSelectedRanges(_rowsToRanges(rows));
   }
 
+  @override
   void setSelectedRanges(List<core.Range> ranges) {
     _ranges = ranges;
     _grid.eventBus.fire(core.Events.selectedRangesChanged,
@@ -105,6 +108,7 @@ class RowSelectionModel extends SelectionModel {
     // TODO(zoechi) _self.onSelectedRangesChanged.notify(_ranges);
   }
 
+  @override
   List<core.Range> getSelectedRanges() {
     return _ranges;
   }

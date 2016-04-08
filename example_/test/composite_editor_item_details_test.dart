@@ -45,6 +45,7 @@ const String startNewValue = '2015-07-11';
 const String finishOldValue = '2009-01-05';
 const String finishInsertValue = '12/11/2015';
 const String finishNewValue = '2015-12-11';
+// ignore: avoid_init_to_null
 const String effortDrivenOldValue = null;
 
 String pageUrl;

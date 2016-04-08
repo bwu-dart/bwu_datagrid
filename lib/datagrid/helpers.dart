@@ -13,8 +13,10 @@ import 'package:polymer/polymer.dart';
 
 abstract class DataProvider<T extends core.ItemBase<dynamic, dynamic>> {
   List<T> _items;
+  // ignore: unnecessary_getters_setters
   List<T> get items => _items;
-  void set items(List<T> items) {
+  // ignore: unnecessary_getters_setters
+  set items(List<T> items) {
     _items = items;
   }
 
@@ -119,6 +121,7 @@ abstract class DataItem<K, V> extends ItemBase<K, V> {
 }
 
 class MapDataItem<K, V> extends DelegatingMap<K, V> implements DataItem<K, V> {
+  @override
   bool collapsed = false;
 
   MapDataItem([Map<K, V> base]) : super(base != null ? base : <K, V>{});

@@ -11,15 +11,17 @@ import 'dart:math' as math;
 /// easily be extended to support any JSONP-compatible backend that accepts paging parameters.
 class RemoteModel {
   @Deprecated('See "pageSize"')
+  // ignore: non_constant_identifier_names
   int get PAGESIZE => pageSize;
   @Deprecated('See "pageSize"')
+  // ignore: non_constant_identifier_names
   set PAGESIZE(int value) {
     pageSize = value;
   }
 
   // private
   int pageSize = 50;
-  Map data = {'length': 0};
+  Map<String, int> data = {'length': 0};
   String searchstr = "";
   int sortcol = null;
   int sortdir = 1;

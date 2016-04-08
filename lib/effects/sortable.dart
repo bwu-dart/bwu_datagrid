@@ -39,8 +39,8 @@ class Sortable {
   math.Point<int> _draggedElementStartPos;
   int _draggedElementIndex;
 
-  async.StreamSubscription _mouseMoveSubscr;
-  List<async.StreamSubscription> _mouseDownSubscr = [];
+  async.StreamSubscription<dynamic> _mouseMoveSubscr;
+  List<async.StreamSubscription<dynamic>> _mouseDownSubscr = [];
 
   Sortable(
       {this.sortable,
@@ -334,7 +334,7 @@ class Sortable {
 
   void destroy() {
     _mouseDownSubscr
-        .forEach((async.StreamSubscription subscr) => subscr.cancel());
+        .forEach((async.StreamSubscription<dynamic> subscr) => subscr.cancel());
 //    _mObserver.disconnect();
 //    _mObserver = null;
     cancel();

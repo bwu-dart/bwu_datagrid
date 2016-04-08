@@ -17,7 +17,7 @@ class EventBus<T extends EventData> {
   EventBus({this.isSync: true});
 
   ///  [onEvent] allows to access an stream for the specified [eventType].
-  async.Stream<T> onEvent(EventType<T> eventType) {
+  async.Stream<U> onEvent/*<U extends T>*/(EventType<T> eventType) {
     _logger.finest('onEvent');
 
     if (!streamControllers.containsKey(eventType)) {
@@ -25,7 +25,7 @@ class EventBus<T extends EventData> {
     }
 
     return streamControllers.putIfAbsent(eventType, () {
-      return new async.StreamController<T>.broadcast(sync: isSync);
+      return new async.StreamController<U>.broadcast(sync: isSync);
     }).stream;
   }
 

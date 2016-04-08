@@ -97,6 +97,7 @@ class EditorArgs {
 class TextEditor extends Editor {
   EditorArgs args;
 
+  @override
   TextEditor newInstance(EditorArgs args) {
     return new TextEditor._(args);
   }
@@ -133,7 +134,7 @@ class TextEditor extends Editor {
   String get value => input.value;
 
 //  @override
-  void set value(Object val) {
+  set value(Object val) {
     input.value = '${val}';
   }
 
@@ -179,6 +180,7 @@ class IntegerEditor extends Editor {
   dom.InputElement input;
   Object defaultValue;
 
+  @override
   IntegerEditor newInstance(EditorArgs args) {
     return new IntegerEditor._(args);
   }
@@ -260,6 +262,7 @@ class DateEditor extends Editor {
   bool calendarOpen = false;
   EditorArgs args;
 
+  @override
   DateEditor newInstance(EditorArgs args) {
     return new DateEditor._(args);
   }
@@ -360,6 +363,7 @@ class YesNoSelectEditor extends Editor {
   String defaultValue;
   EditorArgs args;
 
+  @override
   YesNoSelectEditor newInstance(EditorArgs args) {
     return new YesNoSelectEditor._(args);
   }
@@ -423,6 +427,7 @@ class CheckboxEditor extends Editor {
   bool defaultValue;
   EditorArgs args;
 
+  @override
   CheckboxEditor newInstance(EditorArgs args) {
     return new CheckboxEditor._(args);
   }
@@ -490,6 +495,7 @@ class PercentCompleteEditor extends Editor {
   int defaultValue;
   EditorArgs args;
 
+  @override
   PercentCompleteEditor newInstance(EditorArgs args) {
     return new PercentCompleteEditor._(args);
   }
@@ -639,6 +645,7 @@ class LongTextEditor extends Editor {
   String defaultValue;
   EditorArgs args;
 
+  @override
   LongTextEditor newInstance(EditorArgs args) {
     return new LongTextEditor._(args);
   }

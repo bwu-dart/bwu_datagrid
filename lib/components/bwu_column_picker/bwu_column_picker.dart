@@ -51,21 +51,21 @@ class BwuColumnPicker extends PolymerElement {
   List<StreamSubscription<EventData>> _subscriptions =
       <StreamSubscription<EventData>>[];
 
-  void set columns(List<Column> columns) {
+  set columns(List<Column> columns) {
     if (_isInitialized) {
       throw '"columns" must not be updated after the control was added to the DOM.';
     }
     _columns = columns;
   }
 
-  void set options(ColumnPickerOptions options) {
+  set options(ColumnPickerOptions options) {
     if (_isInitialized) {
       throw '"options" must not be updated after the control was added to the DOM.';
     }
     _options = options;
   }
 
-  void set grid(BwuDatagrid grid) {
+  set grid(BwuDatagrid grid) {
     if (_isInitialized) {
       throw '"grid" must not be updated after the control was added to the DOM.';
     }
@@ -109,6 +109,7 @@ class BwuColumnPicker extends PolymerElement {
     _isInitialized = true;
   }
 
+  @override
   void detached() {
     super.detached();
 

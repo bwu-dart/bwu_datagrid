@@ -55,11 +55,11 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
   List<T> rows = <T>[]; // data by row
   Map<dynamic, int> idxById =
       <dynamic, int>{}; // indexes by id - the id needs to be a valid map key
-  Map<dynamic, int> rowsById =
-      null; // rows by id; lazy-calculated - the id needs to be a valid map key
-  FilterFn filter = null; // filter function
-  Map<dynamic, bool> updated =
-      null; // updated item ids - the id needs to be a valid map key
+  Map<dynamic, int>
+      rowsById; // rows by id; lazy-calculated - the id needs to be a valid map key
+  FilterFn filter; // filter function
+  Map<dynamic, bool>
+      updated; // updated item ids - the id needs to be a valid map key
   bool suspend = false; // suspends the recalculation
   bool sortAsc = true;
   String fastSortField;
@@ -86,20 +86,16 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
   core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   async.Stream<core.PagingInfoChanged> get onBwuPagingInfoChanged =>
-      _eventBus.onEvent(core.Events.pagingInfoChanged)
-      as async.Stream<core.PagingInfoChanged>;
+      _eventBus.onEvent(core.Events.pagingInfoChanged);
 
   async.Stream<core.RowCountChanged> get onBwuRowCountChanged =>
-      _eventBus.onEvent(core.Events.rowCountChanged)
-      as async.Stream<core.RowCountChanged>;
+      _eventBus.onEvent(core.Events.rowCountChanged);
 
   async.Stream<core.RowsChanged> get onBwuRowsChanged =>
-      _eventBus.onEvent(core.Events.rowsChanged)
-      as async.Stream<core.RowsChanged>;
+      _eventBus.onEvent(core.Events.rowsChanged);
 
   async.Stream<core.SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
-      _eventBus.onEvent(core.Events.selectedRowIdsChanged)
-      as async.Stream<core.SelectedRowIdsChanged>;
+      _eventBus.onEvent(core.Events.selectedRowIdsChanged);
 
   void beginUpdate() {
     suspend = true;
@@ -145,7 +141,7 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
   @override
 
   /// To specify an id column different from `id`, use `setItems` instead.
-  void set items(List<T> items) {
+  set items(List<T> items) {
     setItems(items);
   }
 
@@ -400,8 +396,10 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
     refresh();
   }
 
+  @override
   int get length => rows.length;
 
+  @override
   T getItem(int i) {
     final T item = rows[i];
 
@@ -428,6 +426,7 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
     return item;
   }
 
+  @override
   RowMetadata getItemMetadata(int i) {
     if (rows.length <= i) {
       return null;

@@ -43,6 +43,7 @@ class CellSelectionModel extends SelectionModel {
   List<async.StreamSubscription<core.EventData>> _subscriptions =
       <async.StreamSubscription<core.EventData>>[];
 
+  @override
   void init(BwuDatagrid grid) {
     // TODO _options = $.extend(true, {}, _defaults, options);
     _grid = grid;
@@ -57,6 +58,7 @@ class CellSelectionModel extends SelectionModel {
         .listen(handleBeforeCellRangeSelected));
   }
 
+  @override
   void destroy() {
     _subscriptions
         .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
@@ -77,6 +79,7 @@ class CellSelectionModel extends SelectionModel {
     return result;
   }
 
+  @override
   void setSelectedRanges(List<core.Range> ranges) {
     _ranges = removeInvalidRanges(ranges);
     _grid.eventBus.fire(core.Events.selectedRangesChanged,
@@ -84,6 +87,7 @@ class CellSelectionModel extends SelectionModel {
 //    _self.onSelectedRangesChanged.notify(_ranges);
   }
 
+  @override
   List<core.Range> getSelectedRanges() {
     return _ranges;
   }

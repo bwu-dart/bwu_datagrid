@@ -46,8 +46,8 @@ class CompositeEditor extends Editor {
   CompositeEditorOptions options;
   Map<String, dom.Element> containers;
 
-  CompositeEditor.prepare(this.columns, this.containers, this.options);
   CompositeEditor(this.args);
+  CompositeEditor.prepare(this.columns, this.containers, this.options);
 
   Editor firstInvalidEditor;
 
@@ -87,6 +87,7 @@ class CompositeEditor extends Editor {
     }
   }
 
+  @override
   void destroy() {
     int idx = editors.length;
     while (idx-- > 0) {
@@ -96,6 +97,7 @@ class CompositeEditor extends Editor {
     if (options.destroy != null) options.destroy();
   }
 
+  @override
   void focus() {
     // if validation has failed, set the focus to the first invalid editor
     if (firstInvalidEditor != null) {
@@ -105,6 +107,7 @@ class CompositeEditor extends Editor {
     }
   }
 
+  @override
   bool get isValueChanged {
     int idx = editors.length;
     while (idx-- > 0) {
@@ -115,6 +118,7 @@ class CompositeEditor extends Editor {
     return false;
   }
 
+  @override
   dynamic serializeValue() {
     final List<int> serializedValue = new List<int>(columns.length);
     int idx = editors.length;
@@ -124,6 +128,7 @@ class CompositeEditor extends Editor {
     return serializedValue;
   }
 
+  @override
   void applyValue(DataItem<dynamic, dynamic> item, List<Object> state) {
     int idx = editors.length;
     while (idx-- > 0) {
@@ -131,6 +136,7 @@ class CompositeEditor extends Editor {
     }
   }
 
+  @override
   void loadValue(DataItem<dynamic, dynamic> item) {
     int idx = editors.length;
     while (idx-- > 0) {
@@ -138,6 +144,7 @@ class CompositeEditor extends Editor {
     }
   }
 
+  @override
   ValidationResult validate() {
     ValidationResult validationResults;
     List<ValidationErrorSource> errors = [];
@@ -164,6 +171,7 @@ class CompositeEditor extends Editor {
     }
   }
 
+  @override
   void hide() {
     int idx = editors.length;
     while (idx-- > 0) {
@@ -172,6 +180,7 @@ class CompositeEditor extends Editor {
     if (options.hide != null) options.hide();
   }
 
+  @override
   void show() {
     int idx = editors.length;
     while (idx-- > 0) {
@@ -180,6 +189,7 @@ class CompositeEditor extends Editor {
     if (options.show != null) options.show();
   }
 
+  @override
   void position(NodeBox box) {
     if (options.position != null) options.position(box);
   }

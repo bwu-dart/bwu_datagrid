@@ -61,7 +61,7 @@ class BwuDatagrid extends PolymerElement {
   DataProvider<core.ItemBase<dynamic, dynamic>> get dataProvider =>
       _dataProvider;
 
-  void set data(DataProvider<core.ItemBase<dynamic, dynamic>> data) {
+  set data(DataProvider<core.ItemBase<dynamic, dynamic>> data) {
     setData(data, true);
   }
 
@@ -75,7 +75,7 @@ class BwuDatagrid extends PolymerElement {
   @property
   GridOptions get gridOptions => _gridOptions;
 
-  void set gridOptions(GridOptions options) {
+  set gridOptions(GridOptions options) {
     setGridOptions = options;
   }
 
@@ -118,7 +118,7 @@ class BwuDatagrid extends PolymerElement {
   // private
   bool _initialized = false;
 
-  // local D
+  // ignore: non_constant_identifier_names
   PolymerDom __container;
 
   PolymerDom get _container {
@@ -154,8 +154,8 @@ class BwuDatagrid extends PolymerElement {
   int _tabbingDirection = 1;
   int _activePosX;
   int _activeRow, _activeCell;
-  dom.Element _activeCellNode = null;
-  Editor _currentEditor = null;
+  dom.Element _activeCellNode;
+  Editor _currentEditor;
   dynamic _serializedEditorValue;
   EditController _editController;
 
@@ -183,12 +183,12 @@ class BwuDatagrid extends PolymerElement {
   List<int> _columnPosRight = <int>[];
 
   // async call handles
-  async.Timer _editorLoaderHandle = null;
-  async.Timer _renderHandle = null;
-  async.Timer _postRenderHandle = null;
+  async.Timer _editorLoaderHandle;
+  async.Timer _renderHandle;
+  async.Timer _postRenderHandle;
   Map<int, List<bool>> _postProcessedRows = <int, List<bool>>{};
-  int _postProcessToRow = null;
-  int _postProcessFromRow = null;
+  int _postProcessToRow;
+  int _postProcessFromRow;
 
   // perf counters
   int _counterRowsRendered = 0;
@@ -516,7 +516,7 @@ class BwuDatagrid extends PolymerElement {
 
   async.StreamSubscription<core.SelectedRangesChanged> _onSelectedRangesChanged;
 
-  void set setSelectionModel(SelectionModel model) {
+  set setSelectionModel(SelectionModel model) {
     if (_selectionModel != null) {
       if (_onSelectedRangesChanged != null) {
         _onSelectedRangesChanged
@@ -878,7 +878,7 @@ class BwuDatagrid extends PolymerElement {
           return;
         }
 
-        SortColumn sortOpts = null;
+        SortColumn sortOpts;
         int i = 0;
         for (; i < _sortColumns.length; i++) {
           if (_sortColumns[i].columnId == column.id) {
@@ -1010,7 +1010,8 @@ class BwuDatagrid extends PolymerElement {
               .parent
               .classes
               .add("bwu-datagrid-header-column-active");
-          int shrinkLeewayOnRight = null, stretchLeewayOnRight = null;
+          int shrinkLeewayOnRight;
+          int stretchLeewayOnRight;
           // lock each column's width option to current width
           for (int i = 0; i < columnElements.length; i++) {
             columns[i].previousWidth = utils.outerWidth(columnElements[i]);
@@ -1614,7 +1615,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void set setColumns(List<Column> columnDefinitions) {
+  set setColumns(List<Column> columnDefinitions) {
     _columns = columnDefinitions;
 
     _columnsById = {};
@@ -1648,7 +1649,7 @@ class BwuDatagrid extends PolymerElement {
 
   GridOptions get getGridOptions => _gridOptions;
 
-  void set setGridOptions(GridOptions newGridOptions) {
+  set setGridOptions(GridOptions newGridOptions) {
     if (!getEditorLock.commitCurrentEdit()) {
       return;
     }
@@ -1703,7 +1704,7 @@ class BwuDatagrid extends PolymerElement {
 
   dom.Element get getTopPanel => _topPanel;
 
-  void set setTopPanelVisibility(bool visible) {
+  set setTopPanelVisibility(bool visible) {
     if (_gridOptions.showTopPanel != visible) {
       _gridOptions.showTopPanel = visible;
       if (visible) {
@@ -1762,7 +1763,7 @@ class BwuDatagrid extends PolymerElement {
     });
   }
 
-  void set setHeaderRowVisibility(bool visible) {
+  set setHeaderRowVisibility(bool visible) {
     if (_gridOptions.showHeaderRow != visible) {
       _gridOptions.showHeaderRow = visible;
       if (visible) {
@@ -3355,7 +3356,7 @@ class BwuDatagrid extends PolymerElement {
         position: (_absBox(_activeCellNode)),
         container: _activeCellNode,
         column: columnDef,
-        item: item != null ? item : new MapDataItem(),
+        item: item != null ? item : new MapDataItem<dynamic, dynamic>(),
         commitChanges: _commitEditAndSetFocus,
         cancelChanges: _cancelEditAndSetFocus));
 
@@ -3533,7 +3534,8 @@ class BwuDatagrid extends PolymerElement {
         row = 0;
       }
 
-      int cell = 0, prevCell = null;
+      int cell = 0;
+      int prevCell;
       int prevActivePosX = _activePosX;
       while (cell <= _activePosX) {
         if (canCellBeActive(row, cell)) {
@@ -3590,7 +3592,7 @@ class BwuDatagrid extends PolymerElement {
 
   int _findLastFocusableCell(int row) {
     int cell = 0;
-    int lastFocusableCell = null;
+    int lastFocusableCell;
     while (cell < columns.length) {
       if (canCellBeActive(row, cell)) {
         lastFocusableCell = cell;
@@ -3692,7 +3694,7 @@ class BwuDatagrid extends PolymerElement {
       return pos;
     }
 
-    int firstFocusableCell = null;
+    int firstFocusableCell;
     final int dataLengthIncludingAddNew = _getDataLengthIncludingAddNew();
     while (++row < dataLengthIncludingAddNew) {
       firstFocusableCell = _findFirstFocusableCell(row);
@@ -3920,7 +3922,7 @@ class BwuDatagrid extends PolymerElement {
   //////////////////////////////////////////////////////////////////////////////////////////////
   // IEditor implementation for the editor lock
   bool _commitCurrentEdit() {
-    final core.ItemBase item = getDataItem(_activeRow);
+    final core.ItemBase<dynamic, dynamic> item = getDataItem(_activeRow);
     final Column column = columns[_activeCell];
 
     if (_currentEditor != null) {
@@ -4046,63 +4048,51 @@ class BwuDatagrid extends PolymerElement {
   }
 
   async.Stream<core.ActiveCellChanged> get onBwuActiveCellChanged =>
-      _eventBus.onEvent(core.Events.activeCellChanged)
-      as async.Stream<core.ActiveCellChanged>;
+      _eventBus.onEvent(core.Events.activeCellChanged);
 
   async.Stream<core.ActiveCellPositionChanged>
       get onBwuActiveCellPositionChanged =>
-          _eventBus.onEvent(core.Events.activeCellPositionChanged)
-          as async.Stream<core.ActiveCellPositionChanged>;
+          _eventBus.onEvent(core.Events.activeCellPositionChanged);
 
   async.Stream<core.AddNewRow> get onBwuAddNewRow =>
-      _eventBus.onEvent(core.Events.addNewRow) as async.Stream<core.AddNewRow>;
+      _eventBus.onEvent(core.Events.addNewRow);
 
   async.Stream<core.Attached> get onBwuAttached =>
-      _eventBus.onEvent(core.Events.attached) as async.Stream<core.Attached>;
+      _eventBus.onEvent(core.Events.attached);
 
   async.Stream<core.BeforeCellEditorDestroy> get onBwuBeforeCellEditorDestroy =>
-      _eventBus.onEvent(core.Events.beforeCellEditorDestroy)
-      as async.Stream<core.BeforeCellEditorDestroy>;
+      _eventBus.onEvent(core.Events.beforeCellEditorDestroy);
 
   async.Stream<core.BeforeDestroy> get onBwuDestroy =>
-      _eventBus.onEvent(core.Events.beforeDestroy)
-      as async.Stream<core.BeforeDestroy>;
+      _eventBus.onEvent(core.Events.beforeDestroy);
 
   async.Stream<core.BeforeEditCell> get onBwuBeforeEditCell =>
-      _eventBus.onEvent(core.Events.beforeEditCell)
-      as async.Stream<core.BeforeEditCell>;
+      _eventBus.onEvent(core.Events.beforeEditCell);
 
   async.Stream<core.BeforeHeaderCellDestroy> get onBwuBeforeHeaderCellDestory =>
-      _eventBus.onEvent(core.Events.beforeHeaderCellDestroy)
-      as async.Stream<core.BeforeHeaderCellDestroy>;
+      _eventBus.onEvent(core.Events.beforeHeaderCellDestroy);
 
   async.Stream<core.BeforeHeaderRowCellDestroy>
       get onBwuBeforeHeaderRowCellDestory =>
-          _eventBus.onEvent(core.Events.beforeHeaderRowCellDestroy)
-          as async.Stream<core.BeforeHeaderRowCellDestroy>;
+          _eventBus.onEvent(core.Events.beforeHeaderRowCellDestroy);
 
   async.Stream<core.CellChange> get onBwuCellChange =>
-      _eventBus.onEvent(core.Events.cellChange)
-      as async.Stream<core.CellChange>;
+      _eventBus.onEvent(core.Events.cellChange);
 
   async.Stream<core.CellCssStylesChanged> get onBwuCellCssStylesChanged =>
-      _eventBus.onEvent(core.Events.cellCssStylesChanged)
-      as async.Stream<core.CellCssStylesChanged>;
+      _eventBus.onEvent(core.Events.cellCssStylesChanged);
 
   async.Stream<core.Click> get onBwuClick =>
-      _eventBus.onEvent(core.Events.click) as async.Stream<core.Click>;
+      _eventBus.onEvent(core.Events.click);
 
   async.Stream<core.ColumnsReordered> get onBwuColumnsReordered =>
-      _eventBus.onEvent(core.Events.columnsReordered)
-      as async.Stream<core.ColumnsReordered>;
+      _eventBus.onEvent(core.Events.columnsReordered);
 
   async.Stream<core.ColumnsResized> get onBwuColumnsResized =>
-      _eventBus.onEvent(core.Events.columnsResized)
-      as async.Stream<core.ColumnsResized>;
+      _eventBus.onEvent(core.Events.columnsResized);
 
   async.Stream<core.ContextMenu> get onBwuContextMenu =>
-      _eventBus.onEvent(core.Events.contextMenu)
-      as async.Stream<core.ContextMenu>;
+      _eventBus.onEvent(core.Events.contextMenu);
 
 //  async.Stream<core.CustomDrag> get onBwuCustomDrag =>
 //      _eventBus.onEvent(core.Events.CUSTOM_DRAG);
@@ -4114,92 +4104,75 @@ class BwuDatagrid extends PolymerElement {
 //      _eventBus.onEvent(core.Events.CUSTOM_DRAG_START);
 //
   async.Stream<core.DoubleClick> get onBwuDoubleClick =>
-      _eventBus.onEvent(core.Events.doubleClick)
-      as async.Stream<core.DoubleClick>;
+      _eventBus.onEvent(core.Events.doubleClick);
 
-  async.Stream<core.Drag> get onBwuDrag =>
-      _eventBus.onEvent(core.Events.drag) as async.Stream<core.Drag>;
+  async.Stream<core.Drag> get onBwuDrag => _eventBus.onEvent(core.Events.drag);
 
   async.Stream<core.DragEnd> get onBwuDragEnd =>
-      _eventBus.onEvent(core.Events.dragEnd) as async.Stream<core.DragEnd>;
+      _eventBus.onEvent(core.Events.dragEnd);
 
   async.Stream<core.DragEnter> get onBwuDragEnter =>
-      _eventBus.onEvent(core.Events.dragEnter) as async.Stream<core.DragEnter>;
+      _eventBus.onEvent(core.Events.dragEnter);
 
   async.Stream<core.DragLeave> get onBwuDragLeave =>
-      _eventBus.onEvent(core.Events.dragLeave) as async.Stream<core.DragLeave>;
+      _eventBus.onEvent(core.Events.dragLeave);
 
   async.Stream<core.DragOver> get onBwuDragOver =>
-      _eventBus.onEvent(core.Events.dragOver) as async.Stream<core.DragOver>;
+      _eventBus.onEvent(core.Events.dragOver);
 
 // TODO this event is jQuery specific and not avaialble in Dart
 //  async.Stream<core.DragInit> get onBwuDragInit =>
 //      _eventBus.onEvent(core.Events.DRAG_INIT);
 
   async.Stream<core.DragStart> get onBwuDragStart =>
-      _eventBus.onEvent(core.Events.dragStart) as async.Stream<core.DragStart>;
+      _eventBus.onEvent(core.Events.dragStart);
 
-  async.Stream<core.Drop> get onBwuDrop =>
-      _eventBus.onEvent(core.Events.drop) as async.Stream<core.Drop>;
+  async.Stream<core.Drop> get onBwuDrop => _eventBus.onEvent(core.Events.drop);
 
   async.Stream<core.HeaderCellRendered> get onBwuHeaderCellRendered =>
-      _eventBus.onEvent(core.Events.headerCellRendered)
-      as async.Stream<core.HeaderCellRendered>;
+      _eventBus.onEvent(core.Events.headerCellRendered);
 
   async.Stream<core.HeaderClick> get onBwuHeaderClick =>
-      _eventBus.onEvent(core.Events.headerClick)
-      as async.Stream<core.HeaderClick>;
+      _eventBus.onEvent(core.Events.headerClick);
 
   async.Stream<core.HeaderContextMenu> get onBwuHeaderContextMenu =>
-      _eventBus.onEvent(core.Events.headerContextMenu)
-      as async.Stream<core.HeaderContextMenu>;
+      _eventBus.onEvent(core.Events.headerContextMenu);
 
   async.Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
-      _eventBus.onEvent(core.Events.headerMouseEnter)
-      as async.Stream<core.HeaderMouseEnter>;
+      _eventBus.onEvent(core.Events.headerMouseEnter);
 
   async.Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
-      _eventBus.onEvent(core.Events.headerMouseLeave)
-      as async.Stream<core.HeaderMouseLeave>;
+      _eventBus.onEvent(core.Events.headerMouseLeave);
 
   async.Stream<core.HeaderRowCellRendered> get onBwuHeaderRowCellRendered =>
-      _eventBus.onEvent(core.Events.headerRowCellRendered)
-      as async.Stream<core.HeaderRowCellRendered>;
+      _eventBus.onEvent(core.Events.headerRowCellRendered);
 
   async.Stream<core.KeyDown> get onBwuKeyDown =>
-      _eventBus.onEvent(core.Events.keyDown) as async.Stream<core.KeyDown>;
+      _eventBus.onEvent(core.Events.keyDown);
 
   async.Stream<core.MouseEnter> get onBwuMouseEnter =>
-      _eventBus.onEvent(core.Events.mouseEnter)
-      as async.Stream<core.MouseEnter>;
+      _eventBus.onEvent(core.Events.mouseEnter);
 
   async.Stream<core.MouseLeave> get onBwuMouseLeave =>
-      _eventBus.onEvent(core.Events.mouseLeave)
-      as async.Stream<core.MouseLeave>;
+      _eventBus.onEvent(core.Events.mouseLeave);
 
   async.Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.pasteCells)
-      as async.Stream<core.PasteCells>;
+      _eventBus.onEvent(core.Events.pasteCells);
 
   async.Stream<core.SelectedRangesChanged> get onBwuSelectedRangesChanged =>
-      _eventBus.onEvent(core.Events.selectedRangesChanged)
-      as async.Stream<core.SelectedRangesChanged>;
+      _eventBus.onEvent(core.Events.selectedRangesChanged);
 
   async.Stream<core.SelectedRowsChanged> get onBwuSelectedRowsChanged =>
-      _eventBus.onEvent(core.Events.selectedRowsChanged)
-      as async.Stream<core.SelectedRowsChanged>;
+      _eventBus.onEvent(core.Events.selectedRowsChanged);
 
   async.Stream<core.Scroll> get onBwuScroll =>
-      _eventBus.onEvent(core.Events.scroll) as async.Stream<core.Scroll>;
+      _eventBus.onEvent(core.Events.scroll);
 
-  async.Stream<core.Sort> get onBwuSort =>
-      _eventBus.onEvent(core.Events.sort) as async.Stream<core.Sort>;
+  async.Stream<core.Sort> get onBwuSort => _eventBus.onEvent(core.Events.sort);
 
   async.Stream<core.ValidationError> get onBwuValidationError =>
-      _eventBus.onEvent(core.Events.validationError)
-      as async.Stream<core.ValidationError>;
+      _eventBus.onEvent(core.Events.validationError);
 
   async.Stream<core.ViewportChanged> get onBwuViewportChanged =>
-      _eventBus.onEvent(core.Events.viewportChanged)
-      as async.Stream<core.ViewportChanged>;
+      _eventBus.onEvent(core.Events.viewportChanged);
 }

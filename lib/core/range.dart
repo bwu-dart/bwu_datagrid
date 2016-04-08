@@ -34,11 +34,11 @@ class Range {
 
   int get toCell => math.max(_fromCell, _toCell);
 
-  void set toCell(int cell) {
+  set toCell(int cell) {
     _toCell = cell;
   }
 
-  void set toRow(int row) {
+  set toRow(int row) {
     _toRow = row;
   }
 

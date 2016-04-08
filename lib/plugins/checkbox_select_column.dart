@@ -31,8 +31,10 @@ class CheckboxSelectionFormatter extends CellFormatter {
 }
 
 class CheckboxSelectColumn extends Column implements Plugin {
+  @override
   bool isSuspended;
   BwuDatagrid _grid;
+  @override
   BwuDatagrid get grid => _grid;
 
   //var _handler = new Slick.EventHandler();
@@ -61,6 +63,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
     }
   }
 
+  @override
   void init(BwuDatagrid grid) {
     _grid = grid;
 
@@ -71,6 +74,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
       ..add(_grid.onBwuKeyDown.listen(handleKeyDown));
   }
 
+  @override
   void destroy() {
     //_handler.unsubscribeAll();
     _subscriptions

@@ -21,6 +21,7 @@ class ContextMenu extends PolymerElement {
 
   Cell cell;
 
+  @override
   void attached() {
     super.attached();
 

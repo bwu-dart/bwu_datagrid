@@ -46,6 +46,7 @@ class RowMoveManager extends Plugin {
     _canvas.append(_dummyProxy);
   }
 
+  @override
   void destroy() {
     _subscriptions
         .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
@@ -175,9 +176,8 @@ class RowMoveManager extends Plugin {
   }
 
   async.Stream<core.BeforeMoveRows> get onBwuBeforeMoveRows =>
-      _eventBus.onEvent(core.Events.beforeMoveRows)
-      as async.Stream<core.BeforeMoveRows>;
+      _eventBus.onEvent(core.Events.beforeMoveRows);
 
   async.Stream<core.MoveRows> get onBwuMoveRows =>
-      _eventBus.onEvent(core.Events.moveRows) as async.Stream<core.MoveRows>;
+      _eventBus.onEvent(core.Events.moveRows);
 }

@@ -18,6 +18,7 @@ class DropZone extends PolymerElement {
   bool _isAcceptedDragStarted = false;
   List<String> _accept;
 
+  @override
   @Property(observer: 'dropzoneChanged')
   String dropzone;
 

@@ -9,6 +9,7 @@ class NumericRangeEditor extends Editor {
   EditorArgs args;
   dom.TextInputElement fromInput, toInput;
 
+  @override
   NumericRangeEditor newInstance(EditorArgs args) {
     return new NumericRangeEditor._(args);
   }

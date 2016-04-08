@@ -24,6 +24,7 @@ class CellCopyManager extends Plugin {
     keyDownSubscription = grid.onBwuKeyDown.listen(_handleKeyDown);
   }
 
+  @override
   void destroy() {
     if (keyDownSubscription != null) {
       keyDownSubscription.cancel();
@@ -88,13 +89,11 @@ class CellCopyManager extends Plugin {
   }
 
   async.Stream<core.CopyCells> get onBwuCopyCells =>
-      _eventBus.onEvent(core.Events.copyCells) as async.Stream<core.CopyCells>;
+      _eventBus.onEvent(core.Events.copyCells);
 
   async.Stream<core.CopyCancelled> get onBwuCopyCancelled =>
-      _eventBus.onEvent(core.Events.copyCancelled)
-      as async.Stream<core.CopyCancelled>;
+      _eventBus.onEvent(core.Events.copyCancelled);
 
   async.Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.pasteCells)
-      as async.Stream<core.PasteCells>;
+      _eventBus.onEvent(core.Events.pasteCells);
 }

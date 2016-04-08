@@ -76,6 +76,7 @@ class AutoTooltips extends Plugin {
   }
 
   /// Destroy plugin.
+  @override
   void destroy() {
     if (mouseEnterSubscription != null) {
       mouseEnterSubscription.cancel();

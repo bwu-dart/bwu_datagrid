@@ -510,6 +510,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
       } /*, skip: 'temporary'*/);
 
       group('effort-driven disabled to enabled', () {
+        // ignore: avoid_init_to_null
         final String effortDrivenOldValue = null;
 //        final effortDrivenNewValue = 'true';
         const By editorSelector =

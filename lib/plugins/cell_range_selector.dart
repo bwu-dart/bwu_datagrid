@@ -39,6 +39,7 @@ class CellRangeSelector extends Plugin {
   final List<async.StreamSubscription<core.EventData>> _subscriptions =
       <async.StreamSubscription<core.EventData>>[];
 
+  @override
   void init(BwuDatagrid grid) {
     // TODO options = $.extend(true, {}, _defaults, options);
     _decorator = new CellRangeDecorator(grid, options: _options);
@@ -56,6 +57,7 @@ class CellRangeSelector extends Plugin {
     _canvas.append(_dummyProxy);
   }
 
+  @override
   void destroy() {
     _subscriptions
         .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
@@ -133,12 +135,10 @@ class CellRangeSelector extends Plugin {
   }
 
   async.Stream<core.BeforeCellRangeSelected> get onBwuBeforeCellRangeSelected =>
-      _eventBus.onEvent(core.Events.beforeCellRangeSelected)
-      as async.Stream<core.BeforeCellRangeSelected>;
+      _eventBus.onEvent(core.Events.beforeCellRangeSelected);
 
   async.Stream<core.CellRangeSelected> get onBwuCellRangeSelected =>
-      _eventBus.onEvent(core.Events.cellRangeSelected)
-      as async.Stream<core.CellRangeSelected>;
+      _eventBus.onEvent(core.Events.cellRangeSelected);
 }
 
 //    $.extend(this, {

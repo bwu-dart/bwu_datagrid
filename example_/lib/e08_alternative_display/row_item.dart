@@ -21,7 +21,7 @@ class RowItem extends PolymerElement {
   @property
   String phone;
 
-  void set data(MapDataItem<dynamic, dynamic> d) {
+  set data(MapDataItem<dynamic, dynamic> d) {
     async(() {
       d.keys.forEach((String k) {
         set(k != 'title' ? k : 'titlex', d[k]);

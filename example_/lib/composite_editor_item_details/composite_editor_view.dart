@@ -23,6 +23,7 @@ class CompositeEditorView extends PolymerElement {
     async(() => set('columns', value));
   }
 
+  @override
   void attached() {
     style.visibility = 'hidden';
     super.attached();

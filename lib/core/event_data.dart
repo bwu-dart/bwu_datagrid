@@ -3,7 +3,7 @@ part of bwu_datagrid.core;
 abstract class Events {
   static const EventType<ActiveCellChanged> activeCellChanged =
       const EventType<ActiveCellChanged>('bwu-active-cell-changed');
-  @Deprecated('Use activeCellChanged')
+  @Deprecated('Use activeCellChanged') // ignore: constant_identifier_names
   static const EventType<ActiveCellChanged> ACTIVE_CELL_CHANGED =
       activeCellChanged;
 
@@ -12,18 +12,21 @@ abstract class Events {
           'bwu-active-cell-position-changed');
   @Deprecated('Use activeCellPositionChanged')
   static const EventType<ActiveCellPositionChanged>
+      // ignore: constant_identifier_names
       ACTIVE_CELL_POSITION_CHANGED = activeCellPositionChanged;
 
   static const EventType<AddNewRow> addNewRow =
       const EventType<AddNewRow>('bwu-add-new-row');
 
   @Deprecated('Use addNewRow')
+  // ignore: constant_identifier_names
   static const EventType<AddNewRow> ADD_NEW_ROW = addNewRow;
 
   static const EventType<Attached> attached =
       const EventType<Attached>('bwu-attached');
 
   @Deprecated('Use attached')
+  // ignore: constant_identifier_names
   static const EventType<Attached> ATTACHED = attached;
 
   static const EventType<BeforeCellEditorDestroy> beforeCellEditorDestroy =
@@ -31,6 +34,7 @@ abstract class Events {
           'bwu-before-cell-editor-destroy');
 
   @Deprecated('Use beforeCellEditorDestroy')
+  // ignore: constant_identifier_names
   static const EventType<BeforeCellEditorDestroy> BEFORE_CELL_EDITOR_DESTROY =
       beforeCellEditorDestroy;
 
@@ -39,6 +43,7 @@ abstract class Events {
           'bwu-before-cell-range-selected');
 
   @Deprecated('Use beforeCellRangeSelected')
+  // ignore: constant_identifier_names
   static const EventType<BeforeCellRangeSelected> BEFORE_CELL_RANGE_SELECTED =
       beforeCellRangeSelected;
 
@@ -46,12 +51,14 @@ abstract class Events {
       const EventType<BeforeDestroy>('bwu-before-destroy');
 
   @Deprecated('Use beforeDestroy')
+  // ignore: constant_identifier_names
   static const EventType<BeforeDestroy> BEFORE_DESTROY = beforeDestroy;
 
   static const EventType<BeforeEditCell> beforeEditCell =
       const EventType<BeforeEditCell>('bwu-before-edit-cell');
 
   @Deprecated('Use beforeEditCell')
+  // ignore: constant_identifier_names
   static const EventType<BeforeEditCell> BEFORE_EDIT_CELL = beforeEditCell;
 
   static const EventType<BeforeHeaderCellDestroy> beforeHeaderCellDestroy =
@@ -59,6 +66,7 @@ abstract class Events {
           'bwu-before-header-cell-destroy');
 
   @Deprecated('Use beforeHeaderCellDestroy')
+  // ignore: constant_identifier_names
   static const EventType<BeforeHeaderCellDestroy> BEFORE_HEADER_CELL_DESTROY =
       beforeHeaderCellDestroy;
 
@@ -68,23 +76,27 @@ abstract class Events {
 
   @Deprecated('Use beforeHeaderRowCellDestroy')
   static const EventType<BeforeHeaderRowCellDestroy>
+      // ignore: constant_identifier_names
       BEFORE_HEADER_ROW_CELL_DESTROY = beforeHeaderRowCellDestroy;
 
   static const EventType<BeforeMoveRows> beforeMoveRows =
       const EventType<BeforeMoveRows>('bwu-before-move-rows');
 
   @Deprecated('Use beforeMoveRows')
+  // ignore: constant_identifier_names
   static const EventType<BeforeMoveRows> BEFORE_MOVE_ROWS = beforeMoveRows;
 
   static const EventType<CellChange> cellChange =
       const EventType<CellChange>('bwu-cell-changed');
 
   @Deprecated('Use cellChange')
+  // ignore: constant_identifier_names
   static const EventType<CellChange> CELL_CHANGE = cellChange;
 
   static const EventType<CellRangeSelected> cellRangeSelected =
       const EventType<CellRangeSelected>('bwu-cell-range-selected');
   @Deprecated('Use cellRangeSelected')
+  // ignore: constant_identifier_names
   static const EventType<CellRangeSelected> CELL_RANGE_SELECTED =
       cellRangeSelected;
 
@@ -92,48 +104,56 @@ abstract class Events {
       const EventType<CellCssStylesChanged>('bwu-cell-css-styles-changed');
 
   @Deprecated('Use cellCssStylesChanged')
+  // ignore: constant_identifier_names
   static const EventType<CellCssStylesChanged> CELL_CSS_STYLES_CHANGED =
       cellCssStylesChanged;
 
   static const EventType<Click> click = const EventType<Click>('bwu-click');
 
   @Deprecated('Use click')
+  // ignore: constant_identifier_names
   static const EventType<Click> CLICK = click;
 
   static const EventType<ColumnsReordered> columnsReordered =
       const EventType<ColumnsReordered>('bwu-columns-reordered');
 
   @Deprecated('Use columnsReordered')
+  // ignore: constant_identifier_names
   static const EventType<ColumnsReordered> COLUMNS_REORDERED = columnsReordered;
 
   static const EventType<ColumnsResized> columnsResized =
       const EventType<ColumnsResized>('bwu-columns-resized');
 
   @Deprecated('Use columnsResized')
+  // ignore: constant_identifier_names
   static const EventType<ColumnsResized> COLUMNS_RESIZED = columnsResized;
 
   static const EventType<ContextMenu> contextMenu =
       const EventType<ContextMenu>('bwu-context-menu');
 
   @Deprecated('Use contextMenu')
+  // ignore: constant_identifier_names
   static const EventType<ContextMenu> CONTEXT_MENU = contextMenu;
 
   static const EventType<CopyCancelled> copyCancelled =
       const EventType<CopyCancelled>('bwu-copy-cancelled');
 
   @Deprecated('Use copyCancelled')
+  // ignore: constant_identifier_names
   static const EventType<CopyCancelled> COPY_CANCELLED = copyCancelled;
 
   static const EventType<CopyCells> copyCells =
       const EventType<CopyCells>('bwu-copy-cells');
 
   @Deprecated('Use copyCells')
+  // ignore: constant_identifier_names
   static const EventType<CopyCells> COPY_CELLS = copyCells;
 
   static const EventType<DoubleClick> doubleClick =
       const EventType<DoubleClick>('bwu-double-click');
 
   @Deprecated('Use doubleClick')
+  // ignore: constant_identifier_names
   static const EventType<DoubleClick> DOUBLE_CLICK = doubleClick;
 
 //  static const EventType<CustomDrag> CUSTOM_DRAG = const EventType<CustomDrag>('bwu-custom-drag');
@@ -145,35 +165,41 @@ abstract class Events {
   static const EventType<Drag> drag = const EventType<Drag>('bwu-drag');
 
   @Deprecated('Use drag')
+  // ignore: constant_identifier_names
   static const EventType<Drag> DRAG = drag;
 
   static const EventType<DragEnd> dragEnd =
       const EventType<DragEnd>('bwu-drag-end');
 
   @Deprecated('Use dragEnd')
+  // ignore: constant_identifier_names
   static const EventType<DragEnd> DRAG_END = dragEnd;
 
   static const EventType<DragEnter> dragEnter =
       const EventType<DragEnter>('bwu-drag-enter');
 
   @Deprecated('Use dragEnter')
+  // ignore: constant_identifier_names
   static const EventType<DragEnter> DRAG_ENTER = dragEnter;
 
   static const EventType<DragLeave> dragLeave =
       const EventType<DragLeave>('bwu-drag-leave');
 
   @Deprecated('Use dragLeave')
+  // ignore: constant_identifier_names
   static const EventType<DragLeave> DRAG_LEAVE = dragLeave;
 
   static const EventType<DragOver> dragOver =
       const EventType<DragOver>('bwu-drag-over');
 
   @Deprecated('Use dragOver')
+  // ignore: constant_identifier_names
   static const EventType<DragOver> DRAG_OVER = dragOver;
 
   static const EventType<Drop> drop = const EventType<Drop>('bwu-drop');
 
   @Deprecated('Use drop')
+  // ignore: constant_identifier_names
   static const EventType<Drop> DROP = drop;
 
   // TODO this is a jQuery specific event, there is no replacement for it
@@ -183,12 +209,14 @@ abstract class Events {
       const EventType<DragStart>('bwu-drag-start');
 
   @Deprecated('Use dragStart')
+  // ignore: constant_identifier_names
   static const EventType<DragStart> DRAG_START = dragStart;
 
   static const EventType<HeaderCellRendered> headerCellRendered =
       const EventType<HeaderCellRendered>('bwu-header-cell-rendered');
 
   @Deprecated('Use headerCellRenderer')
+  // ignore: constant_identifier_names
   static const EventType<HeaderCellRendered> HEADER_CELL_RENDERED =
       headerCellRendered;
 
@@ -196,12 +224,14 @@ abstract class Events {
       const EventType<HeaderClick>('bwu-header-click');
 
   @Deprecated('Use headerClick')
+  // ignore: constant_identifier_names
   static const EventType<HeaderClick> HEADER_CLICK = headerClick;
 
   static const EventType<HeaderContextMenu> headerContextMenu =
       const EventType<HeaderContextMenu>('bwu-header-context-menu');
 
   @Deprecated('Use headerContextMenu')
+  // ignore: constant_identifier_names
   static const EventType<HeaderContextMenu> HEADER_CONTEX_MENU =
       headerContextMenu;
 
@@ -209,6 +239,7 @@ abstract class Events {
       const EventType<HeaderMouseEnter>('bwu-header-mouse-enter');
 
   @Deprecated('Use headerMouseEnter')
+  // ignore: constant_identifier_names
   static const EventType<HeaderMouseEnter> HEADER_MOUSE_ENTER =
       headerMouseEnter;
 
@@ -216,6 +247,7 @@ abstract class Events {
       const EventType<HeaderMouseLeave>('bwu-header-mouse-leave');
 
   @Deprecated('Use headerMouseLeave')
+  // ignore: constant_identifier_names
   static const EventType<HeaderMouseLeave> HEADER_MOUSE_LEAVE =
       headerMouseLeave;
 
@@ -223,6 +255,7 @@ abstract class Events {
       const EventType<HeaderRowCellRendered>('bwu-header-row-cell-rendered');
 
   @Deprecated('Use headerRowCellRenderer')
+  // ignore: constant_identifier_names
   static const EventType<HeaderRowCellRendered> HEADER_ROW_CELL_RENDERED =
       headerRowCellRendered;
 
@@ -230,30 +263,35 @@ abstract class Events {
       const EventType<KeyDown>('bwu-key-down');
 
   @Deprecated('Use keyDown')
+  // ignore: constant_identifier_names
   static const EventType<KeyDown> KEY_DOWN = keyDown;
 
   static const EventType<MouseEnter> mouseEnter =
       const EventType<MouseEnter>('bwu-mouse-enter');
 
   @Deprecated('Use mouseEnter')
+  // ignore: constant_identifier_names
   static const EventType<MouseEnter> MOUSE_ENTER = mouseEnter;
 
   static const EventType<MouseLeave> mouseLeave =
       const EventType<MouseLeave>('bwu-mouse-leave');
 
   @Deprecated('Use mouseLeave')
+  // ignore: constant_identifier_names
   static const EventType<MouseLeave> MOUSE_LEAVE = mouseLeave;
 
   static const EventType<MoveRows> moveRows =
       const EventType<MoveRows>('bwu-move-rows');
 
   @Deprecated('Use moveRows')
+  // ignore: constant_identifier_names
   static const EventType<MoveRows> MOVE_ROWS = moveRows;
 
   static const EventType<PagingInfoChanged> pagingInfoChanged =
       const EventType<PagingInfoChanged>('bwu-paging-info-changed');
 
   @Deprecated('Use pagingInfoChanged')
+  // ignore: constant_identifier_names
   static const EventType<PagingInfoChanged> PAGING_INFO_CHANGED =
       pagingInfoChanged;
 
@@ -261,29 +299,34 @@ abstract class Events {
       const EventType<PasteCells>('bwu-paste-cells');
 
   @Deprecated('Use pasteCells')
+  // ignore: constant_identifier_names
   static const EventType<PasteCells> PASTE_CELLS = pasteCells;
 
   static const EventType<RowsChanged> rowsChanged =
       const EventType<RowsChanged>('bwu-rows-changed');
 
   @Deprecated('Use rowsChanged')
+  // ignore: constant_identifier_names
   static const EventType<RowsChanged> ROWS_CHANGED = rowsChanged;
 
   static const EventType<RowCountChanged> rowCountChanged =
       const EventType<RowCountChanged>('bwu-row-count-changed');
 
   @Deprecated('Use rowCountChanged')
+  // ignore: constant_identifier_names
   static const EventType<RowCountChanged> ROW_COUNT_CHANGED = rowCountChanged;
 
   static const EventType<Scroll> scroll = const EventType<Scroll>('bwu-scroll');
 
   @Deprecated('Use scroll')
+  // ignore: constant_identifier_names
   static const EventType<Scroll> SCROLL = scroll;
 
   static const EventType<SelectedRangesChanged> selectedRangesChanged =
       const EventType<SelectedRangesChanged>('bwu-selected-ranges-changed');
 
   @Deprecated('Use selectedRangesChanged')
+  // ignore: constant_identifier_names
   static const EventType<SelectedRangesChanged> SELECTED_RANGES_CHANGED =
       selectedRangesChanged;
 
@@ -291,6 +334,7 @@ abstract class Events {
       const EventType<SelectedRowIdsChanged>('selected-row-ids-changed');
 
   @Deprecated('Use selectedRowIdsChanged')
+  // ignore: constant_identifier_names
   static const EventType<SelectedRowIdsChanged> SELECTED_ROW_IDS_CHANGED =
       selectedRowIdsChanged;
 
@@ -298,24 +342,28 @@ abstract class Events {
       const EventType<SelectedRowsChanged>('bwu-selected-rows-changed');
 
   @Deprecated('Use selectedRowsChanged')
+  // ignore: constant_identifier_names
   static const EventType<SelectedRowsChanged> SELECTED_ROWS_CHANGED =
       selectedRowsChanged;
 
   static const EventType<Sort> sort = const EventType<Sort>('bwu-sort');
 
   @Deprecated('Use sort')
+  // ignore: constant_identifier_names
   static const EventType<Sort> SORT = sort;
 
   static const EventType<ValidationError> validationError =
       const EventType<ValidationError>('bwu-validation-error');
 
   @Deprecated('Use validationError')
+  // ignore: constant_identifier_names
   static const EventType<ValidationError> VALIDATION_ERROR = validationError;
 
   static const EventType<ViewportChanged> viewportChanged =
       const EventType<ViewportChanged>('bwu-viewport-changed');
 
   @Deprecated('Use viewportChanged')
+  // ignore: constant_identifier_names
   static const EventType<ViewportChanged> VIEWPORT_CHANGED = viewportChanged;
 }
 

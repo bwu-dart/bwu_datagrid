@@ -13,6 +13,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 /// @namespace Slick
 
 class DefaultFormatter extends CellFormatter {
+  @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     target.children.clear();
@@ -35,6 +36,7 @@ abstract class GroupTitleFormatter extends Formatter {
 }
 
 class PercentCompleteFormatter extends CellFormatter {
+  @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     target.children.clear();
@@ -52,6 +54,7 @@ class PercentCompleteFormatter extends CellFormatter {
 }
 
 class PercentCompleteBarFormatter extends CellFormatter {
+  @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     if (value == null || value == "") {
@@ -78,6 +81,7 @@ class PercentCompleteBarFormatter extends CellFormatter {
 }
 
 class YesNoFormatter extends CellFormatter {
+  @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     target.text = value ? 'Yes' : 'No';
@@ -85,6 +89,7 @@ class YesNoFormatter extends CellFormatter {
 }
 
 class CheckmarkFormatter extends CellFormatter {
+  @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
     target.children.clear();

@@ -15,6 +15,7 @@ class FormulaEditor extends Editor {
   // = new TextEditor();
   async.StreamSubscription<core.EventData> _cellRangeSelectedSubscr;
 
+  @override
   FormulaEditor newInstance(EditorArgs args) {
     return new FormulaEditor._(args);
   }
