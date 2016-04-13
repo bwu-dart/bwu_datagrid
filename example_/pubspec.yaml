@@ -7,33 +7,38 @@ environment:
   sdk: '>=1.12.0 <2.0.0'
 
 dependencies:
+  browser: '^0.10.0+2'
   bwu_datagrid:
     path: ..
+  bwu_log: ^0.1.0
   bwu_utils: '>=0.1.0 <0.2.0'
-  polymer: ^1.0.0-rc.5
-  polymer_interop: ^1.0.0-rc.5
+  dart_to_js_script_rewriter: '^1.0.1'
+  meta: ^0.12.0
+  polymer: ^1.0.0-rc.16
+  polymer_interop: ^1.0.0-rc.9
   quiver: '>=0.21.3 <0.22.0'
-  quiver_log: '>=1.0.1 <2.0.0'
-  reflectable: '0.5.2'
+  reflectable: ^0.5.2
   web_components: ^0.12.0
 
-  dart_to_js_script_rewriter: '^1.0.1'
-  browser: '^0.10.0+2'
 dev_dependencies:
-#  bwu_docker: '>=0.2.1 <0.3.0'
-  bwu_webdriver:
+  bwu_docker: '>=0.2.1 <0.3.0'
+  bwu_webdriver:  # TODO(zoechi) re-add when upgraded to 1.0.0
     path: ../../bwu_webdriver
   bwu_docker:
     path: ../../bwu_docker
-  bwu_grinder_tasks: '>=0.1.0 <0.2.0'
+  bwu_grinder_tasks: ^0.1.1-dev
 #  bwu_sparkline: '>=0.0.9 <0.1.0' # TODO(zoechi) upgrade to Polymer 1
+   #path: ../bwu_sparkline
 #  crypto: '>=0.9.0 <0.10.0' # for Webdriver Firefox profile settings
   grinder: '>=0.7.2 <0.9.0'
-     #path: ../bwu_sparkline
   http: '>=0.11.3 <0.12.0'
   test: '>=0.12.0 <0.13.0'
-  webdriver: '>=0.10.0-pre <0.11.0'
+  webdriver: # ^1.0.0 # TODO(zoechi) re-add
+    path: ../../dart-lang/webdriver.dart
 
+dependency_overrides:
+#  analyzer: ^0.27.2
+  reflectable: ^0.5.4
 
 transformers:
 - polymer:
@@ -74,6 +79,7 @@ transformers:
 
 - test/pub_serve:
     $include: test/**_test{.*,}.dart
+    $include: '**/*.bootstrap.initialize.dart'
 
 - $dart2js:
     commandLineOptions: ['--trust-type-annotations', '--trust-primitives']

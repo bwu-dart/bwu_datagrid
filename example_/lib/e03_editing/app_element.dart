@@ -84,8 +84,8 @@ class AppElement extends PolymerElement {
       asyncEditorLoading: false,
       autoEdit: false);
 
-  final MapDataItemProvider<ItemBase<dynamic, dynamic>> data =
-      new MapDataItemProvider<ItemBase<dynamic, dynamic>>();
+  final MapDataItemProvider<ItemBase> data =
+      new MapDataItemProvider<ItemBase>();
 
   @override
   void attached() {
@@ -95,7 +95,7 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'description':
               'This is a sample task description.\n  It can be multiline',
@@ -139,7 +139,7 @@ class AppElement extends PolymerElement {
   }
 
   void addnewRowHandler(AddNewRow e) {
-    final DataItem<dynamic, dynamic> item = e.item;
+    final DataItem item = e.item;
     grid.invalidateRow(data.items.length);
     data.items.add(item);
     grid.updateRowCount();

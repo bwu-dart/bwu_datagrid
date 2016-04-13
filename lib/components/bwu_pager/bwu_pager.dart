@@ -36,7 +36,7 @@ class NavState extends JsProxy {
 class BwuPager extends PolymerElement {
   BwuPager.created() : super.created();
 
-  DataView<core.ItemBase<dynamic, dynamic>> _dataView;
+  DataView<core.ItemBase> _dataView;
   BwuDatagrid _grid;
 
   @property
@@ -50,8 +50,7 @@ class BwuPager extends PolymerElement {
 
   dom.Element status;
 
-  void init(
-      DataView<core.ItemBase<dynamic, dynamic>> dataView, BwuDatagrid grid) {
+  void init(DataView<core.ItemBase> dataView, BwuDatagrid grid) {
     _dataView = dataView;
     _grid = grid;
     _dataView.onBwuPagingInfoChanged.listen((core.PagingInfoChanged e) {

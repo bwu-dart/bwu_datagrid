@@ -3,13 +3,13 @@ part of bwu_datagrid.dataview;
 abstract class Aggregator {
   void init();
   void storeResult(core.GroupTotals groupTotals);
-  void accumulate(core.ItemBase<dynamic, dynamic> item);
+  void accumulate(core.ItemBase item);
   bool _isCalculated = false;
   bool get isCalculated => _isCalculated;
 
-  void call(List<core.ItemBase<dynamic, dynamic>> rows) {
+  void call(List<core.ItemBase> rows) {
     if (rows != null) {
-      rows.forEach((core.ItemBase<dynamic, dynamic> r) => accumulate(r));
+      rows.forEach((core.ItemBase r) => accumulate(r));
     }
     _isCalculated = true;
   }
@@ -34,7 +34,7 @@ class AvgAggregator extends Aggregator {
   }
 
   @override
-  void accumulate(core.ItemBase<dynamic, dynamic> item) {
+  void accumulate(core.ItemBase item) {
     Object val = item[_field];
     _count++;
     if (val != null) {
@@ -69,7 +69,7 @@ class MinAggregator extends Aggregator {
   }
 
   @override
-  void accumulate(core.ItemBase<dynamic, dynamic> item) {
+  void accumulate(core.ItemBase item) {
     num val = item[_field];
     if (val != null && val != '' && val is num) {
       if (_min == null || val < _min) {
@@ -98,7 +98,7 @@ class MaxAggregator extends Aggregator {
   }
 
   @override
-  void accumulate(core.ItemBase<dynamic, dynamic> item) {
+  void accumulate(core.ItemBase item) {
     num val = item[_field];
     if (val != null && val != '' && val is num) {
       if (_max == null || val > _max) {
@@ -127,7 +127,7 @@ class SumAggregator extends Aggregator {
   }
 
   @override
-  void accumulate(core.ItemBase<dynamic, dynamic> item) {
+  void accumulate(core.ItemBase item) {
     final Object val = item[_field];
     if (val != null) {
       if (val is String && val.isNotEmpty) {

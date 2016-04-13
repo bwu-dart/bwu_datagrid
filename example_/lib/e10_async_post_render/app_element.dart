@@ -19,7 +19,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 
 class WaitingFormatter extends fm.Formatter {
   void call(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, DataItem<dynamic, dynamic> dataContext) {
+      Column columnDef, DataItem dataContext) {
     target
       ..children.clear()
       ..appendText('wait...');
@@ -27,7 +27,7 @@ class WaitingFormatter extends fm.Formatter {
 }
 
 void renderSparkline(dom.Element target, int row,
-    DataItem<dynamic, dynamic> dataContext, Column colDef) {
+    DataItem dataContext, Column colDef) {
   final List<num> vals = <num>[
     tools.parseNum(dataContext["n1"], onErrorDefault: 0),
     tools.parseNum(dataContext["n2"], onErrorDefault: 0),
@@ -115,7 +115,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
+  MapDataItemProvider<core.ItemBase> data;
 
   @override
   void attached() {
@@ -125,9 +125,9 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       // prepare the data
-      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'title': 'Record $i',
           'n1': rnd.nextInt(10),
           'n2': rnd.nextInt(10),

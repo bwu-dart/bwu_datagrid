@@ -19,7 +19,7 @@ class CheckboxSelectionFormatter extends CellFormatter {
   /// to be recognized by the [CheckboxSelectColumn] click handler.
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
 
     if (dataContext != null) {

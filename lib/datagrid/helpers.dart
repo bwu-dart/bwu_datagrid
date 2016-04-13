@@ -10,8 +10,9 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:collection/collection.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:polymer/polymer.dart';
+import 'package:meta/meta.dart' show optionalTypeArgs;
 
-abstract class DataProvider<T extends core.ItemBase<dynamic, dynamic>> {
+abstract class DataProvider<T extends core.ItemBase> {
   List<T> _items;
   // ignore: unnecessary_getters_setters
   List<T> get items => _items;
@@ -27,8 +28,7 @@ abstract class DataProvider<T extends core.ItemBase<dynamic, dynamic>> {
   DataProvider(List<T> items) : _items = (items == null ? <T>[] : items);
 }
 
-class MapDataItemProvider<T extends core.ItemBase<dynamic, dynamic>>
-    extends DataProvider<T> {
+class MapDataItemProvider<T extends core.ItemBase> extends DataProvider<T> {
   MapDataItemProvider([List<T> items]) : super(items);
 
   @override
@@ -116,10 +116,12 @@ typedef Editor EditorFactory(Column column);
 
 typedef Formatter FormatterFactory(Column column);
 
+@optionalTypeArgs
 abstract class DataItem<K, V> extends ItemBase<K, V> {
   bool collapsed;
 }
 
+@optionalTypeArgs
 class MapDataItem<K, V> extends DelegatingMap<K, V> implements DataItem<K, V> {
   @override
   bool collapsed = false;
@@ -167,8 +169,8 @@ class EditController {
   EditController(this.commitCurrentEdit, this.cancelCurrentEdit);
 }
 
-typedef void AsyncPostRenderFn(dom.Element target, int row,
-    DataItem<dynamic, dynamic> dataContext, Column colDef);
+typedef void AsyncPostRenderFn(
+    dom.Element target, int row, DataItem dataContext, Column colDef);
 
 class Column extends JsProxy {
   @reflectable

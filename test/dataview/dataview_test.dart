@@ -6,12 +6,12 @@ import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
-import 'package:logging/logging.dart';
-import 'package:quiver_log/log.dart';
+import 'package:logging/logging.dart' show Level, Logger;
+import 'package:bwu_log/bwu_log.dart' show PrintAppender, basicLogFormatter;
 
 final Logger _log = new Logger('bwu_datagrid.test.dataview');
 
-void assertEmpty(DataView<core.ItemBase<dynamic, dynamic>> dv) {
+void assertEmpty(DataView<core.ItemBase> dv) {
   expect(0, equals(dv.length),
       reason: ".rows is initialized to an empty array");
   expect(dv.getItems().length, equals(0), reason: "getItems().length");
@@ -25,12 +25,11 @@ void assertEmpty(DataView<core.ItemBase<dynamic, dynamic>> dv) {
       reason: "getItemByIdx should return undefined if not found");
 }
 
-void assertConsistency(DataView<DataItem<dynamic, dynamic>> dv,
-    [String idProperty]) {
+void assertConsistency(DataView<DataItem> dv, [String idProperty]) {
   if (idProperty == null || idProperty.isEmpty) {
     idProperty = "id";
   }
-  List<DataItem<dynamic, dynamic>> items = dv.getItems();
+  List<DataItem> items = dv.getItems();
   int filteredOut = 0;
 
   for (int i = 0; i < items.length; i++) {
@@ -54,18 +53,16 @@ void assertConsistency(DataView<DataItem<dynamic, dynamic>> dv,
 
 void main() {
   Logger.root.level = Level.ALL;
-  new PrintAppender(BASIC_LOG_FORMATTER).attachLogger(_log);
+  new PrintAppender(basicLogFormatter).attachLogger(_log);
 
   group('basic', () {
     test("initial setup", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       assertEmpty(dv);
     });
 
     test("initial setup, refresh", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.refresh();
       assertEmpty(dv);
     });
@@ -73,15 +70,13 @@ void main() {
 
   group('setItems', () {
     test("empty", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.setItems([]);
       assertEmpty(dv);
     });
 
     test("basic", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0}),
         new MapDataItem<String, int>({'id': 1})
@@ -92,8 +87,7 @@ void main() {
     });
 
     test("alternative idProperty", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.setItems(<DataItem<String, int>>[
         new MapDataItem<String, int>({'uid': 0}),
         new MapDataItem<String, int>({'uid': 1})
@@ -102,8 +96,7 @@ void main() {
     });
 
     test("requires an id on objects", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       expect(
           () => dv.items = <DataItem<String, int>>[
                 new MapDataItem<String, int>({'a': 1}),
@@ -116,8 +109,7 @@ void main() {
     });
 
     test("requires a unique id on objects", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       //        try {
       expect(
           () => dv.items = <DataItem<String, int>>[
@@ -130,8 +122,7 @@ void main() {
     });
 
     test("requires a unique id on objects (alternative idProperty)", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       expect(
           () => dv.setItems(<DataItem<String, int>>[
                 new MapDataItem<String, int>({'uid': 0}),
@@ -142,8 +133,7 @@ void main() {
     });
 
     test("events fired on setItems", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
 
       final Function expectRowsChangedCalled =
           expectAsync(() {}, reason: "onRowsChanged called");
@@ -175,21 +165,19 @@ void main() {
     });
 
     test("no events on setItems([])", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.onBwuRowsChanged.first
           .then((core.RowsChanged e) => fail("onRowsChanged called"));
       dv.onBwuRowCountChanged.first
           .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
       dv.onBwuPagingInfoChanged.first.then(
           (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
-      dv.items = <DataItem<dynamic, dynamic>>[];
+      dv.items = <DataItem>[];
       dv.refresh();
     });
 
     test("no events on setItems followed by refresh", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.items = <DataItem<String, int>>[
         new MapDataItem<String, int>({'id': 0}),
         new MapDataItem<String, int>({'id': 1})
@@ -204,8 +192,7 @@ void main() {
     });
 
     test("no refresh while suspended", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.beginUpdate();
       dv.onBwuRowsChanged.first
           .then((core.RowsChanged e) => fail("onRowsChanged called"));
@@ -223,8 +210,7 @@ void main() {
     });
 
     test("refresh fires after resume", () {
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.beginUpdate();
       dv.items = <DataItem<String, int>>[
         new MapDataItem<String, int>({'id': 0}),
@@ -277,8 +263,7 @@ void main() {
         itemsList[1],
         itemsList[2]
       ];
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = items;
 
       final Function expectRowsChangedCalled =
@@ -291,10 +276,7 @@ void main() {
 
       dv.onBwuPagingInfoChanged.first.then(
           (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
-      dv.sort(
-          (DataItem<dynamic, dynamic> x, DataItem<dynamic, dynamic> y) =>
-              x['val'] - y['val'] as int,
-          true);
+      dv.sort((DataItem x, DataItem y) => x['val'] - y['val'] as int, true);
       expect(dv.getItems(), equals(items),
           reason: "original array should get sorted");
       expect(items, orderedEquals([itemsList[2], itemsList[1], itemsList[0]]),
@@ -313,12 +295,9 @@ void main() {
         itemsList[1],
         itemsList[2]
       ];
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.items = items;
-      dv.sort((core.ItemBase<dynamic, dynamic> x,
-              core.ItemBase<dynamic, dynamic> y) =>
-          x['val'] - y['val'] as int);
+      dv.sort((core.ItemBase x, core.ItemBase y) => x['val'] - y['val'] as int);
       expect(items, orderedEquals([itemsList[2], itemsList[1], itemsList[0]]),
           reason: "sort order");
     });
@@ -334,11 +313,9 @@ void main() {
         itemsList[1],
         itemsList[2]
       ];
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.items = items;
-      dv.sort((core.ItemBase<dynamic, dynamic> x,
-              core.ItemBase<dynamic, dynamic> y) =>
+      dv.sort((core.ItemBase x, core.ItemBase y) =>
           -1 * (x['val'] - y['val'] as int));
       expect(items, orderedEquals([itemsList[1], itemsList[2], itemsList[0]]),
           reason: "sort order");
@@ -357,30 +334,24 @@ void main() {
         itemsList[2],
         itemsList[3],
       ];
-      final DataView<core.ItemBase<dynamic, dynamic>> dv =
-          new DataView<core.ItemBase<dynamic, dynamic>>();
+      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.items = items;
 
-      dv.sort((core.ItemBase<dynamic, dynamic> x,
-              core.ItemBase<dynamic, dynamic> y) =>
-          x['val'] - y['val'] as int);
+      dv.sort((core.ItemBase x, core.ItemBase y) => x['val'] - y['val'] as int);
       expect(
           items,
           orderedEquals(
               [itemsList[0], itemsList[3], itemsList[1], itemsList[2]]),
           reason: "sort order");
 
-      dv.sort((core.ItemBase<dynamic, dynamic> x,
-              core.ItemBase<dynamic, dynamic> y) =>
-          x['val'] - y['val'] as int);
+      dv.sort((core.ItemBase x, core.ItemBase y) => x['val'] - y['val'] as int);
       expect(
           items,
           orderedEquals(
               [itemsList[0], itemsList[3], itemsList[1], itemsList[2]]),
           reason: "sorting on the same column again doesn't change the order");
 
-      dv.sort((core.ItemBase<dynamic, dynamic> x,
-              core.ItemBase<dynamic, dynamic> y) =>
+      dv.sort((core.ItemBase x, core.ItemBase y) =>
           -1 * (x['val'] - y['val'] as int));
       expect(
           items,
@@ -392,8 +363,7 @@ void main() {
 
   group("filtering", () {
     test("applied immediately", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
 
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
@@ -424,7 +394,7 @@ void main() {
         expect(e.pagingInfo.pageNum, 0, reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, 1, reason: "totalRows arg");
       });
-      dv.setFilter((core.ItemBase<dynamic, dynamic> o, _) => o['val'] == 1);
+      dv.setFilter((core.ItemBase o, _) => o['val'] == 1);
       expect(dv.getItems().length, equals(3),
           reason: "original data is still there");
       expect(dv.length, equals(1), reason: "rows are filtered");
@@ -432,8 +402,7 @@ void main() {
     });
 
     test("re-applied on refresh", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -476,8 +445,7 @@ void main() {
     });
 
     test("re-applied on sort", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -492,10 +460,7 @@ void main() {
           .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
       dv.onBwuPagingInfoChanged.first.then(
           (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
-      dv.sort(
-          (core.ItemBase<dynamic, dynamic> x,
-                  core.ItemBase<dynamic, dynamic> y) =>
-              x['val'] - y['val'] as int,
+      dv.sort((core.ItemBase x, core.ItemBase y) => x['val'] - y['val'] as int,
           false);
       expect(dv.getItems().length, equals(3),
           reason: "original data is still there");
@@ -504,8 +469,7 @@ void main() {
     });
 
     test("all", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -540,8 +504,7 @@ void main() {
     });
 
     test("all then none", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -583,9 +546,8 @@ void main() {
     });
 
     test("inlining replaces absolute returns", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>(
-              options: new DataViewOptions(inlineFilters: true));
+      final DataView<DataItem> dv = new DataView<DataItem>(
+          options: new DataViewOptions(inlineFilters: true));
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -614,9 +576,8 @@ void main() {
     });
 
     test("inlining replaces evaluated returns", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>(
-              options: new DataViewOptions(inlineFilters: true));
+      final DataView<DataItem> dv = new DataView<DataItem>(
+          options: new DataViewOptions(inlineFilters: true));
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -647,8 +608,7 @@ void main() {
 
   group("updateItem", () {
     test("basic", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -674,8 +634,7 @@ void main() {
     });
 
     test("updating an item not passing the filter", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -697,8 +656,7 @@ void main() {
     });
 
     test("updating an item to pass the filter", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -738,8 +696,7 @@ void main() {
     });
 
     test("updating an item to not pass the filter", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -777,8 +734,7 @@ void main() {
 
   group("addItem", () {
     test("must have id", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -792,8 +748,7 @@ void main() {
     });
 
     test("must have id (custom)", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.setItems([
         new MapDataItem<String, int>({'uid': 0, 'val': 0}),
         new MapDataItem<String, int>({'uid': 1, 'val': 1}),
@@ -808,8 +763,7 @@ void main() {
     });
 
     test("basic", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -850,8 +804,7 @@ void main() {
     });
 
     test("add an item not passing the filter", () {
-      final DataView<DataItem<dynamic, dynamic>> dv =
-          new DataView<DataItem<dynamic, dynamic>>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.items = [
         new MapDataItem<String, int>({'id': 0, 'val': 0}),
         new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -873,8 +826,7 @@ void main() {
 
     group("insertItem", () {
       test("must have id", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 0, 'val': 0}),
           new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -889,8 +841,7 @@ void main() {
       });
 
       test("must have id (custom)", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.setItems([
           new MapDataItem<String, int>({'uid': 0, 'val': 0}),
           new MapDataItem<String, int>({'uid': 1, 'val': 1}),
@@ -905,8 +856,7 @@ void main() {
       });
 
       test("insert at the beginning", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 0, 'val': 0}),
           new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -946,8 +896,7 @@ void main() {
       });
 
       test("insert in the middle", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 0, 'val': 0}),
           new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -987,8 +936,7 @@ void main() {
       });
 
       test("insert at the end", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 0, 'val': 0}),
           new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -1030,8 +978,7 @@ void main() {
 
     group("deleteItem", () {
       test("must have id", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 0, 'val': 0}),
           new MapDataItem<String, int>({'id': 1, 'val': 1}),
@@ -1046,8 +993,7 @@ void main() {
       });
 
       test("must have id (custom)", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.setItems([
           new MapDataItem<String, int>({'uid': 0, 'id': -1, 'val': 0}),
           new MapDataItem<String, int>({'uid': 1, 'id': 3, 'val': 1}),
@@ -1062,8 +1008,7 @@ void main() {
       });
 
       test("delete at the beginning", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 05, 'val': 0}),
           new MapDataItem<String, int>({'id': 15, 'val': 1}),
@@ -1100,8 +1045,7 @@ void main() {
       });
 
       test("delete in the middle", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 05, 'val': 0}),
           new MapDataItem<String, int>({'id': 15, 'val': 1}),
@@ -1138,8 +1082,7 @@ void main() {
       });
 
       test("delete at the end", () {
-        final DataView<DataItem<dynamic, dynamic>> dv =
-            new DataView<DataItem<dynamic, dynamic>>();
+        final DataView<DataItem> dv = new DataView<DataItem>();
         dv.items = [
           new MapDataItem<String, int>({'id': 05, 'val': 0}),
           new MapDataItem<String, int>({'id': 15, 'val': 1}),

@@ -111,8 +111,8 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  List<DataItem<dynamic, dynamic>> data;
-  DataView<core.ItemBase<dynamic, dynamic>> dataView;
+  List<DataItem> data;
+  DataView<core.ItemBase> dataView;
 
   String sortcol = "title";
   int sortdir = 1;
@@ -144,7 +144,7 @@ class AppElement extends PolymerElement {
         }));
       }
 
-      dataView = new DataView<core.ItemBase<dynamic, dynamic>>(
+      dataView = new DataView<core.ItemBase>(
           options: new DataViewOptions(inlineFilters: true));
       grid
           .setup(
@@ -303,7 +303,7 @@ class AppElement extends PolymerElement {
     dataView.sort(comparer, e.sortAsc);
   }
 
-  bool myFilter(DataItem<dynamic, dynamic> item, Map<dynamic, dynamic> args) {
+  bool myFilter(DataItem item, Map<dynamic, dynamic> args) {
     if (item["percentComplete"] < args['percentCompleteThreshold']) {
       return false;
     }
@@ -316,18 +316,18 @@ class AppElement extends PolymerElement {
       a["percentComplete"] - b["percentComplete"];
 
   int comparer(
-      core.ItemBase<dynamic, dynamic> a, core.ItemBase<dynamic, dynamic> b) {
+      core.ItemBase a, core.ItemBase b) {
     final int x = a[sortcol];
     final int y = b[sortcol];
     if (x == y) {
       return 0;
     }
 
-    if (x is Comparable<core.ItemBase<dynamic, dynamic>>) {
+    if (x is Comparable<core.ItemBase>) {
       return x.compareTo(y);
     }
 
-    if (y is Comparable<core.ItemBase<dynamic, dynamic>>) {
+    if (y is Comparable<core.ItemBase>) {
       return 1;
     }
 

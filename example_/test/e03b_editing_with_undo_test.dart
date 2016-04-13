@@ -1,7 +1,7 @@
 @TestOn('vm')
 library bwu_datagrid_examples.test.e03b_editing_with_undo_test;
 
-import 'dart:async' show Future, Stream;
+import 'dart:async' show Future;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';

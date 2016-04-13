@@ -3,7 +3,8 @@ part of bwu_datagrid.core;
 abstract class Events {
   static const EventType<ActiveCellChanged> activeCellChanged =
       const EventType<ActiveCellChanged>('bwu-active-cell-changed');
-  @Deprecated('Use activeCellChanged') // ignore: constant_identifier_names
+  @Deprecated('Use activeCellChanged')
+  // ignore: constant_identifier_names
   static const EventType<ActiveCellChanged> ACTIVE_CELL_CHANGED =
       activeCellChanged;
 
@@ -440,7 +441,7 @@ class ActiveCellPositionChanged extends EventData {
 }
 
 class AddNewRow extends EventData {
-  final DataItem<dynamic, dynamic> item;
+  final DataItem item;
   final Column column;
 
   AddNewRow(Object sender, this.item, this.column) : super(sender: sender);
@@ -464,7 +465,7 @@ class BeforeDestroy extends EventData {
 
 class BeforeEditCell extends EventData {
   final Cell cell;
-  final DataItem<dynamic, dynamic> item;
+  final DataItem item;
   final Column column;
 
   BeforeEditCell(Object sender, {this.cell, this.item, this.column})
@@ -473,7 +474,7 @@ class BeforeEditCell extends EventData {
 
 class CellChange extends EventData {
   final Cell cell;
-  final DataItem<dynamic, dynamic> item;
+  final DataItem item;
 
   CellChange(Object sender, this.cell, this.item) : super(sender: sender);
 }

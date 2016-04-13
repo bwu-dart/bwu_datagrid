@@ -19,7 +19,7 @@ import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 class CpuUtilizationFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     if (value != null && value > 90) {
       target.children.clear();
       target.append(new dom.SpanElement()
@@ -53,7 +53,7 @@ class AppElement extends PolymerElement {
       cellHighlightCssClass: 'changed',
       cellFlashingCssClass: 'current-server');
 
-  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
+  MapDataItemProvider<core.ItemBase> data;
   math.Random rnd = new math.Random();
 
   @override
@@ -72,10 +72,10 @@ class AppElement extends PolymerElement {
             formatter: new CpuUtilizationFormatter()));
       }
 
-      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
-        final MapDataItem<dynamic, dynamic> item =
-            new MapDataItem<dynamic, dynamic>({'server': 'Server ${i}',});
+        final MapDataItem item =
+            new MapDataItem({'server': 'Server ${i}',});
         data.items.add(item);
 
         for (int j = 0; j < 4; j++) {

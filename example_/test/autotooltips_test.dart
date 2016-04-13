@@ -1,7 +1,7 @@
 @TestOn('vm')
 library bwu_datagrid_examples.test.autotooltips_test;
 
-import 'dart:async' show Future, Stream;
+import 'dart:async' show Future;
 import 'dart:math' show Point, Rectangle;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';

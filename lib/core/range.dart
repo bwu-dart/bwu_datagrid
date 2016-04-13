@@ -66,6 +66,7 @@ class Range {
   }
 }
 
+@optionalTypeArgs
 abstract class ItemBase<K, V> {
   Map<K, V> _values = <K, V>{};
   dynamic operator [](K key) {
@@ -78,7 +79,7 @@ abstract class ItemBase<K, V> {
 }
 
 /// A base class that all special / non-data rows (like Group and GroupTotals) derive from.
-abstract class NonDataItem extends ItemBase<dynamic, dynamic> {}
+abstract class NonDataItem extends ItemBase {}
 
 /// Information about a group of rows.
 class Group extends NonDataItem {
@@ -101,7 +102,7 @@ class Group extends NonDataItem {
   GroupTotals totals;
 
   /// Rows that are part of the group.
-  List<ItemBase<dynamic, dynamic>> rows = <ItemBase<dynamic, dynamic>>[];
+  List<ItemBase> rows = <ItemBase>[];
 
   /// Sub-groups that are part of the group.
   List<Group> groups;

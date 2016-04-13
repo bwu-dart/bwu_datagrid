@@ -37,11 +37,11 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      final MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data =
+      final MapDataItemProvider<core.ItemBase> data =
           new MapDataItemProvider<
-              core.ItemBase<dynamic, dynamic>>(); //List<Map>(500);
+              core.ItemBase>(); //List<Map>(500);
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'duration': '5 days',
           'percentComplete': new math.Random().nextInt(100).round(),

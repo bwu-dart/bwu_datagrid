@@ -1,12 +1,11 @@
 @TestOn('vm')
 library bwu_datagrid_examples.test.e03_editing_test;
 
-import 'dart:async' show Future, Stream;
+import 'dart:async' show Future;
 
 import 'package:bwu_webdriver/bwu_webdriver.dart';
 import 'package:test/test.dart';
 import 'package:webdriver/io.dart' as wd;
-import 'package:webdriver/io.dart' show Keyboard;
 import 'common.dart';
 
 String pageUrl;
@@ -69,7 +68,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with enter', () async {
-          await editor.sendKeys('${titleNewValue}${Keyboard.enter}');
+          await editor.sendKeys('${titleNewValue}${wd.Keyboard.enter}');
           expect(await titleCell.elementExists(editorSelector), isFalse);
 
           await new Future<Null>.delayed(const Duration(milliseconds: 10));
@@ -86,7 +85,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('cancel with Esc', () async {
-          await editor.sendKeys('${titleNewValue}${Keyboard.escape}');
+          await editor.sendKeys('${titleNewValue}${wd.Keyboard.escape}');
           expect(await titleCell.elementExists(editorSelector), isFalse);
 
           await new Future<Null>.delayed(const Duration(milliseconds: 10));
@@ -128,7 +127,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
         test('accept with Ctrl+Enter', () async {
           await editor.sendKeys(
-              '${descriptionNewValue}${Keyboard.control}${Keyboard.enter}');
+              '${descriptionNewValue}${wd.Keyboard.control}${wd.Keyboard.enter}');
 
           if (autoEdit == AutoEdit.disabled) {
             expect(await driver.elementExists(editorSelector), isFalse);
@@ -154,7 +153,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('cancel with Esc', () async {
-          await editor.sendKeys('${descriptionNewValue}${Keyboard.escape}');
+          await editor.sendKeys('${descriptionNewValue}${wd.Keyboard.escape}');
           expect(await driver.elementExists(editorSelector), isFalse);
 
           await new Future<Null>.delayed(const Duration(milliseconds: 10));
@@ -197,7 +196,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with enter', () async {
-          await editor.sendKeys('${durationNewValue}${Keyboard.enter}');
+          await editor.sendKeys('${durationNewValue}${wd.Keyboard.enter}');
           expect(await durationCell.elementExists(editorSelector), isFalse);
 
           await new Future<Null>.delayed(const Duration(milliseconds: 10));
@@ -214,7 +213,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('cancel with Esc', () async {
-          await editor.sendKeys('${durationNewValue}${Keyboard.escape}');
+          await editor.sendKeys('${durationNewValue}${wd.Keyboard.escape}');
           expect(await durationCell.elementExists(editorSelector), isFalse);
 
           await new Future<Null>.delayed(const Duration(milliseconds: 10));
@@ -277,7 +276,8 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
         test('edit with keyboard, accept with Enter', () async {
           await editor.clear();
-          await editor.sendKeys('${percentCompleteNewValue}${Keyboard.enter}');
+          await editor
+              .sendKeys('${percentCompleteNewValue}${wd.Keyboard.enter}');
           expect(
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
@@ -304,7 +304,8 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
         test('cancel with Esc', () async {
           await editor.clear();
-          await editor.sendKeys('${percentCompleteNewValue}${Keyboard.escape}');
+          await editor
+              .sendKeys('${percentCompleteNewValue}${wd.Keyboard.escape}');
           expect(
               await percentCompleteCell.elementExists(editorSelector), isFalse);
 
@@ -343,9 +344,9 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         test('accept with enter', () async {
           if (browser == WebBrowser.firefox) {
             await editor.clear();
-            await editor.sendKeys('${startNewValue}${Keyboard.enter}');
+            await editor.sendKeys('${startNewValue}${wd.Keyboard.enter}');
           } else {
-            await editor.sendKeys('${startNewInput}${Keyboard.enter}');
+            await editor.sendKeys('${startNewInput}${wd.Keyboard.enter}');
           }
           expect(await startCell.elementExists(editorSelector), isFalse);
 
@@ -370,9 +371,9 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         test('cancel with Esc', () async {
           if (browser == WebBrowser.firefox) {
             await editor.clear();
-            await editor.sendKeys('${startNewValue}${Keyboard.escape}');
+            await editor.sendKeys('${startNewValue}${wd.Keyboard.escape}');
           } else {
-            await editor.sendKeys('${startNewInput}${Keyboard.escape}');
+            await editor.sendKeys('${startNewInput}${wd.Keyboard.escape}');
           }
           expect(await startCell.elementExists(editorSelector), isFalse);
 
@@ -408,9 +409,9 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         test('accept with enter', () async {
           if (browser == WebBrowser.firefox) {
             await editor.clear();
-            await editor.sendKeys('${finishNewValue}${Keyboard.enter}');
+            await editor.sendKeys('${finishNewValue}${wd.Keyboard.enter}');
           } else {
-            await editor.sendKeys('${finishNewInput}${Keyboard.enter}');
+            await editor.sendKeys('${finishNewInput}${wd.Keyboard.enter}');
           }
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
@@ -435,9 +436,9 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         test('cancel with Esc', () async {
           if (browser == WebBrowser.firefox) {
             await editor.clear();
-            await editor.sendKeys('${finishNewValue}${Keyboard.escape}');
+            await editor.sendKeys('${finishNewValue}${wd.Keyboard.escape}');
           } else {
-            await editor.sendKeys('${finishNewInput}${Keyboard.escape}');
+            await editor.sendKeys('${finishNewInput}${wd.Keyboard.escape}');
           }
           expect(await finishCell.elementExists(editorSelector), isFalse);
 
@@ -477,7 +478,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with enter', () async {
-          await editor.sendKeys(Keyboard.enter);
+          await editor.sendKeys(wd.Keyboard.enter);
 
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
@@ -500,7 +501,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('cancel with Esc', () async {
-          await editor.sendKeys(Keyboard.escape);
+          await editor.sendKeys(wd.Keyboard.escape);
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
           await new Future<Null>.delayed(const Duration(milliseconds: 10));
@@ -543,7 +544,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('accept with enter', () async {
-          await editor.sendKeys(Keyboard.enter);
+          await editor.sendKeys(wd.Keyboard.enter);
 
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
@@ -562,7 +563,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
         });
 
         test('cancel with Esc', () async {
-          await editor.sendKeys(Keyboard.escape);
+          await editor.sendKeys(wd.Keyboard.escape);
           expect(await effortDrivenCell.elementExists(editorSelector), isFalse);
 
           await new Future<Null>.delayed(const Duration(milliseconds: 10));

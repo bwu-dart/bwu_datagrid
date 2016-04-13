@@ -87,7 +87,7 @@ class AppElement extends PolymerElement {
   bool get isUndoItem => _commandQueue.isNotEmpty;
 
   void queueAndExecuteCommand(
-      DataItem<dynamic, dynamic> item, Column column, EditCommand editCommand) {
+      DataItem item, Column column, EditCommand editCommand) {
 //    final bool oldValue = isUndoItem;
     _commandQueue.add(editCommand);
     editCommand.execute();
@@ -112,10 +112,10 @@ class AppElement extends PolymerElement {
       gridOptions.editCommandHandler = queueAndExecuteCommand;
 
       grid = $['myGrid'];
-      final DataProvider<ItemBase<dynamic, dynamic>> data =
-          new MapDataItemProvider<ItemBase<dynamic, dynamic>>();
+      final DataProvider<ItemBase> data =
+          new MapDataItemProvider<ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           "description":
               'This is a sample task description.\n  It can be multiline',

@@ -44,7 +44,7 @@ class FormulaEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem<dynamic, dynamic> item, Object value) {
+  void applyValue(DataItem item, Object value) {
     return _editor.applyValue(item, value);
   }
 
@@ -65,7 +65,7 @@ class FormulaEditor extends Editor {
   bool get isValueChanged => _editor.isValueChanged;
 
   @override
-  void loadValue(DataItem<dynamic, dynamic> item) => _editor.loadValue(item);
+  void loadValue(DataItem item) => _editor.loadValue(item);
 
   @override
   String serializeValue() => _editor.serializeValue();

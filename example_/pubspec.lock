@@ -6,7 +6,7 @@ packages:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.1"
+    version: "0.27.2"
   ansicolor:
     description:
       name: ansicolor
@@ -15,9 +15,9 @@ packages:
     version: "0.0.9"
   archive:
     description:
-      name: archive
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../../contributing/archive"
+      relative: true
+    source: path
     version: "1.0.20"
   args:
     description:
@@ -66,6 +66,12 @@ packages:
       name: bwu_grinder_tasks
       url: "https://pub.dartlang.org"
     source: hosted
+    version: "0.1.1-dev.2"
+  bwu_log:
+    description:
+      name: bwu_log
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.1.0"
   bwu_utils:
     description:
@@ -96,7 +102,7 @@ packages:
       name: code_transformers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.2+1"
   collection:
     description:
       name: collection
@@ -114,7 +120,7 @@ packages:
       name: crypto
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.2+1"
+    version: "1.0.0"
   csslib:
     description:
       name: csslib
@@ -144,7 +150,7 @@ packages:
       name: grinder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.2"
+    version: "0.8.0+2"
   html:
     description:
       name: html
@@ -180,7 +186,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.7"
+    version: "0.12.7+1"
   logging:
     description:
       name: logging
@@ -193,6 +199,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.0+2"
+  meta:
+    description:
+      name: meta
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.0"
   mime:
     description:
       name: mime
@@ -265,18 +277,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  quiver_log:
-    description:
-      name: quiver_log
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   reflectable:
     description:
       name: reflectable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.2"
+    version: "0.5.4"
   shelf:
     description:
       name: shelf
@@ -354,7 +360,7 @@ packages:
       name: unittest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.11.6+3"
+    version: "0.11.6+4"
   unscripted:
     description:
       name: unscripted
@@ -387,10 +393,10 @@ packages:
     version: "1.0.2"
   webdriver:
     description:
-      name: webdriver
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.10.0-pre.15"
+      path: "../../dart-lang/webdriver.dart"
+      relative: true
+    source: path
+    version: "0.10.0-pre.13"
   when:
     description:
       name: when

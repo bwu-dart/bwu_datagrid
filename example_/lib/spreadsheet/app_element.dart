@@ -39,7 +39,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
+  MapDataItemProvider<core.ItemBase> data;
 
   String numToChars(int i) {
     String result = '';
@@ -70,9 +70,9 @@ class AppElement extends PolymerElement {
       }
 
       // prepare the data
-      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 100; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({'num': i,}));
+        data.items.add(new MapDataItem({'num': i,}));
       }
 
       grid
@@ -110,7 +110,7 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          final DataItem<dynamic, dynamic> item = e.item;
+          final DataItem item = e.item;
           grid.invalidateRow(data.length);
           data.items.add(item);
           grid.updateRowCount();

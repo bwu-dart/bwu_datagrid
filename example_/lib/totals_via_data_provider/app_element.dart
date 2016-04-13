@@ -47,7 +47,7 @@ class AppElement extends PolymerElement {
 
       grid = $['myGrid'];
 
-      data = new TotalsDataProvider(<MapDataItem<dynamic, dynamic>>[], columns);
+      data = new TotalsDataProvider(<MapDataItem>[], columns);
       for (int i = 0; i < 10; i++) {
         final MapDataItem<String, int> d =
             new MapDataItem<String, int>({'id': i});

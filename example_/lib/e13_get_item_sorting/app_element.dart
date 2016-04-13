@@ -14,7 +14,7 @@ import 'package:bwu_datagrid_examples/asset/example_style.dart';
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
 class CustomMapDataItemProvider
-    extends DataProvider<core.ItemBase<dynamic, dynamic>> {
+    extends DataProvider<core.ItemBase> {
   Function _getItem;
   Function _getLength;
 
@@ -24,7 +24,7 @@ class CustomMapDataItemProvider
   int get length => _getLength();
 
   @override
-  DataItem<dynamic, dynamic> getItem(int index) => _getItem(index);
+  DataItem getItem(int index) => _getItem(index);
 
   @override
   RowMetadata getItemMetadata(int index) => null;
@@ -58,7 +58,7 @@ class AppElement extends PolymerElement {
   int i;
 
   BwuDatagrid grid;
-  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
+  MapDataItemProvider<core.ItemBase> data;
 
   @override
   void attached() {
@@ -67,13 +67,13 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
       // prepare the data
-      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      data = new MapDataItemProvider<core.ItemBase>();
 
       for (int i = 0; i < numberOfItems; i++) {
         items[i] = i;
 
         data.items
-            .add(new MapDataItem<dynamic, dynamic>({'title': 'Task ${i}'}));
+            .add(new MapDataItem({'title': 'Task ${i}'}));
       }
 
       indices = {
@@ -135,7 +135,7 @@ class AppElement extends PolymerElement {
   }
 
   // Define function used to get the data and sort it.
-  core.ItemBase<dynamic, dynamic> getItem(int index) {
+  core.ItemBase getItem(int index) {
     return isAsc
         ? data.items[indices[currentSortCol.id][index]]
         : data.items[indices[currentSortCol.id][(data.length - 1) - index]];

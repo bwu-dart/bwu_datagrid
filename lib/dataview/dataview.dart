@@ -27,15 +27,14 @@ part 'helpers.dart';
 //  });
 
 typedef bool FilterFn(dynamic a, dynamic b);
-typedef List<core.ItemBase<dynamic, dynamic>> _UncompiledFilterFn(
-    List<core.ItemBase<dynamic, dynamic>> items, Map<dynamic, dynamic> args);
-typedef List<core.ItemBase<dynamic, dynamic>> _UncompiledFilterWithCacheFn(
-    List<core.ItemBase<dynamic, dynamic>> items,
+typedef List<core.ItemBase> _UncompiledFilterFn(
+    List<core.ItemBase> items, Map<dynamic, dynamic> args);
+typedef List<core.ItemBase> _UncompiledFilterWithCacheFn(
+    List<core.ItemBase> items,
     Map<dynamic, dynamic> args,
     Map<int, bool> cache);
 
-class DataView<T extends core.ItemBase<dynamic, dynamic>>
-    extends DataProvider<T> {
+class DataView<T extends core.ItemBase> extends DataProvider<T> {
   /// A sample Model implementation.
   /// Provides a filtered view of the underlying data.
   ///
@@ -513,13 +512,13 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
 
   List<core.Group> get getGroups => groups;
 
-  List<core.Group> extractGroups(List<core.ItemBase<dynamic, dynamic>> rows,
+  List<core.Group> extractGroups(List<core.ItemBase> rows,
       [core.Group parentGroup]) {
     core.Group group;
     Object val;
     final List<core.Group> groups = <core.Group>[];
     Map<int, core.Group> groupsByVal = {};
-    core.ItemBase<dynamic, dynamic> r;
+    core.ItemBase r;
     int level = parentGroup != null ? parentGroup.level + 1 : 0;
     GroupingInfo gi = groupingInfos[level];
 
@@ -638,13 +637,11 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
     }
   }
 
-  List<core.ItemBase<dynamic, dynamic>> flattenGroupedRows(
-      List<core.Group> groups,
-      [int level]) {
+  List<core.ItemBase> flattenGroupedRows(List<core.Group> groups, [int level]) {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
-    List<core.ItemBase<dynamic, dynamic>> groupedRows = [];
-    List<core.ItemBase<dynamic, dynamic>> rows;
+    List<core.ItemBase> groupedRows = [];
+    List<core.ItemBase> rows;
 //    int gl = 0; // TODO(zoechi) why is it unused?
     core.Group g;
     for (int i = 0; i < groups.length; i++) {
@@ -756,9 +753,9 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
 //    return fn;
 //  }
 
-  List<core.ItemBase<dynamic, dynamic>> uncompiledFilter(
-      List<core.ItemBase<dynamic, dynamic>> items, Map<dynamic, dynamic> args) {
-    List<core.ItemBase<dynamic, dynamic>> retval = [];
+  List<core.ItemBase> uncompiledFilter(
+      List<core.ItemBase> items, Map<dynamic, dynamic> args) {
+    List<core.ItemBase> retval = [];
 //    int idx = 0; // TODO(zoechi) why is it unused?
 
     try {
@@ -775,13 +772,11 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
     return retval;
   }
 
-  List<core.ItemBase<dynamic, dynamic>> uncompiledFilterWithCaching(
-      List<core.ItemBase<dynamic, dynamic>> items,
-      Map<dynamic, dynamic> args,
-      Map<int, bool> cache) {
-    List<core.ItemBase<dynamic, dynamic>> retval = [];
+  List<core.ItemBase> uncompiledFilterWithCaching(List<core.ItemBase> items,
+      Map<dynamic, dynamic> args, Map<int, bool> cache) {
+    List<core.ItemBase> retval = [];
 //    int idx = 0; // TODO(zoechi) why is it unused?
-    core.ItemBase<dynamic, dynamic> item;
+    core.ItemBase item;
 
     for (int i = 0; i < items.length; i++) {
       item = items[i];
@@ -796,8 +791,7 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
     return retval;
   }
 
-  Map<dynamic, dynamic> getFilteredAndPagedItems(
-      List<core.ItemBase<dynamic, dynamic>> items) {
+  Map<dynamic, dynamic> getFilteredAndPagedItems(List<core.ItemBase> items) {
     if (filter != null) {
       final _UncompiledFilterFn
           batchFilter = /*options.inlineFilters ? compiledFilter :*/ uncompiledFilter;
@@ -820,7 +814,7 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
     }
 
     // get the current page
-    List<core.ItemBase<dynamic, dynamic>> paged;
+    List<core.ItemBase> paged;
     if (pagesize != 0) {
       if (filteredItems.length < pagenum * pagesize) {
         pagenum = (filteredItems.length / pagesize).floor();
@@ -836,10 +830,9 @@ class DataView<T extends core.ItemBase<dynamic, dynamic>>
     return {'totalRows': filteredItems.length, 'rows': paged};
   }
 
-  List<int> getRowDiffs(List<core.ItemBase<dynamic, dynamic>> rows,
-      List<core.ItemBase<dynamic, dynamic>> newRows) {
-    core.ItemBase<dynamic, dynamic> item;
-    core.ItemBase<dynamic, dynamic> r;
+  List<int> getRowDiffs(List<core.ItemBase> rows, List<core.ItemBase> newRows) {
+    core.ItemBase item;
+    core.ItemBase r;
     bool eitherIsNonData;
     List<int> diff = [];
     int from = 0;

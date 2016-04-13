@@ -43,7 +43,7 @@ class NumericRangeEditor extends Editor {
 
   @override
   void applyValue(
-      DataItem<dynamic, dynamic> item, Map<dynamic, dynamic> value) {
+      DataItem item, Map<dynamic, dynamic> value) {
     item['from'] = value['from'];
     item['to'] = value['to'];
   }
@@ -66,7 +66,7 @@ class NumericRangeEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem<dynamic, dynamic> item) {
+  void loadValue(DataItem item) {
     fromInput.value = '${item['from']}';
     toInput.value = '${item['to']}';
   }

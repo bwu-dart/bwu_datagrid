@@ -129,7 +129,7 @@ class CompositeEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem<dynamic, dynamic> item, List<Object> state) {
+  void applyValue(DataItem item, List<Object> state) {
     int idx = editors.length;
     while (idx-- > 0) {
       editors[idx].applyValue(item, state[idx]);
@@ -137,7 +137,7 @@ class CompositeEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem<dynamic, dynamic> item) {
+  void loadValue(DataItem item) {
     int idx = editors.length;
     while (idx-- > 0) {
       editors[idx].loadValue(item);

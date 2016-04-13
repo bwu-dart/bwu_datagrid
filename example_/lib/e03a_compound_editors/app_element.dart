@@ -20,7 +20,7 @@ import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 class NumericRangeFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     target.text = "${dataContext['from']} - ${dataContext['to']}";
   }
@@ -59,11 +59,11 @@ class AppElement extends PolymerElement {
 
     try {
       grid = $['myGrid'];
-      final MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data =
-          new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      final MapDataItemProvider<core.ItemBase> data =
+          new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
         int from = new math.Random().nextInt(100);
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'from': from,
           'to': from + new math.Random().nextInt(100)

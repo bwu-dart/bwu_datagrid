@@ -50,7 +50,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
+  MapDataItemProvider<core.ItemBase> data;
 
   @override
   void attached() {
@@ -60,10 +60,10 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       // prepare the data
-      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      data = new MapDataItemProvider<core.ItemBase>();
 
       for (int i = 1; i <= 10000; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'duration': '5 days',
           'percentComplete': rnd.nextInt(100),

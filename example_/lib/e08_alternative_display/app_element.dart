@@ -21,7 +21,7 @@ import 'custom_style.dart';
 class CellFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
 
     target.append(new RowItem()..data = dataContext);
@@ -52,7 +52,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  MapDataItemProvider<core.ItemBase<dynamic, dynamic>> data;
+  MapDataItemProvider<core.ItemBase> data;
 
   @override
   void attached() {
@@ -62,9 +62,9 @@ class AppElement extends PolymerElement {
       grid = $['myGrid'];
 
       // prepare the data
-      data = new MapDataItemProvider<core.ItemBase<dynamic, dynamic>>();
+      data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 100; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'name': 'User ${i}',
           'email': 'test.user@nospam.org',
           'title': 'Regional sales manager',

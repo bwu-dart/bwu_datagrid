@@ -15,7 +15,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 class DefaultFormatter extends CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value != null) {
       target.text =
@@ -28,7 +28,7 @@ abstract class Formatter {}
 
 abstract class CellFormatter extends Formatter {
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext);
+      Column columnDef, core.ItemBase dataContext);
 }
 
 abstract class GroupTitleFormatter extends Formatter {
@@ -38,7 +38,7 @@ abstract class GroupTitleFormatter extends Formatter {
 class PercentCompleteFormatter extends CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value == null || value == "") {
       target.text = '-';
@@ -56,7 +56,7 @@ class PercentCompleteFormatter extends CellFormatter {
 class PercentCompleteBarFormatter extends CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     if (value == null || value == "") {
       //target.text = '';
       value = 0;
@@ -83,7 +83,7 @@ class PercentCompleteBarFormatter extends CellFormatter {
 class YesNoFormatter extends CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.text = value ? 'Yes' : 'No';
   }
 }
@@ -91,7 +91,7 @@ class YesNoFormatter extends CellFormatter {
 class CheckmarkFormatter extends CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
-      Column columnDef, core.ItemBase<dynamic, dynamic> dataContext) {
+      Column columnDef, core.ItemBase dataContext) {
     target.children.clear();
     if (value != null && value is bool && value) {
       target.append(new dom.ImageElement(

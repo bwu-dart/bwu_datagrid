@@ -2,7 +2,7 @@
 library bwu_datagrid.components.bwu_column_picker;
 
 import 'dart:html' as dom;
-import 'dart:async' show Completer, Future, StreamSubscription;
+import 'dart:async' show Future, StreamSubscription;
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;

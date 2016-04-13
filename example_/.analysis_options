@@ -9,7 +9,7 @@ analyzer:
 linter:
   rules:
     - always_declare_return_types
-#    - always_specify_types
+    - always_specify_types
     - annotate_overrides
 #    - avoid_as
     - avoid_init_to_null
@@ -36,6 +36,5 @@ linter:
     - type_init_formals
 #    - unnecessary_brace_in_string_interp
     - unnecessary_getters_setters # https://groups.google.com/a/dartlang.org/forum/#!topic/reviews/Q8D-mKoUVQA
-#    - unused_shown_names TODO(zoechi) enable when available
     - package_names
 

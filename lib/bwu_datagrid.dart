@@ -55,13 +55,12 @@ class BwuDatagrid extends PolymerElement {
   String theme = 'bwu-datagrid-default-theme';
 
   // DataGrid(dom.Element container, String data, int columns, Options options);
-  DataProvider<core.ItemBase<dynamic, dynamic>> _dataProvider;
+  DataProvider<core.ItemBase> _dataProvider;
 
   @property
-  DataProvider<core.ItemBase<dynamic, dynamic>> get dataProvider =>
-      _dataProvider;
+  DataProvider<core.ItemBase> get dataProvider => _dataProvider;
 
-  set data(DataProvider<core.ItemBase<dynamic, dynamic>> data) {
+  set data(DataProvider<core.ItemBase> data) {
     setData(data, true);
   }
 
@@ -223,7 +222,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   async.Future<Null> setup(
-      {DataProvider<core.ItemBase<dynamic, dynamic>> dataProvider,
+      {DataProvider<core.ItemBase> dataProvider,
       List<Column> columns,
       GridOptions gridOptions}) {
     _setupCompleter = new async.Completer<Null>();
@@ -1673,7 +1672,7 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  void setData(DataProvider<core.ItemBase<dynamic, dynamic>> newData,
+  void setData(DataProvider<core.ItemBase> newData,
       [bool scrollToTop = false]) {
     _dataProvider = newData;
     invalidateAllRows();
@@ -1695,7 +1694,7 @@ class BwuDatagrid extends PolymerElement {
     return getDataLength + (_gridOptions.enableAddRow ? 1 : 0);
   }
 
-  core.ItemBase<dynamic, dynamic> getDataItem(int i) {
+  core.ItemBase getDataItem(int i) {
     if (i >= _dataProvider.length) {
       return null;
     }
@@ -1874,8 +1873,7 @@ class BwuDatagrid extends PolymerElement {
             : null);
   }
 
-  Object _getDataItemValueForColumn(
-      core.ItemBase<dynamic, dynamic> item, Column columnDef) {
+  Object _getDataItemValueForColumn(core.ItemBase item, Column columnDef) {
     if (_gridOptions.dataItemColumnValueExtractor != null) {
       return _gridOptions.dataItemColumnValueExtractor(item, columnDef);
     }
@@ -1883,7 +1881,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   dom.Element _appendRowHtml(int row, Range range, int dataLength) {
-    final core.ItemBase<dynamic, dynamic> d = getDataItem(row);
+    final core.ItemBase d = getDataItem(row);
     final bool dataLoading = row < dataLength && d == null;
     String rowCss =
         'bwu-datagrid-row ${dataLoading ? " loading" : ""} ${row == _activeRow
@@ -1951,7 +1949,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _appendCellHtml(dom.Element rowElement, int row, int cell,
-      String colspan, core.ItemBase<dynamic, dynamic> item) {
+      String colspan, core.ItemBase item) {
     final Column m = columns[cell];
     String cellCss = "bwu-datagrid-cell l${cell} r${math.min(
         columns.length - 1, cell + utils.parseInt(colspan) - 1)} ${
@@ -2069,7 +2067,7 @@ class BwuDatagrid extends PolymerElement {
     }
 
     final Column m = columns[cell];
-    final core.ItemBase<dynamic, dynamic> d = getDataItem(row);
+    final core.ItemBase d = getDataItem(row);
     if (_currentEditor != null && _activeRow == row && _activeCell == cell) {
       _currentEditor.loadValue(d);
     } else {
@@ -2090,7 +2088,7 @@ class BwuDatagrid extends PolymerElement {
 
     _ensureCellNodesInRowsCache(row);
 
-    core.ItemBase<dynamic, dynamic> d = getDataItem(row);
+    core.ItemBase d = getDataItem(row);
 
     for (int columnIdx in cacheEntry.cellNodesByColumnIdx.keys) {
       if (!cacheEntry.cellNodesByColumnIdx.containsKey(columnIdx)) {
@@ -2372,7 +2370,7 @@ class BwuDatagrid extends PolymerElement {
       Map<String, Column> metadata =
           itemMetadata != null ? itemMetadata.columns : null;
 
-      core.ItemBase<dynamic, dynamic> d = getDataItem(row);
+      core.ItemBase d = getDataItem(row);
 
       // TODO:  shorten this loop (index? heuristics? binary search?)
       for (int i = 0, ii = columns.length; i < ii; i++) {
@@ -3282,7 +3280,7 @@ class BwuDatagrid extends PolymerElement {
     _currentEditor = null;
 
     if (_activeCellNode != null) {
-      core.ItemBase<dynamic, dynamic> d = getDataItem(_activeRow);
+      core.ItemBase d = getDataItem(_activeRow);
       _activeCellNode.classes..remove("editable")..remove("invalid");
       if (d != null) {
         final Column column = columns[_activeCell];
@@ -3323,7 +3321,7 @@ class BwuDatagrid extends PolymerElement {
     }
 
     final Column columnDef = columns[_activeCell];
-    final core.ItemBase<dynamic, dynamic> item = getDataItem(_activeRow);
+    final core.ItemBase item = getDataItem(_activeRow);
 
     if (!_eventBus
         .fire(
@@ -3356,7 +3354,7 @@ class BwuDatagrid extends PolymerElement {
         position: (_absBox(_activeCellNode)),
         container: _activeCellNode,
         column: columnDef,
-        item: item != null ? item : new MapDataItem<dynamic, dynamic>(),
+        item: item != null ? item : new MapDataItem(),
         commitChanges: _commitEditAndSetFocus,
         cancelChanges: _cancelEditAndSetFocus));
 
@@ -3922,7 +3920,7 @@ class BwuDatagrid extends PolymerElement {
   //////////////////////////////////////////////////////////////////////////////////////////////
   // IEditor implementation for the editor lock
   bool _commitCurrentEdit() {
-    final core.ItemBase<dynamic, dynamic> item = getDataItem(_activeRow);
+    final core.ItemBase item = getDataItem(_activeRow);
     final Column column = columns[_activeCell];
 
     if (_currentEditor != null) {
@@ -3965,8 +3963,7 @@ class BwuDatagrid extends PolymerElement {
               _makeActiveCellNormal();
             }
           } else {
-            final MapDataItem<dynamic, dynamic> newItem = new MapDataItem<
-                dynamic,
+            final MapDataItem newItem = new MapDataItem<dynamic,
                 dynamic>(); // TODO should be the same as the type used by provided data?
             _currentEditor.applyValue(newItem, _currentEditor.serializeValue());
             _makeActiveCellNormal();

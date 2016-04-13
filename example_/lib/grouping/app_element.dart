@@ -162,8 +162,8 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   BwuDatagrid grid;
-  List<MapDataItem<dynamic, dynamic>> data;
-  DataView<core.ItemBase<dynamic, dynamic>> dataView;
+  List<MapDataItem> data;
+  DataView<core.ItemBase> dataView;
 
   String sortcol = "title";
   int sortdir = 1;
@@ -179,7 +179,7 @@ class AppElement extends PolymerElement {
 
       final GroupItemMetadataProvider groupItemMetadataProvider =
           new GroupItemMetadataProvider();
-      dataView = new DataView<core.ItemBase<dynamic, dynamic>>(
+      dataView = new DataView<core.ItemBase>(
           options: new DataViewOptions(
               groupItemMetadataProvider: groupItemMetadataProvider,
               inlineFilters: true));
@@ -275,7 +275,7 @@ class AppElement extends PolymerElement {
   }
 
   bool myFilter(
-      core.ItemBase<dynamic, dynamic> item, Map<dynamic, dynamic> args) {
+      core.ItemBase item, Map<dynamic, dynamic> args) {
     return item["percentComplete"] >= args['percentComplete'];
   }
 
@@ -284,18 +284,18 @@ class AppElement extends PolymerElement {
   }
 
   int comparer(
-      core.ItemBase<dynamic, dynamic> a, core.ItemBase<dynamic, dynamic> b) {
+      core.ItemBase a, core.ItemBase b) {
     final int x = a[sortcol];
     final int y = b[sortcol];
     if (x == y) {
       return 0;
     }
 
-    if (x is Comparable<core.ItemBase<dynamic, dynamic>>) {
+    if (x is Comparable<core.ItemBase>) {
       return x.compareTo(y);
     }
 
-    if (y is Comparable<core.ItemBase<dynamic, dynamic>>) {
+    if (y is Comparable<core.ItemBase>) {
       return 1;
     }
 
@@ -341,8 +341,8 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
-          comparer: (core.ItemBase<dynamic, dynamic> a,
-                  core.ItemBase<dynamic, dynamic> b) =>
+          comparer: (core.ItemBase a,
+                  core.ItemBase b) =>
               (a as core.Group).count - (b as core.Group).count,
           aggregators: <Aggregator>[
             new AvgAggregator("percentComplete"),
@@ -420,9 +420,9 @@ class AppElement extends PolymerElement {
       "03/03/2009"
     ];
     //var timer = new Stopwatch()..start();
-    data = new List<MapDataItem<dynamic, dynamic>>.generate(
+    data = new List<MapDataItem>.generate(
         count,
-        (int i) => new MapDataItem<dynamic, dynamic>({
+        (int i) => new MapDataItem({
               "id": "id_${i}",
               "num": i,
               "title": "Task ${i}",

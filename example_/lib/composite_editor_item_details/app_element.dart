@@ -87,7 +87,7 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  MapDataItemProvider<ItemBase<dynamic, dynamic>> data;
+  MapDataItemProvider<ItemBase> data;
 
   @override
   void attached() {
@@ -96,9 +96,9 @@ class AppElement extends PolymerElement {
     try {
       grid = $['myGrid'];
 
-      data = new MapDataItemProvider<ItemBase<dynamic, dynamic>>();
+      data = new MapDataItemProvider<ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem<dynamic, dynamic>({
+        data.items.add(new MapDataItem({
           'title': 'Task ${i}',
           'description':
               'This is a sample task description.\n  It can be multiline',
@@ -160,7 +160,7 @@ class AppElement extends PolymerElement {
   }
 
   void _addNewRowHandler(AddNewRow e) {
-    final DataItem<dynamic, dynamic> item = e.item;
+    final DataItem item = e.item;
 //    var column = e.column;
     grid.invalidateRow(data.length);
     data.items.add(item);
