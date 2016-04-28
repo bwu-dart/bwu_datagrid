@@ -40,7 +40,7 @@ class AppElement extends PolymerElement {
       final MapDataItemProvider<core.ItemBase> data =
           new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem(<String,dynamic>{
           'title': "Task ${i}",
           'duration': "5 days",
           'percentComplete': new math.Random().nextInt(100).round(),

@@ -264,11 +264,11 @@ Future<Null> selectRowByTask(ExtendedWebDriver driver, String taskTitle,
     await new Future<Null>.delayed(const Duration(milliseconds: 100));
   }
 
-  final List<WebElement> cells = await (await driver
-          .findElements(firstColumnSelector)
-          .asyncMap(
-              (WebElement e) async => {'element': e, 'text': await e.text})
-          .where((Map<dynamic, dynamic> item) => item['text'] == taskTitle))
+  final List<WebElement> cells = await driver
+      .findElements(firstColumnSelector)
+      .asyncMap((WebElement e) async =>
+          <String, dynamic>{'element': e, 'text': await e.text})
+      .where((Map<dynamic, dynamic> item) => item['text'] == taskTitle)
       .map((Map<dynamic, dynamic> item) => item['element'])
       .toList() as List<WebElement>;
   if (cells.length == 0) {

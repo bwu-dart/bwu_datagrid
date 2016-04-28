@@ -13,12 +13,12 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-class CustomMapDataItemProvider
-    extends DataProvider<core.ItemBase> {
+class CustomMapDataItemProvider extends DataProvider<core.ItemBase> {
   Function _getItem;
   Function _getLength;
 
-  CustomMapDataItemProvider(this._getItem, this._getLength) : super([]);
+  CustomMapDataItemProvider(this._getItem, this._getLength)
+      : super(<core.ItemBase<dynamic, dynamic>>[]);
 
   @override
   int get length => _getLength();
@@ -72,11 +72,10 @@ class AppElement extends PolymerElement {
       for (int i = 0; i < numberOfItems; i++) {
         items[i] = i;
 
-        data.items
-            .add(new MapDataItem({'title': 'Task ${i}'}));
+        data.items.add(new MapDataItem(<String,dynamic>{'title': 'Task ${i}'}));
       }
 
-      indices = {
+      indices = <String,dynamic>{
         'title': items,
         'c1': randomize(items),
         'c2': randomize(items),

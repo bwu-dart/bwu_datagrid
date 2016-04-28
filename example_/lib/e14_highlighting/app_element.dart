@@ -75,7 +75,7 @@ class AppElement extends PolymerElement {
       data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
         final MapDataItem item =
-            new MapDataItem({'server': 'Server ${i}',});
+            new MapDataItem(<String,dynamic>{'server': 'Server ${i}',});
         data.items.add(item);
 
         for (int j = 0; j < 4; j++) {
@@ -118,7 +118,7 @@ class AppElement extends PolymerElement {
       data.items[server]['cpu${cpu}'] = val;
 
       if (!changes.containsKey(server)) {
-        changes[server] = {};
+        changes[server] = <String,String>{};
       }
 
       changes[server]['cpu${cpu}'] = 'changed';

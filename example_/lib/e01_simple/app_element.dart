@@ -17,7 +17,7 @@ class AppElement extends PolymerElement {
   AppElement.created() : super.created();
 
   BwuDatagrid grid;
-  List<Column> columns = [
+  List<Column> columns = <Column>[
     new Column(id: 'title', name: 'Title', field: 'title'),
     new Column(id: 'duration', name: 'Duration', field: 'duration'),
     new Column(id: '%', name: '% Complete', field: 'percentComplete'),
@@ -41,7 +41,7 @@ class AppElement extends PolymerElement {
           new MapDataItemProvider<
               core.ItemBase>(); //List<Map>(500);
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem(<String,dynamic>{
           'title': 'Task ${i}',
           'duration': '5 days',
           'percentComplete': new math.Random().nextInt(100).round(),

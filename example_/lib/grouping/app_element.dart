@@ -224,7 +224,7 @@ class AppElement extends PolymerElement {
         // initialize the model after all the events have been hooked up
         dataView.beginUpdate();
         dataView.setFilter(myFilter);
-        dataView.setFilterArgs({'percentComplete': percentCompleteThreshold});
+        dataView.setFilterArgs(<String,dynamic>{'percentComplete': percentCompleteThreshold});
         loadData(50);
         groupByDuration();
         dataView.endUpdate();
@@ -262,8 +262,8 @@ class AppElement extends PolymerElement {
     bool isExpanding = percentCompleteThreshold < prevPercentCompleteThreshold;
     Range renderedRange = grid.getRenderedRange();
 
-    dataView.setFilterArgs({'percentComplete': percentCompleteThreshold});
-    dataView.setRefreshHints({
+    dataView.setFilterArgs(<String,dynamic>{'percentComplete': percentCompleteThreshold});
+    dataView.setRefreshHints(<String,dynamic>{
       'ignoreDiffsBefore': renderedRange.top,
       'ignoreDiffsAfter': renderedRange.bottom + 1,
       'isFilterNarrowing': isNarrowing,
@@ -422,7 +422,7 @@ class AppElement extends PolymerElement {
     //var timer = new Stopwatch()..start();
     data = new List<MapDataItem>.generate(
         count,
-        (int i) => new MapDataItem({
+        (int i) => new MapDataItem(<String,dynamic>{
               "id": "id_${i}",
               "num": i,
               "title": "Task ${i}",

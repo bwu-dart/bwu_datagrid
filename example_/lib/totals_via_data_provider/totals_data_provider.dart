@@ -8,7 +8,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 
 class TotalsDataProvider
     extends MapDataItemProvider<core.ItemBase> {
-  MapDataItem _totals = new MapDataItem({});
+  MapDataItem _totals = new MapDataItem(<String,dynamic>{});
   List<Column> _columns;
 
   RowMetadata totalsMetadata = new RowMetadata(

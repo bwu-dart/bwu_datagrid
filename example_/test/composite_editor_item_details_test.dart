@@ -117,9 +117,7 @@ void tests(WebBrowser browser) {
             await (await driver.findElement(finishCellActiveRowSelector)).text,
             finishNewValue);
       }
-      expect(
-          await (await driver
-              .findElement(effortDrivenCellActiveRowCheckedSelector)),
+      expect(await driver.findElement(effortDrivenCellActiveRowCheckedSelector),
           isNotNull);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
@@ -158,8 +156,7 @@ void tests(WebBrowser browser) {
       expect(await (await driver.findElement(finishCellActiveRowSelector)).text,
           finishOldValue);
       expect(
-          await (await driver
-              .elementExists(effortDrivenCellActiveRowCheckedSelector)),
+          await driver.elementExists(effortDrivenCellActiveRowCheckedSelector),
           false);
 
 //      await new Future.delayed(const Duration(seconds: 150), () {});
@@ -244,7 +241,7 @@ Future<Null> editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   expect(titleField, isNotNull);
   expect(await titleField.attributes['value'], titleOldValue);
   await titleField.click();
-  await titleField.sendKeys([
+  await titleField.sendKeys(<String>[
     Keyboard.end,
     Keyboard.shift,
     Keyboard.home,
@@ -257,7 +254,7 @@ Future<Null> editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   expect(descriptionField, isNotNull);
   expect(await descriptionField.attributes['value'], descriptionOldValue);
   await descriptionField.click();
-  await descriptionField.sendKeys([
+  await descriptionField.sendKeys(<String>[
     Keyboard.end,
     Keyboard.shift,
     Keyboard.home,
@@ -270,7 +267,7 @@ Future<Null> editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   expect(durationField, isNotNull);
   expect(await durationField.attributes['value'], durationOldValue);
   await durationField.click();
-  await durationField.sendKeys([
+  await durationField.sendKeys(<String>[
     Keyboard.end,
     Keyboard.shift,
     Keyboard.home,
@@ -284,7 +281,7 @@ Future<Null> editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   int oldValue = int.parse(await percentField.attributes['value']);
   expect(oldValue >= 0 && oldValue <= 100, isTrue);
   await percentField.click();
-  await percentField.sendKeys([
+  await percentField.sendKeys(<String>[
     Keyboard.end,
     Keyboard.shift,
     Keyboard.home,
@@ -296,7 +293,7 @@ Future<Null> editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   expect(startField, isNotNull);
   expect(await startField.attributes['value'], startOldValue);
   await startField.click();
-  await startField.sendKeys([
+  await startField.sendKeys(<String>[
     Keyboard.end,
     Keyboard.shift,
     Keyboard.home,
@@ -308,7 +305,7 @@ Future<Null> editRow(ExtendedWebDriver driver, WebBrowser browser) async {
   expect(finishField, isNotNull);
   expect(await finishField.attributes['value'], finishOldValue);
   await finishField.click();
-  await finishField.sendKeys([
+  await finishField.sendKeys(<String>[
     Keyboard.end,
     Keyboard.shift,
     Keyboard.home,

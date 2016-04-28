@@ -69,7 +69,7 @@ Future<Null> seleniumDebug() async {
     _pubServe.start(
         port: pubServePort,
         hostname: '0.0.0.0',
-        directories: ['web']).then((_) {
+        directories: <String>['web']).then((_) {
       _pubServe.stdout.listen((List<int> e) => io.stdout.add(e));
       _pubServe.stderr.listen((List<int> e) => io.stderr.add(e));
     });
@@ -81,7 +81,7 @@ Future<Null> seleniumDebug() async {
         chromeInfo.networkSettings.ports['5900/tcp'][0]['HostPort'];
     print('Chrome: ${chromePort}');
     io.Process.start('vinagre',
-        ['--vnc-scale', '--geometry', '1280x1024+200+0', ':${chromePort}']);
+        <String>['--vnc-scale', '--geometry', '1280x1024+200+0', ':${chromePort}']);
 //    io.Process.start('krdc', ['vnc://:${chromePort}']);
 //    io.Process.start('xvnc4viewer', ['-Shared', ':${chromePort}']);
     final ContainerInfo firefoxInfo = await _dockerConnection
@@ -91,7 +91,7 @@ Future<Null> seleniumDebug() async {
     print('Firefox: ${firefoxPort}');
     await new Future<Null>.delayed(const Duration(seconds: 1));
     io.Process.start('vinagre',
-        ['--vnc-scale', '--geometry', '1280x1024+300+0', ':${firefoxPort}']);
+        <String>['--vnc-scale', '--geometry', '1280x1024+300+0', ':${firefoxPort}']);
 //    io.Process.start('krdc', ['vnc://:${firefoxPort}']);
 //    io.Process.start('xvnc4viewer', ['-Shared', ':${firefoxPort}']);
   } catch (_) {
@@ -122,22 +122,22 @@ Future<Null> _startSelenium({bool wait: true}) async {
   _createdHubContainer = await task.run(_dockerConnection, _seleniumHubImage,
       detach: true,
       name: _hubContainerName,
-      publish: const ['4444:4444'],
+      publish: const <String>['4444:4444'],
       rm: wait);
   _createdChromeNodeContainer = await task.run(
       _dockerConnection, _seleniumChromeImage,
       detach: true,
-      link: const ['${_hubContainerName}:hub'],
+      link: const <String>['${_hubContainerName}:hub'],
       privileged: true,
       publishAll: true,
       rm: wait,
-      volume: const ['/dev/bus/usb:/dev/bus/usb']
+      volume: const <String>['/dev/bus/usb:/dev/bus/usb']
 //      ,addHost: const [pubServeIp]
       );
   _createdFirefoxNodeContainer = await task.run(
       _dockerConnection, _seleniumFirefoxImage,
       detach: true,
-      link: const ['${_hubContainerName}:hub'],
+      link: const <String>['${_hubContainerName}:hub'],
       publishAll: true,
       rm: wait
 //      ,addHost: const [pubServeIp]
@@ -157,7 +157,7 @@ class PubServe extends RunProcess {
 
   Future<io.Process> start(
       {int port,
-      List<String> directories: const ['test'],
+      List<String> directories: const <String>['test'],
       String hostname}) async {
     final Completer<io.Process> readyCompleter = new Completer<io.Process>();
     if (port != null && port > 0) {
@@ -166,12 +166,12 @@ class PubServe extends RunProcess {
       _port = await utils.getFreeIpPort();
     }
     if (directories == null || directories.isEmpty) {
-      directories = ['test'];
+      directories = <String>['test'];
     }
     directories.forEach((String d) => _directoryPorts[d] = null);
     String packageRoot = utils.packageRoot().path;
     //_process = await io.Process.start(
-    List<String> args = ['serve', '--port=${_port}'];
+    List<String> args = <String>['serve', '--port=${_port}'];
     if (hostname != null) {
       args.add('--hostname=${hostname}');
     }

@@ -77,7 +77,7 @@ class RowMoveManager extends Plugin {
     List<int> selectedRows = grid.getSelectedRows();
 
     if (selectedRows.length == 0 || !selectedRows.contains(cell.row)) {
-      selectedRows = [cell.row];
+      selectedRows = <int>[cell.row];
       grid.setSelectedRows(selectedRows);
     }
 

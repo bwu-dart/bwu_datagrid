@@ -40,7 +40,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
   //var _handler = new Slick.EventHandler();
   List<async.StreamSubscription<core.EventData>> _subscriptions =
       <async.StreamSubscription<core.EventData>>[];
-  Map<int, bool> selectedRowsLookup = {};
+  Map<int, bool> selectedRowsLookup = <int, bool>{};
   CheckboxSelectColumn(
       {String id: '_checkbox_selector',
       String cssClass,
@@ -173,7 +173,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
         }
         _grid.setSelectedRows(rows);
       } else {
-        _grid.setSelectedRows([]);
+        _grid.setSelectedRows(<int>[]);
       }
       e.stopPropagation();
       e.stopImmediatePropagation();

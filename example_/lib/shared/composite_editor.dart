@@ -147,7 +147,7 @@ class CompositeEditor extends Editor {
   @override
   ValidationResult validate() {
     ValidationResult validationResults;
-    List<ValidationErrorSource> errors = [];
+    List<ValidationErrorSource> errors = <ValidationErrorSource>[];
 
     firstInvalidEditor = null;
 

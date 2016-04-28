@@ -16,7 +16,7 @@ class CellRangeDecoratorOptions {
 
   CellRangeDecoratorOptions(
       {this.selectionCssClass: 'bwu-datagrid-range-decorator',
-      this.selectionCss: const {
+      this.selectionCss: const <String, String>{
         'z-index': '9999',
         'border': '2px dashed red'
       }});

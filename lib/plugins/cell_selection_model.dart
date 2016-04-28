@@ -100,14 +100,14 @@ class CellSelectionModel extends SelectionModel {
   }
 
   void handleCellRangeSelected(CellRangeSelected e) {
-    setSelectedRanges([e.range]);
+    setSelectedRanges(<core.Range>[e.range]);
   }
 
   void handleActiveCellChange(ActiveCellChanged e) {
     if (_options.selectActiveCell != null &&
         e.cell.row != null &&
         e.cell != null) {
-      setSelectedRanges([new core.Range(e.cell.row, e.cell.cell)]);
+      setSelectedRanges(<core.Range>[new core.Range(e.cell.row, e.cell.cell)]);
     }
   }
 
@@ -155,7 +155,7 @@ class CellSelectionModel extends SelectionModel {
       final core.Range newLast = new core.Range(active.row, active.cell,
           toRow: active.row + dirRow * dRow,
           toCell: active.cell + dirCell * dCell);
-      if (removeInvalidRanges([newLast]).length != 0) {
+      if (removeInvalidRanges(<core.Range>[newLast]).length != 0) {
         ranges.add(newLast);
         final int viewRow = dirRow > 0 ? newLast.toRow : newLast.fromRow;
         final int viewCell = dirCell > 0 ? newLast.toCell : newLast.fromCell;

@@ -73,7 +73,7 @@ class NumericRangeEditor extends Editor {
 
   @override
   Map<String, int> serializeValue() {
-    return {
+    return <String,int>{
       'from': tools.parseInt(fromInput.value, onErrorDefault: 0),
       'to': tools.parseInt(toInput.value, onErrorDefault: 0)
     };

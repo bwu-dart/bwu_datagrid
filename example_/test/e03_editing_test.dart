@@ -252,7 +252,7 @@ void testsWithEditMode(WebBrowser browser, AutoEdit autoEdit) {
 
           editor = await percentCompleteCell.findElement(editorSelector);
           percentCompleteOldValue =
-              await int.parse(await editor.attributes['value']);
+               int.parse(await editor.attributes['value']);
           expect(percentCompleteOldValue, greaterThanOrEqualTo(0));
           expect(percentCompleteOldValue, lessThanOrEqualTo(100));
         });

@@ -50,7 +50,7 @@ class AvgAggregator extends Aggregator {
   @override
   void storeResult(core.GroupTotals groupTotals) {
     if (groupTotals['avg'] == null) {
-      groupTotals['avg'] = {};
+      groupTotals['avg'] = <String, num>{};
     }
     if (_nonNullCount != 0) {
       groupTotals['avg'][_field] = _sum / _nonNullCount;
@@ -81,7 +81,7 @@ class MinAggregator extends Aggregator {
   @override
   void storeResult(core.GroupTotals groupTotals) {
     if (groupTotals['min'] == null) {
-      groupTotals['min'] = {};
+      groupTotals['min'] = <String, num>{};
     }
     groupTotals['min'][_field] = _min;
   }
@@ -110,7 +110,7 @@ class MaxAggregator extends Aggregator {
   @override
   void storeResult(core.GroupTotals groupTotals) {
     if (groupTotals['max'] == null) {
-      groupTotals['max'] = {};
+      groupTotals['max'] = <String, num>{};
     }
     groupTotals['max'][_field] = _max;
   }
@@ -141,7 +141,7 @@ class SumAggregator extends Aggregator {
   @override
   void storeResult(core.GroupTotals groupTotals) {
     if (groupTotals['sum'] == null) {
-      groupTotals['sum'] = {};
+      groupTotals['sum'] = <String, num>{};
     }
     groupTotals['sum'][_field] = _sum;
   }

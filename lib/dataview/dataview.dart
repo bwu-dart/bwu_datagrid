@@ -150,7 +150,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
       idProperty = objectIdProperty;
     }
     super.items = filteredItems = data;
-    idxById = {};
+    idxById = <dynamic, int>{};
     updateIdxById();
     ensureIdUniqueness();
     refresh();
@@ -199,7 +199,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     if (ascending == false) {
       items = items.reversed.toList();
     }
-    idxById = {};
+    idxById = <dynamic, int>{};
     updateIdxById();
     refresh();
   }
@@ -268,7 +268,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 //      while (idx-- != 0) {
 //        gi.compiledAccumulators[idx] = compileAccumulatorLoop(gi.aggregators[idx]);
 //      }
-      toggledGroupsByLevel.add({});
+      toggledGroupsByLevel.add(<String, bool>{});
     }
     refresh();
   }
@@ -312,7 +312,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   void ensureRowsByIdCache() {
     if (rowsById == null) {
-      rowsById = {};
+      rowsById = <dynamic, int>{};
       for (int i = 0; i < rows.length; i++) {
         rowsById[rows[i][idProperty]] = i;
       }
@@ -336,7 +336,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   // the id needs to be a valid map key
   List<int> mapIdsToRows(List<dynamic> idArray) {
-    List<int> rows = [];
+    List<int> rows = <int>[];
     ensureRowsByIdCache();
     for (int i = 0; i < idArray.length; i++) {
       final int row = rowsById[idArray[i]];
@@ -365,7 +365,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     }
     items[idxById[id]] = item;
     if (updated == null) {
-      updated = {};
+      updated = <dynamic, bool>{};
     }
     updated[id] = true;
     refresh();
@@ -451,11 +451,11 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   void expandCollapseAllGroups(bool collapse, [int level]) {
     if (level == null) {
       for (int i = 0; i < groupingInfos.length; i++) {
-        toggledGroupsByLevel[i] = {};
+        toggledGroupsByLevel[i] = <String, bool>{};
         groupingInfos[i].isCollapsed = collapse;
       }
     } else {
-      toggledGroupsByLevel[level] = {};
+      toggledGroupsByLevel[level] = <String, bool>{};
       groupingInfos[level].isCollapsed = collapse;
     }
     refresh();
@@ -517,7 +517,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     core.Group group;
     Object val;
     final List<core.Group> groups = <core.Group>[];
-    Map<int, core.Group> groupsByVal = {};
+    Map<int, core.Group> groupsByVal = <int, core.Group>{};
     core.ItemBase r;
     int level = parentGroup != null ? parentGroup.level + 1 : 0;
     GroupingInfo gi = groupingInfos[level];
@@ -640,7 +640,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   List<core.ItemBase> flattenGroupedRows(List<core.Group> groups, [int level]) {
     level = level != null ? level : 0;
     GroupingInfo gi = groupingInfos[level];
-    List<core.ItemBase> groupedRows = [];
+    List<core.ItemBase> groupedRows = <core.ItemBase>[];
     List<core.ItemBase> rows;
 //    int gl = 0; // TODO(zoechi) why is it unused?
     core.Group g;
@@ -755,7 +755,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   List<core.ItemBase> uncompiledFilter(
       List<core.ItemBase> items, Map<dynamic, dynamic> args) {
-    List<core.ItemBase> retval = [];
+    List<core.ItemBase> retval = <core.ItemBase>[];
 //    int idx = 0; // TODO(zoechi) why is it unused?
 
     try {
@@ -774,7 +774,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
   List<core.ItemBase> uncompiledFilterWithCaching(List<core.ItemBase> items,
       Map<dynamic, dynamic> args, Map<int, bool> cache) {
-    List<core.ItemBase> retval = [];
+    List<core.ItemBase> retval = <core.ItemBase>[];
 //    int idx = 0; // TODO(zoechi) why is it unused?
     core.ItemBase item;
 
@@ -827,14 +827,14 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
       paged = filteredItems;
     }
 
-    return {'totalRows': filteredItems.length, 'rows': paged};
+    return <String, dynamic>{'totalRows': filteredItems.length, 'rows': paged};
   }
 
   List<int> getRowDiffs(List<core.ItemBase> rows, List<core.ItemBase> newRows) {
     core.ItemBase item;
     core.ItemBase r;
     bool eitherIsNonData;
-    List<int> diff = [];
+    List<int> diff = <int>[];
     int from = 0;
     int to = newRows != null ? newRows.length : 0;
 
@@ -882,7 +882,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
             prevRefreshHints['isFilterNarrowing'] ||
         refreshHints['isFilterExpanding'] !=
             prevRefreshHints['isFilterExpanding']) {
-      filterCache = {};
+      filterCache = <int, bool>{};
     }
 
     Map<dynamic, dynamic> filteredItems = getFilteredAndPagedItems(items);
@@ -926,7 +926,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
     updated = null;
     prevRefreshHints = refreshHints;
-    refreshHints = {};
+    refreshHints = <String, dynamic>{};
 
     if (totalRowsBefore != totalRows) {
       eventBus.fire(core.Events.pagingInfoChanged,

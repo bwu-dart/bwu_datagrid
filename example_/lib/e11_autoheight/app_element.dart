@@ -49,7 +49,7 @@ class AppElement extends PolymerElement {
       data = new MapDataItemProvider<core.ItemBase>();
 
       for (int i = 1; i <= 100; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem(<String,dynamic>{
           'title': 'Task ${i}',
           'duration': '5 days',
           'percentComplete': rnd.nextInt(100),

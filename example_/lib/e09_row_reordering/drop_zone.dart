@@ -29,7 +29,7 @@ class DropZone extends PolymerElement {
     final Iterable<Match> matches =
         new RegExp(r'(?: +[a-z]*:)([^ ]*)').allMatches(match.group(1));
 
-    List<String> results = [];
+    List<String> results = <String>[];
     matches.forEach((Match e) {
       results.add(e.group(1));
     });

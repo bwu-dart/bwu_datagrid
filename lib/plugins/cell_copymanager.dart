@@ -75,7 +75,7 @@ class CellCopyManager extends Plugin {
     final Map<int, Map<String, String>> hash = <int, Map<String, String>>{};
     for (int i = 0; i < ranges.length; i++) {
       for (int j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
-        hash[j] = {};
+        hash[j] = <String, String>{};
         for (int k = ranges[i].fromCell; k <= ranges[i].toCell; k++) {
           hash[j][columns[k].id] = "copied";
         }

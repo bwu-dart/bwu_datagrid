@@ -135,13 +135,15 @@ class GroupItemMetadataProvider extends Plugin {
       if (grid.dataProvider is DataView<core.ItemBase>) {
         final DataView<core.ItemBase> dp =
             grid.dataProvider as DataView<core.ItemBase>;
-        dp.setRefreshHints(
-            {'ignoreDiffsBefore': range.top, 'ignoreDiffsAfter': range.bottom});
+        dp.setRefreshHints(<String, dynamic>{
+          'ignoreDiffsBefore': range.top,
+          'ignoreDiffsAfter': range.bottom
+        });
 
         if (item.isCollapsed) {
-          dp.expandGroup([item.groupingKey]);
+          dp.expandGroup(<String>[item.groupingKey]);
         } else {
-          dp.collapseGroup([item.groupingKey]);
+          dp.collapseGroup(<String>[item.groupingKey]);
         }
       }
       e.stopImmediatePropagation();
@@ -163,15 +165,16 @@ class GroupItemMetadataProvider extends Plugin {
             final DataView<core.ItemBase> dp =
                 grid.dataProvider as DataView<core.ItemBase>;
 
-            (grid.dataProvider as DataView<core.ItemBase>).setRefreshHints({
+            (grid.dataProvider as DataView<core.ItemBase>)
+                .setRefreshHints(<String, dynamic>{
               'ignoreDiffsBefore': range.top,
               'ignoreDiffsAfter': range.bottom
             });
 
             if (item.isCollapsed) {
-              dp.expandGroup([item.groupingKey]);
+              dp.expandGroup(<String>[item.groupingKey]);
             } else {
-              dp.collapseGroup([item.groupingKey]);
+              dp.collapseGroup(<String>[item.groupingKey]);
             }
           }
 

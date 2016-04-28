@@ -132,7 +132,7 @@ class AppElement extends PolymerElement {
 
       data = new List<DataItem<String, dynamic>>();
       for (int i = 0; i < 50000; i++) {
-        data.add(new MapDataItem<String, dynamic>({
+        data.add(new MapDataItem<String, dynamic>(<String,dynamic>{
           "id": "id_${i}",
           "num": i,
           "title": 'Task ${i}',
@@ -168,7 +168,7 @@ class AppElement extends PolymerElement {
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
           final MapDataItem<String, dynamic> item =
-              new MapDataItem<String, dynamic>({
+              new MapDataItem<String, dynamic>(<String,dynamic>{
             "num": data.length,
             "id": "new_${rnd.nextInt(10000)}",
             "title": "New task",
@@ -212,7 +212,7 @@ class AppElement extends PolymerElement {
         // initialize the model after all the events have been hooked up
         dataView.beginUpdate();
         dataView.items = data;
-        dataView.setFilterArgs({
+        dataView.setFilterArgs(<String,dynamic>{
           'percentCompleteThreshold':
               tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
@@ -288,7 +288,7 @@ class AppElement extends PolymerElement {
       set('percentCompleteThreshold', '0');
     }
 
-    dataView.setFilterArgs({
+    dataView.setFilterArgs(<String,dynamic>{
       'percentCompleteThreshold':
           tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString

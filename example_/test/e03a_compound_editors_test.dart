@@ -32,7 +32,7 @@ void tests(WebBrowser browser) {
 
     group('range', () {
 //      const titleOldValue = 'Task 7';
-      const List<int> rangeNewValues = const [37, 70];
+      const List<int> rangeNewValues = const <int>[37, 70];
       const By editorsSelector = const By.cssSelector('input[type="text"]');
       List<int> rangeOldValues;
 

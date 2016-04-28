@@ -18,7 +18,7 @@ class RowSelectionModelOptions {
 
 class RowSelectionModel extends SelectionModel {
   BwuDatagrid _grid;
-  List<core.Range> _ranges = [];
+  List<core.Range> _ranges = <core.Range>[];
   // TODO(zoechi) var _handler = new Slick.EventHandler();
   // int _inHandler;
   RowSelectionModelOptions _options;
@@ -62,7 +62,7 @@ class RowSelectionModel extends SelectionModel {
 //  }
 
   List<int> _rangesToRows(List<core.Range> ranges) {
-    List<int> rows = [];
+    List<int> rows = <int>[];
     for (int i = 0; i < ranges.length; i++) {
       for (int j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
         rows.add(j);
@@ -72,7 +72,7 @@ class RowSelectionModel extends SelectionModel {
   }
 
   List<core.Range> _rowsToRanges(List<int> rows) {
-    List<core.Range> ranges = [];
+    List<core.Range> ranges = <core.Range>[];
     final int lastCell = _grid.getColumns.length - 1;
     for (int i = 0; i < rows.length; i++) {
       ranges.add(new core.Range(rows[i], 0, toRow: rows[i], toCell: lastCell));
@@ -115,7 +115,7 @@ class RowSelectionModel extends SelectionModel {
 
   void _handleActiveCellChange(ActiveCellChanged e) {
     if (_options.selectActiveRow && e.cell != null && e.cell.row != null) {
-      setSelectedRanges([
+      setSelectedRanges(<core.Range>[
         new core.Range(e.cell.row, 0,
             toRow: e.cell.row, toCell: _grid.getColumns.length - 1)
       ]);
@@ -135,7 +135,7 @@ class RowSelectionModel extends SelectionModel {
       selectedRows.sort((int x, int y) => x - y);
 
       if (selectedRows.length == 0) {
-        selectedRows = [activeRow.row];
+        selectedRows = <int>[activeRow.row];
       }
 
       int top = selectedRows[0];
@@ -185,7 +185,7 @@ class RowSelectionModel extends SelectionModel {
       final int last = selection.removeLast();
       final int from = math.min/*<int>*/(cell.row, last);
       final int to = math.max/*<int>*/(cell.row, last);
-      selection = [];
+      selection = <int>[];
       for (int i = from; i <= to; i++) {
         if (i != last) {
           selection.add(i);

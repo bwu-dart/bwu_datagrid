@@ -64,7 +64,7 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 100; i++) {
-        data.items.add(new MapDataItem({
+        data.items.add(new MapDataItem(<String,dynamic>{
           'name': 'User ${i}',
           'email': 'test.user@nospam.org',
           'title': 'Regional sales manager',

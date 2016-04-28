@@ -180,7 +180,7 @@ class AppElement extends PolymerElement {
           options: new DataViewOptions(inlineFilters: true))
         ..beginUpdate()
         ..items = data
-        ..setFilterArgs({
+        ..setFilterArgs(<String,dynamic>{
           'percentCompleteThreshold':
               tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
@@ -203,7 +203,7 @@ class AppElement extends PolymerElement {
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
           final MapDataItem item =
-              new MapDataItem({
+              new MapDataItem(<String,dynamic>{
             'id': 'new_${rnd.nextInt(10000)}',
             'indent': 0,
             'title': 'New task',
@@ -287,7 +287,7 @@ class AppElement extends PolymerElement {
       set('percentCompleteThreshold', '0');
     }
 
-    dataView.setFilterArgs({
+    dataView.setFilterArgs(<String,dynamic>{
       'percentCompleteThreshold':
           tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString

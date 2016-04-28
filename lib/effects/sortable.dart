@@ -19,7 +19,7 @@ class Sortable {
   final String tolerance;
   final String helper;
   final String placeholderCssClass;
-  final List<Object> reorderedIds = [];
+  final List<Object> reorderedIds = <Object>[];
 
   SortableStartFn start;
   SortableBeforeStopFn beforeStop;
@@ -40,7 +40,8 @@ class Sortable {
   int _draggedElementIndex;
 
   async.StreamSubscription<dynamic> _mouseMoveSubscr;
-  List<async.StreamSubscription<dynamic>> _mouseDownSubscr = [];
+  List<async.StreamSubscription<dynamic>> _mouseDownSubscr =
+      <async.StreamSubscription<dynamic>>[];
 
   Sortable(
       {this.sortable,

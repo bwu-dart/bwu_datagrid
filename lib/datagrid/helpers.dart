@@ -85,7 +85,7 @@ class RowCache {
   Map<int, String> cellColSpans = <int, String>{};
   dom.Element rowNode;
   List<dom.Element> cellNodes = <dom.Element>[];
-  Map<int, dom.Element> cellNodesByColumnIdx = {};
+  Map<int, dom.Element> cellNodesByColumnIdx = <int, dom.Element>{};
 
   RowCache();
 }

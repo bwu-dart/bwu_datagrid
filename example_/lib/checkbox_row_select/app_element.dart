@@ -59,7 +59,7 @@ class AppElement extends PolymerElement {
       data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 100; i++) {
         data.items
-            .add(new MapDataItem<String, dynamic>({'id': i, '0': 'Row $i'}));
+            .add(new MapDataItem<String, dynamic>(<String,dynamic>{'id': i, '0': 'Row $i'}));
       }
 
       grid

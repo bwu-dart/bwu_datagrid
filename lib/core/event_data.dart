@@ -377,7 +377,7 @@ class EventData {
   final dom.Event _causedBy;
 
   dom.Event get causedBy => _causedBy;
-  Map<String, dynamic> detail = {};
+  Map<String, dynamic> detail = <String, dynamic>{};
   bool retVal = true;
 
   bool _isPropagationStopped = false;

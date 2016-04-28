@@ -80,13 +80,13 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new MapDataItemProvider<core.ItemBase>();
       data.items.add(new MapDataItem(
-          {'name': "Make a list", 'complete': true}));
+          <String,dynamic>{'name': "Make a list", 'complete': true}));
       data.items.add(new MapDataItem(
-          {'name': "Check it twice", 'complete': false}));
+          <String,dynamic>{'name': "Check it twice", 'complete': false}));
       data.items.add(new MapDataItem(
-          {'name': "Find out who's naughty", 'complete': false}));
+          <String,dynamic>{'name': "Find out who's naughty", 'complete': false}));
       data.items.add(new MapDataItem(
-          {'name': "Find out who's nice", 'complete': false}));
+          <String,dynamic>{'name': "Find out who's nice", 'complete': false}));
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
@@ -126,10 +126,10 @@ class AppElement extends PolymerElement {
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
           MapDataItem item =
               new MapDataItem(
-                  {'name': "New task", 'complete': false});
+                  <String,dynamic>{'name': "New task", 'complete': false});
           //$.extend(item, args.item);
           data.items.add(item);
-          grid.invalidateRows([data.length - 1]);
+          grid.invalidateRows(<int>[data.length - 1]);
           grid.updateRowCount();
           grid.render();
         });
@@ -162,7 +162,7 @@ class AppElement extends PolymerElement {
         .forEach((core.ItemBase r) => data.items.remove(r));
 
     grid.invalidate();
-    grid.setSelectedRows([]);
+    grid.setSelectedRows(<int>[]);
   }
 
   void moveRowsHandler(core.MoveRows e) {
@@ -236,7 +236,7 @@ class AppElement extends PolymerElement {
     List<int> selectedRows = grid.getSelectedRows();
 
     if (selectedRows.length == 0 || !selectedRows.contains(cell.row)) {
-      selectedRows = [cell.row];
+      selectedRows = <int>[cell.row];
       grid.setSelectedRows(selectedRows);
     }
 

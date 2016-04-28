@@ -158,7 +158,7 @@ class BwuDatagrid extends PolymerElement {
   dynamic _serializedEditorValue;
   EditController _editController;
 
-  Map<int, RowCache> _rowsCache = {};
+  Map<int, RowCache> _rowsCache = <int, RowCache>{};
   int _renderedRows = 0;
   int _numVisibleRows;
   int _prevScrollTop = 0;
@@ -272,7 +272,7 @@ class BwuDatagrid extends PolymerElement {
     _validateAndEnforceOptions();
     _columnDefaults.width = _gridOptions.defaultColumnWidth;
 
-    _columnsById = {};
+    _columnsById = <String, int>{};
     if (columns != null) {
       for (int i = 0; i < columns.length; i++) {
         Column m = new Column()
@@ -481,11 +481,11 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  Map<Plugin, List<Plugin>> _suspendedPlugins = {};
+  Map<Plugin, List<Plugin>> _suspendedPlugins = <Plugin, List<Plugin>>{};
 
   void registerPlugin(Plugin plugin, {bool suspendOthers: false}) {
     if (suspendOthers) {
-      _suspendedPlugins[plugin] = [];
+      _suspendedPlugins[plugin] = <Plugin>[];
       _plugins.forEach((Plugin p) {
         if (p.runtimeType == plugin.runtimeType && !p.isSuspended) {
           _suspendedPlugins[plugin].add(p);
@@ -893,7 +893,7 @@ class BwuDatagrid extends PolymerElement {
           }
         } else {
           if ((!e.shiftKey && !e.metaKey) || !_gridOptions.multiColumnSort) {
-            _sortColumns = [];
+            _sortColumns = <SortColumn>[];
           }
 
           if (sortOpts == null) {
@@ -1310,8 +1310,8 @@ class BwuDatagrid extends PolymerElement {
       _stylesheet = _style.sheet;
 
       // find and cache column CSS rules
-      _columnCssRulesL = {};
-      _columnCssRulesR = {};
+      _columnCssRulesL = <int, dom.CssStyleRule>{};
+      _columnCssRulesR = <int, dom.CssStyleRule>{};
       final List<dom.CssRule> cssRules = _stylesheet.cssRules;
       Match matches;
       int columnIdx;
@@ -1333,7 +1333,10 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    return {"left": _columnCssRulesL[idx], "right": _columnCssRulesR[idx]};
+    return <String, dom.CssStyleRule>{
+      "left": _columnCssRulesL[idx],
+      "right": _columnCssRulesR[idx]
+    };
   }
 
   void _removeCssRules() {
@@ -1387,7 +1390,7 @@ class BwuDatagrid extends PolymerElement {
   void autosizeColumns() {
     int i;
     Column c;
-    List<int> widths = [];
+    List<int> widths = <int>[];
     int shrinkLeeway = 0;
     int total = 0;
     int prevTotal;
@@ -1538,7 +1541,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void setSortColumn(String columnId, bool ascending) {
-    setSortColumns([new SortColumn(columnId, ascending)]);
+    setSortColumns(<SortColumn>[new SortColumn(columnId, ascending)]);
   }
 
   void setSortColumns(List<SortColumn> cols) {
@@ -1575,14 +1578,14 @@ class BwuDatagrid extends PolymerElement {
 
   void _selectedRangesChangedHandler(core.SelectedRangesChanged e) {
     //dom.CustomEvent e, [List<Range> ranges]) {
-    _selectedRows = [];
-    Map<int, Map<String, String>> hash = {};
+    _selectedRows = <int>[];
+    Map<int, Map<String, String>> hash = <int, Map<String, String>>{};
     for (int i = 0; i < e.ranges.length; i++) {
       for (int j = e.ranges[i].fromRow; j <= e.ranges[i].toRow; j++) {
         if (hash[j] == null) {
           // prevent duplicates
           _selectedRows.add(j);
-          hash[j] = {};
+          hash[j] = <String, String>{};
         }
         for (int k = e.ranges[i].fromCell; k <= e.ranges[i].toCell; k++) {
           if (canCellBeSelected(j, k)) {
@@ -1617,7 +1620,7 @@ class BwuDatagrid extends PolymerElement {
   set setColumns(List<Column> columnDefinitions) {
     _columns = columnDefinitions;
 
-    _columnsById = {};
+    _columnsById = <String, int>{};
     for (int i = 0; i < columns.length; i++) {
       Column m = columns[i] = new Column()
         ..extend(columnDefinitions[i])
@@ -2057,7 +2060,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void invalidateRow(int row) {
-    invalidateRows([row]);
+    invalidateRows(<int>[row]);
   }
 
   void updateCell(int row, int cell) {
@@ -2447,7 +2450,7 @@ class BwuDatagrid extends PolymerElement {
     //dom.Element rowElement;
 //    List<dom.Element> rowElements = []; // TODO(zoechi) why is it unused?
 
-    List<int> rows = [];
+    List<int> rows = <int>[];
     bool needToReselectCell = false;
     int dataLength = getDataLength;
 
@@ -2641,7 +2644,7 @@ class BwuDatagrid extends PolymerElement {
       }
 
       if (_postProcessedRows[row] == null) {
-        _postProcessedRows[row] = []; // TODO {}
+        _postProcessedRows[row] = <bool>[]; // TODO {}
       }
 
       _ensureCellNodesInRowsCache(row);

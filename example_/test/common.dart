@@ -14,8 +14,8 @@ Future<String> get webServer async =>
     'http://${await pubServeIp}:${pubServePort}';
 
 Future<String> get pubServeIp async {
-  const List<String> prioritize = const ['eth0', 'eth1', 'wlan0'];
-  const List<String> ignoreList = const ['docker0'];
+  const List<String> prioritize = const <String>['eth0', 'eth1', 'wlan0'];
+  const List<String> ignoreList = const <String>['docker0'];
   String ip = io.Platform.environment['PUB_SERVE_IP'];
   if (ip == null) {
     ip = (await io.NetworkInterface.list())
@@ -103,7 +103,7 @@ void forEachBrowser(BrowserTest testsWithBrowser) {
 final Map<WebBrowser, Map<String, dynamic>> _defaultBrowserCapabilities =
     <WebBrowser, Map<String, dynamic>>{
   WebBrowser.android: wd.Capabilities.chrome
-    ..['chromeOptions'] = {'androidPackage': 'com.android.chrome'},
+    ..['chromeOptions'] = <String,String>{'androidPackage': 'com.android.chrome'},
   WebBrowser.chrome: wd.Capabilities.chrome,
   WebBrowser.edge: <String, String>{'browserName': WebBrowser.edge.value},
   WebBrowser.firefox: wd.Capabilities.firefox
