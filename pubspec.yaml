@@ -15,7 +15,7 @@ dependencies:
 #    path: ../../bwu_utils_browser
 
 dev_dependencies:
-  unittest: any
+  test: any
   bwu_sparkline: '>=0.0.2 <0.1.0'
      #path: ../bwu_sparkline
 

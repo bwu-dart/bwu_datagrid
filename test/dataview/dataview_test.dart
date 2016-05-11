@@ -1,8 +1,7 @@
 library bwu_dart.bwu_datagrid.dataview.test;
 
 import 'package:polymer/polymer.dart';
-import 'package:unittest/unittest.dart';
-import 'package:unittest/html_enhanced_config.dart';
+import 'package:test/test.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 //import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
@@ -14,7 +13,7 @@ import 'package:quiver_log/log.dart';
 var _log = new Logger('bwu_datagrid.dataview_test');
 
 void assertEmpty(DataView dv) {
-  expect(0, equals(dv.getLength),
+  expect(0, equals(dv.length),
       reason: ".rows is initialized to an empty array");
   expect(dv.getItems().length, equals(0), reason: "getItems().length");
   expect(dv.getIdxById("id"), isNull,
@@ -34,13 +33,13 @@ void assertConsistency(DataView dv, [String idProperty]) {
   List<core.ItemBase> items = dv.getItems();
   int filteredOut = 0;
   int row;
-  String id;
+  int id;
 
   for (var i = 0; i < items.length; i++) {
     _log.fine(items[i][idProperty]);
     id = items[i][idProperty];
     expect(dv.getItemByIdx(i), equals(items[i]), reason: "getItemByIdx");
-    expect(dv.getItemById(id), equals([i]), reason: "getItemById");
+    expect(dv.getItemById(id)[idProperty], equals(i), reason: "getItemById");
     expect(dv.getIdxById(id), equals(i), reason: "getIdxById");
 
     row = dv.getRowById(id);
@@ -51,7 +50,7 @@ void assertConsistency(DataView dv, [String idProperty]) {
     }
   }
 
-  expect(items.length - dv.getLength, equals(filteredOut),
+  expect(items.length - dv.length, equals(filteredOut),
       reason: "filtered rows");
 }
 
@@ -88,7 +87,7 @@ void main() {
         new MapDataItem({'id': 0}),
         new MapDataItem({'id': 1})
       ]);
-      expect(dv.getLength, equals(2), reason: "rows.length");
+      expect(dv.length, equals(2), reason: "rows.length");
       expect(dv.getItems().length, equals(2), reason: "getItems().length");
       assertConsistency(dv);
     });
@@ -104,26 +103,26 @@ void main() {
 
     test("requires an id on objects", () {
       var dv = new DataView();
-      //try {
-      expect(dv.setItems([1, 2, 3]), throws, reason: "exception expected");
+      try {
+      expect(dv.setItems([1, 2, 3]), throwsA(new isInstanceOf<String>()), reason: "exception expected");
       //            ok(false, "exception expected")
-      //        }
-      //        catch (ex) {}
+              }
+              catch (ex) {}
     });
 
     test("requires a unique id on objects", () {
       var dv = new DataView();
-      //        try {
+              try {
       expect(
           dv.setItems([
             {'id': 0},
             {'id': 0}
           ]),
-          throws,
+          throwsA(new isInstanceOf<String>()),
           reason: "exception expected");
       //            ok(false, "exception expected")
-      //        }
-      //        catch (ex) {}
+              }
+              catch (ex) {}
     });
   });
   //});
@@ -348,14 +347,14 @@ void main() {
 //    var dv = new Slick.Data.DataView();
 //    dv.setItems([{id:0,val:0},{id:1,val:1},{id:2,val:2}]);
 //    dv.setFilter(function(o) { return o.val === 1; });
-//    same(dv.getLength(), 1, "one row is remaining");
+//    same(dv.length(), 1, "one row is remaining");
 //
 //    dv.onRowsChanged.subscribe(function() { ok(false, "onRowsChanged called") });
 //    dv.onRowCountChanged.subscribe(function() { ok(false, "onRowCountChanged called") });
 //    dv.onPagingInfoChanged.subscribe(function() { ok(false, "onPagingInfoChanged called") });
 //    dv.sort(function(x,y) { return x.val-y.val; }, false);
 //    same(dv.getItems().length, 3, "original data is still there");
-//    same(dv.getLength(), 1, "rows are filtered");
+//    same(dv.length(), 1, "rows are filtered");
 //    assertConsistency(dv);
 //});
 //
