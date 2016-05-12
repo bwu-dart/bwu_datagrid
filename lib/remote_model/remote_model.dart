@@ -115,7 +115,7 @@ class RemoteModel {
     dom.window.alert("error loading pages ${fromPage} to ${toPage}");
   }
 
-  void onSuccess(int resp) {
+  void onSuccess(resp) {
     var from = resp.request.start, to = from + resp.results.length;
     data['length'] =
         math.min(int.parse(resp.hits), 1000); // limitation of the API
