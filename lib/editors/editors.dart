@@ -151,7 +151,8 @@ class TextEditor extends Editor {
   String serializeValue() => input.value;
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem item, dynamic state) {
+    assert(state is String);
     item[args.column.field] = state;
   }
 
@@ -342,7 +343,7 @@ class DateEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem item, dynamic state) {
     item[args.column.field] = state;
   }
 
@@ -407,7 +408,8 @@ class YesNoSelectEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, int state) {
+  void applyValue(DataItem item, dynamic state) {
+    assert(state is num);
     item[args.column.field] = state;
   }
 
@@ -473,13 +475,15 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem item, dynamic state) {
+    assert(state is String);
     item[args.column.field] = state.toLowerCase() == 'true' ? true : false;
   }
 
   @override
   bool get isValueChanged {
-    return (this.serializeValue() != defaultValue);
+    return (this.serializeValue().toLowerCase() !=
+        defaultValue.toString().toLowerCase());
   }
 
   @override
@@ -613,7 +617,8 @@ class PercentCompleteEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem item, dynamic state) {
+    assert(state is String);
     item[args.column.field] = utils.parseInt(state);
   }
 
@@ -754,7 +759,8 @@ class LongTextEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, String state) {
+  void applyValue(DataItem item, dynamic state) {
+    assert(state is String);
     item[args.column.field] = state;
   }
 

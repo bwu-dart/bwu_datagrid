@@ -40,7 +40,7 @@
         padding: 0 4px;
       }
     </style>
-    <div class='item-details-form'>
+    <div class='item-details-form' on-keydown="keyDownHandler">
       <template is="dom-repeat" items='{{columns}}' as="column">
         <div class='item-details-label'>
           [[column.name]]

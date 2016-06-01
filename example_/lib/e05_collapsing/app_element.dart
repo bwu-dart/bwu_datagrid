@@ -122,7 +122,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
 
   List<DataItem> data;
-  DataView<DataItem> dataView;
+  DataView<core.ItemBase> dataView;
 
   String sortcol = 'title';
   int sortdir = 1;
@@ -144,8 +144,7 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new List<DataItem>();
       for (int i = 0; i < 1000; i++) {
-        final MapDataItem d =
-            new MapDataItem();
+        final MapDataItem d = new MapDataItem();
         data.add(d);
         int parent;
 
@@ -176,11 +175,11 @@ class AppElement extends PolymerElement {
         d['effortDriven'] = (i % 5 == 0);
       }
 
-      dataView = new DataView<DataItem>(
+      dataView = new DataView<core.ItemBase>(
           options: new DataViewOptions(inlineFilters: true))
         ..beginUpdate()
         ..items = data
-        ..setFilterArgs(<String,dynamic>{
+        ..setFilterArgs(<String, dynamic>{
           'percentCompleteThreshold':
               tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
           'searchString': searchString
@@ -202,8 +201,7 @@ class AppElement extends PolymerElement {
             (core.CellChange e) => dataView.updateItem(e.item['id'], e.item));
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          final MapDataItem item =
-              new MapDataItem(<String,dynamic>{
+          final MapDataItem item = new MapDataItem(<String, dynamic>{
             'id': 'new_${rnd.nextInt(10000)}',
             'indent': 0,
             'title': 'New task',
@@ -219,8 +217,7 @@ class AppElement extends PolymerElement {
 
         grid.onBwuClick.listen((core.Click e) {
           if ((e.causedBy.target as dom.Element).classes.contains('toggle')) {
-            final DataItem item =
-                dataView.getItem(e.cell.row);
+            final DataItem item = dataView.getItem(e.cell.row);
             if (item != null) {
               item.collapsed = !item.collapsed;
 
@@ -287,7 +284,7 @@ class AppElement extends PolymerElement {
       set('percentCompleteThreshold', '0');
     }
 
-    dataView.setFilterArgs(<String,dynamic>{
+    dataView.setFilterArgs(<String, dynamic>{
       'percentCompleteThreshold':
           tools.parseInt(percentCompleteThreshold, onErrorDefault: 0),
       'searchString': searchString

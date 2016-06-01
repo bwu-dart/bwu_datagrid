@@ -82,7 +82,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   int totalRows = 0;
 
   core.EventBus<core.EventData> get eventBus => _eventBus;
-  core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
+  final core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   async.Stream<core.PagingInfoChanged> get onBwuPagingInfoChanged =>
       _eventBus.onEvent(core.Events.pagingInfoChanged);

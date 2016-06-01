@@ -51,8 +51,7 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = <DataItem>[];
       for (int i = 0; i < 100; i++) {
-        final MapDataItem d =
-            new MapDataItem();
+        final MapDataItem d = new MapDataItem();
         d['id'] = i;
         for (int j = 0; j < columns.length; j++) {
           d[j.toString()] = rnd.nextInt(10);
@@ -60,8 +59,7 @@ class AppElement extends PolymerElement {
         data.add(d);
       }
 
-      DataView<core.ItemBase> dataView =
-          new DataView<core.ItemBase>();
+      DataView<core.ItemBase> dataView = new DataView<core.ItemBase>();
 
       grid
           .setup(

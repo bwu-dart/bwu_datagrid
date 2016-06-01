@@ -6,11 +6,13 @@ dynamic main() async {
   try {
     driver = await createDriver(
         uri: Uri.parse('http://localhost:4444/wd/hub/'),
-        desired: <String,dynamic>{
+        desired: <String, dynamic>{
           'browserName': 'chrome',
           'platform': 'ANY',
           'version': '',
-          'chromeOptions': <String,dynamic>{'androidPackage': 'com.android.chrome'}
+          'chromeOptions': <String, dynamic>{
+            'androidPackage': 'com.android.chrome'
+          }
         });
 
 //        desired: {'browserName': 'MicrosoftEdge'});

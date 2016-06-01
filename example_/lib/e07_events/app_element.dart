@@ -55,7 +55,7 @@ class AppElement extends PolymerElement {
           new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
         data.items.add(new MapDataItem(
-            <String,String>{'title': 'Task ${i}', 'priority': 'Medium'}));
+            <String, String>{'title': 'Task ${i}', 'priority': 'Medium'}));
       }
 
       grid
@@ -91,7 +91,7 @@ class AppElement extends PolymerElement {
               return;
             }
 
-            final Map<String, String> states = <String,String>{
+            final Map<String, String> states = <String, String>{
               'Low': 'Medium',
               'Medium': 'High',
               'High': 'Low'

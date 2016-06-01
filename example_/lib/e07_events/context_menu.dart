@@ -31,8 +31,8 @@ class ContextMenu extends PolymerElement {
       if (!(e.target is dom.LIElement)) {
         return;
       }
-      fire(contextMenuSelect,
-          detail: ((e.target as dom.LIElement).attributes['value']));
+      dispatchEvent(new dom.CustomEvent(contextMenuSelect,
+          detail: ((e.target as dom.LIElement).attributes['value'])));
     });
   }
 

@@ -128,7 +128,7 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void pageSizeClickHandler(dom.MouseEvent e, [_]) {
+  void pageSizeClickHandler(CustomEventWrapper e, [_]) {
     int pagesize = utils.parseInt((e.target as dom.Element).dataset['value'],
         onErrorDefault: 0);
     //if (pagesize != 0) {
@@ -142,12 +142,12 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void toggleMouseOver(dom.MouseEvent e, [_]) {
+  void toggleMouseOver(CustomEventWrapper e, [_]) {
     (e.currentTarget as dom.Element).classes.add('ui-state-hover');
   }
 
   @reflectable
-  void toggleMouseOut(dom.MouseEvent e, [_]) {
+  void toggleMouseOut(CustomEventWrapper e, [_]) {
     (e.currentTarget as dom.Element).classes.remove('ui-state-hover');
   }
 

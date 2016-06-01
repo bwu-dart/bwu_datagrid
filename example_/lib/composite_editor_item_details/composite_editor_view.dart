@@ -44,12 +44,14 @@ class CompositeEditorView extends PolymerElement {
       ..top = '${box.top}px';
   }
 
-  void keyDownHandler(dom.KeyboardEvent e) {
-    if (e.which == dom.KeyCode.ENTER) {
+  @reflectable
+  void keyDownHandler(CustomEventWrapper e, [dynamic detail]) {
+    dom.KeyboardEvent original = e.original;
+    if (original.keyCode == dom.KeyCode.ENTER) {
       grid.getEditController.commitCurrentEdit();
       e.stopPropagation();
       e.preventDefault();
-    } else if (e.which == dom.KeyCode.ESC) {
+    } else if (original.keyCode == dom.KeyCode.ESC) {
       grid.getEditController.cancelCurrentEdit();
       e.stopPropagation();
       e.preventDefault();
@@ -57,12 +59,12 @@ class CompositeEditorView extends PolymerElement {
   }
 
   @reflectable
-  void btnSaveHandler(dom.MouseEvent e, [_]) {
+  void btnSaveHandler(CustomEventWrapper e, [_]) {
     grid.getEditController.commitCurrentEdit();
   }
 
   @reflectable
-  void btnCancelHandler(dom.MouseEvent e, [_]) {
+  void btnCancelHandler(CustomEventWrapper e, [_]) {
     grid.getEditController.cancelCurrentEdit();
   }
 

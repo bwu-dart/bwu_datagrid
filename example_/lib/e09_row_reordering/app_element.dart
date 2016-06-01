@@ -80,13 +80,15 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new MapDataItemProvider<core.ItemBase>();
       data.items.add(new MapDataItem(
-          <String,dynamic>{'name': "Make a list", 'complete': true}));
+          <String, dynamic>{'name': "Make a list", 'complete': true}));
       data.items.add(new MapDataItem(
-          <String,dynamic>{'name': "Check it twice", 'complete': false}));
+          <String, dynamic>{'name': "Check it twice", 'complete': false}));
+      data.items.add(new MapDataItem(<String, dynamic>{
+        'name': "Find out who's naughty",
+        'complete': false
+      }));
       data.items.add(new MapDataItem(
-          <String,dynamic>{'name': "Find out who's naughty", 'complete': false}));
-      data.items.add(new MapDataItem(
-          <String,dynamic>{'name': "Find out who's nice", 'complete': false}));
+          <String, dynamic>{'name': "Find out who's nice", 'complete': false}));
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
@@ -124,9 +126,8 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          MapDataItem item =
-              new MapDataItem(
-                  <String,dynamic>{'name': "New task", 'complete': false});
+          MapDataItem item = new MapDataItem(
+              <String, dynamic>{'name': "New task", 'complete': false});
           //$.extend(item, args.item);
           data.items.add(item);
           grid.invalidateRows(<int>[data.length - 1]);
@@ -153,21 +154,18 @@ class AppElement extends PolymerElement {
 
     final List<int> selectedRows = grid.getSelectedRows();
 
-    List<core.ItemBase> rowsToDelete =
-        <core.ItemBase>[];
+    List<core.ItemBase> rowsToDelete = <core.ItemBase>[];
     selectedRows.forEach((int r) {
       rowsToDelete.add(data.items[r]);
     });
-    rowsToDelete
-        .forEach((core.ItemBase r) => data.items.remove(r));
+    rowsToDelete.forEach((core.ItemBase r) => data.items.remove(r));
 
     grid.invalidate();
     grid.setSelectedRows(<int>[]);
   }
 
   void moveRowsHandler(core.MoveRows e) {
-    final List<core.ItemBase> extractedRows =
-        <core.ItemBase>[];
+    final List<core.ItemBase> extractedRows = <core.ItemBase>[];
     List<core.ItemBase> left, right;
     List<int> rows = e.rows;
     final int insertBefore = e.insertBefore;

@@ -71,7 +71,7 @@ class MinAggregator extends Aggregator {
   @override
   void accumulate(core.ItemBase item) {
     num val = item[_field];
-    if (val != null && val != '' && val is num) {
+    if (val != null && val is num) {
       if (_min == null || val < _min) {
         _min = val;
       }
@@ -100,7 +100,7 @@ class MaxAggregator extends Aggregator {
   @override
   void accumulate(core.ItemBase item) {
     num val = item[_field];
-    if (val != null && val != '' && val is num) {
+    if (val != null && val is num) {
       if (_max == null || val > _max) {
         _max = val;
       }

@@ -103,7 +103,9 @@ void forEachBrowser(BrowserTest testsWithBrowser) {
 final Map<WebBrowser, Map<String, dynamic>> _defaultBrowserCapabilities =
     <WebBrowser, Map<String, dynamic>>{
   WebBrowser.android: wd.Capabilities.chrome
-    ..['chromeOptions'] = <String,String>{'androidPackage': 'com.android.chrome'},
+    ..['chromeOptions'] = <String, String>{
+      'androidPackage': 'com.android.chrome'
+    },
   WebBrowser.chrome: wd.Capabilities.chrome,
   WebBrowser.edge: <String, String>{'browserName': WebBrowser.edge.value},
   WebBrowser.firefox: wd.Capabilities.firefox

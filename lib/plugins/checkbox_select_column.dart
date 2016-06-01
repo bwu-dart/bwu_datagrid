@@ -1,7 +1,8 @@
 library bwu_datagrid.plugins.checkbox_select_column;
 
-import 'dart:html' as dom;
 import 'dart:async' as async;
+import 'dart:html' as dom;
+import 'package:meta/meta.dart' show protected;
 
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -36,6 +37,10 @@ class CheckboxSelectColumn extends Column implements Plugin {
   BwuDatagrid _grid;
   @override
   BwuDatagrid get grid => _grid;
+
+  @protected
+  @override
+  set grid(BwuDatagrid value) => _grid = value;
 
   //var _handler = new Slick.EventHandler();
   List<async.StreamSubscription<core.EventData>> _subscriptions =

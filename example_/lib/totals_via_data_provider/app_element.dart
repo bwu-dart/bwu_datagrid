@@ -50,7 +50,7 @@ class AppElement extends PolymerElement {
       data = new TotalsDataProvider(<MapDataItem>[], columns);
       for (int i = 0; i < 10; i++) {
         final MapDataItem<String, int> d =
-            new MapDataItem<String, int>(<String,int>{'id': i});
+            new MapDataItem<String, int>(<String, int>{'id': i});
         data.items.add(d);
         for (int j = 0; j < columns.length; j++) {
           d['${j}'] = rnd.nextInt(10);

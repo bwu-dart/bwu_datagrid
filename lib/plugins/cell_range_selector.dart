@@ -11,7 +11,6 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
 class CellRangeSelector extends Plugin {
-  BwuDatagrid _grid;
   dom.Element _canvas;
   bool _dragging = false;
   Decorator _decorator;
@@ -41,15 +40,15 @@ class CellRangeSelector extends Plugin {
 
   @override
   void init(BwuDatagrid grid) {
+    super.init(grid);
     // TODO options = $.extend(true, {}, _defaults, options);
     _decorator = new CellRangeDecorator(grid, options: _options);
-    _grid = grid;
-    _canvas = _grid.getCanvasNode;
+    _canvas = grid.getCanvasNode;
     _canvas.attributes['draggable'] = 'true';
 
-    _subscriptions.add(_grid.onBwuDragStart.listen(_handleDragStart));
-    _subscriptions.add(_grid.onBwuDrag.listen(_handleDrag));
-    _subscriptions.add(_grid.onBwuDragEnd.listen(_handleDragEnd));
+    _subscriptions.add(grid.onBwuDragStart.listen(_handleDragStart));
+    _subscriptions.add(grid.onBwuDrag.listen(_handleDrag));
+    _subscriptions.add(grid.onBwuDragEnd.listen(_handleDragEnd));
 
     _dummyProxy = new dom.DivElement()
       ..style.width = '0'
@@ -71,12 +70,12 @@ class CellRangeSelector extends Plugin {
   dom.Element _handleDragStart(core.DragStart e) {
     if (e.isImmediatePropagationStopped || isSuspended) return null;
 
-    Cell cell = _grid.getCellFromEvent(e.causedBy);
+    Cell cell = grid.getCellFromEvent(e.causedBy);
     if (eventBus
         .fire(core.Events.beforeCellRangeSelected,
             new core.BeforeCellRangeSelected(this, cell))
         .retVal) {
-      if (_grid.canCellBeSelected(cell.row, cell.cell)) {
+      if (grid.canCellBeSelected(cell.row, cell.cell)) {
         _dragging = true;
         e.stopImmediatePropagation();
       }
@@ -86,14 +85,14 @@ class CellRangeSelector extends Plugin {
       return null;
     }
 
-    _grid.setFocus();
+    grid.setFocus();
 
     dom.Rectangle<num> canvasBounds = _canvas.getBoundingClientRect();
     _canvasOrigin = new math.Point<int>(
         canvasBounds.left.round(), canvasBounds.top.round());
     e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
 
-    Cell start = _grid.getCellFromPoint(e.causedBy.client.x - _canvasOrigin.x,
+    Cell start = grid.getCellFromPoint(e.causedBy.client.x - _canvasOrigin.x,
         e.causedBy.client.y - _canvasOrigin.y);
 
     _range = new core.Range(start.row, start.cell);
@@ -107,10 +106,10 @@ class CellRangeSelector extends Plugin {
     }
     e.preventDefault();
 
-    final Cell end = _grid.getCellFromPoint(e.causedBy.page.x - _canvasOrigin.x,
+    final Cell end = grid.getCellFromPoint(e.causedBy.page.x - _canvasOrigin.x,
         e.causedBy.page.y - _canvasOrigin.y);
 
-    if (!_grid.canCellBeSelected(end.row, end.cell)) {
+    if (!grid.canCellBeSelected(end.row, end.cell)) {
       return;
     }
 

@@ -1,6 +1,6 @@
 library bwu_datagrid_examples.tool.grind;
 
-import 'dart:async' show Completer, Future, Stream, StreamTransformer;
+import 'dart:async' show Completer, Future, Stream;
 import 'dart:collection';
 import 'dart:convert' show LineSplitter, UTF8;
 import 'dart:io' as io;
@@ -80,8 +80,12 @@ Future<Null> seleniumDebug() async {
     final int chromePort =
         chromeInfo.networkSettings.ports['5900/tcp'][0]['HostPort'];
     print('Chrome: ${chromePort}');
-    io.Process.start('vinagre',
-        <String>['--vnc-scale', '--geometry', '1280x1024+200+0', ':${chromePort}']);
+    io.Process.start('vinagre', <String>[
+      '--vnc-scale',
+      '--geometry',
+      '1280x1024+200+0',
+      ':${chromePort}'
+    ]);
 //    io.Process.start('krdc', ['vnc://:${chromePort}']);
 //    io.Process.start('xvnc4viewer', ['-Shared', ':${chromePort}']);
     final ContainerInfo firefoxInfo = await _dockerConnection
@@ -90,8 +94,12 @@ Future<Null> seleniumDebug() async {
         firefoxInfo.networkSettings.ports['5900/tcp'][0]['HostPort'];
     print('Firefox: ${firefoxPort}');
     await new Future<Null>.delayed(const Duration(seconds: 1));
-    io.Process.start('vinagre',
-        <String>['--vnc-scale', '--geometry', '1280x1024+300+0', ':${firefoxPort}']);
+    io.Process.start('vinagre', <String>[
+      '--vnc-scale',
+      '--geometry',
+      '1280x1024+300+0',
+      ':${firefoxPort}'
+    ]);
 //    io.Process.start('krdc', ['vnc://:${firefoxPort}']);
 //    io.Process.start('xvnc4viewer', ['-Shared', ':${firefoxPort}']);
   } catch (_) {
@@ -181,7 +189,7 @@ class PubServe extends RunProcess {
       _port = null;
     });
     stdout
-        .transform(UTF8.decoder as StreamTransformer<List<int>, dynamic>)
+        .transform(UTF8.decoder)
         .transform(new LineSplitter())
         .listen((String s) {
       //_log.fine(s);
@@ -195,9 +203,7 @@ class PubServe extends RunProcess {
         readyCompleter.complete(process);
       }
     });
-    stderr
-        .transform(UTF8.decoder as StreamTransformer<List<int>, dynamic>)
-        .listen(print);
+    stderr.transform(UTF8.decoder).listen(print);
     return readyCompleter.future;
   }
 }

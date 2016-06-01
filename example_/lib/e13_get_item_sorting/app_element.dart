@@ -72,10 +72,11 @@ class AppElement extends PolymerElement {
       for (int i = 0; i < numberOfItems; i++) {
         items[i] = i;
 
-        data.items.add(new MapDataItem(<String,dynamic>{'title': 'Task ${i}'}));
+        data.items
+            .add(new MapDataItem(<String, dynamic>{'title': 'Task ${i}'}));
       }
 
-      indices = <String,dynamic>{
+      indices = <String, dynamic>{
         'title': items,
         'c1': randomize(items),
         'c2': randomize(items),

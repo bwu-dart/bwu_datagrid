@@ -179,10 +179,9 @@ class AppElement extends PolymerElement {
 
       final GroupItemMetadataProvider groupItemMetadataProvider =
           new GroupItemMetadataProvider();
-      dataView = new DataView<core.ItemBase>(
-          options: new DataViewOptions(
-              groupItemMetadataProvider: groupItemMetadataProvider,
-              inlineFilters: true));
+      dataView = new DataView<core.ItemBase>(options: new DataViewOptions(
+          groupItemMetadataProvider: groupItemMetadataProvider,
+          inlineFilters: true));
 
       grid
           .setup(
@@ -224,7 +223,8 @@ class AppElement extends PolymerElement {
         // initialize the model after all the events have been hooked up
         dataView.beginUpdate();
         dataView.setFilter(myFilter);
-        dataView.setFilterArgs(<String,dynamic>{'percentComplete': percentCompleteThreshold});
+        dataView.setFilterArgs(
+            <String, dynamic>{'percentComplete': percentCompleteThreshold});
         loadData(50);
         groupByDuration();
         dataView.endUpdate();
@@ -262,8 +262,9 @@ class AppElement extends PolymerElement {
     bool isExpanding = percentCompleteThreshold < prevPercentCompleteThreshold;
     Range renderedRange = grid.getRenderedRange();
 
-    dataView.setFilterArgs(<String,dynamic>{'percentComplete': percentCompleteThreshold});
-    dataView.setRefreshHints(<String,dynamic>{
+    dataView.setFilterArgs(
+        <String, dynamic>{'percentComplete': percentCompleteThreshold});
+    dataView.setRefreshHints(<String, dynamic>{
       'ignoreDiffsBefore': renderedRange.top,
       'ignoreDiffsAfter': renderedRange.bottom + 1,
       'isFilterNarrowing': isNarrowing,
@@ -274,8 +275,7 @@ class AppElement extends PolymerElement {
     prevPercentCompleteThreshold = percentCompleteThreshold;
   }
 
-  bool myFilter(
-      core.ItemBase item, Map<dynamic, dynamic> args) {
+  bool myFilter(core.ItemBase item, Map<dynamic, dynamic> args) {
     return item["percentComplete"] >= args['percentComplete'];
   }
 
@@ -283,10 +283,9 @@ class AppElement extends PolymerElement {
     return a["percentComplete"] - b["percentComplete"];
   }
 
-  int comparer(
-      core.ItemBase a, core.ItemBase b) {
-    final int x = a[sortcol];
-    final int y = b[sortcol];
+  int comparer(core.ItemBase a, core.ItemBase b) {
+    final dynamic x = a[sortcol];
+    final dynamic y = b[sortcol];
     if (x == y) {
       return 0;
     }
@@ -341,8 +340,7 @@ class AppElement extends PolymerElement {
       new GroupingInfo(
           getter: "duration",
           formatter: new GroupTitleFormatter('Duration'),
-          comparer: (core.ItemBase a,
-                  core.ItemBase b) =>
+          comparer: (core.ItemBase a, core.ItemBase b) =>
               (a as core.Group).count - (b as core.Group).count,
           aggregators: <Aggregator>[
             new AvgAggregator("percentComplete"),
@@ -422,7 +420,7 @@ class AppElement extends PolymerElement {
     //var timer = new Stopwatch()..start();
     data = new List<MapDataItem>.generate(
         count,
-        (int i) => new MapDataItem(<String,dynamic>{
+        (int i) => new MapDataItem(<String, dynamic>{
               "id": "id_${i}",
               "num": i,
               "title": "Task ${i}",

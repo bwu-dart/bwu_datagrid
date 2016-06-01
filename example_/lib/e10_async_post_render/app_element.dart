@@ -26,8 +26,8 @@ class WaitingFormatter extends fm.Formatter {
   }
 }
 
-void renderSparkline(dom.Element target, int row,
-    DataItem dataContext, Column colDef) {
+void renderSparkline(
+    dom.Element target, int row, DataItem dataContext, Column colDef) {
   final List<num> vals = <num>[
     tools.parseNum(dataContext["n1"], onErrorDefault: 0),
     tools.parseNum(dataContext["n2"], onErrorDefault: 0),

@@ -112,10 +112,9 @@ class AppElement extends PolymerElement {
       gridOptions.editCommandHandler = queueAndExecuteCommand;
 
       grid = $['myGrid'];
-      final DataProvider<ItemBase> data =
-          new MapDataItemProvider<ItemBase>();
+      final DataProvider<ItemBase> data = new MapDataItemProvider<ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem(<String,dynamic>{
+        data.items.add(new MapDataItem(<String, dynamic>{
           'title': 'Task ${i}',
           "description":
               'This is a sample task description.\n  It can be multiline',

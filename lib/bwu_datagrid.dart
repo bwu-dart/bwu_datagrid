@@ -203,7 +203,7 @@ class BwuDatagrid extends PolymerElement {
   // node that was hidden instead of getting deleted
 
   core.EventBus<core.EventData> get eventBus => _eventBus;
-  core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
+  final core.EventBus<core.EventData> _eventBus = new core.EventBus<core.EventData>();
 
   async.Completer<Null> _setupCompleter;
 
@@ -741,7 +741,7 @@ class BwuDatagrid extends PolymerElement {
   dom.Element getHeaderRowColumn(Object columnId) {
     final int idx = getColumnIndex(columnId);
     dom.Element header = _headerRow.children
-        .firstWhere((dom.Element e) => e == idx); //.eq(idx); // TODO check
+        .firstWhere((dom.Element e) => _headerRow.children.indexOf(e) == idx);
     if (header != null && header.children.length > 0) {
       return header;
     }
@@ -2998,7 +2998,8 @@ class BwuDatagrid extends PolymerElement {
     }
 
     // are we editing this cell?
-    if (_activeCellNode == cell && _currentEditor != null) {
+    if (_activeCellNode == getCellNode(cell.row, cell.cell) &&
+        _currentEditor != null) {
       return;
     }
 

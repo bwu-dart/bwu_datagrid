@@ -113,12 +113,13 @@ class Group extends NonDataItem {
 
   @override
   bool operator ==(Object other) {
-    if (other is! Group) {
-      return false;
+    if (identical(this, other)) {
+      return true;
     }
-
-    final Group o = other as Group;
-    return count == o.count && isCollapsed == o.isCollapsed && title == o.title;
+    return other is Group &&
+        count == other.count &&
+        isCollapsed == other.isCollapsed &&
+        title == other.title;
   }
 
   @override

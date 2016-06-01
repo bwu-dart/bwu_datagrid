@@ -6,9 +6,8 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
-class TotalsDataProvider
-    extends MapDataItemProvider<core.ItemBase> {
-  MapDataItem _totals = new MapDataItem(<String,dynamic>{});
+class TotalsDataProvider extends MapDataItemProvider<core.ItemBase> {
+  MapDataItem _totals = new MapDataItem(<String, dynamic>{});
   List<Column> _columns;
 
   RowMetadata totalsMetadata = new RowMetadata(
@@ -16,8 +15,7 @@ class TotalsDataProvider
       cssClasses: 'totals',
       columns: new Map<String, Column>());
 
-  TotalsDataProvider(List<MapDataItem> data, this._columns)
-      : super(data) {
+  TotalsDataProvider(List<MapDataItem> data, this._columns) : super(data) {
     // Make the totals not editable.
     for (int i = 0; i < _columns.length; i++) {
       totalsMetadata.columns['${i}'] = new Column(editor: null);

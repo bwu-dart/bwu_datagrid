@@ -18,7 +18,6 @@ class CellSelectionModelOptions {
 }
 
 class CellSelectionModel extends SelectionModel {
-  BwuDatagrid _grid;
 //  dom.Element _canvas; // TODO(zoechi) why is it unused?
   List<core.Range> _ranges = <core.Range>[];
   final CellRangeSelector _selector = new CellRangeSelector(
@@ -45,12 +44,12 @@ class CellSelectionModel extends SelectionModel {
 
   @override
   void init(BwuDatagrid grid) {
+    super.init(grid);
     // TODO _options = $.extend(true, {}, _defaults, options);
-    _grid = grid;
 //    _canvas = _grid.getCanvasNode; // TODO(zoechi) why is it unused?
     _subscriptions
-        .add(_grid.onBwuActiveCellChanged.listen(handleActiveCellChange));
-    _subscriptions.add(_grid.onBwuKeyDown.listen(handleKeyDown));
+        .add(grid.onBwuActiveCellChanged.listen(handleActiveCellChange));
+    _subscriptions.add(grid.onBwuKeyDown.listen(handleKeyDown));
     grid.registerPlugin(_selector);
     _subscriptions
         .add(_selector.onBwuCellRangeSelected.listen(handleCellRangeSelected));
@@ -62,7 +61,7 @@ class CellSelectionModel extends SelectionModel {
   void destroy() {
     _subscriptions
         .forEach((async.StreamSubscription<core.EventData> e) => e.cancel());
-    _grid.unregisterPlugin(_selector);
+    grid.unregisterPlugin(_selector);
   }
 
   List<core.Range> removeInvalidRanges(List<core.Range> ranges) {
@@ -70,8 +69,8 @@ class CellSelectionModel extends SelectionModel {
 
     for (int i = 0; i < ranges.length; i++) {
       final core.Range r = ranges[i];
-      if (_grid.canCellBeSelected(r.fromRow, r.fromCell) &&
-          _grid.canCellBeSelected(r.toRow, r.toCell)) {
+      if (grid.canCellBeSelected(r.fromRow, r.fromCell) &&
+          grid.canCellBeSelected(r.toRow, r.toCell)) {
         result.add(r);
       }
     }
@@ -82,7 +81,7 @@ class CellSelectionModel extends SelectionModel {
   @override
   void setSelectedRanges(List<core.Range> ranges) {
     _ranges = removeInvalidRanges(ranges);
-    _grid.eventBus.fire(core.Events.selectedRangesChanged,
+    grid.eventBus.fire(core.Events.selectedRangesChanged,
         new core.SelectedRangesChanged(this, _ranges));
 //    _self.onSelectedRangesChanged.notify(_ranges);
   }
@@ -93,7 +92,7 @@ class CellSelectionModel extends SelectionModel {
   }
 
   void handleBeforeCellRangeSelected(BeforeCellRangeSelected e) {
-    if (_grid.getEditorLock.isActive) {
+    if (grid.getEditorLock.isActive) {
       e.stopPropagation();
       e.retVal = false;
     }
@@ -114,7 +113,7 @@ class CellSelectionModel extends SelectionModel {
   void handleKeyDown(KeyDown e) {
     List<core.Range> ranges;
     core.Range last;
-    Cell active = _grid.getActiveCell();
+    Cell active = grid.getActiveCell();
 
     if (active != null &&
         e.causedBy.shiftKey &&
@@ -159,8 +158,8 @@ class CellSelectionModel extends SelectionModel {
         ranges.add(newLast);
         final int viewRow = dirRow > 0 ? newLast.toRow : newLast.fromRow;
         final int viewCell = dirCell > 0 ? newLast.toCell : newLast.fromCell;
-        _grid.scrollRowIntoView(viewRow);
-        _grid.scrollCellIntoView(viewRow, viewCell);
+        grid.scrollRowIntoView(viewRow);
+        grid.scrollCellIntoView(viewRow, viewCell);
       } else {
         ranges.add(last);
       }

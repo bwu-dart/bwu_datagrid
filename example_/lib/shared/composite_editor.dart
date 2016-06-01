@@ -120,7 +120,7 @@ class CompositeEditor extends Editor {
 
   @override
   dynamic serializeValue() {
-    final List<int> serializedValue = new List<int>(columns.length);
+    final List<String> serializedValue = new List<String>(columns.length);
     int idx = editors.length;
     while (idx-- > 0) {
       serializedValue[idx] = editors[idx].serializeValue();
@@ -129,7 +129,8 @@ class CompositeEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, List<Object> state) {
+  void applyValue(DataItem item, dynamic state) {
+    assert(state is List);
     int idx = editors.length;
     while (idx-- > 0) {
       editors[idx].applyValue(item, state[idx]);

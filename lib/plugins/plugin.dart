@@ -2,18 +2,21 @@ library bwu_datagrid.plugins;
 
 //import 'dart:html' as dom;
 //import 'dart:async' as async;
+import 'package:meta/meta.dart' show protected;
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
 abstract class Plugin {
   BwuDatagrid _grid;
   BwuDatagrid get grid => _grid;
+  @protected
+  set grid(BwuDatagrid value) => _grid = value;
   bool isSuspended = false;
 
   Plugin();
 
   void init(BwuDatagrid grid) {
-    this._grid = grid;
+    this.grid = grid;
   }
 
   void destroy() {}

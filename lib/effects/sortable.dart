@@ -198,7 +198,7 @@ class Sortable {
     _placeholder = _draggedElement.clone(false);
     _placeholder.classes
       ..clear()
-      ..add(placeholderCssClass);
+      ..addAll(placeholderCssClass.split(' ').where((String s) => s.length > 0));
 
     if (start != null) {
       start(_draggedElement, _draggedHelper, _placeholder);
