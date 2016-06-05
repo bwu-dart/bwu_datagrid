@@ -1,10 +1,13 @@
 ## 0.1.0-dev.2
-- fix #132
-- fix #133
-- fix #134
-- fix #135
-- fix #136
-- fix #138
+- fixes #132
+- fixes #133
+- fixes #134
+- fixes #135
+- fixes #136
+- fixes #137
+- fixes #138
+- partial fix for #88
+- fixes 141
 
 ## 0.1.0-dev.1
 - upgrade dependency on reflectable to 0.5.2 (currently only 0.5.2 because there is an issue with 0.5.3)

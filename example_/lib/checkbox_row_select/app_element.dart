@@ -13,11 +13,12 @@ import 'package:bwu_datagrid/editors/editors.dart' as editors;
 import 'package:bwu_datagrid/plugins/checkbox_select_column.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
-/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   factory AppElement() => new dom.Element.tag('app-element') as AppElement;

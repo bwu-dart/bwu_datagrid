@@ -30,7 +30,7 @@ class EventBus<T extends EventData> {
   }
 
   /// [fire] broadcasts an event of a type [eventType] to all subscribers.
-  T fire(EventType<T> eventType, T data) {
+  T fire/*<U extends T>*/(EventType<T> eventType, T /*=U*/ data) {
     _logger.finest('event fired: ${eventType.name}');
 
     if (data != null && !eventType.isTypeT(data)) {
@@ -42,9 +42,9 @@ class EventBus<T extends EventData> {
       _logger.finest('fire: new EventType: ${eventType.name}');
     }
 
-    final async.StreamController<T> controller =
+    final async.StreamController<U> controller =
         streamControllers.putIfAbsent(eventType, () {
-      return new async.StreamController<T>.broadcast(sync: isSync);
+      return new async.StreamController<U>.broadcast(sync: isSync);
     });
 
     controller.add(data);

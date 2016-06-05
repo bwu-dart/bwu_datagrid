@@ -16,11 +16,12 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 import 'package:bwu_datagrid_examples/shared/composite_editor.dart';
 import 'package:bwu_datagrid/core/core.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 import 'composite_editor_view.dart';
 
-/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();

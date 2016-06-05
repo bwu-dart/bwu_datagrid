@@ -18,11 +18,13 @@ import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+// ignore: unused_import
 import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-/// Silence analyzer [exampleStyleSilence], [OptionsPanel], [jqUiStyleSilence],
 class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   @override
   void format(dom.Element target, core.GroupTotals totals, Column columnDef) {

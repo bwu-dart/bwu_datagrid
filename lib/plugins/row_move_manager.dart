@@ -10,6 +10,7 @@ import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
+/// A plugin to reorder grid rows.
 class RowMoveManager extends Plugin {
   static const String dragDropId = 'text/bwu-datagrid-row-move';
 
@@ -90,7 +91,7 @@ class RowMoveManager extends Plugin {
 
     // run DOM modification async because modifying the DOM in DragStart
     // causes the browser to fire DragEnd immediately
-    new async.Future<Null>.delayed(new Duration(milliseconds: 10), () {
+    new async.Future<Null>(() {
       _selectionProxy = new dom.DivElement()
         ..classes.add('bwu-datagrid-reorder-proxy')
         ..style.position = "absolute"
@@ -106,7 +107,6 @@ class RowMoveManager extends Plugin {
         ..style.width = '${utils.innerWidth(_canvas)}px'
         ..style.top = '-1000px';
       _canvas.append(_guide);
-      print('DragStart done');
     });
   }
 
@@ -119,7 +119,11 @@ class RowMoveManager extends Plugin {
 
     final int top = e.causedBy.client.y - _canvasTop;
 
-    _selectionProxy.style.top = '${top - 5}px';
+    // _selectionProxy is created async to work around the browser firing
+    // dragEnd immediately after dragStart when the DOM is modified in dragStart
+    if (_selectionProxy != null) {
+      _selectionProxy.style.top = '${top - 5}px';
+    }
 
     final int insertBefore = math.max(
         0,
@@ -133,10 +137,19 @@ class RowMoveManager extends Plugin {
                       rows: _selectedRows, insertBefore: insertBefore))
               .retVal ==
           false) {
-        _guide.style.top = '-1000px';
+        // _selectionProxy is created async to work around the browser firing
+        // dragEnd immediately after dragStart when the DOM is modified in dragStart
+        if (_guide != null) {
+          _guide.style.top = '-1000px';
+        }
         _canMove = false;
       } else {
-        _guide.style.top = '${insertBefore * grid.getGridOptions.rowHeight}px';
+        // _selectionProxy is created async to work around the browser firing
+        // dragEnd immediately after dragStart when the DOM is modified in dragStart
+        if (_selectionProxy != null) {
+          _guide.style.top =
+              '${insertBefore * grid.getGridOptions.rowHeight}px';
+        }
         _canMove = true;
       }
       _insertBefore = insertBefore;

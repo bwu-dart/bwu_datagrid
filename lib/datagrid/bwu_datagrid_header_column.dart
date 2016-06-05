@@ -14,4 +14,26 @@ class BwuDatagridHeaderColumn extends PolymerElement {
   BwuDatagridHeaderColumn.created() : super.created();
 
   Column column;
+
+  static const String defaultThemeName = 'bwu-datagrid-default-theme';
+
+  /// The actually used theme name is [theme] + '-header-column'.
+  @Property(observer: 'themeChanged')
+  String theme = defaultThemeName;
+
+  @reflectable
+  void themeChanged(String newValue, String oldValue) {
+    PolymerDom root = Polymer.dom(this.root);
+    root
+        .querySelectorAll('[bwu-datagrid-theme]')
+        .forEach((dom.Element e) => root.removeChild(e));
+    root.insertBefore(
+        new dom.Element.tag('style', 'custom-style')
+          ..attributes['bwu-datagrid-theme'] = newValue
+          ..attributes['include'] =
+              (newValue ?? defaultThemeName) + '-column-header',
+        $['theme-placeholder']);
+//    updateStyles();
+    PolymerDom.flush();
+  }
 }

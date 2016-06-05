@@ -17,15 +17,18 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
+// ignore: unused_import
 import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
 
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/filter_form.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-/// Silence analyzer [FilterForm], [exampleStyleSilence], [jqUiStyleSilence],
-/// [OptionsPanel]
 class TaskNameFormatter extends fm.CellFormatter {
   List<DataItem> data;
   DataView<core.ItemBase> dataView;

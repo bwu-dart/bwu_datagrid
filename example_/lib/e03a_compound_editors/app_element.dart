@@ -13,10 +13,11 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/editors/editors.dart';
 import 'numeric_range_editor.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 class NumericRangeFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<dom-module id='bwu-datagrid-header-column'>
+<dom-module id="bwu-datagrid-header-column">
   <template>
     <style>
       :host {
         display: block;
-        @apply(--bwu-datagrid-header-column);
       }
       :host(.ui-state-default) {
         position: relative;
-        display: inline-block;
+        display: flex;
         overflow: hidden;
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
@@ -21,17 +20,9 @@
         border-top: 0;
         border-bottom: 0;
         float: left;
-
-        @apply(--bwu-datagrid-header-column-default);
-      }
-      :host(.bwu-datagrid-header-column:hover),
-      :host(.bwu-datagrid-header-column-active) {
-        @apply(--bwu-datagrid-header-column-hover);
-      }
-      :host(.bwu-datagrid-header-column-sorted) {
-        @apply(--bwu-datagrid-header-column-sorted);
       }
     </style>
+    <span class="hidden" id="theme-placeholder"></span>
     <content></content>
   </template>
 </dom-module>

@@ -9,18 +9,19 @@ import 'package:web_components/web_components.dart' show HtmlImport;
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
 import 'package:bwu_datagrid/plugins/cell_selection_model.dart';
 import 'package:bwu_datagrid/plugins/bwu_auto_tooltips.dart';
 import 'package:bwu_datagrid/plugins/cell_copymanager.dart';
 
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
 import 'formula_editor.dart';
 
-/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
-/// Silence analyzer [BwuColumnPicker]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();

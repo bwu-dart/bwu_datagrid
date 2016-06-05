@@ -70,7 +70,7 @@ class BwuColumnPicker extends PolymerElement {
       throw '"grid" must not be updated after the control was added to the DOM.';
     }
     _grid = grid;
-    // breaks in Firefox when called synchronuously after
+    // breaks in Firefox when called synchronously after
     // `new BwuColumnPicker()`
     async(() {
       set('isSyncResize', _grid.getGridOptions.syncColumnCellResize);
@@ -118,6 +118,7 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   void _handleHeaderContextMenu(HeaderContextMenu e) {
+    console.log('contextMenu');
     e.preventDefault();
     clear('columnCheckboxes');
     _updateColumnOrder();

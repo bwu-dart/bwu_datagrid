@@ -10,7 +10,9 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
 class CustomMapDataItemProvider extends DataProvider<core.ItemBase> {
@@ -30,7 +32,6 @@ class CustomMapDataItemProvider extends DataProvider<core.ItemBase> {
   RowMetadata getItemMetadata(int index) => null;
 }
 
-/// Silence analyzer [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();

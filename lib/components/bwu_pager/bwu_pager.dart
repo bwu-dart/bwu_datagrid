@@ -11,6 +11,7 @@ import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
+// ignore: unused_import
 import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
 
 class NavState extends JsProxy {
@@ -31,7 +32,6 @@ class NavState extends JsProxy {
       this.canGotoNext: false});
 }
 
-/// Silence analyzer [jqUiStyleSilence]
 @PolymerRegister('bwu-pager')
 class BwuPager extends PolymerElement {
   BwuPager.created() : super.created();

@@ -14,13 +14,15 @@ import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/plugins/row_move_manager.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
+// ignore: unused_import
 import 'drop_zone.dart';
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
 
-/// Silence analyzer [DropZone], [exampleStyleSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
@@ -114,8 +116,10 @@ class AppElement extends PolymerElement {
         grid.registerPlugin(moveRowsPlugin);
 
         grid.onBwuDragStart.listen(dragStartHandler);
+        grid.onBwuDragEnd.listen(dragEndHandler);
 
         grid.onBwuDrag.listen((core.Drag e) {
+//          print('drag');
           dom.DataTransfer dt = e.causedBy.dataTransfer;
           if (dt.getData('text/bwu-datagrid-recycle') != "recycle") {
             return;
@@ -147,8 +151,11 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void zoneDropHandler(dom.MouseEvent e, [_]) {
-    if (e.dataTransfer.getData('text/bwu-datagrid-recycle') != "recycle") {
+  void zoneDropHandler(CustomEventWrapper e, [_]) {
+    if ((e.original as dom.MouseEvent)
+            .dataTransfer
+            .getData('text/bwu-datagrid-recycle') !=
+        "recycle") {
       return;
     }
 
@@ -164,6 +171,7 @@ class AppElement extends PolymerElement {
     grid.setSelectedRows(<int>[]);
   }
 
+  /// Handle rows reordering
   void moveRowsHandler(core.MoveRows e) {
     final List<core.ItemBase> extractedRows = <core.ItemBase>[];
     List<core.ItemBase> left, right;
@@ -206,6 +214,16 @@ class AppElement extends PolymerElement {
     grid.render();
   }
 
+  dom.SpanElement _dragProxy;
+
+  @reflectable
+  void dragEndHandler(core.DragEnd e, [_]) {
+    if (_dragProxy != null) {
+      _dragProxy.remove();
+    }
+  }
+
+  /// drag row content (instead of by the handle)
   void dragStartHandler(core.DragStart e) {
     Cell cell = grid.getCellFromEvent(e.causedBy);
 
@@ -240,7 +258,7 @@ class AppElement extends PolymerElement {
 
     final dom.Rectangle<num> r = grid.getCanvasNode.getBoundingClientRect();
 
-    final dom.SpanElement proxy = new dom.SpanElement()
+    _dragProxy = new dom.SpanElement()
       ..style.position = "absolute"
       ..style.left = '${r.left}px'
       ..style.top = '${r.top}px'
@@ -253,8 +271,8 @@ class AppElement extends PolymerElement {
       ..style.boxShadow = "2px 2px 6px silver"
       ..text =
           "Drag to Recycle Bin to delete ${selectedRows.length} selected row(s)";
-    dom.document.body.append(proxy);
+    dom.document.body.append(_dragProxy);
 
-    e.causedBy.dataTransfer.setDragImage(proxy, 0, 0);
+    e.causedBy.dataTransfer.setDragImage(_dragProxy, 0, 0);
   }
 }

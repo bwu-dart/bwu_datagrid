@@ -16,20 +16,23 @@ import 'package:bwu_datagrid/editors/editors.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/dataview/dataview.dart';
 import 'package:bwu_datagrid/components/bwu_column_picker/bwu_column_picker.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid/components/jq_ui_icon/jq_ui_icon.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid/components/jq_ui_style/jq_ui_style.dart';
 import 'package:bwu_datagrid/plugins/row_selection_model.dart';
 import 'package:bwu_datagrid/components/bwu_pager/bwu_pager.dart';
 import 'package:bwu_utils/bwu_utils_browser.dart' as tools;
+// ignore: unused_import
 import 'inline_filter_panel.dart';
-
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/filter_form.dart';
 import 'package:bwu_datagrid_examples/shared/required_field_validator.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
-/// Silence analyzer [InlineFilterPanel], [FilterForm], [exampleStyleSilence],
-/// [OptionsPanel], [JqUiIcon], [jqUiStyleSilence]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<dom-module id="bwu-datagrid-default-theme-column-header">
+  <template>
+    <!--suppress CssOptimizeSimilarProperties -->
+    <style>
+      :host(.ui-state-default) {
+        background: url('../../../packages/bwu_datagrid/asset/images/header-columns-bg.gif') repeat-x center bottom;
+        border-right: 1px solid silver;
+      }
+
+      :host(.bwu-datagrid-header-column:hover),
+      :host(.bwu-datagrid-header-column-active) {
+        background: white url('../../../packages/bwu_datagrid/asset/images/header-columns-over-bg.gif') repeat-x center bottom;
+      }
+
+      :host(.bwu-datagrid-header-column-sorted) {
+        font-style: italic;
+      }
+
+      :host(.bwu-datagrid-header-column-sorted) ::content > .bwu-datagrid-column-name {
+        border: solid 3px red !important;
+        order: 1;
+      }
+      :host(.bwu-datagrid-header-column-sorted) ::content > .bwu-datagrid-sort-indicator {
+        padding-right: 2px;
+      }
+    </style>
+  </template>
+</dom-module>

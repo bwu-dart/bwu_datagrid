@@ -12,10 +12,13 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/bwu_datagrid.dart';
 import 'package:bwu_datagrid/formatters/formatters.dart' as fm;
 
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/asset/example_style.dart';
+// ignore: unused_import
 import 'package:bwu_datagrid_examples/shared/options_panel.dart';
 
 import 'row_item.dart';
+// ignore: unused_import
 import 'custom_style.dart';
 
 class CellFormatter extends fm.CellFormatter {
@@ -28,7 +31,6 @@ class CellFormatter extends fm.CellFormatter {
   }
 }
 
-/// Silence analyzer [exampleStyleSilence], [customThemeSilence], [OptionsPanel]
 @PolymerRegister('app-element')
 class AppElement extends PolymerElement {
   AppElement.created() : super.created();
