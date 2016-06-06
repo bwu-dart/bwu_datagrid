@@ -72,7 +72,8 @@ class AppElement extends PolymerElement {
 
         final BwuColumnPicker columnPicker = new BwuColumnPicker()
           ..columns = columns
-          ..grid = grid;
+          ..grid = grid
+        ;
         dom.document.body.append(columnPicker);
       });
     } on NoSuchMethodError catch (e) {

@@ -118,7 +118,6 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   void _handleHeaderContextMenu(HeaderContextMenu e) {
-    console.log('contextMenu');
     e.preventDefault();
     clear('columnCheckboxes');
     _updateColumnOrder();
@@ -196,13 +195,17 @@ class BwuColumnPicker extends PolymerElement {
   void fadeIn(int milliseconds) {
     style.display = 'block';
     style.transition = 'opacity ${milliseconds}ms ease-in';
-    new Future<Null>(() => style.opacity = '1');
+    new Future<Null>(() {
+      style.opacity = '1';
+    });
     onMouseLeave.first.then((dom.MouseEvent e) => fadeOut(_options.fadeSpeed));
   }
 
   void fadeOut(int milliseconds) {
     style.transition = 'opacity ${milliseconds}ms ease-out';
-    new Future<Null>(() => style.opacity = '0');
+    new Future<Null>(() {
+      style.opacity = '0';
+    });
     this
         .onTransitionEnd
         .first
