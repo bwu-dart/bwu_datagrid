@@ -1,53 +1,95 @@
 library bwu_datagrid.effects.sortable;
 
 import 'dart:html' as dom;
-import 'dart:math' as math;
-import 'dart:async' as async;
-//import 'package:collection/equality.dart' as collEqu;
+import 'dart:math' show Point;
+import 'dart:async' show StreamSubscription;
 
 typedef void SortableStartFn(
     dom.Element element, dom.Element helper, dom.Element placeholder);
 typedef void SortableBeforeStopFn(dom.Element element, dom.Element helper);
 typedef void SortableStopFn(dom.MouseEvent e);
 
+/// Supported values for the reorder direction
+enum ReorderAxis {
+  horizontal, vertical, both
+}
+
+// TODO(zoechi) Dragable has some improvments compared to Sortable how it
+// recognizes and initializes drag-n-drop state. Sortable should be updated to
+// do the same. It might be worth making Sortable extend Dragable.
 class Sortable {
+  /// The parent element of the sortable items.
   final dom.Element sortable;
+  /// Currently only `parent` (default) is supported.
   final String containment;
+  /// The mouse-move threshold after a mouse-down, before a drag is recognized
   final int distance;
-  final String axis;
+  /// Whether the elements are oriented horizontally or vertically.
+  final ReorderAxis axis;
+  /// The name of the cursor icon during dragging.
   final String cursor;
+  /// unused (fore example 'intersection')
   final String tolerance;
+  /// unused
+  // The method to create the drag proxy (for example 'clone')
   final String helper;
+  /// A space-separated list of CSS class names to be added to the element that
+  /// is displayed instead of the original element while the original is dragged.
   final String placeholderCssClass;
+  /// Contains the element ids in resulting order after a drag operation.
   final List<Object> reorderedIds = <Object>[];
 
+  /// A callback called when a drag action was recognized (mouse-down and
+  /// successive mouse-move more than [distance]
   SortableStartFn start;
+  /// A callback called on mouse-up (after a drag action) before drag status
+  /// is reset.
   SortableBeforeStopFn beforeStop;
+  /// A callback called on mouse-up (after a drag action) after drag status
+  /// was reset.
   SortableStopFn stop;
 
+  /// Containers the found sortable items filled by [init]
   List<dom.Element> _items;
-  //dom.MutationObserver _mObserver;
 
+  /// `true` when a drag action is in progress
   bool _isDragActive = false;
+
+  /// `true` after a mouse-down was received while the mouse did not yet move
+  /// [distance] pixels away from the initial click position.
   bool _isDragStartPending = false;
-  math.Point<int> _dragStartPos;
+  /// The mouse position on mouse-down
+  Point<int> _dragStartPos;
+  /// The min left and max right position an item can be dragged
   int _minLeft, _maxLeft;
+  /// The min top and max bottom position an item can be dragged
   int _minTop, _maxTop;
+  /// A clone of the dragged element used as drag proxy.
   dom.Element _draggedHelper;
+  /// A clone of the dragged element shown at the original position of the
+  /// dragged element while it is dragged.
   dom.Element _placeholder;
+  /// The reference to the original element being currently dragged.
   dom.Element _draggedElement;
-  math.Point<int> _draggedElementStartPos;
+  /// The top-left position of the dragged element before the drag action
+  /// started.
+  Point<int> _draggedElementStartPos;
+  /// The index of the dragged element when the drag action started.
   int _draggedElementIndex;
 
-  async.StreamSubscription<dynamic> _mouseMoveSubscr;
-  List<async.StreamSubscription<dynamic>> _mouseDownSubscr =
-      <async.StreamSubscription<dynamic>>[];
+  /// The mouse-move subscription created after a mouse-down while waiting for
+  /// a drag action to start to be recognized.
+  StreamSubscription<dynamic> _mouseMoveSubscription;
+  /// The mouse-down subscription waiting for a possible drag action to be
+  /// initiated.
+  List<StreamSubscription<dynamic>> _mouseDownSubscriptions =
+      <StreamSubscription<dynamic>>[];
 
   Sortable(
       {this.sortable,
       this.containment: 'parent',
-      this.distance,
-      this.axis,
+      this.distance : 3,
+      this.axis : ReorderAxis.both,
       this.cursor,
       this.tolerance,
       this.helper,
@@ -55,13 +97,10 @@ class Sortable {
       this.start,
       this.beforeStop,
       this.stop}) {
+    assert(axis != null);
+    assert(distance >= 0);
+
     init();
-//    _mObserver = new dom.MutationObserver((mutations, _) {
-//      if(!_isDragActive && !const collEqu.IterableEquality().equals(sortable.children.where((e) => e.attributes['isMovable'] == 'true'), _items)) {
-//        destroy();
-//        init();
-//      }
-//    })..observe(sortable, attributes: true, childList: true, subtree: false);
 
     // every mouse-up stops a drag operation
     dom.document.onMouseUp.listen((dom.MouseEvent e) {
@@ -80,8 +119,8 @@ class Sortable {
     if (beforeStop != null) {
       beforeStop(_draggedElement, _draggedHelper);
     }
-    _mouseMoveSubscr.cancel();
-    _mouseMoveSubscr = null;
+    _mouseMoveSubscription.cancel();
+    _mouseMoveSubscription = null;
 
     _isDragActive = false;
     _dragStartPos = null;
@@ -105,9 +144,9 @@ class Sortable {
   }
 
   void cancel() {
-    if (_mouseMoveSubscr != null) {
-      _mouseMoveSubscr.cancel();
-      _mouseMoveSubscr = null;
+    if (_mouseMoveSubscription != null) {
+      _mouseMoveSubscription.cancel();
+      _mouseMoveSubscription = null;
     }
     _isDragActive = false;
     _isDragStartPending = false;
@@ -128,16 +167,19 @@ class Sortable {
     _draggedElementStartPos = null;
   }
 
+  /// Cancel active listeners and reinitialize.
   void init() {
     _items = sortable.children
         .where((dom.Element e) => e.attributes['ismovable'] == 'true')
         .toList();
-    _mouseDownSubscr.clear();
+    _mouseDownSubscriptions.forEach((StreamSubscription<dynamic> s) => s.cancel);
+    _mouseDownSubscriptions.clear();
+
     _items.forEach((dom.Element e) {
-      _mouseDownSubscr.add(e.onMouseDown.listen((dom.MouseEvent e) {
+      _mouseDownSubscriptions.add(e.onMouseDown.listen((dom.MouseEvent e) {
         if (e.button == 0) {
           _draggedElement = e.target as dom.Element;
-          if (_draggedElement.attributes.containsKey('draggable')) {
+          if (_draggedElement.attributes.containsKey('nonsortable')) {
             return;
           }
 
@@ -149,8 +191,8 @@ class Sortable {
             return;
           }
 
-          _dragStartPos = new math.Point<int>(e.client.x, e.client.y);
-          _draggedElementStartPos = new math.Point<int>(
+          _dragStartPos = new Point<int>(e.client.x, e.client.y);
+          _draggedElementStartPos = new Point<int>(
               _draggedElement.offsetLeft.round(),
               _draggedElement.offsetTop.round());
 
@@ -161,9 +203,9 @@ class Sortable {
   }
 
   void _subscribeMouseMove() {
-    _mouseMoveSubscr = dom.document.onMouseMove.listen((dom.MouseEvent e) {
+    _mouseMoveSubscription =
+        dom.document.onMouseMove.listen((dom.MouseEvent e) {
       if (_dragStartPos != null && _isDragStartPending) {
-        // seems we still receive events after _mouseMoveSubscr.cancel()
         if (!_isDragActive) {
           if ((((e.client.x - _dragStartPos.x) as int).abs() > distance) ||
               (((e.client.y - _dragStartPos.y) as int).abs() > distance) &&
@@ -198,14 +240,15 @@ class Sortable {
     _placeholder = _draggedElement.clone(false);
     _placeholder.classes
       ..clear()
-      ..addAll(placeholderCssClass.split(' ').where((String s) => s.length > 0));
+      ..addAll(
+          placeholderCssClass.split(' ').where((String s) => s.length > 0));
 
     if (start != null) {
       start(_draggedElement, _draggedHelper, _placeholder);
     }
     int dIdx = sortable.children.indexOf(_draggedElement);
 
-    if (axis.contains('x')) {
+    if (axis == ReorderAxis.horizontal || axis == ReorderAxis.both) {
       _minLeft = _draggedElement.offsetLeft.round();
       _maxLeft =
           (_draggedElement.offsetLeft + _draggedElement.offsetWidth).round();
@@ -231,7 +274,7 @@ class Sortable {
       _maxLeft += (_draggedHelper.offsetWidth / 2).round();
     }
 
-    if (axis.contains('y')) {
+    if (axis == ReorderAxis.vertical || axis == ReorderAxis.both) {
       _minTop = _draggedElement.offsetTop.round();
       _maxTop =
           (_draggedElement.offsetTop + _draggedElement.offsetHeight).round();
@@ -261,32 +304,30 @@ class Sortable {
   }
 
   void _drag(dom.MouseEvent e) {
-    math.Point<int> _newPos = new math.Point<int>(
+    Point<int> _newPos = new Point<int>(
         _draggedElementStartPos.x + e.client.x - _dragStartPos.x,
         _draggedElementStartPos.y + e.client.y - _dragStartPos.y);
-    if (axis == null || axis.isEmpty || axis == 'x') {
+    if (axis == ReorderAxis.both || axis == ReorderAxis.horizontal) {
       if (_newPos.x < _minLeft) {
-        _newPos = new math.Point<int>(_minLeft, _newPos.y);
+        _newPos = new Point<int>(_minLeft, _newPos.y);
       }
       if (_newPos.x + _placeholder.offsetWidth > _maxLeft) {
-        _newPos = new math.Point<int>(
+        _newPos = new Point<int>(
             (_maxLeft - _placeholder.offsetWidth).round(), _newPos.y);
       }
       _draggedHelper.style.left = '${_newPos.x}px';
     }
-    if (axis == null || axis.isEmpty || axis == 'y') {
+    if (axis == null || axis == ReorderAxis.both || axis == ReorderAxis.vertical) {
       if (_newPos.y < _minTop) {
-        _newPos = new math.Point<int>(_newPos.x, _minTop);
+        _newPos = new Point<int>(_newPos.x, _minTop);
       }
       if (_newPos.y + _placeholder.offsetHeight > _maxTop) {
-        _newPos = new math.Point<int>(
+        _newPos = new Point<int>(
             _newPos.x, (_maxTop - _placeholder.offsetHeight).round());
       }
       _draggedHelper.style.top = '${_newPos.y}px';
     }
 
-//    int placeholderPos; // TODO(zoechi) why is it not used?
-//    dom.Element hoverElement; // TODO(zoechi) why is it not used?
     int placeholderIdx = sortable.children.indexOf(_placeholder);
 
     // TODO check only relevant children
@@ -303,7 +344,7 @@ class Sortable {
 
       int overIdx = sortable.children.indexOf(elm);
 
-      if (axis != null && axis.contains('x')) {
+      if (axis != null && (axis == ReorderAxis.both || axis == ReorderAxis.horizontal)) {
         if (elm != _placeholder &&
             elm != _draggedHelper &&
             elm.attributes['ismovable'] == 'true' &&
@@ -317,7 +358,7 @@ class Sortable {
         }
       }
 
-      if (axis != null && axis.contains('y')) {
+      if (axis != null && (axis == ReorderAxis.both || axis == ReorderAxis.vertical)) {
         if (elm != _placeholder &&
             elm != _draggedHelper &&
             elm.attributes['ismovable'] == 'true' &&
@@ -334,10 +375,9 @@ class Sortable {
   }
 
   void destroy() {
-    _mouseDownSubscr
-        .forEach((async.StreamSubscription<dynamic> subscr) => subscr.cancel());
-//    _mObserver.disconnect();
-//    _mObserver = null;
+    _mouseDownSubscriptions.forEach(
+        (StreamSubscription<dynamic> subscription) => subscription.cancel());
+    _mouseDownSubscriptions.clear();
     cancel();
   }
 }

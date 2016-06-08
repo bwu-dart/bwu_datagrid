@@ -1,4 +1,7 @@
-## 0.1.0-dev.2
+## 0.1.0-dev.1
+- upgrade dependency on reflectable to 0.5.2 (currently only 0.5.2 because there is an issue with 0.5.3)
+- fix strong mode hints and warnings.
+- added generic type annotations to a lot of celarations.
 - fixes #132
 - fixes #133
 - fixes #134
@@ -8,11 +11,7 @@
 - fixes #138
 - partial fix for #88
 - fixes 141
-
-## 0.1.0-dev.1
-- upgrade dependency on reflectable to 0.5.2 (currently only 0.5.2 because there is an issue with 0.5.3)
-- fix strong mode hints and warnings.
-- added generic type annotations to a lot of celarations.
+- fixex 87  Finally column resize and reorder also works in Firefox
 
 ## 0.1.0-dev.0
 - Ported to Polymer 1.0.0-rc.6

@@ -77,9 +77,9 @@ transformers:
 #      packages/bwu_datagrid_examples/asset/examples.css: false
 #      packages/bwu_datagrid/asset/smoothness/jquery-ui-1.8.16.custom.css: false
 
-- test/pub_serve:
-    $include: test/**_test{.*,}.dart
-    $include: '**/*.bootstrap.initialize.dart'
+#- test/pub_serve:
+#    $include: test/**_test{.*,}.dart
+#    $include: '**/*.bootstrap.initialize.dart'
 
 - $dart2js:
     commandLineOptions: ['--trust-type-annotations', '--trust-primitives']

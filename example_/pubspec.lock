@@ -6,7 +6,7 @@ packages:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.4-alpha.9"
+    version: "0.27.4-alpha.10"
   ansicolor:
     description:
       name: ansicolor
@@ -330,13 +330,13 @@ packages:
       name: stream_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   string_scanner:
     description:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4+1"
+    version: "0.1.5"
   supports_color:
     description:
       name: supports_color
@@ -348,7 +348,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.13+4"
+    version: "0.12.13+5"
   typed_data:
     description:
       name: typed_data
@@ -390,7 +390,7 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   webdriver:
     description:
       path: "../../dart-lang/webdriver.dart"
@@ -415,4 +415,4 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.9"
-sdk: ">=1.16.0 <1.18.0"
+sdk: ">=1.16.0 <1.19.0"

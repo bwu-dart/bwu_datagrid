@@ -25,6 +25,7 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 import 'package:bwu_datagrid/effects/sortable.dart' as sort;
+import 'package:bwu_datagrid/effects/dragable.dart' show Dragable;
 // ignore: unused_import
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_default_theme.dart';
 // ignore: unused_import
@@ -276,7 +277,6 @@ class BwuDatagrid extends PolymerElement {
         ? _scrollbarDimensions
         : _measureScrollbar();
 
-    //options = $.extend({}, defaults, options);
     _validateAndEnforceOptions();
     _columnDefaults.width = _gridOptions.defaultColumnWidth;
 
@@ -294,15 +294,14 @@ class BwuDatagrid extends PolymerElement {
         if (m.maxWidth != null && m.width > m.maxWidth) {
           m.width = m.maxWidth;
         }
-        //dom.document.head.append(new dom.StyleElement());
       }
     }
 
     _editController =
         new EditController(_commitCurrentEdit, _cancelCurrentEdit);
 
-    //$container
-    //..children.clear(); // TODO empty()
+    this._container
+    .children.clear();
     this
       ..style.overflow = 'hidden'
       ..style.outline = '0'
@@ -311,9 +310,6 @@ class BwuDatagrid extends PolymerElement {
       ..classes.add("ui-widget");
 
     // set up a positioning container if needed
-//      if (!/relative|absolute|fixed/.test($container.css("position"))) {
-//        $container.css("position", "relative");
-//      }
     if (!this.style.position.contains(new RegExp('relative|absolute|fixed'))) {
       this.style.position = 'relative';
     }
@@ -325,7 +321,6 @@ class BwuDatagrid extends PolymerElement {
       ..style.top = '0'
       ..style.left = '0'
       ..style.outline = '0';
-    //_container.append(_focusSink);
 
     _headerScroller = ($['headerScroller'] as dom.DivElement)
       //..classes.add('bwu-datagrid-header')
@@ -760,12 +755,10 @@ class BwuDatagrid extends PolymerElement {
     void onMouseEnter(dom.MouseEvent e) {
       (e.target as dom.Element).classes.add("ui-state-hover");
     }
-    ;
 
     void onMouseLeave(dom.MouseEvent e) {
       (e.target as dom.Element).classes.remove("ui-state-hover");
     }
-    ;
 
     _headers
         .querySelectorAll(".bwu-datagrid-header-column")
@@ -942,10 +935,10 @@ class BwuDatagrid extends PolymerElement {
         //selector: 'ui-sortable',
         containment: 'parent',
         distance: 3,
-        axis: 'x',
+        axis: sort.ReorderAxis.horizontal,
         cursor: 'default',
-        tolerance: 'intersection',
-        helper: 'clone',
+        // tolerance: 'intersection',
+        // helper: 'clone',
         placeholderCssClass:
             'bwu-datagrid-sortable-placeholder ui-state-default bwu-datagrid-header-column',
         start: (dom.Element elm, dom.Element helper, dom.Element placeholder) {
@@ -1006,10 +999,13 @@ class BwuDatagrid extends PolymerElement {
 
       final dom.DivElement div = new dom.DivElement()
         ..classes.add('bwu-datagrid-resizable-handle')
-        ..draggable = true;
+        //`..draggable = true` breaks custom drag-and-drop in Chrome
+        ..attributes['nonsortable']='true'
+        ..attributes['bwu-draggable']='true'
+      ;
       headerCol.append(div);
 
-      div
+      new Dragable(div)
         ..onDragStart.listen((dom.MouseEvent e) {
           if (!getEditorLock.commitCurrentEdit()) {
             e.preventDefault; // TODO(zoechi) is this the proper translation from `return false;`?
@@ -1277,8 +1273,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _createCssRules() {
     _style = new dom
-        .StyleElement(); //.html("<style type='text/css' rel='stylesheet' />", validator: nodeValidator);
-    //dom.document.head.append($style);
+        .StyleElement();
     _container.append(_style);
     final int rowHeight = (_gridOptions.rowHeight - _cellHeightDiff);
     final List<String> rules = <String>[
@@ -1303,21 +1298,8 @@ class BwuDatagrid extends PolymerElement {
     _style.appendText(rules.join(" "));
   }
 
-  // TODO keep the rules in a collection to avoid parsing them
   Map<String, dom.CssStyleRule> _getColumnCssRules(int idx) {
     if (_stylesheet == null) {
-//      var sheets = this.shadowRoot.styleSheets;
-//      for (int i = 0; i < sheets.length; i++) {
-//        if (sheets[i].ownerNode != null && sheets[i].ownerNode == $style) {
-//          stylesheet = sheets[i];
-//          break;
-//        }
-//      }
-//
-//      if (stylesheet == null) {
-//        throw "Cannot find stylesheet.";
-//      }
-
       _stylesheet = _style.sheet;
 
       // find and cache column CSS rules
@@ -1655,7 +1637,6 @@ class BwuDatagrid extends PolymerElement {
       resizeCanvas();
       _applyColumnWidths();
 
-      this.shadowRoot.append(_style);
       _handleScroll();
     }
   }
@@ -1920,8 +1901,6 @@ class BwuDatagrid extends PolymerElement {
       ..classes.addAll(rowCss.split(" ").where((String s) => s.length > 0))
       ..style.top = '${_getRowTop(row)}px';
 
-    //stringArray.add(rowElement);
-
     String colspan;
     Column m;
     if (columns != null) {
@@ -1958,7 +1937,6 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    //stringArray.add("</div>");
     return rowElement;
   }
 
@@ -2001,15 +1979,12 @@ class BwuDatagrid extends PolymerElement {
       }
     }
 
-    //stringArray.add("</div>");
-
     _rowsCache[row].cellRenderQueue.add(cell);
     _rowsCache[row].cellColSpans[cell] = colspan;
   }
 
   void _cleanupRows(Range rangeToKeep) {
     for (int i = 0; i < _rowsCache.length; i++) {
-      // TODO was probably associative
       if ((i != _activeRow) &&
           (i < rangeToKeep.top || i > rangeToKeep.bottom)) {
         _removeRowFromCache(i);
@@ -2315,19 +2290,16 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _cleanUpCells(Range range, int row) {
-//    var totalCellsRemoved = 0; // TODO(zoechi) why is it unused?
     final RowCache cacheEntry = _rowsCache[row];
 
     // Remove cells outside the range.
     final List<int> cellsToRemove = <int>[];
     for (int i in cacheEntry.cellNodesByColumnIdx.keys) {
-      // I really hate it when people mess with Array.prototype.
       if (!cacheEntry.cellNodesByColumnIdx.containsKey(i)) {
-        // TODO check
         continue;
       }
 
-      // This is a string, so it needs to be cast back to a number.
+      // TODO(zoechi) This is a string, so it needs to be cast back to a number.
       //i = i | 0;
 
       String colspan = cacheEntry.cellColSpans[i];
@@ -2350,17 +2322,14 @@ class BwuDatagrid extends PolymerElement {
       if (_postProcessedRows.containsKey(row)) {
         _postProcessedRows[row].remove(cellToRemove);
       }
-//      totalCellsRemoved++; // TODO(zoechi) why is it unused?
     }
   }
 
   void _cleanUpAndRenderCells(Range range) {
     RowCache cacheEntry;
-    //var stringArray = [];
     final dom.Element rowElement = new dom.DivElement();
     final List<int> processedRows = <int>[];
     int cellsAdded;
-//    var totalCellsAdded = 0; // TODO(zoechi) why is it unused?
     String colSpan;
 
     for (int row = range.top; row <= range.bottom; row++) {
@@ -2457,10 +2426,6 @@ class BwuDatagrid extends PolymerElement {
   void _renderRows(Range range) {
     final dom.Element parentNode = _canvas;
 
-    //stringArray = [],
-    //dom.Element rowElement;
-//    List<dom.Element> rowElements = []; // TODO(zoechi) why is it unused?
-
     List<int> rows = <int>[];
     bool needToReselectCell = false;
     int dataLength = getDataLength;
@@ -2520,6 +2485,9 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
+  /// Process async post-render tasks. Using post-render allows to render
+  /// expensive content delayed to not hurt user experience, for example with
+  /// scrolling.
   void _startPostProcessing() {
     if (!_gridOptions.enableAsyncPostRender) {
       return;
@@ -3005,7 +2973,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _handleContextMenu(dom.MouseEvent e) {
     final Cell cell = getCellFromEvent(e);
-    //var $cell = tools.closest((e.target as dom.Element), '.bwu-datagrid-cell', context: $canvas);
+    // TODO(zoechi)var $cell = tools.closest((e.target as dom.Element), '.bwu-datagrid-cell', context: $canvas);
     if (cell == null) {
       return;
     }
