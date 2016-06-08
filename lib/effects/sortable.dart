@@ -10,9 +10,7 @@ typedef void SortableBeforeStopFn(dom.Element element, dom.Element helper);
 typedef void SortableStopFn(dom.MouseEvent e);
 
 /// Supported values for the reorder direction
-enum ReorderAxis {
-  horizontal, vertical, both
-}
+enum ReorderAxis { horizontal, vertical, both }
 
 // TODO(zoechi) Dragable has some improvments compared to Sortable how it
 // recognizes and initializes drag-n-drop state. Sortable should be updated to
@@ -20,31 +18,41 @@ enum ReorderAxis {
 class Sortable {
   /// The parent element of the sortable items.
   final dom.Element sortable;
+
   /// Currently only `parent` (default) is supported.
   final String containment;
+
   /// The mouse-move threshold after a mouse-down, before a drag is recognized
   final int distance;
+
   /// Whether the elements are oriented horizontally or vertically.
   final ReorderAxis axis;
+
   /// The name of the cursor icon during dragging.
   final String cursor;
+
   /// unused (fore example 'intersection')
   final String tolerance;
+
   /// unused
   // The method to create the drag proxy (for example 'clone')
   final String helper;
+
   /// A space-separated list of CSS class names to be added to the element that
   /// is displayed instead of the original element while the original is dragged.
   final String placeholderCssClass;
+
   /// Contains the element ids in resulting order after a drag operation.
   final List<Object> reorderedIds = <Object>[];
 
   /// A callback called when a drag action was recognized (mouse-down and
   /// successive mouse-move more than [distance]
   SortableStartFn start;
+
   /// A callback called on mouse-up (after a drag action) before drag status
   /// is reset.
   SortableBeforeStopFn beforeStop;
+
   /// A callback called on mouse-up (after a drag action) after drag status
   /// was reset.
   SortableStopFn stop;
@@ -58,28 +66,37 @@ class Sortable {
   /// `true` after a mouse-down was received while the mouse did not yet move
   /// [distance] pixels away from the initial click position.
   bool _isDragStartPending = false;
+
   /// The mouse position on mouse-down
   Point<int> _dragStartPos;
+
   /// The min left and max right position an item can be dragged
   int _minLeft, _maxLeft;
+
   /// The min top and max bottom position an item can be dragged
   int _minTop, _maxTop;
+
   /// A clone of the dragged element used as drag proxy.
   dom.Element _draggedHelper;
+
   /// A clone of the dragged element shown at the original position of the
   /// dragged element while it is dragged.
   dom.Element _placeholder;
+
   /// The reference to the original element being currently dragged.
   dom.Element _draggedElement;
+
   /// The top-left position of the dragged element before the drag action
   /// started.
   Point<int> _draggedElementStartPos;
+
   /// The index of the dragged element when the drag action started.
   int _draggedElementIndex;
 
   /// The mouse-move subscription created after a mouse-down while waiting for
   /// a drag action to start to be recognized.
   StreamSubscription<dynamic> _mouseMoveSubscription;
+
   /// The mouse-down subscription waiting for a possible drag action to be
   /// initiated.
   List<StreamSubscription<dynamic>> _mouseDownSubscriptions =
@@ -88,8 +105,8 @@ class Sortable {
   Sortable(
       {this.sortable,
       this.containment: 'parent',
-      this.distance : 3,
-      this.axis : ReorderAxis.both,
+      this.distance: 3,
+      this.axis: ReorderAxis.both,
       this.cursor,
       this.tolerance,
       this.helper,
@@ -172,7 +189,8 @@ class Sortable {
     _items = sortable.children
         .where((dom.Element e) => e.attributes['ismovable'] == 'true')
         .toList();
-    _mouseDownSubscriptions.forEach((StreamSubscription<dynamic> s) => s.cancel);
+    _mouseDownSubscriptions
+        .forEach((StreamSubscription<dynamic> s) => s.cancel);
     _mouseDownSubscriptions.clear();
 
     _items.forEach((dom.Element e) {
@@ -317,7 +335,9 @@ class Sortable {
       }
       _draggedHelper.style.left = '${_newPos.x}px';
     }
-    if (axis == null || axis == ReorderAxis.both || axis == ReorderAxis.vertical) {
+    if (axis == null ||
+        axis == ReorderAxis.both ||
+        axis == ReorderAxis.vertical) {
       if (_newPos.y < _minTop) {
         _newPos = new Point<int>(_newPos.x, _minTop);
       }
@@ -344,7 +364,8 @@ class Sortable {
 
       int overIdx = sortable.children.indexOf(elm);
 
-      if (axis != null && (axis == ReorderAxis.both || axis == ReorderAxis.horizontal)) {
+      if (axis != null &&
+          (axis == ReorderAxis.both || axis == ReorderAxis.horizontal)) {
         if (elm != _placeholder &&
             elm != _draggedHelper &&
             elm.attributes['ismovable'] == 'true' &&
@@ -358,7 +379,8 @@ class Sortable {
         }
       }
 
-      if (axis != null && (axis == ReorderAxis.both || axis == ReorderAxis.vertical)) {
+      if (axis != null &&
+          (axis == ReorderAxis.both || axis == ReorderAxis.vertical)) {
         if (elm != _placeholder &&
             elm != _draggedHelper &&
             elm.attributes['ismovable'] == 'true' &&

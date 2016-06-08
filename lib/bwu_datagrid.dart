@@ -300,8 +300,7 @@ class BwuDatagrid extends PolymerElement {
     _editController =
         new EditController(_commitCurrentEdit, _cancelCurrentEdit);
 
-    this._container
-    .children.clear();
+    this._container.children.clear();
     this
       ..style.overflow = 'hidden'
       ..style.outline = '0'
@@ -1000,9 +999,8 @@ class BwuDatagrid extends PolymerElement {
       final dom.DivElement div = new dom.DivElement()
         ..classes.add('bwu-datagrid-resizable-handle')
         //`..draggable = true` breaks custom drag-and-drop in Chrome
-        ..attributes['nonsortable']='true'
-        ..attributes['bwu-draggable']='true'
-      ;
+        ..attributes['nonsortable'] = 'true'
+        ..attributes['bwu-draggable'] = 'true';
       headerCol.append(div);
 
       new Dragable(div)
@@ -1272,8 +1270,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _createCssRules() {
-    _style = new dom
-        .StyleElement();
+    _style = new dom.StyleElement();
     _container.append(_style);
     final int rowHeight = (_gridOptions.rowHeight - _cellHeightDiff);
     final List<String> rules = <String>[
