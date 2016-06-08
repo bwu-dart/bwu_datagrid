@@ -6,4 +6,3 @@ import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 // ignore: unused_import
 import 'package:bwu_datagrid/datagrid/bwu_datagrid_header_column_default_theme.dart';
-
