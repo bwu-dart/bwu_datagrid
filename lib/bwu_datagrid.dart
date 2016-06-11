@@ -1654,7 +1654,9 @@ class BwuDatagrid extends PolymerElement {
     _gridOptions.extend(newGridOptions); // TODO verify
     _validateAndEnforceOptions();
 
-    _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
+    if(_viewport != null) {
+      _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
+    }
     render();
   }
 

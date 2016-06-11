@@ -518,7 +518,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     core.Group group;
     Object val;
     final List<core.Group> groups = <core.Group>[];
-    Map<int, core.Group> groupsByVal = <int, core.Group>{};
+    Map<dynamic, core.Group> groupsByVal = <dynamic, core.Group>{};
     core.ItemBase r;
     int level = parentGroup != null ? parentGroup.level + 1 : 0;
     GroupingInfo gi = groupingInfos[level];

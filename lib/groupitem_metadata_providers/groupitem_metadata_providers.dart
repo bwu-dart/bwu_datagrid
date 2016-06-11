@@ -19,7 +19,7 @@ class DefaultGroupCellFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase item) {
-    assert(value is String);
+    assert(value == null || value is String);
     final core.Group group = item as core.Group;
     if (!giMetadataProvider.enableExpandCollapse) {
       target.append(group.title);

@@ -1,6 +1,7 @@
 @HtmlImport('app_element.html')
 library app_element;
 
+import 'dart:html' show window, Event;
 import 'dart:math' as math;
 
 import 'package:polymer/polymer.dart';
@@ -93,6 +94,8 @@ class AppElement extends PolymerElement {
 
       CustomMapDataItemProvider dataProvider =
           new CustomMapDataItemProvider(getItem, getLength);
+
+      window.onResize.listen((Event e) => grid.resizeCanvas(e));
 
       grid
           .setup(

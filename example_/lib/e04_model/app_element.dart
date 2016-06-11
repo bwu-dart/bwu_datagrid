@@ -325,11 +325,11 @@ class AppElement extends PolymerElement {
       return 0;
     }
 
-    if (x is Comparable<core.ItemBase>) {
+    if (x is Comparable) {
       return x.compareTo(y);
     }
 
-    if (y is Comparable<core.ItemBase>) {
+    if (y is Comparable) {
       return 1;
     }
 

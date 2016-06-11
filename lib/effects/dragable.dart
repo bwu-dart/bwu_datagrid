@@ -47,9 +47,9 @@ class Dragable {
   bool _isDragActive = false;
 
   Dragable(this.dragable, {this.distance: 3}) {
-    _dragStartStream = _dragStartController.stream.asBroadcastStream();
-    _dragStream = _dragController.stream.asBroadcastStream();
-    _dragEndStream = _dragEndController.stream.asBroadcastStream();
+    _dragStartStream = _dragStartController.stream;
+    _dragStream = _dragController.stream;
+    _dragEndStream = _dragEndController.stream;
 
     init();
 
