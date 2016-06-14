@@ -27,14 +27,12 @@ part 'helpers.dart';
 //  });
 
 typedef bool FilterFn(dynamic a, dynamic b);
-typedef List<core.ItemBase> _UncompiledFilterFn(
-    List<core.ItemBase> items, Map<dynamic, dynamic> args);
-typedef List<core.ItemBase> _UncompiledFilterWithCacheFn(
-    List<core.ItemBase> items,
-    Map<dynamic, dynamic> args,
-    Map<int, bool> cache);
+typedef List<TItem> _UncompiledFilterFn<TItem>(
+    List<TItem> items, Map<dynamic, dynamic> args);
+typedef List<TItem> _UncompiledFilterWithCacheFn<TItem>(
+    List<TItem> items, Map<dynamic, dynamic> args, Map<int, bool> cache);
 
-class DataView<T extends core.ItemBase> extends DataProvider<T> {
+class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
   /// A sample Model implementation.
   /// Provides a filtered view of the underlying data.
   ///
@@ -42,7 +40,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   DataViewOptions options = new DataViewOptions();
   GroupingInfo groupingInfo = new GroupingInfo();
 
-  DataView({DataViewOptions options, List<T> items}) : super(items) {
+  DataView({DataViewOptions options, List<TItem> items}) : super(items) {
     if (options != null) {
       this.options = options;
     }
@@ -51,7 +49,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   // private
   String idProperty = "id"; // property holding a unique row id
   //List<T> items = [];         // data by index
-  List<T> rows = <T>[]; // data by row
+  List<TItem> rows = <TItem>[]; // data by row
   Map<dynamic, int> idxById =
       <dynamic, int>{}; // indexes by id - the id needs to be a valid map key
   Map<dynamic, int>
@@ -62,12 +60,12 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   bool suspend = false; // suspends the recalculation
   bool sortAsc = true;
   String fastSortField;
-  SortComparerFunc<T> sortComparer;
+  SortComparerFunc<TItem> sortComparer;
   Map<String, dynamic> refreshHints = <String,
       dynamic>{}; // TODO make class, if this String stores ids it should be dynamic
   Map<String, dynamic> prevRefreshHints = <String, dynamic>{};
   Map<dynamic, dynamic> filterArgs;
-  List<T> filteredItems = <T>[];
+  List<TItem> filteredItems = <TItem>[];
   FilterFn compiledFilter;
   FilterFn compiledFilterWithCaching;
   Map<int, bool> filterCache = <int, bool>{};
@@ -136,17 +134,17 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     }
   }
 
-  List<T> getItems() => items;
+  List<TItem> getItems() => items;
 
   @override
 
   /// To specify an id column different from `id`, use `setItems` instead.
-  set items(List<T> items) {
+  set items(List<TItem> items) {
     setItems(items);
   }
 
-  void setItems(List<T> data, [String objectIdProperty]) {
-    assert(!data.map/*<bool>*/((Object d) => d is T).contains(false));
+  void setItems(List<TItem> data, [String objectIdProperty]) {
+    assert(!data.map/*<bool>*/((Object d) => d is TItem).contains(false));
     if (objectIdProperty != null) {
       idProperty = objectIdProperty;
     }
@@ -186,7 +184,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
         totalPages: totalPages);
   }
 
-  void sort(SortComparerFunc<T> comparer, [bool ascending = true]) {
+  void sort(SortComparerFunc<TItem> comparer, [bool ascending = true]) {
     assert(ascending is bool && ascending != null);
 
     sortAsc = ascending;
@@ -300,7 +298,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 //      setGrouping(groupingInfos);
 //    }
 
-  T getItemByIdx(int i) {
+  TItem getItemByIdx(int i) {
     if (i < 0 || i >= items.length) {
       return null;
     }
@@ -327,7 +325,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   }
 
   // the id needs to be a valid map key
-  T getItemById(Object id) {
+  TItem getItemById(Object id) {
     final int idx = idxById[id];
     if (idx == null) {
       return null;
@@ -360,7 +358,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   }
 
   // the id needs to be a valid map key
-  void updateItem(Object id, T item) {
+  void updateItem(Object id, TItem item) {
     if (idxById[id] == null || id != item[idProperty]) {
       throw "Invalid or non-matching id";
     }
@@ -372,13 +370,13 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     refresh();
   }
 
-  void insertItem(int insertBefore, T item) {
+  void insertItem(int insertBefore, TItem item) {
     items.insert(insertBefore, item);
     updateIdxById(insertBefore);
     refresh();
   }
 
-  void addItem(T item) {
+  void addItem(TItem item) {
     items.add(item);
     updateIdxById(items.length - 1);
     refresh();
@@ -400,8 +398,8 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
   int get length => rows.length;
 
   @override
-  T getItem(int i) {
-    final T item = rows[i];
+  TItem getItem(int i) {
+    final TItem item = rows[i];
 
     core.Group group;
     if (item != null && item is core.Group) {
@@ -431,7 +429,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     if (rows.length <= i) {
       return null;
     }
-    T item = rows[i];
+    TItem item = rows[i];
     if (item == null) {
       return null;
     }
@@ -754,9 +752,8 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 //    return fn;
 //  }
 
-  List<core.ItemBase> uncompiledFilter(
-      List<core.ItemBase> items, Map<dynamic, dynamic> args) {
-    List<core.ItemBase> retval = <core.ItemBase>[];
+  List<TItem> uncompiledFilter(List<TItem> items, Map<dynamic, dynamic> args) {
+    List<TItem> retval = <TItem>[];
 //    int idx = 0; // TODO(zoechi) why is it unused?
 
     try {
@@ -773,11 +770,11 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     return retval;
   }
 
-  List<core.ItemBase> uncompiledFilterWithCaching(List<core.ItemBase> items,
-      Map<dynamic, dynamic> args, Map<int, bool> cache) {
-    List<core.ItemBase> retval = <core.ItemBase>[];
+  List<TItem> uncompiledFilterWithCaching(
+      List<TItem> items, Map<dynamic, dynamic> args, Map<int, bool> cache) {
+    List<TItem> retval = <TItem>[];
 //    int idx = 0; // TODO(zoechi) why is it unused?
-    core.ItemBase item;
+    TItem item;
 
     for (int i = 0; i < items.length; i++) {
       item = items[i];
@@ -792,11 +789,11 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     return retval;
   }
 
-  Map<dynamic, dynamic> getFilteredAndPagedItems(List<core.ItemBase> items) {
+  Map<dynamic, dynamic> getFilteredAndPagedItems(List<TItem> items) {
     if (filter != null) {
-      final _UncompiledFilterFn
+      final _UncompiledFilterFn<TItem>
           batchFilter = /*options.inlineFilters ? compiledFilter :*/ uncompiledFilter;
-      final _UncompiledFilterWithCacheFn
+      final _UncompiledFilterWithCacheFn<TItem>
           batchFilterWithCaching = /*options.inlineFilters ? compiledFilterWithCaching :*/ uncompiledFilterWithCaching;
 
       if (refreshHints['isFilterNarrowing'] == true) {
@@ -815,7 +812,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     }
 
     // get the current page
-    List<core.ItemBase> paged;
+    List<TItem> paged;
     if (pagesize != 0) {
       if (filteredItems.length < pagenum * pagesize) {
         pagenum = (filteredItems.length / pagesize).floor();
@@ -876,7 +873,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
     return diff;
   }
 
-  List<int> recalc(List<T> items) {
+  List<int> recalc(List<TItem> items) {
     rowsById = null;
 
     if (refreshHints['isFilterNarrowing'] !=
@@ -888,7 +885,7 @@ class DataView<T extends core.ItemBase> extends DataProvider<T> {
 
     Map<dynamic, dynamic> filteredItems = getFilteredAndPagedItems(items);
     totalRows = filteredItems['totalRows'];
-    List<T> newRows = filteredItems['rows'] as List<T>;
+    List<TItem> newRows = filteredItems['rows'] as List<TItem>;
 
     groups = <core.Group>[];
     if (groupingInfos.length > 0) {

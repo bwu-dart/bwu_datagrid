@@ -1,3 +1,10 @@
+## 0.1.0-dev.2
+- fixes #140
+- widen dependency constraints on quiver
+- fix dataview tests (fix some generic types)
+- use `KeyboardEvent.keyCode` instead of `KeyboardEvent.which` everywhere
+- fix some issues in example e04_model (incomplete migration from Polymer 0.16)
+
 ## 0.1.0-dev.1
 - upgrade dependency on reflectable to 0.5.2 (currently only 0.5.2 because there is an issue with 0.5.3)
 - fix strong mode hints and warnings.

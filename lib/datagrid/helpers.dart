@@ -90,6 +90,7 @@ class RowCache {
   RowCache();
 }
 
+// TODO(zoechi) check if this [Range] and [core.Range] can be unified.
 class Range extends core.Range {
 //  int fromRow;
 //  int fromCell;

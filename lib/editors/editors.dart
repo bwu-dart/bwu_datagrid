@@ -695,15 +695,15 @@ class LongTextEditor extends Editor {
   }
 
   void handleKeyDown(dom.KeyboardEvent e) {
-    if (e.which == dom.KeyCode.ENTER && e.ctrlKey) {
+    if (e.keyCode == dom.KeyCode.ENTER && e.ctrlKey) {
       save();
-    } else if (e.which == dom.KeyCode.ESC) {
+    } else if (e.keyCode == dom.KeyCode.ESC) {
       e.preventDefault();
       cancel();
-    } else if (e.which == dom.KeyCode.TAB && e.shiftKey) {
+    } else if (e.keyCode == dom.KeyCode.TAB && e.shiftKey) {
       e.preventDefault();
       args.grid.navigatePrev();
-    } else if (e.which == dom.KeyCode.TAB) {
+    } else if (e.keyCode == dom.KeyCode.TAB) {
       e.preventDefault();
       args.grid.navigateNext();
     }

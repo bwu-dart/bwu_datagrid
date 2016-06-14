@@ -128,8 +128,8 @@ class RowSelectionModel extends SelectionModel {
         !e.causedBy.ctrlKey &&
         !e.causedBy.altKey &&
         !e.causedBy.metaKey &&
-        (e.causedBy.which == dom.KeyCode.UP ||
-            e.causedBy.which == dom.KeyCode.DOWN)) {
+        (e.causedBy.keyCode == dom.KeyCode.UP ||
+            e.causedBy.keyCode == dom.KeyCode.DOWN)) {
       List<int> selectedRows = getSelectedRows();
       selectedRows.sort((int x, int y) => x - y);
 
@@ -141,7 +141,7 @@ class RowSelectionModel extends SelectionModel {
       int bottom = selectedRows[selectedRows.length - 1];
       int active;
 
-      if (e.causedBy.which == dom.KeyCode.DOWN) {
+      if (e.causedBy.keyCode == dom.KeyCode.DOWN) {
         active = activeRow.row < bottom || top == bottom ? ++bottom : ++top;
       } else {
         active = activeRow.row < bottom ? --bottom : --top;

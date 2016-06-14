@@ -115,7 +115,7 @@ class CheckboxSelectColumn extends Column implements Plugin {
   }
 
   void handleKeyDown(core.KeyDown e) {
-    if (e.causedBy.which == 32) {
+    if (e.causedBy.keyCode == dom.KeyCode.SPACE) {
       if (_grid.getColumns[e.cell.cell].id == id) {
         // if editing, try to commit
         if (!_grid.getEditorLock.isActive ||

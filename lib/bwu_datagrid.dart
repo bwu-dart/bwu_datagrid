@@ -1654,7 +1654,7 @@ class BwuDatagrid extends PolymerElement {
     _gridOptions.extend(newGridOptions); // TODO verify
     _validateAndEnforceOptions();
 
-    if(_viewport != null) {
+    if (_viewport != null) {
       _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
     }
     render();
@@ -2876,28 +2876,28 @@ class BwuDatagrid extends PolymerElement {
 
     if (!handled) {
       if (!e.shiftKey && !e.altKey && !e.ctrlKey) {
-        if (e.which == 27) {
+        if (e.keyCode == 27) {
           if (!getEditorLock.isActive) {
             return; // no editing mode to cancel, allow bubbling and default processing (exit without cancelling the event)
           }
           _cancelEditAndSetFocus();
-        } else if (e.which == dom.KeyCode.NUM_SOUTH_EAST) {
+        } else if (e.keyCode == dom.KeyCode.NUM_SOUTH_EAST) {
           navigatePageDown();
           handled = true;
-        } else if (e.which == dom.KeyCode.NUM_NORTH_EAST) {
+        } else if (e.keyCode == dom.KeyCode.NUM_NORTH_EAST) {
           navigatePageUp();
           handled = true;
-        } else if (e.which == dom.KeyCode.NUM_WEST) {
+        } else if (e.keyCode == dom.KeyCode.NUM_WEST) {
           handled = navigateLeft();
-        } else if (e.which == dom.KeyCode.NUM_EAST) {
+        } else if (e.keyCode == dom.KeyCode.NUM_EAST) {
           handled = navigateRight();
-        } else if (e.which == dom.KeyCode.NUM_NORTH) {
+        } else if (e.keyCode == dom.KeyCode.NUM_NORTH) {
           handled = navigateUp();
-        } else if (e.which == dom.KeyCode.NUM_SOUTH) {
+        } else if (e.keyCode == dom.KeyCode.NUM_SOUTH) {
           handled = navigateDown();
-        } else if (e.which == dom.KeyCode.TAB) {
+        } else if (e.keyCode == dom.KeyCode.TAB) {
           handled = navigateNext();
-        } else if (e.which == dom.KeyCode.ENTER) {
+        } else if (e.keyCode == dom.KeyCode.ENTER) {
           if (_gridOptions.editable) {
             if (_currentEditor != null) {
               // adding new row
@@ -2914,7 +2914,7 @@ class BwuDatagrid extends PolymerElement {
           }
           handled = true;
         }
-      } else if (e.which == dom.KeyCode.TAB &&
+      } else if (e.keyCode == dom.KeyCode.TAB &&
           e.shiftKey &&
           !e.ctrlKey &&
           !e.altKey) {

@@ -352,18 +352,18 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void iconMouseOver(dom.MouseEvent e, [_]) {
+  void iconMouseOver(CustomEventWrapper e, [_]) {
     (e.target as dom.Element).classes.add('ui-state-hover');
   }
 
   @reflectable
-  void iconMouseOut(dom.MouseEvent e, [_]) {
+  void iconMouseOut(CustomEventWrapper e, [_]) {
     (e.target as dom.Element).classes.remove('ui-state-hover');
   }
 
   void _onKeyDownHandler(core.KeyDown e) {
     // select all rows on ctrl-a
-    if (e.causedBy.which != dom.KeyCode.A || !e.causedBy.ctrlKey) {
+    if (e.causedBy.keyCode != dom.KeyCode.A || !e.causedBy.ctrlKey) {
       return; // false;
     }
 

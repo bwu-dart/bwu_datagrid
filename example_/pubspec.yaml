@@ -16,7 +16,7 @@ dependencies:
   meta: ^0.12.0
   polymer: ^1.0.0-rc.16
   polymer_interop: ^1.0.0-rc.9
-  quiver: '>=0.21.3 <0.22.0'
+  quiver: '>=0.21.3 <0.23.0'
   reflectable: ^0.5.2
   web_components: ^0.12.0
 
@@ -33,8 +33,8 @@ dev_dependencies:
   grinder: '>=0.7.2 <0.9.0'
   http: '>=0.11.3 <0.12.0'
   test: '>=0.12.0 <0.13.0'
-  webdriver: # ^1.0.0 # TODO(zoechi) re-add
-    path: ../../dart-lang/webdriver.dart
+  webdriver: ^1.0.0 # TODO(zoechi) re-add
+    #path: ../../dart-lang/webdriver.dart
 
 dependency_overrides:
 #  analyzer: ^0.27.2

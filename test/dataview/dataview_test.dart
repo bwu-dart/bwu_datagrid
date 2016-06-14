@@ -210,7 +210,7 @@ void main() {
     });
 
     test("refresh fires after resume", () {
-      final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
+      final DataView<DataItem> dv = new DataView<DataItem>();
       dv.beginUpdate();
       dv.items = <DataItem<String, int>>[
         new MapDataItem<String, int>(<String, int>{'id': 0}),
@@ -424,7 +424,7 @@ void main() {
         expect(e.pagingInfo.pageNum, 0, reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, 1, reason: "totalRows arg");
       });
-      dv.setFilter((core.ItemBase o, _) => o['val'] == 1);
+      dv.setFilter((DataItem o, _) => o['val'] == 1);
       expect(dv.getItems().length, equals(3),
           reason: "original data is still there");
       expect(dv.length, equals(1), reason: "rows are filtered");

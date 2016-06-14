@@ -1,0 +1,26 @@
+  # see https://github.com/dart-lang/test/blob/master/doc/package_config.md
+
+# platforms: [vm]
+
+# paths:
+# - test/fast
+
+# pub_serve: 8081
+
+tags:
+  integration:
+    skip: true
+    timeout: 1m
+#  chrome:
+#    skip: "Our Chrome launcher is busted. See issue 1234."
+#ruby || python:
+#    timeout: 1.5x
+
+# https://github.com/dart-lang/test/blob/master/doc/configuration.md
+platforms: [vm]
+
+
+presets:
+  grinder:
+    platforms: [dartium]
+    #pub_serve: 8080

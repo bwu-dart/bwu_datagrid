@@ -155,7 +155,7 @@ class GroupItemMetadataProvider extends Plugin {
   // TODO:  add -/+ handling
   void _handleGridKeyDown(core.KeyDown e) {
     BwuDatagrid grid = e.sender;
-    if (enableExpandCollapse && (e.causedBy.which == dom.KeyCode.SPACE)) {
+    if (enableExpandCollapse && (e.causedBy.keyCode == dom.KeyCode.SPACE)) {
       final Cell activeCell = grid.getActiveCell();
       if (activeCell != null) {
         core.ItemBase item = grid.getDataItem(activeCell.row);

@@ -93,8 +93,8 @@ class AppElement extends PolymerElement {
             throw "This implementation only supports single range copy and paste operations";
           }
 
-          final Range from = e.from[0];
-          final Range to = e.to[0];
+          final core.Range from = e.from[0];
+          final core.Range to = e.to[0];
           Object val;
           for (int i = 0; i <= from.toRow - from.fromRow; i++) {
             for (int j = 0; j <= from.toCell - from.fromCell; j++) {

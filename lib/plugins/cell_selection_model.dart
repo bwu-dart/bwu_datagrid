@@ -119,10 +119,10 @@ class CellSelectionModel extends SelectionModel {
         e.causedBy.shiftKey &&
         !e.causedBy.ctrlKey &&
         !e.causedBy.altKey &&
-        (e.causedBy.which == dom.KeyCode.LEFT ||
-            e.causedBy.which == dom.KeyCode.RIGHT ||
-            e.causedBy.which == dom.KeyCode.UP ||
-            e.causedBy.which == dom.KeyCode.DOWN)) {
+        (e.causedBy.keyCode == dom.KeyCode.LEFT ||
+            e.causedBy.keyCode == dom.KeyCode.RIGHT ||
+            e.causedBy.keyCode == dom.KeyCode.UP ||
+            e.causedBy.keyCode == dom.KeyCode.DOWN)) {
       ranges = getSelectedRanges();
       if (ranges.length == 0)
         ranges.add(new core.Range(active.row, active.cell));
@@ -140,13 +140,13 @@ class CellSelectionModel extends SelectionModel {
       final int dirRow = active.row == last.fromRow ? 1 : -1;
       final int dirCell = active.cell == last.fromCell ? 1 : -1;
 
-      if (e.causedBy.which == dom.KeyCode.LEFT) {
+      if (e.causedBy.keyCode == dom.KeyCode.LEFT) {
         dCell -= dirCell;
-      } else if (e.causedBy.which == dom.KeyCode.RIGHT) {
+      } else if (e.causedBy.keyCode == dom.KeyCode.RIGHT) {
         dCell += dirCell;
-      } else if (e.causedBy.which == dom.KeyCode.UP) {
+      } else if (e.causedBy.keyCode == dom.KeyCode.UP) {
         dRow -= dirRow;
-      } else if (e.causedBy.which == dom.KeyCode.DOWN) {
+      } else if (e.causedBy.keyCode == dom.KeyCode.DOWN) {
         dRow += dirRow;
       }
 

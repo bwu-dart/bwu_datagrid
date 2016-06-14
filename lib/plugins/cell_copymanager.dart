@@ -34,7 +34,7 @@ class CellCopyManager extends Plugin {
   void _handleKeyDown(core.KeyDown e) {
     List<core.Range> ranges;
     if (!grid.getEditorLock.isActive) {
-      if (e.causedBy.which == dom.KeyCode.ESC) {
+      if (e.causedBy.keyCode == dom.KeyCode.ESC) {
         if (_copiedRanges != null) {
           e.preventDefault();
           clearCopySelection();
@@ -44,7 +44,7 @@ class CellCopyManager extends Plugin {
         }
       }
 
-      if (e.causedBy.which == 67 &&
+      if (e.causedBy.keyCode == dom.KeyCode.C &&
           (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
         ranges = grid.getSelectionModel.getSelectedRanges();
         if (ranges.length != 0) {
@@ -56,7 +56,7 @@ class CellCopyManager extends Plugin {
         }
       }
 
-      if (e.causedBy.which == 86 &&
+      if (e.causedBy.keyCode == dom.KeyCode.V &&
           (e.causedBy.ctrlKey || e.causedBy.metaKey)) {
         if (_copiedRanges != null) {
           e.preventDefault();
