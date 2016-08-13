@@ -66,7 +66,7 @@ class Sortable {
     // every mouse-up stops a drag operation
     dom.document.onMouseUp.listen((e) {
       if (_isDragActive) {
-        if (e.which != 1) {
+        if (e.button != 1) {
           cancel();
         } else {
           _dragEnd(e);
@@ -135,7 +135,7 @@ class Sortable {
     _mouseDownSubscr.clear();
     _items.forEach((e) {
       _mouseDownSubscr.add(e.onMouseDown.listen((e) {
-        if (e.which == 1) {
+        if (e.button == 1) {
           _draggedElement = e.target as dom.HtmlElement;
           if (_draggedElement.attributes.containsKey('draggable')) {
             return;
