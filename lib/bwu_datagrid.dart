@@ -3032,7 +3032,7 @@ class BwuDatagrid extends PolymerElement {
   void _handleHeaderContextMenu(dom.MouseEvent e) {
     final BwuDatagridHeaderColumn header = utils.closest(
             (e.target as dom.HtmlElement),
-            ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/)
+            ".bwu-datagrid-header-column" /*, ".bwu-datagrid-header-columns"*/)
         as BwuDatagridHeaderColumn;
     final Column column = header != null ? header.column : null;
     _eventBus.fire(core.Events.headerContextMenu,
