@@ -2956,7 +2956,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _handleHeaderContextMenu(dom.MouseEvent e) {
     var $header = tools.closest((e.target as dom.HtmlElement),
-            ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/)
+            ".bwu-datagrid-header-column" /*, ".bwu-datagrid-header-columns"*/)
         as BwuDatagridHeaderColumn;
     var column = $header != null ? $header.column : null;
     _eventBus.fire(core.Events.HEADER_CONTEX_MENU,
