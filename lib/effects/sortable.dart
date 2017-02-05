@@ -132,7 +132,7 @@ class Sortable {
     });
   }
 
-  void _dragEnd(dom.MouseEvent e) {
+  void _dragEnd(dom.MouseEvent e ) {
     if (beforeStop != null) {
       beforeStop(_draggedElement, _draggedHelper);
     }
@@ -209,7 +209,8 @@ class Sortable {
             return;
           }
 
-          _dragStartPos = new Point<int>(e.client.x, e.client.y);
+          _dragStartPos =
+              new Point<int>(e.client.x.toInt(), e.client.y.toInt());
           _draggedElementStartPos = new Point<int>(
               _draggedElement.offsetLeft.round(),
               _draggedElement.offsetTop.round());
@@ -245,7 +246,7 @@ class Sortable {
   void _dragStart() {
     _updateIds();
     _isDragActive = true;
-    _draggedHelper = _draggedElement.clone(true);
+    _draggedHelper = _draggedElement.clone(true) as dom.Element;
     _draggedElementIndex = sortable.children.indexOf(_draggedElement);
     _draggedHelper.style
       ..zIndex = '1000'
@@ -255,7 +256,7 @@ class Sortable {
     _draggedHelper.id = 'draggable';
     sortable.append(_draggedHelper);
 
-    _placeholder = _draggedElement.clone(false);
+    _placeholder = _draggedElement.clone(false) as dom.Element;
     _placeholder.classes
       ..clear()
       ..addAll(
@@ -323,8 +324,12 @@ class Sortable {
 
   void _drag(dom.MouseEvent e) {
     Point<int> _newPos = new Point<int>(
-        _draggedElementStartPos.x + e.client.x - _dragStartPos.x,
-        _draggedElementStartPos.y + e.client.y - _dragStartPos.y);
+        _draggedElementStartPos.x.toInt() +
+            e.client.x.toInt() -
+            _dragStartPos.x.toInt(),
+        _draggedElementStartPos.y.toInt() +
+            e.client.y.toInt() -
+            _dragStartPos.y.toInt());
     if (axis == ReorderAxis.both || axis == ReorderAxis.horizontal) {
       if (_newPos.x < _minLeft) {
         _newPos = new Point<int>(_minLeft, _newPos.y);

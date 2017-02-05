@@ -7,7 +7,7 @@ import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
 class TotalsDataProvider extends MapDataItemProvider<core.ItemBase> {
-  MapDataItem _totals = new MapDataItem(<String, dynamic>{});
+  MapDataItem _totals = new MapDataItem<String, dynamic>(<String, dynamic>{});
   List<Column> _columns;
 
   RowMetadata totalsMetadata = new RowMetadata(
@@ -25,7 +25,7 @@ class TotalsDataProvider extends MapDataItemProvider<core.ItemBase> {
   }
 
   @override
-  DataItem getItem(int index) {
+  core.ItemBase getItem(int index) {
     return (index < items.length) ? items[index] : _totals;
   }
 
@@ -39,7 +39,7 @@ class TotalsDataProvider extends MapDataItemProvider<core.ItemBase> {
         Object val = items[i][columnId];
         if (val != null) {
           if (val is String) {
-            total += (tools.parseInt(items[i][columnId], onErrorDefault: 0));
+            total += tools.parseInt(items[i][columnId], onErrorDefault: 0);
           } else {
             if (val is int) {
               total += val;

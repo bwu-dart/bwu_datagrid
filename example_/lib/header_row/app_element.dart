@@ -39,7 +39,7 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       for (int i = 0; i < 10; i++) {
         columns.add(new Column(
@@ -67,7 +67,7 @@ class AppElement extends PolymerElement {
               dataProvider: dataView,
               columns: columns,
               gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         dataView.onBwuRowCountChanged.listen((core.RowCountChanged e) {
           grid.updateRowCount();
           grid.render();

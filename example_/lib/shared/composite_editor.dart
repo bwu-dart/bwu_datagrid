@@ -3,8 +3,10 @@ library bwu_datagrid_examples.shared.composite_editor;
 import 'dart:html' as dom;
 import 'dart:math' as math;
 
-import 'package:bwu_datagrid/datagrid/helpers.dart';
-import 'package:bwu_datagrid/editors/editors.dart';
+import 'package:bwu_datagrid/core/core.dart' show ItemBase;
+import 'package:bwu_datagrid/datagrid/helpers.dart' show Column, NodeBox;
+import 'package:bwu_datagrid/editors/editors.dart'
+    show Editor, EditorArgs, ValidationErrorSource, ValidationResult;
 
 class CompositeEditorOptions {
   String validationFailedMsg;
@@ -123,13 +125,13 @@ class CompositeEditor extends Editor {
     final List<String> serializedValue = new List<String>(columns.length);
     int idx = editors.length;
     while (idx-- > 0) {
-      serializedValue[idx] = editors[idx].serializeValue();
+      serializedValue[idx] = editors[idx].serializeValue() as String;
     }
     return serializedValue;
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     assert(state is List);
     int idx = editors.length;
     while (idx-- > 0) {
@@ -138,7 +140,7 @@ class CompositeEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(ItemBase item) {
     int idx = editors.length;
     while (idx-- > 0) {
       editors[idx].loadValue(item);

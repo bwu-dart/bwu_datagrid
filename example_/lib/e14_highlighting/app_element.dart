@@ -21,12 +21,12 @@ class CpuUtilizationFormatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase dataContext) {
-    if (value != null && value > 90) {
+    if (value != null && (value as num) > 90) {
       target.children.clear();
       target.append(new dom.SpanElement()
         ..classes.add('load-hi')
         ..text = '${value}%');
-    } else if (value != null && value > 70) {
+    } else if (value != null && (value as num) > 70) {
       target.children.clear();
       target.append(new dom.SpanElement()
         ..classes.add('load-medium')
@@ -62,7 +62,7 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       for (int i = 0; i < 4; i++) {
         columns.add(new Column(
@@ -76,7 +76,9 @@ class AppElement extends PolymerElement {
       data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
         final MapDataItem item =
-            new MapDataItem(<String, dynamic>{'server': 'Server ${i}',});
+            new MapDataItem<String, dynamic>(<String, dynamic>{
+          'server': 'Server ${i}',
+        });
         data.items.add(item);
 
         for (int j = 0; j < 4; j++) {
@@ -102,7 +104,7 @@ class AppElement extends PolymerElement {
   int currentServer;
 
   @reflectable
-  void simulateRealTimeUpdates([_, __]) {
+  void simulateRealTimeUpdates([dynamic _, dynamic __]) {
     final Map<int, Map<String, String>> changes = <int, Map<String, String>>{};
     int numberOfUpdates = (rnd.nextDouble() * (data.length / 10)).round();
 
@@ -112,7 +114,7 @@ class AppElement extends PolymerElement {
       final int delta = rnd.nextInt(50) - 25;
       //var col = grid.getColumnIndex('cpu${cpu}');
       //print('col: ${col}');
-      int val = data.items[server]['cpu${cpu}'] + delta;
+      int val = (data.items[server]['cpu${cpu}'] as int) + delta;
       val = math.max/*<int>*/(0, val);
       val = math.min(100, val);
 
@@ -135,7 +137,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void findCurrentServer([_, __]) {
+  void findCurrentServer([dynamic _, dynamic __]) {
     grid.scrollRowIntoView(currentServer);
     grid.flashCell(currentServer, grid.getColumnIndex("server"), 100);
   }

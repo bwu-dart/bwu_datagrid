@@ -8,16 +8,14 @@ class EventBus<T extends EventData> {
   final Map<EventType<T>, async.StreamController<T>> streamControllers =
       <EventType<T>, async.StreamController<T>>{};
 
-  //StreamController _historyStreamController = new StreamController();
-
-  final bool isSync; // TODO when bug is fixed (literal values for attributes)
+  final bool isSync;
 
   /// Constructs an [EventBus] and allows to specify if the events should be
-  /// send synchroniously or asynchroniously by setting [isSync].
+  /// send synchronously or asynchronously by setting [isSync].
   EventBus({this.isSync: true});
 
   ///  [onEvent] allows to access an stream for the specified [eventType].
-  async.Stream<U> onEvent/*<U extends T>*/(EventType<T> eventType) {
+  async.Stream<T /*=U*/> onEvent/*<U extends T>*/(EventType<T> eventType) {
     _logger.finest('onEvent');
 
     if (!streamControllers.containsKey(eventType)) {
@@ -25,12 +23,12 @@ class EventBus<T extends EventData> {
     }
 
     return streamControllers.putIfAbsent(eventType, () {
-      return new async.StreamController<U>.broadcast(sync: isSync);
-    }).stream;
+      return new async.StreamController<T /*=U*/>.broadcast(sync: isSync);
+    }).stream as async.Stream<T /*=U*/>;
   }
 
   /// [fire] broadcasts an event of a type [eventType] to all subscribers.
-  T fire/*<U extends T>*/(EventType<T> eventType, T/*=U*/ data) {
+  T /*=U*/ fire/*<U extends T>*/(EventType<T> eventType, T/*=U*/ data) {
     _logger.finest('event fired: ${eventType.name}');
 
     if (data != null && !eventType.isTypeT(data)) {
@@ -42,9 +40,9 @@ class EventBus<T extends EventData> {
       _logger.finest('fire: new EventType: ${eventType.name}');
     }
 
-    final async.StreamController<U> controller =
+    final async.StreamController<T> controller =
         streamControllers.putIfAbsent(eventType, () {
-      return new async.StreamController<U>.broadcast(sync: isSync);
+      return new async.StreamController<T /*=U*/>.broadcast(sync: isSync);
     });
 
     controller.add(data);

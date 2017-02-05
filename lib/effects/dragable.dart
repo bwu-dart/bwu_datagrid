@@ -100,7 +100,7 @@ class Dragable {
 
         _isDragStartPending = true;
         _startMouseEvent = e;
-        _dragStartPos = new Point<int>(e.client.x, e.client.y);
+        _dragStartPos = new Point<int>(e.client.x.toInt(), e.client.y.toInt());
         _subscribeMouseMove();
       }
     });

@@ -79,7 +79,7 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   @reflectable
-  void syncResizeChangedHandler(bool checked, [_]) {
+  void syncResizeChangedHandler(bool checked, [dynamic _]) {
     if (_grid == null) {
       return;
     }
@@ -88,7 +88,7 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   @reflectable
-  void autoResizeChangedHandler(bool checked, [_]) {
+  void autoResizeChangedHandler(bool checked, [dynamic _]) {
     if (_grid == null) {
       return;
     }
@@ -161,7 +161,7 @@ class BwuColumnPicker extends PolymerElement {
   }
 
   @Observe('columnCheckboxes.*')
-  void updateColumn(Map<dynamic, dynamic> e) {
+  void updateColumn(Map e) {
     if (!(e['path'] as String).endsWith('.checked')) {
       return;
     }
@@ -180,7 +180,7 @@ class BwuColumnPicker extends PolymerElement {
     }
 
     if (visibleColumns.length == 0) {
-      set(e['path'], true);
+      set(e['path'] as String, true);
       return;
     }
 
@@ -198,7 +198,9 @@ class BwuColumnPicker extends PolymerElement {
     new Future<Null>(() {
       style.opacity = '1';
     });
-    onMouseLeave.first.then((dom.MouseEvent e) => fadeOut(_options.fadeSpeed));
+    onMouseLeave.first.then/*<dom.MouseEvent>*/((e) {
+      fadeOut(_options.fadeSpeed);
+    });
   }
 
   void fadeOut(int milliseconds) {

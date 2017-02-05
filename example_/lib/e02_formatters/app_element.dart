@@ -20,7 +20,7 @@ class Formatter extends fm.CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase dataContext) {
-    target.appendHtml(value);
+    target.appendHtml(value as String);
   }
 }
 
@@ -67,11 +67,11 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
-      final MapDataItemProvider<DataItem> data =
-          new MapDataItemProvider<DataItem>();
+      grid = $['myGrid'] as BwuDatagrid;
+      final MapDataItemProvider<DataItem<String, dynamic>> data =
+          new MapDataItemProvider<DataItem<String, dynamic>>();
       for (int i = 0; i < 5; i++) {
-        data.items.add(new MapDataItem(<String, dynamic>{
+        data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
           'title': "<a href='#' tabindex='0'>Task</a> ${i}",
           'duration': "5 days",
           'percentComplete':

@@ -70,10 +70,10 @@ class MinAggregator extends Aggregator {
 
   @override
   void accumulate(core.ItemBase item) {
-    num val = item[_field];
+    num val = item[_field] as num;
     if (val != null && val is num) {
       if (_min == null || val < _min) {
-        _min = val;
+        _min = val.toDouble();
       }
     }
   }
@@ -99,10 +99,10 @@ class MaxAggregator extends Aggregator {
 
   @override
   void accumulate(core.ItemBase item) {
-    num val = item[_field];
+    num val = item[_field] as num;
     if (val != null && val is num) {
       if (_max == null || val > _max) {
-        _max = val;
+        _max = val.toDouble();
       }
     }
   }

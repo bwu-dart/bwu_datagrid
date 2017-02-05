@@ -95,11 +95,11 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       data = new MapDataItemProvider<ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem(<String, dynamic>{
+        data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
           'title': 'Task ${i}',
           'description':
               'This is a sample task description.\n  It can be multiline',
@@ -116,7 +116,7 @@ class AppElement extends PolymerElement {
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
-          .then((_) => grid.setActiveCell(0, 0));
+          .then/*<dynamic>*/((_) => grid.setActiveCell(0, 0));
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');
     } on RangeError catch (e) {
@@ -129,7 +129,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void openDetails(CustomEventWrapper e, [_]) {
+  void openDetails(CustomEventWrapper e, [dynamic _]) {
     if (grid.getEditorLock.isActive &&
         !grid.getEditorLock.commitCurrentEdit()) {
       return;

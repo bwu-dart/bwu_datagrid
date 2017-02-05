@@ -65,7 +65,7 @@ void tests(WebBrowser browser) {
 Future<bool> isTaskShown(ExtendedWebDriver driver, int number) {
   return driver
       .findElements(firstColumnSelector)
-      .asyncMap((WebElement e) async =>
-          await e.text == 'Task ${number}' && await e.displayed)
+      .asyncMap/*<WebElement>*/(
+          (e) async => await e.text == 'Task ${number}' && await e.displayed)
       .contains(true);
 }

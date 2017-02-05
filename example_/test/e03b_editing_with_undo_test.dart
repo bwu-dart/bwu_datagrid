@@ -266,11 +266,11 @@ Future<Null> selectRowByTask(ExtendedWebDriver driver, String taskTitle,
 
   final List<WebElement> cells = await driver
       .findElements(firstColumnSelector)
-      .asyncMap((WebElement e) async =>
-          <String, dynamic>{'element': e, 'text': await e.text})
-      .where((Map<dynamic, dynamic> item) => item['text'] == taskTitle)
-      .map((Map<dynamic, dynamic> item) => item['element'])
-      .toList() as List<WebElement>;
+      .asyncMap/*<Map>*/(
+          (e) async => <String, dynamic>{'element': e, 'text': await e.text})
+      .where((Map item) => item['text'] == taskTitle)
+      .map/*<WebElement >*/((item) => item['element'] as WebElement)
+      .toList();
   if (cells.length == 0) {
     throw 'No row with title "${taskTitle}" found.';
   } else if (cells.length > 1) {

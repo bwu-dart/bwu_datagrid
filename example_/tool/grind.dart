@@ -69,7 +69,7 @@ Future<Null> seleniumDebug() async {
     _pubServe.start(
         port: pubServePort,
         hostname: '0.0.0.0',
-        directories: <String>['web']).then((_) {
+        directories: <String>['web']).then/*<dynamic>*/((_) {
       _pubServe.stdout.listen((List<int> e) => io.stdout.add(e));
       _pubServe.stderr.listen((List<int> e) => io.stderr.add(e));
     });
@@ -78,7 +78,7 @@ Future<Null> seleniumDebug() async {
     final ContainerInfo chromeInfo = await _dockerConnection
         .container(_createdChromeNodeContainer.container);
     final int chromePort =
-        chromeInfo.networkSettings.ports['5900/tcp'][0]['HostPort'];
+        chromeInfo.networkSettings.ports['5900/tcp'][0]['HostPort'] as int;
     print('Chrome: ${chromePort}');
     io.Process.start('vinagre', <String>[
       '--vnc-scale',
@@ -91,7 +91,7 @@ Future<Null> seleniumDebug() async {
     final ContainerInfo firefoxInfo = await _dockerConnection
         .container(_createdFirefoxNodeContainer.container);
     final int firefoxPort =
-        firefoxInfo.networkSettings.ports['5900/tcp'][0]['HostPort'];
+        firefoxInfo.networkSettings.ports['5900/tcp'][0]['HostPort'] as int;
     print('Firefox: ${firefoxPort}');
     await new Future<Null>.delayed(const Duration(seconds: 1));
     io.Process.start('vinagre', <String>[
@@ -185,7 +185,7 @@ class PubServe extends RunProcess {
     }
     args.addAll(directories);
     await super._run('pub', args, workingDirectory: packageRoot);
-    exitCode.then((int exitCode) {
+    exitCode.then/*<int >*/((exitCode) {
       _port = null;
     });
     stdout
@@ -233,7 +233,7 @@ class RunProcess {
     _process = await io.Process
         .start(executable, args, workingDirectory: workingDirectory);
     _exitCode = process.exitCode;
-    process.exitCode.then((int exitCode) {
+    process.exitCode.then/*<int>*/((exitCode) {
       _process = null;
     });
 

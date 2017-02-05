@@ -93,10 +93,10 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem(<String, dynamic>{
+        data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
           'title': 'Task ${i}',
           'description':
               'This is a sample task description.\n  It can be multiline',
@@ -110,7 +110,7 @@ class AppElement extends PolymerElement {
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         grid.setSelectionModel = new CellSelectionModel();
         grid.onBwuAddNewRow.listen(addnewRowHandler);
       });
@@ -129,7 +129,7 @@ class AppElement extends PolymerElement {
   String autoEditButtonLabel = 'Auto-edit ON';
 
   @reflectable
-  void toggleAutoEdit([_, __]) {
+  void toggleAutoEdit([dynamic _, dynamic __]) {
     grid.setGridOptions = new GridOptions.unitialized()
       ..autoEdit = !grid.gridOptions.autoEdit;
     if (grid.gridOptions.autoEdit) {

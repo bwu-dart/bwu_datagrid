@@ -22,7 +22,7 @@ class DropZone extends PolymerElement {
   String dropzoneid;
 
   @reflectable
-  void dropZoneIdChanged([_, __]) {
+  void dropZoneIdChanged([dynamic _, dynamic __]) {
     String s = 'move s:text/bwu-datagrid-recycle file:text/blajflaskjfd';
     final Match match = new RegExp(r'^(?:copy|link|move)(.*)').firstMatch(s);
     final Iterable<Match> matches =

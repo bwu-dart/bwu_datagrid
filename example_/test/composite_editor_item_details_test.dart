@@ -168,8 +168,8 @@ void tests(WebBrowser browser) {
       expect(editButton, isNotNull);
       await editButton.click();
 
-      await driver.mouse.moveTo(element: await driver.findElement(
-          const By.shadow(
+      await driver.mouse.moveTo(
+          element: await driver.findElement(const By.shadow(
               'composite-editor-view::shadow .editor-percentcomplete-picker')));
 
       final WebElement dialogPercentField =

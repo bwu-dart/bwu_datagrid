@@ -43,13 +43,13 @@ class TaskNameFormatter extends fm.CellFormatter {
     final dom.SpanElement spacer = new dom.SpanElement()
       ..style.display = 'inline-block'
       ..style.height = '1px'
-      ..style.width = '${(15 * dataContext['indent'])}px';
+      ..style.width = '${(15 * (dataContext['indent'] as num))}px';
     target.append(spacer);
     int idx = dataView.getIdxById(dataContext['id']);
     final dom.SpanElement toggle = new dom.SpanElement()..classes.add('toggle');
 
     if (data[idx + 1] != null &&
-        data[idx + 1]['indent'] > data[idx]['indent']) {
+        (data[idx + 1]['indent'] as num) > (data[idx]['indent'] as num)) {
       if ((dataContext as DataItem).collapsed) {
         toggle.classes.add('expand');
       } else {
@@ -124,8 +124,8 @@ class AppElement extends PolymerElement {
 
   math.Random rnd = new math.Random();
 
-  List<DataItem> data;
-  DataView<core.ItemBase> dataView;
+  List<MapDataItem> data;
+  DataView<MapDataItem> dataView;
 
   String sortcol = 'title';
   int sortdir = 1;
@@ -145,7 +145,7 @@ class AppElement extends PolymerElement {
 
     try {
       // prepare the data
-      data = new List<DataItem>();
+      data = new List<MapDataItem>();
       for (int i = 0; i < 1000; i++) {
         final MapDataItem d = new MapDataItem();
         data.add(d);
@@ -165,7 +165,7 @@ class AppElement extends PolymerElement {
           parent = null;
         }
 
-        grid = $['myGrid'];
+        grid = $['myGrid'] as BwuDatagrid;
 
         d['id'] = 'id_${i}';
         d['indent'] = indent;
@@ -178,7 +178,7 @@ class AppElement extends PolymerElement {
         d['effortDriven'] = (i % 5 == 0);
       }
 
-      dataView = new DataView<core.ItemBase>(
+      dataView = new DataView<MapDataItem>(
           options: new DataViewOptions(inlineFilters: true))
         ..beginUpdate()
         ..items = data
@@ -199,12 +199,13 @@ class AppElement extends PolymerElement {
               dataProvider: dataView,
               columns: columns,
               gridOptions: gridOptions)
-          .then((_) {
-        grid.onBwuCellChange.listen(
-            (core.CellChange e) => dataView.updateItem(e.item['id'], e.item));
+          .then/*<dynamic>*/((_) {
+        grid.onBwuCellChange.listen((core.CellChange e) =>
+            dataView.updateItem(e.item['id'], e.item as MapDataItem));
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          final MapDataItem item = new MapDataItem(<String, dynamic>{
+          final MapDataItem<String, dynamic> item =
+              new MapDataItem<String, dynamic>(<String, dynamic>{
             'id': 'new_${rnd.nextInt(10000)}',
             'indent': 0,
             'title': 'New task',
@@ -214,13 +215,13 @@ class AppElement extends PolymerElement {
             'finish': '01/01/2009',
             'effortDriven': false
           });
-          item.extend(e.item);
+          item.extend(e.item as MapDataItem<String, dynamic>);
           dataView.addItem(item);
         });
 
         grid.onBwuClick.listen((core.Click e) {
           if ((e.causedBy.target as dom.Element).classes.contains('toggle')) {
-            final DataItem item = dataView.getItem(e.cell.row);
+            final MapDataItem item = dataView.getItem(e.cell.row);
             if (item != null) {
               item.collapsed = !item.collapsed;
 
@@ -252,7 +253,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void searchStringChanged([_, __]) {
+  void searchStringChanged([dynamic _, dynamic __]) {
     if (dataView == null) {
       return;
     }
@@ -262,7 +263,7 @@ class AppElement extends PolymerElement {
   async.Timer _pendingUpdateFilter;
 
   @reflectable
-  void percentCompleteThresholdChanged([_, __]) {
+  void percentCompleteThresholdChanged([dynamic _, dynamic __]) {
     if (dataView == null) {
       return;
     }
@@ -295,22 +296,24 @@ class AppElement extends PolymerElement {
     dataView.refresh();
   }
 
-  bool myFilter(DataItem item, Map<dynamic, dynamic> args) {
-    if (item['percentComplete'] < args['percentCompleteThreshold']) {
+  bool myFilter(DataItem item, Map args) {
+    if ((item['percentComplete'] as num) <
+        (args['percentCompleteThreshold'] as num)) {
       return false;
     }
 
     if (args['searchString'] != '' &&
-        (item['title'] as String).indexOf(args['searchString']) == -1) {
+        (item['title'] as String).indexOf(args['searchString'] as Pattern) ==
+            -1) {
       return false;
     }
 
     if (item['parent'] != null) {
-      DataItem parent = data[item['parent']];
+      DataItem parent = data[item['parent'] as int];
 
       while (parent != null) {
         if (parent.collapsed ||
-            (parent['percentComplete'] <
+            ((parent['percentComplete'] as num) <
                 tools.parseInt(percentCompleteThreshold, onErrorDefault: 0)) ||
             (searchString != '' &&
                 (parent['title'] as String).indexOf(searchString) == -1)) {
@@ -318,7 +321,7 @@ class AppElement extends PolymerElement {
         }
 
         if (parent['parent'] != null) {
-          parent = data[parent['parent']];
+          parent = data[parent['parent'] as int];
         } else {
           parent = null;
         }
@@ -327,7 +330,7 @@ class AppElement extends PolymerElement {
     return true;
   }
 
-  int percentCompleteSort(Map<dynamic, dynamic> a, Map<dynamic, dynamic> b) {
-    return a['percentComplete'] - b['percentComplete'];
+  int percentCompleteSort(Map a, Map b) {
+    return (a['percentComplete'] as int) - (b['percentComplete'] as int);
   }
 }

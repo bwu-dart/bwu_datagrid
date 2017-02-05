@@ -51,7 +51,7 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
       final MapDataItemProvider<core.ItemBase> data =
           new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
@@ -61,14 +61,14 @@ class AppElement extends PolymerElement {
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         // setup context menu handler
         grid.onBwuContextMenu.listen((core.ContextMenu e) {
           e.stopImmediatePropagation();
           e.preventDefault();
           ($['contextMenu'] as ContextMenu)
             ..cell = e.cell
-            ..setPosition(e.causedBy.page.x, e.causedBy.page.y)
+            ..setPosition(e.causedBy.page.x.toInt(), e.causedBy.page.y.toInt())
             ..show();
         });
 

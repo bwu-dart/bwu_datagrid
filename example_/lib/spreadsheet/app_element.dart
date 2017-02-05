@@ -57,7 +57,7 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       FormulaEditor formulaEditor = new FormulaEditor();
 
@@ -73,12 +73,14 @@ class AppElement extends PolymerElement {
       // prepare the data
       data = new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 100; i++) {
-        data.items.add(new MapDataItem(<String, dynamic>{'num': i,}));
+        data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
+          'num': i,
+        }));
       }
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         grid.setSelectionModel = (new CellSelectionModel());
         grid.registerPlugin(new AutoTooltips());
 

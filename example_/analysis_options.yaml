@@ -1,5 +1,7 @@
 analyzer:
-  strong-mode: true
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
   exclude:
   # TODO(zoechi) remove
   - lib/e10_async_post_render/app_element.dart
@@ -9,7 +11,7 @@ analyzer:
 linter:
   rules:
     - always_declare_return_types
-    - always_specify_types
+#    - always_specify_types
     - annotate_overrides
 #    - avoid_as
     - avoid_init_to_null

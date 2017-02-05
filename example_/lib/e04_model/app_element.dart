@@ -131,7 +131,7 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       data = new List<DataItem<String, dynamic>>();
       for (int i = 0; i < 50000; i++) {
@@ -154,7 +154,7 @@ class AppElement extends PolymerElement {
               dataProvider: dataView,
               columns: columns,
               gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         grid.setSelectionModel = new RowSelectionModel();
 
         ($['pager'] as BwuPager).init(dataView, grid);
@@ -241,7 +241,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void btnSelectRowsHandler([_, __]) {
+  void btnSelectRowsHandler([dynamic _, dynamic __]) {
 //  $['filter-form'].on['select-rows'].listen((e) {
     if (!core.globalEditorLock.commitCurrentEdit()) {
       return;
@@ -256,7 +256,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void searchStringChanged(_, [__]) {
+  void searchStringChanged(dynamic _, [dynamic __]) {
     if (dataView == null) {
       return;
     }
@@ -266,7 +266,7 @@ class AppElement extends PolymerElement {
   async.Timer _pendingUpdateFilter;
 
   @reflectable
-  void percentCompleteThresholdChanged(_, [__]) {
+  void percentCompleteThresholdChanged(dynamic _, [dynamic __]) {
     if (dataView == null) {
       return;
     }
@@ -306,17 +306,19 @@ class AppElement extends PolymerElement {
     dataView.sort(comparer, e.sortAsc);
   }
 
-  bool myFilter(DataItem item, Map<dynamic, dynamic> args) {
-    if (item["percentComplete"] < args['percentCompleteThreshold']) {
+  bool myFilter(DataItem item, Map args) {
+    if ((item["percentComplete"] as num) <
+        (args['percentCompleteThreshold'] as num)) {
       return false;
     }
 
     return (args['searchString'] == '' ||
-        (item['title'] as String).indexOf(args['searchString']) != -1);
+        (item['title'] as String).indexOf((args['searchString'] as Pattern)) !=
+            -1);
   }
 
-  int percentCompleteSort(Map<dynamic, dynamic> a, Map<dynamic, dynamic> b) =>
-      a["percentComplete"] - b["percentComplete"];
+  int percentCompleteSort(Map a, Map b) =>
+      (a["percentComplete"] as int) - (b["percentComplete"] as int);
 
   int comparer(core.ItemBase a, core.ItemBase b) {
     final dynamic x = a[sortcol];
@@ -342,22 +344,22 @@ class AppElement extends PolymerElement {
     if (x is bool) {
       return x == true ? 1 : 0;
     }
-    return (x == y ? 0 : (x > y ? 1 : -1));
+    return (x == y ? 0 : ((x as num) > (y as num) ? 1 : -1));
   }
 
   // Header row search icon
   @reflectable
-  void toggleFilterRow([_, __]) {
+  void toggleFilterRow([dynamic _, dynamic __]) {
     grid.setTopPanelVisibility = !grid.getGridOptions.showTopPanel;
   }
 
   @reflectable
-  void iconMouseOver(CustomEventWrapper e, [_]) {
+  void iconMouseOver(CustomEventWrapper e, [dynamic _]) {
     (e.target as dom.Element).classes.add('ui-state-hover');
   }
 
   @reflectable
-  void iconMouseOut(CustomEventWrapper e, [_]) {
+  void iconMouseOut(CustomEventWrapper e, [dynamic _]) {
     (e.target as dom.Element).classes.remove('ui-state-hover');
   }
 

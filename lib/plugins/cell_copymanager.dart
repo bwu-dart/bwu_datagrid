@@ -16,7 +16,8 @@ class CellCopyManager extends Plugin {
 
   CellCopyManager();
 
-  async.StreamSubscription<core.KeyDown> keyDownSubscription;
+  async.StreamSubscription<core.EventData/*=core.KeyDown*/ >
+      keyDownSubscription;
 
   @override
   void init(BwuDatagrid grid) {
@@ -88,12 +89,12 @@ class CellCopyManager extends Plugin {
     grid.removeCellCssStyles("copy-manager");
   }
 
-  async.Stream<core.CopyCells> get onBwuCopyCells =>
-      _eventBus.onEvent(core.Events.copyCells);
+  async.Stream<core.EventData/*=core.CopyCells*/ > get onBwuCopyCells =>
+      _eventBus.onEvent/*<core.CopyCells>*/(core.Events.copyCells);
 
-  async.Stream<core.CopyCancelled> get onBwuCopyCancelled =>
-      _eventBus.onEvent(core.Events.copyCancelled);
+  async.Stream<core.EventData/*=core.CopyCancelled*/ > get onBwuCopyCancelled =>
+      _eventBus.onEvent/*<core.CopyCancelled>*/(core.Events.copyCancelled);
 
-  async.Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.pasteCells);
+  async.Stream<core.EventData/*=core.PasteCells*/ > get onBwuPasteCells =>
+      _eventBus.onEvent/*<core.PasteCells>*/(core.Events.pasteCells);
 }

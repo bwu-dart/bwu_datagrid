@@ -221,7 +221,7 @@ class BwuDatagrid extends PolymerElement {
         new dom.Element.tag('style', 'custom-style')
           ..attributes['bwu-datagrid-theme'] = newValue
           ..attributes['include'] = newValue ?? defaultThemeName,
-        $['theme-placeholder']);
+        $['theme-placeholder'] as dom.Node);
     if (_headers != null) {
       _headers.children.forEach((dom.Element header) =>
           (header as BwuDatagridHeaderColumn).set('theme', theme));
@@ -342,7 +342,7 @@ class BwuDatagrid extends PolymerElement {
       ..style.position = 'relative';
     //_container.append(_headerRowScroller);
 
-    _headerRow = $['headerRow']; //new dom.DivElement()
+    _headerRow = $['headerRow'] as dom.Element; //new dom.DivElement()
     //..classes.add('bwu-datagrid-headerrow-columns');
     //_headerRowScroller.append(_headerRow);
 
@@ -383,7 +383,8 @@ class BwuDatagrid extends PolymerElement {
     //_container.append(_viewport);
     _viewport.style.overflowY = _gridOptions.autoHeight ? "hidden" : "auto";
 
-    _canvas = $['canvas']; //new dom.DivElement()..classes.add('grid-canvas');
+    _canvas = $['canvas']
+        as dom.Element; //new dom.DivElement()..classes.add('grid-canvas');
     //_viewport.append(_canvas);
 
     _focusSink2 = (_focusSink.clone(true) as dom.DivElement)..id = 'focusSink2';
@@ -515,7 +516,8 @@ class BwuDatagrid extends PolymerElement {
     }
   }
 
-  StreamSubscription<core.SelectedRangesChanged> _onSelectedRangesChanged;
+  StreamSubscription<core.EventData/*=core.SelectedRangesChanged*/ >
+      _onSelectedRangesChanged;
 
   set setSelectionModel(SelectionModel model) {
     if (_selectionModel != null) {
@@ -627,9 +629,10 @@ class BwuDatagrid extends PolymerElement {
   int _getMaxSupportedCssHeight() {
     int supportedHeight = 1000000;
     // FF reports the height back but still renders blank after ~6M px
-    int testUpTo = dom.window.navigator.userAgent
-        .toLowerCase()
-        .contains('firefox') ? 6000000 : 1000000000; // TODO check match
+    int testUpTo =
+        dom.window.navigator.userAgent.toLowerCase().contains('firefox')
+            ? 6000000
+            : 1000000000; // TODO check match
     final dom.DivElement div = new dom.DivElement()..style.display = 'none';
     dom.document.body.append(div);
 
@@ -868,7 +871,7 @@ class BwuDatagrid extends PolymerElement {
       }
 
       final BwuDatagridHeaderColumn col = utils.closest(
-              (e.target as dom.Element), '.bwu-datagrid-header-column')
+              (e.target as dom.HtmlElement), '.bwu-datagrid-header-column')
           as BwuDatagridHeaderColumn;
       if (col.children.length == 0) {
         return;
@@ -1009,7 +1012,7 @@ class BwuDatagrid extends PolymerElement {
             e.preventDefault; // TODO(zoechi) is this the proper translation from `return false;`?
             return; // false;
           }
-          pageX = e.page.x;
+          pageX = e.page.x.toInt();
           (e.target as dom.Element)
               .parent
               .classes
@@ -1079,7 +1082,9 @@ class BwuDatagrid extends PolymerElement {
           if (e.page.x == 0) {
             return;
           }
-          int d = math.min(maxPageX, math.max(minPageX, e.page.x)) - pageX;
+          int d = math.min/*<int>*/(
+                  maxPageX, math.max(minPageX, e.page.x.toInt())) -
+              pageX;
 
           int x;
           if (d < 0) {
@@ -1297,7 +1302,7 @@ class BwuDatagrid extends PolymerElement {
 
   Map<String, dom.CssStyleRule> _getColumnCssRules(int idx) {
     if (_stylesheet == null) {
-      _stylesheet = _style.sheet;
+      _stylesheet = _style.sheet as dom.CssStyleSheet;
 
       // find and cache column CSS rules
       _columnCssRulesL = <int, dom.CssStyleRule>{};
@@ -1311,13 +1316,13 @@ class BwuDatagrid extends PolymerElement {
         if (matches != null) {
           columnIdx = utils.parseInt(
               matches.group(1)); // first.substr(2, matches.first.length - 2));
-          _columnCssRulesL[columnIdx] = cssRules[i];
+          _columnCssRulesL[columnIdx] = cssRules[i] as dom.CssStyleRule;
         } else {
           matches = new RegExp(r'(?:\.r)(\d+)').firstMatch(selector);
           if (matches != null) {
             columnIdx = utils.parseInt(
                 matches.group(1)); //first.substr(2, matches.first.length - 2));
-            _columnCssRulesR[columnIdx] = cssRules[i];
+            _columnCssRulesR[columnIdx] = cssRules[i] as dom.CssStyleRule;
           }
         }
       }
@@ -1587,8 +1592,10 @@ class BwuDatagrid extends PolymerElement {
 
     setCellCssStyles(_gridOptions.selectedCellCssClass, hash);
 
-    _eventBus.fire(core.Events.selectedRowsChanged,
-        new core.SelectedRowsChanged(this, getSelectedRows(), e.causedBy));
+    _eventBus.fire(
+        core.Events.selectedRowsChanged,
+        new core.SelectedRowsChanged(
+            this, getSelectedRows(), e.causedBy as dom.CustomEvent));
   }
 
   List<Column> get getColumns => columns;
@@ -1729,7 +1736,7 @@ class BwuDatagrid extends PolymerElement {
     element.style.height = '0';
     element.style.display = 'block';
 
-    element.onTransitionEnd.first.then((dom.TransitionEvent e) {
+    element.onTransitionEnd.first.then/*<dom.TransitionEvent>*/((e) {
       fn();
       element.classes.remove('slide-down');
     });
@@ -1745,7 +1752,7 @@ class BwuDatagrid extends PolymerElement {
     fn();
     element.classes.add('slide-up');
 
-    element.onTransitionEnd.first.then((dom.TransitionEvent e) {
+    element.onTransitionEnd.first.then/*<dom.TransitionEvent>*/((e) {
       element.classes.remove('slide-up');
       element.style.display = 'none';
       element.style.height = '${oldHeight}px';
@@ -1974,7 +1981,7 @@ class BwuDatagrid extends PolymerElement {
       if (fm is CellFormatter) {
         fm.format(cellElement, row, cell, value, m, item);
       } else if (fm is core.GroupTotalsFormatter) {
-        fm.format(cellElement, item, m);
+        fm.format(cellElement, item as core.GroupTotals, m);
       }
     }
 
@@ -2059,8 +2066,8 @@ class BwuDatagrid extends PolymerElement {
     if (_currentEditor != null && _activeRow == row && _activeCell == cell) {
       _currentEditor.loadValue(d);
     } else {
-          // TODO(zoechi) the first parameter to the formatter seems to be missing (test)
-          d != null
+      // TODO(zoechi) the first parameter to the formatter seems to be missing (test)
+      d != null
           ? (_getFormatter(row, m) as CellFormatter).format(
               cellNode, row, cell, _getDataItemValueForColumn(d, m), m, d)
           : cellNode.innerHtml = '';
@@ -2278,11 +2285,11 @@ class BwuDatagrid extends PolymerElement {
     final RowCache cacheEntry = _rowsCache[row];
     if (cacheEntry != null) {
       if (cacheEntry.cellRenderQueue.length > 0) {
-        dom.Element lastChild = cacheEntry.rowNode.lastChild;
+        dom.Element lastChild = cacheEntry.rowNode.lastChild as dom.Element;
         while (cacheEntry.cellRenderQueue.length > 0) {
           final int columnIdx = cacheEntry.cellRenderQueue.removeLast();
           cacheEntry.cellNodesByColumnIdx[columnIdx] = lastChild;
-          lastChild = lastChild.previousNode;
+          lastChild = lastChild.previousNode as dom.Element;
         }
       }
     }
@@ -2415,7 +2422,7 @@ class BwuDatagrid extends PolymerElement {
       int columnIdx;
       while (cacheEntry.cellRenderQueue.length > 0) {
         columnIdx = cacheEntry.cellRenderQueue.removeLast();
-        node = x.lastChild;
+        node = x.lastChild as dom.Element;
         cacheEntry.rowNode.append(node);
         cacheEntry.cellNodesByColumnIdx[columnIdx] = node;
       }
@@ -2468,7 +2475,8 @@ class BwuDatagrid extends PolymerElement {
     }
 
     for (int i = 0; i < rows.length; i++) {
-      _rowsCache[rows[i]].rowNode = parentNode.append(x.firstChild);
+      _rowsCache[rows[i]].rowNode =
+          parentNode.append(x.firstChild) as dom.Element;
       _rowsCache[rows[i]]
           .rowNode
           .querySelectorAll(".bwu-datagrid-cell")
@@ -2756,7 +2764,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _handleMouseWheel(dom.MouseEvent e) {
     final dom.Element rowNode =
-        utils.closest((e.target as dom.Element), '.bwu-datagrid-row');
+        utils.closest((e.target as dom.HtmlElement), '.bwu-datagrid-row');
     if (rowNode != _rowNodeFromLastMouseWheelEvent) {
       if (_zombieRowNodeFromLastMouseWheelEvent != null &&
           _zombieRowNodeFromLastMouseWheelEvent != rowNode) {
@@ -2779,7 +2787,7 @@ class BwuDatagrid extends PolymerElement {
 
     // execute async to work around events can't be fired within an event handler
     new Future<core.Drag>(() {
-      final core.Drag data = _eventBus.fire(
+      final core.Drag data = _eventBus.fire/*<core.Drag>*/(
           core.Events.drag, new core.Drag(this /*, dd: dd*/, causedBy: e));
       if (data.isDefaultPrevented) {
         return; //data.retVal;
@@ -2996,8 +3004,9 @@ class BwuDatagrid extends PolymerElement {
       return;
     }
 
-    final core.EventData data = _eventBus.fire(
-        core.Events.doubleClick, new core.DoubleClick(this, cell, causedBy: e));
+    final core.DoubleClick data = _eventBus.fire/*<core.DoubleClick>*/(
+        core.Events.doubleClick,
+        new core.DoubleClick(this, cell, causedBy: e as dom.MouseEvent));
     if (data.isImmediatePropagationStopped) {
       return;
     }
@@ -3022,7 +3031,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _handleHeaderContextMenu(dom.MouseEvent e) {
     final BwuDatagridHeaderColumn header = utils.closest(
-            (e.target as dom.Element),
+            (e.target as dom.HtmlElement),
             ".bwu-datagread-header-column" /*, ".bwu-datagrid-header-columns"*/)
         as BwuDatagridHeaderColumn;
     final Column column = header != null ? header.column : null;
@@ -3032,7 +3041,7 @@ class BwuDatagrid extends PolymerElement {
 
   void _handleHeaderClick(dom.MouseEvent e) {
     final BwuDatagridHeaderColumn header = utils.closest(
-            (e.target as dom.Element),
+            (e.target as dom.HtmlElement),
             '.bwu-datagrid-header-column' /*, ".bwu-datagrid-header-columns"*/)
         as BwuDatagridHeaderColumn;
     final Column column = header != null ? header.column : null;
@@ -3103,13 +3112,14 @@ class BwuDatagrid extends PolymerElement {
   }
 
   Cell getCellFromTarget(dom.Element t) {
-    final dom.Element cellElement =
-        utils.closest(t, '.bwu-datagrid-cell', context: _canvas);
+    final dom.Element cellElement = utils.closest(
+        t as dom.HtmlElement, '.bwu-datagrid-cell',
+        context: _canvas as dom.HtmlElement);
     if (cellElement == null) {
       return null;
     }
 
-    int row = _getRowFromNode(cellElement.parentNode);
+    int row = _getRowFromNode(cellElement.parentNode as dom.Element);
     final int cell = _getCellFromNode(cellElement);
 
     if (row == null || cell == null) {
@@ -3184,7 +3194,7 @@ class BwuDatagrid extends PolymerElement {
     _activeCellNode = newCell;
 
     if (_activeCellNode != null) {
-      _activeRow = _getRowFromNode(_activeCellNode.parentNode);
+      _activeRow = _getRowFromNode(_activeCellNode.parentNode as dom.Element);
       _activeCell = _activePosX = _getCellFromNode(_activeCellNode);
 
       if (optEditMode == null) {
@@ -3268,7 +3278,8 @@ class BwuDatagrid extends PolymerElement {
       _activeCellNode.classes..remove("editable")..remove("invalid");
       if (d != null) {
         final Column column = columns[_activeCell];
-        CellFormatter formatter = _getFormatter(_activeRow, column);
+        CellFormatter formatter =
+            _getFormatter(_activeRow, column) as CellFormatter;
         /*activeCellNode.innerHtml =*/
         formatter.format(_activeCellNode, _activeRow, _activeCell,
             _getDataItemValueForColumn(d, column), column, d);
@@ -4028,49 +4039,62 @@ class BwuDatagrid extends PolymerElement {
     dom.window.alert(s);
   }
 
-  Stream<core.ActiveCellChanged> get onBwuActiveCellChanged =>
-      _eventBus.onEvent(core.Events.activeCellChanged);
+  Stream<core.EventData/*=core.ActiveCellChanged*/ >
+      get onBwuActiveCellChanged => _eventBus
+          .onEvent/*<core.ActiveCellChanged>*/(core.Events.activeCellChanged);
 
-  Stream<core.ActiveCellPositionChanged> get onBwuActiveCellPositionChanged =>
-      _eventBus.onEvent(core.Events.activeCellPositionChanged);
+  Stream<core.EventData/*=core.ActiveCellPositionChanged*/ >
+      get onBwuActiveCellPositionChanged =>
+          _eventBus.onEvent/*<core.ActiveCellPositionChanged>*/(
+              core.Events.activeCellPositionChanged);
 
-  Stream<core.AddNewRow> get onBwuAddNewRow =>
-      _eventBus.onEvent(core.Events.addNewRow);
+  Stream<core.EventData/*=core.AddNewRow*/ > get onBwuAddNewRow =>
+      _eventBus.onEvent/*<core.AddNewRow>*/(core.Events.addNewRow);
 
-  Stream<core.Attached> get onBwuAttached =>
-      _eventBus.onEvent(core.Events.attached);
+  Stream<core.EventData/*=core.Attached*/ > get onBwuAttached =>
+      _eventBus.onEvent/*<core.Attached>*/(core.Events.attached);
 
-  Stream<core.BeforeCellEditorDestroy> get onBwuBeforeCellEditorDestroy =>
-      _eventBus.onEvent(core.Events.beforeCellEditorDestroy);
+  Stream<core.EventData/*=core.BeforeCellEditorDestroy*/ >
+      get onBwuBeforeCellEditorDestroy =>
+          _eventBus.onEvent/*<core.BeforeCellEditorDestroy>*/(
+              core.Events.beforeCellEditorDestroy);
 
-  Stream<core.BeforeDestroy> get onBwuDestroy =>
-      _eventBus.onEvent(core.Events.beforeDestroy);
+  Stream<core.EventData/*=core.BeforeDestroy*/ > get onBwuDestroy =>
+      _eventBus.onEvent/*<core.BeforeDestroy>*/(core.Events.beforeDestroy);
 
-  Stream<core.BeforeEditCell> get onBwuBeforeEditCell =>
-      _eventBus.onEvent(core.Events.beforeEditCell);
+  Stream<core.EventData/*=core.BeforeEditCell*/ > get onBwuBeforeEditCell =>
+      _eventBus.onEvent/*<core.BeforeEditCell>*/(core.Events.beforeEditCell);
 
-  Stream<core.BeforeHeaderCellDestroy> get onBwuBeforeHeaderCellDestory =>
-      _eventBus.onEvent(core.Events.beforeHeaderCellDestroy);
+  Stream<core.EventData/*=core.BeforeHeaderCellDestroy*/ >
+      get onBwuBeforeHeaderCellDestory =>
+          _eventBus.onEvent/*<core.BeforeHeaderCellDestroy>*/(
+              core.Events.beforeHeaderCellDestroy);
 
-  Stream<core.BeforeHeaderRowCellDestroy> get onBwuBeforeHeaderRowCellDestory =>
-      _eventBus.onEvent(core.Events.beforeHeaderRowCellDestroy);
+  Stream<core.EventData/*=core.BeforeHeaderRowCellDestroy*/ >
+      get onBwuBeforeHeaderRowCellDestory =>
+          _eventBus.onEvent/*<core.BeforeHeaderRowCellDestroy>*/(
+              core.Events.beforeHeaderRowCellDestroy);
 
-  Stream<core.CellChange> get onBwuCellChange =>
-      _eventBus.onEvent(core.Events.cellChange);
+  Stream<core.EventData/*=core.CellChange*/ > get onBwuCellChange =>
+      _eventBus.onEvent/*<core.CellChange>*/(core.Events.cellChange);
 
-  Stream<core.CellCssStylesChanged> get onBwuCellCssStylesChanged =>
-      _eventBus.onEvent(core.Events.cellCssStylesChanged);
+  Stream<core.EventData/*=core.CellCssStylesChanged*/ >
+      get onBwuCellCssStylesChanged =>
+          _eventBus.onEvent/*<core.CellCssStylesChanged>*/(
+              core.Events.cellCssStylesChanged);
 
-  Stream<core.Click> get onBwuClick => _eventBus.onEvent(core.Events.click);
+  Stream<core.EventData/*=core.Click*/ > get onBwuClick =>
+      _eventBus.onEvent/*<core.Click>*/(core.Events.click);
 
-  Stream<core.ColumnsReordered> get onBwuColumnsReordered =>
-      _eventBus.onEvent(core.Events.columnsReordered);
+  Stream<core.EventData/*=core.ColumnsReordered*/ > get onBwuColumnsReordered =>
+      _eventBus
+          .onEvent/*<core.ColumnsReordered>*/(core.Events.columnsReordered);
 
-  Stream<core.ColumnsResized> get onBwuColumnsResized =>
-      _eventBus.onEvent(core.Events.columnsResized);
+  Stream<core.EventData/*=core.ColumnsResized*/ > get onBwuColumnsResized =>
+      _eventBus.onEvent/*<core.ColumnsResized>*/(core.Events.columnsResized);
 
-  Stream<core.ContextMenu> get onBwuContextMenu =>
-      _eventBus.onEvent(core.Events.contextMenu);
+  Stream<core.EventData/*=core.ContextMenu*/ > get onBwuContextMenu =>
+      _eventBus.onEvent/*<core.ContextMenu>*/(core.Events.contextMenu);
 
 //  Stream<core.CustomDrag> get onBwuCustomDrag =>
 //      _eventBus.onEvent(core.Events.CUSTOM_DRAG);
@@ -4081,75 +4105,89 @@ class BwuDatagrid extends PolymerElement {
 //  Stream<core.CustomDragStart> get onBwuCustomDragStart =>
 //      _eventBus.onEvent(core.Events.CUSTOM_DRAG_START);
 //
-  Stream<core.DoubleClick> get onBwuDoubleClick =>
-      _eventBus.onEvent(core.Events.doubleClick);
+  Stream<core.EventData/*=core.DoubleClick*/ > get onBwuDoubleClick =>
+      _eventBus.onEvent/*<core.DoubleClick>*/(core.Events.doubleClick);
 
-  Stream<core.Drag> get onBwuDrag => _eventBus.onEvent(core.Events.drag);
+  Stream<core.EventData/*=core.Drag*/ > get onBwuDrag =>
+      _eventBus.onEvent/*<core.Drag>*/(core.Events.drag);
 
-  Stream<core.DragEnd> get onBwuDragEnd =>
-      _eventBus.onEvent(core.Events.dragEnd);
+  Stream<core.EventData/*=core.DragEnd*/ > get onBwuDragEnd =>
+      _eventBus.onEvent/*<core.DragEnd>*/(core.Events.dragEnd);
 
-  Stream<core.DragEnter> get onBwuDragEnter =>
-      _eventBus.onEvent(core.Events.dragEnter);
+  Stream<core.EventData/*=core.DragEnter*/ > get onBwuDragEnter =>
+      _eventBus.onEvent/*<core.DragEnter>*/(core.Events.dragEnter);
 
-  Stream<core.DragLeave> get onBwuDragLeave =>
-      _eventBus.onEvent(core.Events.dragLeave);
+  Stream<core.EventData/*=core.DragLeave*/ > get onBwuDragLeave =>
+      _eventBus.onEvent/*<core.DragLeave>*/(core.Events.dragLeave);
 
-  Stream<core.DragOver> get onBwuDragOver =>
-      _eventBus.onEvent(core.Events.dragOver);
+  Stream<core.EventData/*=core.DragOver*/ > get onBwuDragOver =>
+      _eventBus.onEvent/*<core.DragOver>*/(core.Events.dragOver);
 
 // TODO this event is jQuery specific and not avaialble in Dart
 //  Stream<core.DragInit> get onBwuDragInit =>
 //      _eventBus.onEvent(core.Events.DRAG_INIT);
 
-  Stream<core.DragStart> get onBwuDragStart =>
-      _eventBus.onEvent(core.Events.dragStart);
+  Stream<core.EventData/*=core.DragStart*/ > get onBwuDragStart =>
+      _eventBus.onEvent/*<core.DragStart>*/(core.Events.dragStart);
 
-  Stream<core.Drop> get onBwuDrop => _eventBus.onEvent(core.Events.drop);
+  Stream<core.EventData/*=core.Drop*/ > get onBwuDrop =>
+      _eventBus.onEvent/*<core.Drop>*/(core.Events.drop);
 
-  Stream<core.HeaderCellRendered> get onBwuHeaderCellRendered =>
-      _eventBus.onEvent(core.Events.headerCellRendered);
+  Stream<core.EventData/*=core.HeaderCellRendered*/ >
+      get onBwuHeaderCellRendered => _eventBus
+          .onEvent/*<core.HeaderCellRendered>*/(core.Events.headerCellRendered);
 
-  Stream<core.HeaderClick> get onBwuHeaderClick =>
-      _eventBus.onEvent(core.Events.headerClick);
+  Stream<core.EventData/*=core.HeaderClick*/ > get onBwuHeaderClick =>
+      _eventBus.onEvent/*<core.HeaderClick>*/(core.Events.headerClick);
 
-  Stream<core.HeaderContextMenu> get onBwuHeaderContextMenu =>
-      _eventBus.onEvent(core.Events.headerContextMenu);
+  Stream<core.EventData/*=core.HeaderContextMenu*/ >
+      get onBwuHeaderContextMenu => _eventBus
+          .onEvent/*<core.HeaderContextMenu>*/(core.Events.headerContextMenu);
 
-  Stream<core.HeaderMouseEnter> get onBwuHeaderMouseEnter =>
-      _eventBus.onEvent(core.Events.headerMouseEnter);
+  Stream<core.EventData/*=core.HeaderMouseEnter*/ > get onBwuHeaderMouseEnter =>
+      _eventBus
+          .onEvent/*<core.HeaderMouseEnter>*/(core.Events.headerMouseEnter);
 
-  Stream<core.HeaderMouseLeave> get onBwuHeaderMouseLeave =>
-      _eventBus.onEvent(core.Events.headerMouseLeave);
+  Stream<core.EventData/*=core.HeaderMouseLeave*/ > get onBwuHeaderMouseLeave =>
+      _eventBus
+          .onEvent/*<core.HeaderMouseLeave>*/(core.Events.headerMouseLeave);
 
-  Stream<core.HeaderRowCellRendered> get onBwuHeaderRowCellRendered =>
-      _eventBus.onEvent(core.Events.headerRowCellRendered);
+  Stream<core.EventData/*=core.HeaderRowCellRendered*/ >
+      get onBwuHeaderRowCellRendered =>
+          _eventBus.onEvent/*<core.HeaderRowCellRendered>*/(
+              core.Events.headerRowCellRendered);
 
-  Stream<core.KeyDown> get onBwuKeyDown =>
-      _eventBus.onEvent(core.Events.keyDown);
+  Stream<core.EventData/*=core.KeyDown*/ > get onBwuKeyDown =>
+      _eventBus.onEvent/*<core.KeyDown>*/(core.Events.keyDown);
 
-  Stream<core.MouseEnter> get onBwuMouseEnter =>
-      _eventBus.onEvent(core.Events.mouseEnter);
+  Stream<core.EventData/*=core.MouseEnter*/ > get onBwuMouseEnter =>
+      _eventBus.onEvent/*<core.MouseEnter>*/(core.Events.mouseEnter);
 
-  Stream<core.MouseLeave> get onBwuMouseLeave =>
-      _eventBus.onEvent(core.Events.mouseLeave);
+  Stream<core.EventData/*=core.MouseLeave*/ > get onBwuMouseLeave =>
+      _eventBus.onEvent/*<core.MouseLeave>*/(core.Events.mouseLeave);
 
-  Stream<core.PasteCells> get onBwuPasteCells =>
-      _eventBus.onEvent(core.Events.pasteCells);
+  Stream<core.EventData/*=core.PasteCells*/ > get onBwuPasteCells =>
+      _eventBus.onEvent/*<core.PasteCells>*/(core.Events.pasteCells);
 
-  Stream<core.SelectedRangesChanged> get onBwuSelectedRangesChanged =>
-      _eventBus.onEvent(core.Events.selectedRangesChanged);
+  Stream<core.EventData/*=core.SelectedRangesChanged*/ >
+      get onBwuSelectedRangesChanged =>
+          _eventBus.onEvent/*<core.SelectedRangesChanged>*/(
+              core.Events.selectedRangesChanged);
 
-  Stream<core.SelectedRowsChanged> get onBwuSelectedRowsChanged =>
-      _eventBus.onEvent(core.Events.selectedRowsChanged);
+  Stream<core.EventData/*=core.SelectedRowsChanged*/ >
+      get onBwuSelectedRowsChanged =>
+          _eventBus.onEvent/*<core.SelectedRowsChanged>*/(
+              core.Events.selectedRowsChanged);
 
-  Stream<core.Scroll> get onBwuScroll => _eventBus.onEvent(core.Events.scroll);
+  Stream<core.EventData/*=core.Scroll*/ > get onBwuScroll =>
+      _eventBus.onEvent/*<core.Scroll>*/(core.Events.scroll);
 
-  Stream<core.Sort> get onBwuSort => _eventBus.onEvent(core.Events.sort);
+  Stream<core.EventData/*=core.Sort*/ > get onBwuSort =>
+      _eventBus.onEvent/*<core.Sort>*/(core.Events.sort);
 
-  Stream<core.ValidationError> get onBwuValidationError =>
-      _eventBus.onEvent(core.Events.validationError);
+  Stream<core.EventData/*=core.ValidationError*/ > get onBwuValidationError =>
+      _eventBus.onEvent/*<core.ValidationError>*/(core.Events.validationError);
 
-  Stream<core.ViewportChanged> get onBwuViewportChanged =>
-      _eventBus.onEvent(core.Events.viewportChanged);
+  Stream<core.EventData/*=core.ViewportChanged*/ > get onBwuViewportChanged =>
+      _eventBus.onEvent/*<core.ViewportChanged>*/(core.Events.viewportChanged);
 }

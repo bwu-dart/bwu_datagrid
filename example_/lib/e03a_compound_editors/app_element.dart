@@ -59,12 +59,12 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
       final MapDataItemProvider<core.ItemBase> data =
           new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
         int from = new math.Random().nextInt(100);
-        data.items.add(new MapDataItem(<String, dynamic>{
+        data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
           'title': 'Task ${i}',
           'from': from,
           'to': from + new math.Random().nextInt(100)

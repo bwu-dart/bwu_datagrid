@@ -93,7 +93,7 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void gotoFirst([_, __]) {
+  void gotoFirst([dynamic _, dynamic __]) {
     updateNavState();
     if (navState.canGotoFirst) {
       _dataView.setPagingOptions(new PagingInfo(pageNum: 0));
@@ -101,7 +101,7 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void gotoLast([_, __]) {
+  void gotoLast([dynamic _, dynamic __]) {
     updateNavState();
     if (navState.canGotoLast) {
       _dataView.setPagingOptions(
@@ -110,7 +110,7 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void gotoPrev([_, __]) {
+  void gotoPrev([dynamic _, dynamic __]) {
     updateNavState();
     if (navState.canGotoPrev) {
       _dataView.setPagingOptions(
@@ -119,7 +119,7 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void gotoNext([_, __]) {
+  void gotoNext([dynamic _, dynamic __]) {
     updateNavState();
     if (navState.canGotoNext) {
       _dataView.setPagingOptions(
@@ -128,7 +128,7 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void pageSizeClickHandler(CustomEventWrapper e, [_]) {
+  void pageSizeClickHandler(CustomEventWrapper e, [dynamic _]) {
     int pagesize = utils.parseInt((e.target as dom.Element).dataset['value'],
         onErrorDefault: 0);
     //if (pagesize != 0) {
@@ -142,17 +142,17 @@ class BwuPager extends PolymerElement {
   }
 
   @reflectable
-  void toggleMouseOver(CustomEventWrapper e, [_]) {
+  void toggleMouseOver(CustomEventWrapper e, [dynamic _]) {
     (e.currentTarget as dom.Element).classes.add('ui-state-hover');
   }
 
   @reflectable
-  void toggleMouseOut(CustomEventWrapper e, [_]) {
+  void toggleMouseOut(CustomEventWrapper e, [dynamic _]) {
     (e.currentTarget as dom.Element).classes.remove('ui-state-hover');
   }
 
   @reflectable
-  void togglePagerSettingsHidden([_, __]) {
+  void togglePagerSettingsHidden([dynamic _, dynamic __]) {
     set('pagerSettingsHidden', !pagerSettingsHidden);
   }
 

@@ -13,11 +13,11 @@ dependencies:
   bwu_log: ^0.1.0
   bwu_utils: '>=0.1.0 <0.2.0'
   dart_to_js_script_rewriter: '^1.0.1'
-  meta: ^0.12.0
+  meta: '>=0.12.0 < 2.0.0'
   polymer: ^1.0.0-rc.16
   polymer_interop: ^1.0.0-rc.9
-  quiver: '>=0.21.3 <0.23.0'
-  reflectable: ^0.5.2
+  quiver: '>=0.21.3 <0.25.0'
+  reflectable: ^1.0.1
   web_components: ^0.12.0
 
 dev_dependencies:

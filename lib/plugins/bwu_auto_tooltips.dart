@@ -41,9 +41,11 @@ class AutoTooltips extends Plugin {
     }
   }
 
-  async.StreamSubscription<core.MouseEnter> mouseEnterSubscription;
+  async.StreamSubscription<core.EventData/*=core.MouseEnter*/ >
+      mouseEnterSubscription;
   //async.StreamSubscription mouseLeaveSubscription;
-  async.StreamSubscription<core.HeaderMouseEnter> headerMouseEnterSubscription;
+  async.StreamSubscription<core.EventData/*=core.HeaderMouseEnter*/ >
+      headerMouseEnterSubscription;
   //async.StreamSubscription headerMouseLeaveSubscription;
 
   /// Initialize plugin.
@@ -94,7 +96,7 @@ class AutoTooltips extends Plugin {
     if (cell != null) {
       final dom.Element node = grid.getCellNode(cell.row, cell.cell);
       String text;
-      if (utils.innerWidth(node) < node.scrollWidth) {
+      if (utils.innerWidth(node as dom.HtmlElement) < node.scrollWidth) {
         text = node.text.trim();
         if (options.maxTooltipLength != null &&
             text.length > options.maxTooltipLength) {
@@ -146,14 +148,14 @@ class AutoTooltips extends Plugin {
     //var detail = e.detail as core.HeaderMouseEnter;
     final Column column = e.data;
     dom.Element node = utils.closest(
-        (e.causedBy.target as dom.Element), '.bwu-datagrid-header-column');
+        (e.causedBy.target as dom.HtmlElement), '.bwu-datagrid-header-column');
     if (node == null) {
-      node = utils.closest(
-          (e.causedBy.target as dom.Element), '.bwu-datagrid-header-column');
+      node = utils.closest((e.causedBy.target as dom.HtmlElement),
+          '.bwu-datagrid-header-column');
     }
     if (column.toolTip == null) {
-      node.attributes["title"] =
-          utils.innerWidth(node) < node.scrollWidth ? column.name : "";
+      node.attributes["title"] = utils.innerWidth(node as dom.HtmlElement) <
+          node.scrollWidth ? column.name : "";
     }
   }
 }

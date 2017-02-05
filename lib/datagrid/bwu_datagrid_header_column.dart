@@ -4,7 +4,7 @@ library bwu_datagrid.datagrid.bwu_datagrid_header_column;
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
-import 'package:bwu_datagrid/datagrid/helpers.dart';
+import 'package:bwu_datagrid/datagrid/helpers.dart' show Column;
 
 @PolymerRegister('bwu-datagrid-header-column')
 class BwuDatagridHeaderColumn extends PolymerElement {
@@ -23,7 +23,7 @@ class BwuDatagridHeaderColumn extends PolymerElement {
 
   @reflectable
   void themeChanged(String newValue, String oldValue) {
-    PolymerDom root = Polymer.dom(this.root);
+    PolymerDom root = new PolymerDom(this.root);
     root
         .querySelectorAll('[bwu-datagrid-theme]')
         .forEach((dom.Element e) => root.removeChild(e));
@@ -32,7 +32,7 @@ class BwuDatagridHeaderColumn extends PolymerElement {
           ..attributes['bwu-datagrid-theme'] = newValue
           ..attributes['include'] =
               (newValue ?? defaultThemeName) + '-column-header',
-        $['theme-placeholder']);
+        $['theme-placeholder'] as dom.Node);
 //    updateStyles();
     PolymerDom.flush();
   }

@@ -37,11 +37,11 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
       final MapDataItemProvider<core.ItemBase> data =
           new MapDataItemProvider<core.ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem(<String, dynamic>{
+        data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
           'title': "Task ${i}",
           'duration': "5 days",
           'percentComplete': new math.Random().nextInt(100).round(),
@@ -53,7 +53,7 @@ class AppElement extends PolymerElement {
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
-          .then((_) => grid.registerPlugin(new AutoTooltips(
+          .then/*<dynamic>*/((_) => grid.registerPlugin(new AutoTooltips(
               new AutoTooltipsOptions(enableForHeaderCells: true))));
     } on NoSuchMethodError catch (e) {
       print('$e\n\n${e.stackTrace}');

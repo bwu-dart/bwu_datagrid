@@ -19,7 +19,10 @@ dynamic main() async {
 // TODO(zoechi)
 // - accept with tab
 
-enum AutoEdit { enabled, disabled, }
+enum AutoEdit {
+  enabled,
+  disabled,
+}
 
 void tests(WebBrowser browser) {
   testsWithEditMode(browser, AutoEdit.disabled);
@@ -585,12 +588,12 @@ Future<WebElement> findCancelButton(wd.WebDriver driver) =>
     findButton(driver, 'Cancel');
 
 /// Find the buttons in the multiline text editor.
-Future<WebElement> findButton(ExtendedWebDriver driver, String text) async {
+Future<WebElement> findButton(wd.WebDriver driver, String text) async {
   return driver
       .findElements(buttonsSelector)
-      .asyncMap((wd.WebElement e) async =>
-          <String, dynamic>{'button': e, 'text': await e.text})
-      .where((Map<dynamic, dynamic> m) => m['text'] == text)
-      .map/*<String>*/((Map<dynamic, dynamic> m) => m['button'] as String)
+      .asyncMap/*<Map >*/(
+          (e) async => <String, dynamic>{'button': e, 'text': await e.text})
+      .where((Map m) => m['text'] == text)
+      .map/*<String>*/((Map m) => m['button'] as String)
       .first as WebElement;
 }

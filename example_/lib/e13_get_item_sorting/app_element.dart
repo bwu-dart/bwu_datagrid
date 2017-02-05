@@ -21,13 +21,13 @@ class CustomMapDataItemProvider extends DataProvider<core.ItemBase> {
   Function _getLength;
 
   CustomMapDataItemProvider(this._getItem, this._getLength)
-      : super(<core.ItemBase<dynamic, dynamic>>[]);
+      : super(<core.ItemBase>[]);
 
   @override
-  int get length => _getLength();
+  int get length => _getLength() as int;
 
   @override
-  DataItem getItem(int index) => _getItem(index);
+  DataItem getItem(int index) => _getItem(index) as DataItem;
 
   @override
   RowMetadata getItemMetadata(int index) => null;
@@ -54,7 +54,7 @@ class AppElement extends PolymerElement {
   math.Random rnd = new math.Random();
   static const int numberOfItems = 25000;
   List<int> items = new List<int>(numberOfItems);
-  Map<dynamic, dynamic> indices;
+  Map indices;
   bool isAsc = true;
   Column currentSortCol = new Column(id: "title");
   int i;
@@ -67,15 +67,15 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
       // prepare the data
       data = new MapDataItemProvider<core.ItemBase>();
 
       for (int i = 0; i < numberOfItems; i++) {
         items[i] = i;
 
-        data.items
-            .add(new MapDataItem(<String, dynamic>{'title': 'Task ${i}'}));
+        data.items.add(new MapDataItem<String, dynamic>(
+            <String, dynamic>{'title': 'Task ${i}'}));
       }
 
       indices = <String, dynamic>{
@@ -87,9 +87,9 @@ class AppElement extends PolymerElement {
 
       // Assign values to the data.
       for (int i = 0; i < numberOfItems; i++) {
-        data.items[indices['c1'][i]]['c1'] = "Value ${i + 1}";
-        data.items[indices['c2'][i]]['c2'] = "Value ${i + 1}";
-        data.items[indices['c3'][i]]['c3'] = "Value ${i + 1}";
+        data.items[indices['c1'][i] as int]['c1'] = "Value ${i + 1}";
+        data.items[indices['c2'][i] as int]['c2'] = "Value ${i + 1}";
+        data.items[indices['c3'][i] as int]['c3'] = "Value ${i + 1}";
       }
 
       CustomMapDataItemProvider dataProvider =
@@ -102,7 +102,7 @@ class AppElement extends PolymerElement {
               dataProvider: dataProvider,
               columns: columns,
               gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         grid.onBwuSort.listen((core.Sort args) {
           currentSortCol = args.sortColumn;
           isAsc = args.sortAsc;
@@ -141,8 +141,9 @@ class AppElement extends PolymerElement {
   // Define function used to get the data and sort it.
   core.ItemBase getItem(int index) {
     return isAsc
-        ? data.items[indices[currentSortCol.id][index]]
-        : data.items[indices[currentSortCol.id][(data.length - 1) - index]];
+        ? data.items[indices[currentSortCol.id][index] as int]
+        : data.items[
+            indices[currentSortCol.id][(data.length - 1) - index] as int];
   }
 
   int getLength() {

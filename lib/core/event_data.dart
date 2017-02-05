@@ -465,7 +465,7 @@ class BeforeDestroy extends EventData {
 
 class BeforeEditCell extends EventData {
   final Cell cell;
-  final DataItem item;
+  final ItemBase item;
   final Column column;
 
   BeforeEditCell(Object sender, {this.cell, this.item, this.column})
@@ -474,7 +474,7 @@ class BeforeEditCell extends EventData {
 
 class CellChange extends EventData {
   final Cell cell;
-  final DataItem item;
+  final ItemBase item;
 
   CellChange(Object sender, this.cell, this.item) : super(sender: sender);
 }
@@ -522,7 +522,7 @@ class Click extends EventData {
   final Cell cell;
 
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   Click(Object sender, this.cell, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -540,7 +540,7 @@ class ContextMenu extends EventData {
   final Cell cell;
 
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   ContextMenu(Object sender, this.cell, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -562,7 +562,7 @@ class DoubleClick extends EventData {
   final Cell cell;
 
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   DoubleClick(Object sender, this.cell, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -624,7 +624,7 @@ class DoubleClick extends EventData {
 class Drag extends EventData {
 //  final Map dd;
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
   dom.Element guide;
   dom.Element selectionProxy;
   int insertBefore;
@@ -646,7 +646,7 @@ class Drag extends EventData {
 class DragEnd extends EventData {
   //final Map dd;
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   dom.Element guide;
   dom.Element selectionProxy;
@@ -668,7 +668,7 @@ class DragEnd extends EventData {
 
 class DragEnter extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   DragEnter(Object sender, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -676,7 +676,7 @@ class DragEnter extends EventData {
 
 class DragLeave extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   DragLeave(Object sender, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -684,7 +684,7 @@ class DragLeave extends EventData {
 
 class DragOver extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   DragOver(Object sender, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -692,7 +692,7 @@ class DragOver extends EventData {
 
 class Drop extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   Drop(Object sender, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -709,7 +709,7 @@ class Drop extends EventData {
 
 class DragStart extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
   List<int> selectedRows;
   int insertBefore;
   dom.Element selectionProxy;
@@ -736,7 +736,7 @@ class HeaderClick extends EventData {
   final Column column;
 
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   HeaderClick(Object sender, this.column, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -746,7 +746,7 @@ class HeaderContextMenu extends EventData {
   final Column column;
 
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   HeaderContextMenu(Object sender, this.column, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -756,7 +756,7 @@ class HeaderMouseEnter extends EventData {
   final Column data;
 
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   HeaderMouseEnter(Object sender, this.data, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -766,7 +766,7 @@ class HeaderMouseLeave extends EventData {
   final String data;
 
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   HeaderMouseLeave(Object sender, this.data, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -784,7 +784,7 @@ class KeyDown extends EventData {
   final Cell cell;
 
   @override
-  dom.KeyboardEvent get causedBy => super.causedBy;
+  dom.KeyboardEvent get causedBy => super.causedBy as dom.KeyboardEvent;
 
   KeyDown(Object sender, this.cell, {dom.KeyboardEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -792,7 +792,7 @@ class KeyDown extends EventData {
 
 class MouseEnter extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   MouseEnter(Object sender, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -800,7 +800,7 @@ class MouseEnter extends EventData {
 
 class MouseLeave extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   MouseLeave(Object sender, {dom.MouseEvent causedBy})
       : super(sender: sender, causedBy: causedBy);
@@ -808,7 +808,7 @@ class MouseLeave extends EventData {
 
 class MoveRows extends EventData {
   @override
-  dom.MouseEvent get causedBy => super.causedBy;
+  dom.MouseEvent get causedBy => super.causedBy as dom.MouseEvent;
 
   List<int> rows;
   int insertBefore;
@@ -860,7 +860,7 @@ class SelectedRowsChanged extends EventData {
   final List<int> rows;
 
   @override
-  dom.CustomEvent get causedBy => super.causedBy;
+  dom.CustomEvent get causedBy => super.causedBy as dom.CustomEvent;
 
   SelectedRowsChanged(Object sender, this.rows, dom.CustomEvent causedBy)
       : super(sender: sender, causedBy: causedBy);
@@ -893,7 +893,7 @@ class RowsChanged extends EventData {
 
 class ValidationError extends EventData {
   final Editor editor;
-  final dom.HtmlElement cellNode;
+  final dom.Element cellNode;
   final ValidationResult validationResults;
   final Cell cell;
   final Column column;

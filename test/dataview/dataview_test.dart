@@ -136,22 +136,22 @@ void main() {
       final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
         expectRowsChangedCalled();
       });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
         expect(e.oldCount, equals(0), reason: "previous arg");
         expect(e.newCount, equals(2), reason: "current arg");
         expectRowCountChangedCalled();
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged >*/((e) {
         expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
@@ -166,12 +166,15 @@ void main() {
 
     test("no events on setItems([])", () {
       final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged >*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       dv.items = <DataItem>[];
       dv.refresh();
     });
@@ -182,29 +185,35 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 0}),
         new MapDataItem<String, int>(<String, int>{'id': 1})
       ];
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged >*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       dv.refresh();
     });
 
     test("no refresh while suspended", () {
       final DataView<core.ItemBase> dv = new DataView<core.ItemBase>();
       dv.beginUpdate();
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       dv.items = <DataItem<String, int>>[
         new MapDataItem<String, int>(<String, int>{'id': 0}),
         new MapDataItem<String, int>(<String, int>{'id': 1})
       ];
-      dv.setFilter((_, __) => true);
+      dv.setFilter((dynamic _, dynamic __) => true);
       dv.refresh();
       expect(dv.length, equals(0), reason: "rows aren't updated until resumed");
     });
@@ -218,27 +227,27 @@ void main() {
       ];
       expect(dv.getItems().length, equals(2),
           reason: "items updated immediately");
-      dv.setFilter((_, __) => true);
+      dv.setFilter((dynamic _, dynamic __) => true);
       dv.refresh();
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
         expect(e.changedRows, equals(<int>[0, 1]), reason: "args");
         expectRowsChangedCalled();
       });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
         expect(e.oldCount, equals(0), reason: "previous arg");
         expect(e.newCount, equals(2), reason: "current arg");
         expectRowCountChangedCalled();
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
         expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
@@ -267,15 +276,18 @@ void main() {
       dv.items = items;
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => expectRowsChangedCalled());
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
+        expectRowsChangedCalled();
+      });
 
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
+        fail("onRowCountChanged called");
+      });
 
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       dv.sort((DataItem x, DataItem y) => x['val'] - y['val'] as int, true);
       expect(dv.getItems(), equals(items),
           reason: "original array should get sorted");
@@ -402,29 +414,30 @@ void main() {
       ];
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
         expectRowsChangedCalled();
         expect(e.changedRows, equals(<int>[0]), reason: "args");
       });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
         expectRowCountChangedCalled();
         expect(e.oldCount, equals(3), reason: "previous arg");
         expect(e.newCount, equals(1), reason: "current arg");
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first
+          .then/*<core.PagingInfoChanged>*/((core.PagingInfoChanged e) {
         expectPagingInfoChangedCalled();
         expect(e.pagingInfo.pageSize, 0, reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, 0, reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, 1, reason: "totalRows arg");
       });
-      dv.setFilter((DataItem o, _) => o['val'] == 1);
+      dv.setFilter((DataItem o, dynamic _) => o['val'] == 1);
       expect(dv.getItems().length, equals(3),
           reason: "original data is still there");
       expect(dv.length, equals(1), reason: "rows are filtered");
@@ -439,28 +452,29 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
       ];
       dv.setFilterArgs(<String, dynamic>{'id': 0});
-      dv.setFilter((dynamic o, dynamic args) => o['val'] >= args['id']);
+      dv.setFilter((Map<String, num> o, Map<String, num> args) =>
+          o['val'] >= args['id']);
       expect(dv.length, equals(3), reason: "nothing is filtered out");
       assertConsistency(dv);
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
         expectRowsChangedCalled();
         expect(e.changedRows, equals(<int>[0]), reason: "args");
       });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
         expectRowCountChangedCalled();
         expect(e.oldCount, equals(3), reason: "previous arg");
         expect(e.newCount, equals(1), reason: "current arg");
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
         expectPagingInfoChangedCalled();
         expect(e.pagingInfo.pageSize, 0, reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, 0, reason: "pageNum arg");
@@ -481,15 +495,18 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 1, 'val': 1}),
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
       ];
-      dv.setFilter((dynamic o, _) => o['val'] == 1);
+      dv.setFilter((dynamic o, dynamic _) => o['val'] == 1);
       expect(dv.length, equals(1), reason: "one row is remaining");
 
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       dv.sort((core.ItemBase x, core.ItemBase y) => x['val'] - y['val'] as int,
           false);
       expect(dv.getItems().length, equals(3),
@@ -506,27 +523,28 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
       ];
 
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
+        fail("onRowsChanged called");
+      });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged >*/((e) {
         expect(e.oldCount, equals(3), reason: "previous arg");
         expect(e.newCount, equals(0), reason: "current arg");
         expectRowCountChangedCalled();
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
         expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, equals(0), reason: "totalRows arg");
         expectPagingInfoChangedCalled();
       });
 
-      dv.setFilter((_, __) => false);
+      dv.setFilter((dynamic _, dynamic __) => false);
       expect(dv.getItems().length, equals(3),
           reason: "original data is still there");
       expect(dv.length, equals(0), reason: "rows are filtered");
@@ -541,27 +559,27 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
       ];
       dv.setFilterArgs(<String, dynamic>{'value': false});
-      dv.setFilter((dynamic o, dynamic args) => args['value']);
+      dv.setFilter((dynamic o, Map<String, bool> args) => args['value']);
       expect(dv.length, equals(0), reason: "all rows are filtered out");
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
         expect(e.changedRows, equals(<int>[0, 1, 2]), reason: "args");
         expectRowsChangedCalled();
       });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged >*/((e) {
         expect(e.oldCount, equals(0), reason: "previous arg");
         expect(e.newCount, equals(3), reason: "current arg");
         expectRowCountChangedCalled();
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
         expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, equals(3), reason: "totalRows arg");
@@ -583,7 +601,7 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 1, 'val': 1}),
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
       ];
-      dv.setFilter((dynamic o, _) {
+      dv.setFilter((dynamic o, dynamic _) {
         if (o['val'] == 1) {
           return true;
         } else if (o['val'] == 4) {
@@ -593,12 +611,15 @@ void main() {
       });
       expect(dv.length, equals(1), reason: "one row is remaining");
 
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       expect(dv.getItems().length, equals(3),
           reason: "original data is still there");
       expect(dv.length, equals(1), reason: "rows are filtered");
@@ -613,7 +634,7 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 1, 'val': 1}),
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
       ];
-      dv.setFilter((Map<String, int> o, _) {
+      dv.setFilter((Map<String, int> o, dynamic _) {
         if (o['val'] == 0) {
           return o['id'] == 2;
         } else if (o['val'] == 1) {
@@ -623,12 +644,15 @@ void main() {
       });
       expect(dv.length, equals(1), reason: "one row is remaining");
 
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged >*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged >*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       expect(dv.getItems().length, equals(3),
           reason: "original data is still there");
       expect(dv.length, equals(1), reason: "rows are filtered");
@@ -646,15 +670,17 @@ void main() {
       ];
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
         expect(e.changedRows, equals(<int>[1]), reason: "args");
         expectRowsChangedCalled();
       });
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged >*/((e) {
+        fail("onPagingInfoChanged called");
+      });
 
       dv.updateItem(
           1, new MapDataItem<String, int>(<String, int>{'id': 1, 'val': 1337}));
@@ -674,13 +700,16 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
         new MapDataItem<String, int>(<String, int>{'id': 3, 'val': 1337})
       ];
-      dv.setFilter((dynamic o, _) => o['val'] != 1337);
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.setFilter((dynamic o, dynamic _) => o['val'] != 1337);
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged >*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       dv.updateItem(
           3, new MapDataItem<String, int>(<String, int>{'id': 3, 'val': 1337}));
       expect(
@@ -699,26 +728,26 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
         new MapDataItem<String, int>(<String, int>{'id': 3, 'val': 1337})
       ];
-      dv.setFilter((dynamic o, _) => o['val'] != 1337);
+      dv.setFilter((dynamic o, dynamic _) => o['val'] != 1337);
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
         expect(e.changedRows, equals(<int>[3]), reason: "args");
         expectRowsChangedCalled();
       });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
         expect(e.oldCount, equals(3), reason: "previous arg");
         expect(e.newCount, equals(4), reason: "current arg");
         expectRowCountChangedCalled();
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged >*/((e) {
         expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, equals(4), reason: "totalRows arg");
@@ -740,22 +769,23 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
         new MapDataItem<String, int>(<String, int>{'id': 3, 'val': 3})
       ];
-      dv.setFilter((dynamic o, _) => o["val"] != 1337);
+      dv.setFilter((dynamic o, dynamic _) => o["val"] != 1337);
 
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
+        fail("onRowsChanged called");
+      });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged >*/((e) {
         expect(e.oldCount, equals(4), reason: "previous arg");
         expect(e.newCount, equals(3), reason: "current arg");
         expectRowCountChangedCalled();
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
         expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, equals(3), reason: "totalRows arg");
@@ -812,23 +842,23 @@ void main() {
       ];
 
       final Function expectRowsChangedCalled =
-          expectAsync(() {}, reason: "onRowsChanged called");
-      dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
         expect(e.changedRows, equals(<int>[3]), reason: "args");
         expectRowsChangedCalled();
       });
 
       final Function expectRowCountChangedCalled =
-          expectAsync(() {}, reason: "onRowCountChanged called");
-      dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged >*/((e) {
         expect(e.oldCount, equals(3), reason: "previous arg");
         expect(e.newCount, equals(4), reason: "current arg");
         expectRowCountChangedCalled();
       });
 
       final Function expectPagingInfoChangedCalled =
-          expectAsync(() {}, reason: "onPagingInfoChanged called");
-      dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+          expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged >*/((e) {
         expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
         expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
         expect(e.pagingInfo.totalRows, equals(4), reason: "totalRows arg");
@@ -856,13 +886,16 @@ void main() {
         new MapDataItem<String, int>(<String, int>{'id': 1, 'val': 1}),
         new MapDataItem<String, int>(<String, int>{'id': 2, 'val': 2}),
       ];
-      dv.setFilter((dynamic o, _) => o["val"] != 1337);
-      dv.onBwuRowsChanged.first
-          .then((core.RowsChanged e) => fail("onRowsChanged called"));
-      dv.onBwuRowCountChanged.first
-          .then((core.RowCountChanged e) => fail("onRowCountChanged called"));
-      dv.onBwuPagingInfoChanged.first.then(
-          (core.PagingInfoChanged e) => fail("onPagingInfoChanged called"));
+      dv.setFilter((dynamic o, dynamic _) => o["val"] != 1337);
+      dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
+        fail("onRowsChanged called");
+      });
+      dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
+        fail("onRowCountChanged called");
+      });
+      dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
+        fail("onPagingInfoChanged called");
+      });
       dv.addItem(
           new MapDataItem<String, int>(<String, int>{'id': 3, 'val': 1337}));
       expect(dv.getItems()[3],
@@ -913,23 +946,23 @@ void main() {
         ];
 
         final Function expectRowsChangedCalled =
-            expectAsync(() {}, reason: "onRowsChanged called");
-        dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+        dv.onBwuRowsChanged.first.then/*<core.RowsChanged >*/((e) {
           expect(e.changedRows, <int>[0, 1, 2, 3], reason: "args");
           expectRowsChangedCalled();
         });
 
         final Function expectRowCountChangedCalled =
-            expectAsync(() {}, reason: "onRowCountChanged called");
-        dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+        dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
           expect(e.oldCount, equals(3), reason: "previous arg");
           expect(e.newCount, equals(4), reason: "current arg");
           expectRowCountChangedCalled();
         });
 
         final Function expectPagingInfoChangedCalled =
-            expectAsync(() {}, reason: "onPagingInfoChanged called");
-        dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+        dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
           expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
           expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
           expect(e.pagingInfo.totalRows, equals(4), reason: "totalRows arg");
@@ -954,23 +987,23 @@ void main() {
         ];
 
         final Function expectRowsChangedCalled =
-            expectAsync(() {}, reason: "onRowsChanged called");
-        dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+        dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
           expect(e.changedRows, equals(<int>[2, 3]), reason: "args");
           expectRowsChangedCalled();
         });
 
         final Function expectRowCountChangedCalled =
-            expectAsync(() {}, reason: "onRowCountChanged called");
-        dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+        dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
           expect(e.oldCount, equals(3), reason: "previous arg");
           expect(e.newCount, equals(4), reason: "current arg");
           expectRowCountChangedCalled();
         });
 
         final Function expectPagingInfoChangedCalled =
-            expectAsync(() {}, reason: "onPagingInfoChanged called");
-        dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+        dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
           expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
           expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
           expect(e.pagingInfo.totalRows, equals(4), reason: "totalRows arg");
@@ -997,23 +1030,23 @@ void main() {
         ];
 
         final Function expectRowsChangedCalled =
-            expectAsync(() {}, reason: "onRowsChanged called");
-        dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+        dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
           expect(e.changedRows, equals(<int>[3]), reason: "args");
           expectRowsChangedCalled();
         });
 
         final Function expectRowCountChangedCalled =
-            expectAsync(() {}, reason: "onRowCountChanged called");
-        dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+        dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
           expect(e.oldCount, equals(3), reason: "previous arg");
           expect(e.newCount, equals(4), reason: "current arg");
           expectRowCountChangedCalled();
         });
 
         final Function expectPagingInfoChangedCalled =
-            expectAsync(() {}, reason: "onPagingInfoChanged called");
-        dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+        dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
           expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
           expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
           expect(e.pagingInfo.totalRows, equals(4), reason: "totalRows arg");
@@ -1075,23 +1108,23 @@ void main() {
         ];
 
         final Function expectRowsChangedCalled =
-            expectAsync(() {}, reason: "onRowsChanged called");
-        dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+        dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
           expect(e.changedRows, equals(<int>[0, 1]), reason: "args");
           expectRowsChangedCalled();
         });
 
         final Function expectRowCountChangedCalled =
-            expectAsync(() {}, reason: "onRowCountChanged called");
-        dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+        dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
           expect(e.oldCount, equals(3), reason: "previous arg");
           expect(e.newCount, equals(2), reason: "current arg");
           expectRowCountChangedCalled();
         });
 
         final Function expectPagingInfoChangedCalled =
-            expectAsync(() {}, reason: "onPagingInfoChanged called");
-        dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+        dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
           expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
           expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
           expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
@@ -1112,23 +1145,23 @@ void main() {
         ];
 
         final Function expectRowsChangedCalled =
-            expectAsync(() {}, reason: "onRowsChanged called");
-        dv.onBwuRowsChanged.first.then((core.RowsChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowsChanged called");
+        dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
           expect(e.changedRows, equals(<int>[1]), reason: "args");
           expectRowsChangedCalled();
         });
 
         final Function expectRowCountChangedCalled =
-            expectAsync(() {}, reason: "onRowCountChanged called");
-        dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+        dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
           expect(e.oldCount, equals(3), reason: "previous arg");
           expect(e.newCount, equals(2), reason: "current arg");
           expectRowCountChangedCalled();
         });
 
         final Function expectPagingInfoChangedCalled =
-            expectAsync(() {}, reason: "onPagingInfoChanged called");
-        dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+        dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
           expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
           expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
           expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");
@@ -1148,20 +1181,21 @@ void main() {
           new MapDataItem<String, int>(<String, int>{'id': 25, 'val': 2})
         ];
 
-        dv.onBwuRowsChanged.first
-            .then((core.RowsChanged e) => fail("onRowsChanged called"));
+        dv.onBwuRowsChanged.first.then/*<core.RowsChanged>*/((e) {
+          fail("onRowsChanged called");
+        });
 
         final Function expectRowCountChangedCalled =
-            expectAsync(() {}, reason: "onRowCountChanged called");
-        dv.onBwuRowCountChanged.first.then((core.RowCountChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onRowCountChanged called");
+        dv.onBwuRowCountChanged.first.then/*<core.RowCountChanged>*/((e) {
           expect(e.oldCount, equals(3), reason: "previous arg");
           expect(e.newCount, equals(2), reason: "current arg");
           expectRowCountChangedCalled();
         });
 
         final Function expectPagingInfoChangedCalled =
-            expectAsync(() {}, reason: "onPagingInfoChanged called");
-        dv.onBwuPagingInfoChanged.first.then((core.PagingInfoChanged e) {
+            expectAsync0/*<Null>*/(() {}, reason: "onPagingInfoChanged called");
+        dv.onBwuPagingInfoChanged.first.then/*<core.PagingInfoChanged>*/((e) {
           expect(e.pagingInfo.pageSize, equals(0), reason: "pageSize arg");
           expect(e.pagingInfo.pageNum, equals(0), reason: "pageNum arg");
           expect(e.pagingInfo.totalRows, equals(2), reason: "totalRows arg");

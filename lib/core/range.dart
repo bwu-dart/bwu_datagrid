@@ -66,8 +66,7 @@ class Range {
   }
 }
 
-@optionalTypeArgs
-abstract class ItemBase<K, V> {
+abstract class ItemBase<K extends Object, V extends Object> {
   Map<K, V> _values = <K, V>{};
   dynamic operator [](K key) {
     return _values[key];
@@ -76,6 +75,8 @@ abstract class ItemBase<K, V> {
   void operator []=(K key, V value) {
     _values[key] = value;
   }
+
+  Iterable<K> get keys => _values.keys;
 }
 
 /// A base class that all special / non-data rows (like Group and GroupTotals) derive from.
@@ -84,7 +85,7 @@ abstract class NonDataItem extends ItemBase {}
 /// Information about a group of rows.
 class Group extends NonDataItem {
   /// Grouping level, starting with 0.
-  num level = 0;
+  int level = 0;
 
   /// Number of rows in the group.
   int get count => rows == null ? 0 : rows.length;

@@ -41,7 +41,7 @@ class GroupingInfo {
     if (comparer == null)
       comparer = (core.ItemBase a, core.ItemBase b) {
       if (a['value'] is bool && b['value'] is bool) {
-        return (a['value'] ? 1 : 0) - (b['value'] ? 1 : 0);
+        return (a['value'] != null ? 1 : 0) - (b['value'] != null ? 1 : 0);
       }
       if (a['value'] is String) {
         return (a['value'] as String).compareTo('${b['value']}');
@@ -49,7 +49,7 @@ class GroupingInfo {
       if (a['value'] == null) {
         return b['value'] == null ? 0 : -1;
       }
-      return a['value'] - b['value'];
+      return (a['value'] as int) - (b['value'] as int);
     };
   }
 }

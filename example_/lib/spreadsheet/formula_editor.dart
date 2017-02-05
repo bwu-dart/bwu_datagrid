@@ -3,7 +3,6 @@ library bwu_datagrid_examples.spreadsheet.formula_editor;
 import 'dart:async' as async;
 
 import 'package:bwu_datagrid/editors/editors.dart';
-import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/plugins/cell_range_selector.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 
@@ -44,7 +43,7 @@ class FormulaEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, Object value) {
+  void applyValue(core.ItemBase item, Object value) {
     return _editor.applyValue(item, value);
   }
 
@@ -65,7 +64,7 @@ class FormulaEditor extends Editor {
   bool get isValueChanged => _editor.isValueChanged;
 
   @override
-  void loadValue(DataItem item) => _editor.loadValue(item);
+  void loadValue(core.ItemBase item) => _editor.loadValue(item);
 
   @override
   String serializeValue() => _editor.serializeValue();

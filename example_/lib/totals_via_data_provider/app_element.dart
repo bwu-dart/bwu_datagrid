@@ -46,7 +46,7 @@ class AppElement extends PolymerElement {
             editor: new IntegerEditor()));
       }
 
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       data = new TotalsDataProvider(<MapDataItem>[], columns);
       for (int i = 0; i < 10; i++) {

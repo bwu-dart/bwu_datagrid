@@ -46,7 +46,7 @@ class CompositeEditorView extends PolymerElement {
 
   @reflectable
   void keyDownHandler(CustomEventWrapper e, [dynamic detail]) {
-    dom.KeyboardEvent original = e.original;
+    dom.KeyboardEvent original = e.original as dom.KeyboardEvent;
     if (original.keyCode == dom.KeyCode.ENTER) {
       grid.getEditController.commitCurrentEdit();
       e.stopPropagation();
@@ -59,12 +59,12 @@ class CompositeEditorView extends PolymerElement {
   }
 
   @reflectable
-  void btnSaveHandler(CustomEventWrapper e, [_]) {
+  void btnSaveHandler(CustomEventWrapper e, [dynamic _]) {
     grid.getEditController.commitCurrentEdit();
   }
 
   @reflectable
-  void btnCancelHandler(CustomEventWrapper e, [_]) {
+  void btnCancelHandler(CustomEventWrapper e, [dynamic _]) {
     grid.getEditController.cancelCurrentEdit();
   }
 

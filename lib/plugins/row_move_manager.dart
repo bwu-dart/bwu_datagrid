@@ -54,7 +54,7 @@ class RowMoveManager extends Plugin {
   }
 
   void _handleDragStart(core.DragStart e) {
-    Cell cell = grid.getCellFromTarget(e.causedBy.target);
+    Cell cell = grid.getCellFromTarget(e.causedBy.target as dom.HtmlElement);
 
     if (cancelEditOnDrag && grid.getEditorLock.isActive) {
       grid.getEditorLock.cancelCurrentEdit();
@@ -96,7 +96,7 @@ class RowMoveManager extends Plugin {
         ..classes.add('bwu-datagrid-reorder-proxy')
         ..style.position = "absolute"
         ..style.zIndex = "99999"
-        ..style.width = '${utils.innerWidth(_canvas)}px'
+        ..style.width = '${utils.innerWidth(_canvas as dom.HtmlElement)}px'
         ..style.height = '${rowHeight * selectedRows.length}px';
       _canvas.append(_selectionProxy);
 
@@ -104,7 +104,7 @@ class RowMoveManager extends Plugin {
         ..classes.add('bwu-datagrid-reorder-guide')
         ..style.position = "absolute"
         ..style.zIndex = "99998"
-        ..style.width = '${utils.innerWidth(_canvas)}px'
+        ..style.width = '${utils.innerWidth(_canvas as dom.HtmlElement)}px'
         ..style.top = '-1000px';
       _canvas.append(_guide);
     });
@@ -117,7 +117,7 @@ class RowMoveManager extends Plugin {
 
     e.preventDefault();
 
-    final int top = e.causedBy.client.y - _canvasTop;
+    final int top = e.causedBy.client.y.toInt() - _canvasTop;
 
     // _selectionProxy is created async to work around the browser firing
     // dragEnd immediately after dragStart when the DOM is modified in dragStart
@@ -188,9 +188,9 @@ class RowMoveManager extends Plugin {
     e.preventDefault();
   }
 
-  async.Stream<core.BeforeMoveRows> get onBwuBeforeMoveRows =>
-      _eventBus.onEvent(core.Events.beforeMoveRows);
+  async.Stream<core.EventData /*= core.BeforeMoveRows*/> get onBwuBeforeMoveRows =>
+      _eventBus.onEvent /*<core.BeforeMoveRows>*/(core.Events.beforeMoveRows);
 
-  async.Stream<core.MoveRows> get onBwuMoveRows =>
-      _eventBus.onEvent(core.Events.moveRows);
+  async.Stream<core.EventData /*=core.MoveRows*/> get onBwuMoveRows =>
+      _eventBus.onEvent /*<core.MoveRows>*/(core.Events.moveRows);
 }

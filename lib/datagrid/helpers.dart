@@ -10,7 +10,6 @@ import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_pro
 import 'package:collection/collection.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:polymer/polymer.dart';
-import 'package:meta/meta.dart' show optionalTypeArgs;
 
 abstract class DataProvider<T extends core.ItemBase> {
   List<T> _items;
@@ -117,13 +116,13 @@ typedef Editor EditorFactory(Column column);
 
 typedef Formatter FormatterFactory(Column column);
 
-@optionalTypeArgs
-abstract class DataItem<K, V> extends ItemBase<K, V> {
+abstract class DataItem<K extends Object, V extends Object>
+    extends ItemBase<K, V> {
   bool collapsed;
 }
 
-@optionalTypeArgs
-class MapDataItem<K, V> extends DelegatingMap<K, V> implements DataItem<K, V> {
+class MapDataItem<K extends Object, V extends Object>
+    extends DelegatingMap<K, V> implements DataItem<K, V> {
   @override
   bool collapsed = false;
 
@@ -163,15 +162,18 @@ class EditCommand {
       this.undo});
 }
 
+typedef bool CommitCurrentEditFunction();
+typedef bool CancelCurrentEditFunction();
+
 class EditController {
-  Function commitCurrentEdit;
-  Function cancelCurrentEdit;
+  CommitCurrentEditFunction commitCurrentEdit;
+  CancelCurrentEditFunction cancelCurrentEdit;
 
   EditController(this.commitCurrentEdit, this.cancelCurrentEdit);
 }
 
 typedef void AsyncPostRenderFn(
-    dom.Element target, int row, DataItem dataContext, Column colDef);
+    dom.Element target, int row, ItemBase dataContext, Column colDef);
 
 class Column extends JsProxy {
   @reflectable

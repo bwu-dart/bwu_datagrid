@@ -30,7 +30,7 @@ class AvgTotalsFormatter extends core.GroupTotalsFormatter {
   void format(dom.Element target, core.GroupTotals totals, Column columnDef) {
     double val;
     if (totals['avg'] != null && totals['avg'][columnDef.field] != null) {
-      val = totals['avg'][columnDef.field];
+      val = totals['avg'][columnDef.field] as double;
     }
     if (val != null) {
       target.appendHtml("avg: ${val.round()}%");
@@ -46,7 +46,7 @@ class SumTotalsFormatter extends core.GroupTotalsFormatter {
     //target.appendHtml(value);
     double val;
     if (totals['sum'] != null && totals['sum'][columnDef.field] != null) {
-      val = totals['sum'][columnDef.field];
+      val = totals['sum'][columnDef.field] as double;
     }
     if (val != null) {
       target.appendHtml("total: ${(val * 100).round() / 100}");
@@ -177,20 +177,21 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       final GroupItemMetadataProvider groupItemMetadataProvider =
           new GroupItemMetadataProvider();
-      dataView = new DataView<core.ItemBase>(options: new DataViewOptions(
-          groupItemMetadataProvider: groupItemMetadataProvider,
-          inlineFilters: true));
+      dataView = new DataView<core.ItemBase>(
+          options: new DataViewOptions(
+              groupItemMetadataProvider: groupItemMetadataProvider,
+              inlineFilters: true));
 
       grid
           .setup(
               dataProvider: dataView,
               columns: columns,
               gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         grid.registerPlugin(new GroupItemMetadataProvider());
         grid.setSelectionModel = new CellSelectionModel();
 
@@ -247,7 +248,7 @@ class AppElement extends PolymerElement {
   async.Timer _pendingUpdateFilter;
 
   @reflectable
-  void thresholdChanged([_, __]) {
+  void thresholdChanged([dynamic _, dynamic __]) {
     core.globalEditorLock.cancelCurrentEdit();
 
     if (_pendingUpdateFilter != null) {
@@ -277,12 +278,12 @@ class AppElement extends PolymerElement {
     prevPercentCompleteThreshold = percentCompleteThreshold;
   }
 
-  bool myFilter(core.ItemBase item, Map<dynamic, dynamic> args) {
-    return item["percentComplete"] >= args['percentComplete'];
+  bool myFilter(core.ItemBase item, Map args) {
+    return (item["percentComplete"] as num) >= (args['percentComplete'] as num);
   }
 
-  int percentCompleteSort(Map<dynamic, dynamic> a, Map<dynamic, dynamic> b) {
-    return a["percentComplete"] - b["percentComplete"];
+  int percentCompleteSort(Map a, Map b) {
+    return (a["percentComplete"] as int) - (b["percentComplete"] as int);
   }
 
   int comparer(core.ItemBase a, core.ItemBase b) {
@@ -309,11 +310,11 @@ class AppElement extends PolymerElement {
     if (x is bool) {
       return x == true ? 1 : 0;
     }
-    return (x == y ? 0 : (x > y ? 1 : -1));
+    return (x == y ? 0 : ((x as num) > (y as num) ? 1 : -1));
   }
 
   @reflectable
-  void groupByDuration([_, __]) {
+  void groupByDuration([dynamic _, dynamic __]) {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
@@ -328,12 +329,12 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void groupByDurationOrderByCountHandler([_, __]) {
+  void groupByDurationOrderByCountHandler([dynamic _, dynamic __]) {
     groupByDurationOrderByCount();
   }
 
   @reflectable
-  void groupByDurationOrderByCountDoAggregateHandler([_, __]) {
+  void groupByDurationOrderByCountDoAggregateHandler([dynamic _, dynamic __]) {
     groupByDurationOrderByCount(true);
   }
 
@@ -354,7 +355,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void groupByDurationEffortDriven([_, __]) {
+  void groupByDurationEffortDriven([dynamic _, dynamic __]) {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
@@ -378,7 +379,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void groupByDurationEffortDrivenPercent([_, __]) {
+  void groupByDurationEffortDrivenPercent([dynamic _, dynamic __]) {
     dataView.setGrouping(<GroupingInfo>[
       new GroupingInfo(
           getter: "duration",
@@ -408,7 +409,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void loadDataHandler(dom.Event e, [_]) {
+  void loadDataHandler(dom.Event e, [dynamic _]) {
     int count = int.parse((e.target as dom.Element).dataset['count']);
     loadData(count);
   }
@@ -422,7 +423,7 @@ class AppElement extends PolymerElement {
     //var timer = new Stopwatch()..start();
     data = new List<MapDataItem>.generate(
         count,
-        (int i) => new MapDataItem(<String, dynamic>{
+        (int i) => new MapDataItem<String, dynamic>(<String, dynamic>{
               "id": "id_${i}",
               "num": i,
               "title": "Task ${i}",
@@ -441,17 +442,17 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void groupClearHandler([_, __]) {
+  void groupClearHandler([dynamic _, dynamic __]) {
     dataView.setGrouping(<GroupingInfo>[]);
   }
 
   @reflectable
-  void collapseAllGroupsHandler([_, __]) {
+  void collapseAllGroupsHandler([dynamic _, dynamic __]) {
     dataView.collapseAllGroups();
   }
 
   @reflectable
-  void expandAllGroupsHandler([_, __]) {
+  void expandAllGroupsHandler([dynamic _, dynamic __]) {
     dataView.expandAllGroups();
   }
 }

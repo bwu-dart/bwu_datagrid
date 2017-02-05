@@ -16,7 +16,7 @@ class FilterForm extends PolymerElement {
   String searchString = '';
 
   @reflectable
-  void clearSearch(CustomEventWrapper e, [_]) {
+  void clearSearch(CustomEventWrapper e, [dynamic _]) {
     if ((e.original as dom.KeyboardEvent).keyCode == dom.KeyCode.ESC) {
       set('searchString', '');
     }

@@ -92,8 +92,9 @@ class CellRangeSelector extends Plugin {
         canvasBounds.left.round(), canvasBounds.top.round());
     e.causedBy.dataTransfer.setDragImage(_dummyProxy, 0, 0);
 
-    Cell start = grid.getCellFromPoint(e.causedBy.client.x - _canvasOrigin.x,
-        e.causedBy.client.y - _canvasOrigin.y);
+    Cell start = grid.getCellFromPoint(
+        e.causedBy.client.x.toInt() - _canvasOrigin.x,
+        e.causedBy.client.y.toInt() - _canvasOrigin.y);
 
     _range = new core.Range(start.row, start.cell);
 
@@ -106,8 +107,9 @@ class CellRangeSelector extends Plugin {
     }
     e.preventDefault();
 
-    final Cell end = grid.getCellFromPoint(e.causedBy.page.x - _canvasOrigin.x,
-        e.causedBy.page.y - _canvasOrigin.y);
+    final Cell end = grid.getCellFromPoint(
+        e.causedBy.page.x.toInt() - _canvasOrigin.x,
+        e.causedBy.page.y.toInt() - _canvasOrigin.y);
 
     if (!grid.canCellBeSelected(end.row, end.cell)) {
       return;
@@ -133,11 +135,14 @@ class CellRangeSelector extends Plugin {
         new core.CellRangeSelected(this, _range));
   }
 
-  async.Stream<core.BeforeCellRangeSelected> get onBwuBeforeCellRangeSelected =>
-      _eventBus.onEvent(core.Events.beforeCellRangeSelected);
+  async.Stream<core.EventData/*=core.BeforeCellRangeSelected*/ >
+      get onBwuBeforeCellRangeSelected =>
+          _eventBus.onEvent/*<core.BeforeCellRangeSelected>*/(
+              core.Events.beforeCellRangeSelected);
 
-  async.Stream<core.CellRangeSelected> get onBwuCellRangeSelected =>
-      _eventBus.onEvent(core.Events.cellRangeSelected);
+  async.Stream<core.EventData/*=core.CellRangeSelected*/ >
+      get onBwuCellRangeSelected => _eventBus
+          .onEvent/*<core.CellRangeSelected>*/(core.Events.cellRangeSelected);
 }
 
 //    $.extend(this, {

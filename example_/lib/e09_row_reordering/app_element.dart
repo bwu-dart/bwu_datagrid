@@ -77,24 +77,24 @@ class AppElement extends PolymerElement {
     super.attached();
 
     try {
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
 
       // prepare the data
       data = new MapDataItemProvider<core.ItemBase>();
-      data.items.add(new MapDataItem(
+      data.items.add(new MapDataItem<String, dynamic>(
           <String, dynamic>{'name': "Make a list", 'complete': true}));
-      data.items.add(new MapDataItem(
+      data.items.add(new MapDataItem<String, dynamic>(
           <String, dynamic>{'name': "Check it twice", 'complete': false}));
-      data.items.add(new MapDataItem(<String, dynamic>{
+      data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
         'name': "Find out who's naughty",
         'complete': false
       }));
-      data.items.add(new MapDataItem(
+      data.items.add(new MapDataItem<String, dynamic>(
           <String, dynamic>{'name': "Find out who's nice", 'complete': false}));
 
       grid
           .setup(dataProvider: data, columns: columns, gridOptions: gridOptions)
-          .then((_) {
+          .then/*<dynamic>*/((_) {
         grid.setSelectionModel = new RowSelectionModel();
 
         final RowMoveManager moveRowsPlugin =
@@ -130,7 +130,7 @@ class AppElement extends PolymerElement {
         });
 
         grid.onBwuAddNewRow.listen((core.AddNewRow e) {
-          MapDataItem item = new MapDataItem(
+          MapDataItem item = new MapDataItem<String, dynamic>(
               <String, dynamic>{'name': "New task", 'complete': false});
           //$.extend(item, args.item);
           data.items.add(item);
@@ -151,7 +151,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void zoneDropHandler(CustomEventWrapper e, [_]) {
+  void zoneDropHandler(CustomEventWrapper e, [dynamic _]) {
     if ((e.original as dom.MouseEvent)
             .dataTransfer
             .getData('text/bwu-datagrid-recycle') !=
@@ -217,7 +217,7 @@ class AppElement extends PolymerElement {
   dom.SpanElement _dragProxy;
 
   @reflectable
-  void dragEndHandler(core.DragEnd e, [_]) {
+  void dragEndHandler(core.DragEnd e, [dynamic _]) {
     if (_dragProxy != null) {
       _dragProxy.remove();
     }
@@ -233,7 +233,7 @@ class AppElement extends PolymerElement {
       return;
     }
 
-    Map<dynamic, dynamic> dragData = new Map<dynamic, dynamic>();
+    Map dragData = new Map<dynamic, dynamic>();
     dragData['row'] = cell.row;
 
     if (cell.row >= data.items.length) {

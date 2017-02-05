@@ -2,6 +2,7 @@ library bwu_datagrid.editors;
 
 import 'dart:html' as dom;
 
+import 'package:bwu_datagrid/core/core.dart' show ItemBase;
 import 'package:bwu_utils/bwu_utils_browser.dart' as utils;
 
 import 'package:bwu_datagrid/bwu_datagrid.dart';
@@ -22,13 +23,13 @@ abstract class Editor {
   Function cancelChanges;
 
   void destroy();
-  void loadValue(DataItem item);
+  void loadValue(ItemBase item);
 
   /// Normally returns [String] but for example for
   /// compound editors it may return [Map]
   dynamic serializeValue();
   bool get isValueChanged;
-  void applyValue(DataItem item, dynamic value);
+  void applyValue(ItemBase item, dynamic value);
   void focus();
   void show() {}
   void hide() {}
@@ -67,7 +68,7 @@ class EditorArgs {
   NodeBox position;
   dom.Element container;
   Column column;
-  DataItem item;
+  ItemBase item;
 
   CommitChangesFn commitChanges;
   CancelChangesFn cancelChanges;
@@ -117,7 +118,7 @@ class TextEditor extends Editor {
       ..select();
   }
 
-  dom.InputElement input;
+  dom.TextInputElement input;
   String defaultValue;
 
   @override
@@ -139,11 +140,12 @@ class TextEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
-    defaultValue =
-        item[args.column.field] != null ? item[args.column.field] : "";
+  void loadValue(ItemBase item) {
+    defaultValue = item[args.column.field] != null
+        ? item[args.column.field] as String
+        : "";
     input.value = defaultValue;
-    input.defaultValue = defaultValue;
+    (input as dom.InputElement).defaultValue = defaultValue;
     input.select();
   }
 
@@ -151,7 +153,7 @@ class TextEditor extends Editor {
   String serializeValue() => input.value;
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     assert(state is String);
     item[args.column.field] = state;
   }
@@ -178,8 +180,8 @@ class TextEditor extends Editor {
 
 class IntegerEditor extends Editor {
   EditorArgs args;
-  dom.InputElement input;
-  Object defaultValue;
+  dom.TextInputElement input;
+  String defaultValue;
 
   @override
   IntegerEditor newInstance(EditorArgs args) {
@@ -214,10 +216,10 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
-    defaultValue = item[args.column.field].toString();
+  void loadValue(ItemBase item) {
+    defaultValue = '${item[args.column.field]}';
     input.value = defaultValue;
-    input.defaultValue = defaultValue;
+    (input as dom.InputElement).defaultValue = defaultValue;
     input.select();
   }
 
@@ -227,7 +229,7 @@ class IntegerEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     int val;
     if (state is int) {
       val = state;
@@ -258,7 +260,7 @@ class IntegerEditor extends Editor {
 }
 
 class DateEditor extends Editor {
-  dom.InputElement input;
+  dom.DateInputElement input;
   String defaultValue;
   bool calendarOpen = false;
   EditorArgs args;
@@ -285,7 +287,7 @@ class DateEditor extends Editor {
 //        var calendarOpen = false;
 //      }
 //    });
-    input.width = input.offsetWidth.round() - 18;
+    (input as dom.InputElement).width = input.offsetWidth.round() - 18;
   }
 
   @override
@@ -328,13 +330,12 @@ class DateEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
-    defaultValue = item[args.column.field] != null
-        ? item[args.column.field].toString()
-        : '';
+  void loadValue(ItemBase item) {
+    defaultValue =
+        item[args.column.field] != null ? '${item[args.column.field]}' : '';
     input.value = defaultValue;
-    input.defaultValue = defaultValue;
-    input.select();
+    (input as dom.InputElement).defaultValue = defaultValue;
+    (input as dom.InputElement).select();
   }
 
   @override
@@ -343,7 +344,7 @@ class DateEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     item[args.column.field] = state;
   }
 
@@ -396,8 +397,8 @@ class YesNoSelectEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
-    defaultValue = item[args.column.field];
+  void loadValue(ItemBase item) {
+    defaultValue = '${item[args.column.field]}';
     select.value = defaultValue != null ? "yes" : "no";
     //$select.select();
   }
@@ -408,7 +409,7 @@ class YesNoSelectEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     assert(state is num);
     item[args.column.field] = state;
   }
@@ -425,7 +426,7 @@ class YesNoSelectEditor extends Editor {
 }
 
 class CheckboxEditor extends Editor {
-  dom.InputElement select;
+  dom.CheckboxInputElement select;
   bool defaultValue;
   EditorArgs args;
 
@@ -456,7 +457,7 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
+  void loadValue(ItemBase item) {
     final Object val = item[args.column.field];
     defaultValue = (val is bool && val) ||
         (val is String &&
@@ -475,7 +476,7 @@ class CheckboxEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     assert(state is String);
     item[args.column.field] = state.toLowerCase() == 'true' ? true : false;
   }
@@ -493,7 +494,7 @@ class CheckboxEditor extends Editor {
 }
 
 class PercentCompleteEditor extends Editor {
-  dom.InputElement input;
+  dom.TextInputElement input;
   dom.Element picker;
   dom.RangeInputElement slider;
   int defaultValue;
@@ -508,7 +509,8 @@ class PercentCompleteEditor extends Editor {
 
   PercentCompleteEditor._(this.args) {
     input = new dom.TextInputElement()..classes.add('editor-percentcomplete');
-    input.style.width = '${utils.innerWidth(args.container) - 25}px';
+    input.style.width =
+        '${utils.innerWidth(args.container as dom.HtmlElement) - 25}px';
     args.container.append(input);
 
     picker = new dom.DivElement()..classes.add('editor-percentcomplete-picker');
@@ -588,8 +590,8 @@ class PercentCompleteEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
-    Object val = item[args.column.field];
+  void loadValue(ItemBase item) {
+    int val = item[args.column.field] as int;
     if (val == null) {
       val = 0;
     }
@@ -617,7 +619,7 @@ class PercentCompleteEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     assert(state is String);
     item[args.column.field] = utils.parseInt(state);
   }
@@ -748,8 +750,8 @@ class LongTextEditor extends Editor {
   }
 
   @override
-  void loadValue(DataItem item) {
-    input.value = (defaultValue = item[args.column.field]);
+  void loadValue(ItemBase item) {
+    input.value = (defaultValue = '${item[args.column.field]}');
     input.select();
   }
 
@@ -759,7 +761,7 @@ class LongTextEditor extends Editor {
   }
 
   @override
-  void applyValue(DataItem item, dynamic state) {
+  void applyValue(ItemBase item, dynamic state) {
     assert(state is String);
     item[args.column.field] = state;
   }

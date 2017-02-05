@@ -16,7 +16,7 @@ import 'package:bwu_datagrid_examples/checkbox_row_select/app_element.dart';
 dom.CheckboxInputElement getSelectAllCheckBox() {
   return dom
       .querySelector('* /deep/ bwu-datagrid-header-column#_checkbox_selector')
-      .childNodes[0];
+      .childNodes[0] as dom.CheckboxInputElement;
   // grid.querySelector('* /deep/ bwu-datagrid-header-column#_checkbox_selector') ...
   // didn't work in FireFox
 }
@@ -38,7 +38,7 @@ dynamic main() async {
       // allow the grid finish initialization
       await new Future<Null>(() {});
 
-      grid = dom.querySelector('app-element /deep/ #myGrid');
+      grid = dom.querySelector('app-element /deep/ #myGrid') as BwuDatagrid;
       expect(grid, new isInstanceOf<BwuDatagrid>());
     });
 
@@ -52,8 +52,9 @@ dynamic main() async {
       // set up
       const int sampleRow = 3;
       const int checkBoxCol = 0;
-      final dom.CheckboxInputElement checkBox =
-          grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
+      final dom.CheckboxInputElement checkBox = grid
+          .getCellNode(sampleRow, checkBoxCol)
+          .childNodes[0] as dom.CheckboxInputElement;
       expect(checkBox, new isInstanceOf<dom.CheckboxInputElement>());
       expect(checkBox.checked, isFalse);
       expect(grid.getGridOptions.selectedCellCssClass, isNotEmpty);
@@ -75,8 +76,9 @@ dynamic main() async {
       // set up
       const int sampleRow = 3;
       const int checkBoxCol = 0;
-      dom.CheckboxInputElement checkBox =
-          grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
+      dom.CheckboxInputElement checkBox = grid
+          .getCellNode(sampleRow, checkBoxCol)
+          .childNodes[0] as dom.CheckboxInputElement;
       expect(checkBox, new isInstanceOf<dom.CheckboxInputElement>());
       expect(checkBox.checked, isFalse);
       expect(grid.getGridOptions.selectedCellCssClass, isNotEmpty);
@@ -86,7 +88,8 @@ dynamic main() async {
       expect(checkBox.checked, isTrue);
 
       // get checkBox again because the grid recreates it when it is rendered
-      checkBox = grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
+      checkBox = grid.getCellNode(sampleRow, checkBoxCol).childNodes[0]
+          as dom.CheckboxInputElement;
 
       checkBox.click();
 
@@ -120,7 +123,8 @@ dynamic main() async {
         for (int col = 0; col < grid.columns.length; col++) {
           final dom.Element node = grid.getCellNode(row, col);
           if (col == 0) {
-            final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
+            final dom.CheckboxInputElement rowCheckBox =
+                node.childNodes[0] as dom.CheckboxInputElement;
             expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
             expect(rowCheckBox.checked, isTrue);
           }
@@ -146,8 +150,9 @@ dynamic main() async {
       checkBox.click();
       const int sampleRow = 3;
       const int checkBoxCol = 0;
-      dom.CheckboxInputElement rowCheckBox =
-          grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
+      dom.CheckboxInputElement rowCheckBox = grid
+          .getCellNode(sampleRow, checkBoxCol)
+          .childNodes[0] as dom.CheckboxInputElement;
       expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
       expect(rowCheckBox.checked, isTrue);
 
@@ -167,7 +172,8 @@ dynamic main() async {
           for (int col = 0; col < grid.columns.length; col++) {
             final dom.Element node = grid.getCellNode(row, col);
             if (col == 0) {
-              final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
+              final dom.CheckboxInputElement rowCheckBox =
+                  node.childNodes[0] as dom.CheckboxInputElement;
               expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
               expect(rowCheckBox.checked, isFalse);
             }
@@ -180,7 +186,8 @@ dynamic main() async {
           for (int col = 0; col < grid.columns.length; col++) {
             final dom.Element node = grid.getCellNode(row, col);
             if (col == 0) {
-              final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
+              final dom.CheckboxInputElement rowCheckBox =
+                  node.childNodes[0] as dom.CheckboxInputElement;
               expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
               expect(rowCheckBox.checked, isTrue);
             }
@@ -208,8 +215,9 @@ dynamic main() async {
       checkBox.click();
       const int sampleRow = 3;
       const int checkBoxCol = 0;
-      dom.CheckboxInputElement rowCheckBox =
-          grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
+      dom.CheckboxInputElement rowCheckBox = grid
+          .getCellNode(sampleRow, checkBoxCol)
+          .childNodes[0] as dom.CheckboxInputElement;
       expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
       expect(rowCheckBox.checked, isTrue);
       // unselect one row
@@ -218,7 +226,8 @@ dynamic main() async {
       checkBox = getSelectAllCheckBox();
       expect(checkBox.checked, isFalse);
 
-      rowCheckBox = grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
+      rowCheckBox = grid.getCellNode(sampleRow, checkBoxCol).childNodes[0]
+          as dom.CheckboxInputElement;
 
       // exercise
       // reselect unselected row
@@ -226,7 +235,8 @@ dynamic main() async {
 
       // verification
       checkBox = getSelectAllCheckBox();
-      rowCheckBox = grid.getCellNode(sampleRow, checkBoxCol).childNodes[0];
+      rowCheckBox = grid.getCellNode(sampleRow, checkBoxCol).childNodes[0]
+          as dom.CheckboxInputElement;
       expect(rowCheckBox.checked, isTrue);
       checkBox = getSelectAllCheckBox();
       expect(checkBox.checked, isTrue);
@@ -238,7 +248,8 @@ dynamic main() async {
         for (int col = 0; col < grid.columns.length; col++) {
           final dom.Element node = grid.getCellNode(row, col);
           if (col == 0) {
-            final dom.CheckboxInputElement rowCheckBox = node.childNodes[0];
+            final dom.CheckboxInputElement rowCheckBox =
+                node.childNodes[0] as dom.CheckboxInputElement;
             expect(rowCheckBox, new isInstanceOf<dom.CheckboxInputElement>());
             expect(rowCheckBox.checked, isTrue);
           }

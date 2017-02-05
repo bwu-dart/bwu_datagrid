@@ -113,8 +113,8 @@ class GroupItemMetadataProvider extends Plugin {
     return new DefaultTotalsCellFormatter();
   }
 
-  async.StreamSubscription<core.Click> _gridClickSubscription;
-  async.StreamSubscription<core.KeyDown> _gridKeyDownSubscription;
+  async.StreamSubscription<core.EventData /*=core.Click*/> _gridClickSubscription;
+  async.StreamSubscription<core.EventData /*=core.KeyDown*/> _gridKeyDownSubscription;
 
   @override
   void destroy() {
@@ -127,7 +127,7 @@ class GroupItemMetadataProvider extends Plugin {
   }
 
   void _handleGridClick(core.Click e) {
-    BwuDatagrid grid = e.sender;
+    BwuDatagrid grid = e.sender as BwuDatagrid;
     core.ItemBase item = grid.getDataItem(e.cell.row);
     if (item != null &&
         item is core.Group &&
@@ -154,7 +154,7 @@ class GroupItemMetadataProvider extends Plugin {
 
   // TODO:  add -/+ handling
   void _handleGridKeyDown(core.KeyDown e) {
-    BwuDatagrid grid = e.sender;
+    BwuDatagrid grid = e.sender as BwuDatagrid;
     if (enableExpandCollapse && (e.causedBy.keyCode == dom.KeyCode.SPACE)) {
       final Cell activeCell = grid.getActiveCell();
       if (activeCell != null) {

@@ -1,7 +1,8 @@
 library bwu_datagrid.dataview;
 
-import 'dart:math' as math;
 import 'dart:async' as async;
+import 'dart:html' as dom;
+import 'dart:math' as math;
 import 'package:bwu_datagrid/groupitem_metadata_providers/groupitem_metadata_providers.dart';
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
@@ -27,10 +28,9 @@ part 'helpers.dart';
 //  });
 
 typedef bool FilterFn(dynamic a, dynamic b);
-typedef List<TItem> _UncompiledFilterFn<TItem>(
-    List<TItem> items, Map<dynamic, dynamic> args);
+typedef List<TItem> _UncompiledFilterFn<TItem>(List<TItem> items, Map args);
 typedef List<TItem> _UncompiledFilterWithCacheFn<TItem>(
-    List<TItem> items, Map<dynamic, dynamic> args, Map<int, bool> cache);
+    List<TItem> items, Map args, Map<int, bool> cache);
 
 class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
   /// A sample Model implementation.
@@ -64,7 +64,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
   Map<String, dynamic> refreshHints = <String,
       dynamic>{}; // TODO make class, if this String stores ids it should be dynamic
   Map<String, dynamic> prevRefreshHints = <String, dynamic>{};
-  Map<dynamic, dynamic> filterArgs;
+  Map filterArgs;
   List<TItem> filteredItems = <TItem>[];
   FilterFn compiledFilter;
   FilterFn compiledFilterWithCaching;
@@ -79,21 +79,25 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
   int pagenum = 0;
   int totalRows = 0;
 
-  core.EventBus<core.EventData> get eventBus => _eventBus;
+  core.EventBus<core.EventData/*=core.EventData*/ > get eventBus => _eventBus;
   final core.EventBus<core.EventData> _eventBus =
       new core.EventBus<core.EventData>();
 
-  async.Stream<core.PagingInfoChanged> get onBwuPagingInfoChanged =>
-      _eventBus.onEvent(core.Events.pagingInfoChanged);
+  async.Stream<core.EventData/*=core.PagingInfoChanged*/ >
+      get onBwuPagingInfoChanged => _eventBus
+          .onEvent/*<core.PagingInfoChanged>*/(core.Events.pagingInfoChanged);
 
-  async.Stream<core.RowCountChanged> get onBwuRowCountChanged =>
-      _eventBus.onEvent(core.Events.rowCountChanged);
+  async.Stream<core.EventData/*=core.RowCountChanged*/ >
+      get onBwuRowCountChanged => _eventBus
+          .onEvent/*<core.RowCountChanged>*/(core.Events.rowCountChanged);
 
-  async.Stream<core.RowsChanged> get onBwuRowsChanged =>
-      _eventBus.onEvent(core.Events.rowsChanged);
+  async.Stream<core.EventData/*=core.RowsChanged*/ > get onBwuRowsChanged =>
+      _eventBus.onEvent/*<core.RowsChanged>*/(core.Events.rowsChanged);
 
-  async.Stream<core.SelectedRowIdsChanged> get onBwuSelectedRowIdsChanged =>
-      _eventBus.onEvent(core.Events.selectedRowIdsChanged);
+  async.Stream<core.EventData/*=core.SelectedRowIdsChanged*/ >
+      get onBwuSelectedRowIdsChanged =>
+          _eventBus.onEvent/*<core.SelectedRowIdsChanged>*/(
+              core.Events.selectedRowIdsChanged);
 
   void beginUpdate() {
     suspend = true;
@@ -108,7 +112,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
     refreshHints = hints;
   }
 
-  void setFilterArgs(Map<dynamic, dynamic> args) {
+  void setFilterArgs(Map args) {
     filterArgs = args;
   }
 
@@ -351,7 +355,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
     final List<Object> ids = <String>[];
     for (int i = 0; i < rowArray.length; i++) {
       if (rowArray[i] < rows.length) {
-        ids.add(rows[rowArray[i]][idProperty]);
+        ids.add(rows[rowArray[i]][idProperty] as String);
       }
     }
     return ids;
@@ -403,22 +407,21 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
 
     core.Group group;
     if (item != null && item is core.Group) {
-      group = item as core.Group;
+      group = item;
     }
     // if this is a group row, make sure totals are calculated and update the title
     if (group != null && group.totals != null && !group.totals.isInitialized) {
       GroupingInfo gi = groupingInfos[group.level];
       if (!gi.isDisplayTotalsRow) {
         calculateTotals(group.totals);
-        group.title =
-            gi.formatter != null ? gi.formatter.format(group) : group.value;
+        group.title = gi.formatter != null
+            ? gi.formatter.format(group)
+            : group.value as dom.Node;
       }
     }
     // if this is a totals row, make sure it's calculated
-    else if (item != null &&
-        item is core.GroupTotals &&
-        !(item as core.GroupTotals).isInitialized) {
-      calculateTotals(item as core.GroupTotals);
+    else if (item != null && item is core.GroupTotals && !item.isInitialized) {
+      calculateTotals(item);
     }
 
     return item;
@@ -632,7 +635,8 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
       }
 
       g.isCollapsed = groupCollapsed != (toggledGroups[g.groupingKey] != null);
-      g.title = gi.formatter != null ? gi.formatter.format(g) : g.value;
+      g.title =
+          gi.formatter != null ? gi.formatter.format(g) : g.value as dom.Node;
     }
   }
 
@@ -752,7 +756,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
 //    return fn;
 //  }
 
-  List<TItem> uncompiledFilter(List<TItem> items, Map<dynamic, dynamic> args) {
+  List<TItem> uncompiledFilter(List<TItem> items, Map args) {
     List<TItem> retval = <TItem>[];
 //    int idx = 0; // TODO(zoechi) why is it unused?
 
@@ -771,7 +775,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
   }
 
   List<TItem> uncompiledFilterWithCaching(
-      List<TItem> items, Map<dynamic, dynamic> args, Map<int, bool> cache) {
+      List<TItem> items, Map args, Map<int, bool> cache) {
     List<TItem> retval = <TItem>[];
 //    int idx = 0; // TODO(zoechi) why is it unused?
     TItem item;
@@ -789,7 +793,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
     return retval;
   }
 
-  Map<dynamic, dynamic> getFilteredAndPagedItems(List<TItem> items) {
+  Map getFilteredAndPagedItems(List<TItem> items) {
     if (filter != null) {
       final _UncompiledFilterFn<TItem>
           batchFilter = /*options.inlineFilters ? compiledFilter :*/ uncompiledFilter;
@@ -837,13 +841,17 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
     int to = newRows != null ? newRows.length : 0;
 
     if (refreshHints != null && refreshHints['ignoreDiffsBefore'] == true) {
-      from = math.max(
-          0, math.min(newRows.length, refreshHints['ignoreDiffsBefore']));
+      from = math.max/*<int>*/(
+          0,
+          math.min/*<int>*/(newRows.length,
+              (refreshHints['ignoreDiffsBefore'] as num).toInt()));
     }
 
     if (refreshHints != null && refreshHints['ignoreDiffsAfter'] == true) {
-      to = math.min(
-          newRows.length, math.max(0, refreshHints['ignoreDiffsAfter']));
+      to = math.min/*<int>*/(
+          newRows.length,
+          math.max/*<int>*/(
+              0, (refreshHints['ignoreDiffsAfter'] as num).toInt()));
     }
 
     final int rl = rows.length;
@@ -883,8 +891,8 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
       filterCache = <int, bool>{};
     }
 
-    Map<dynamic, dynamic> filteredItems = getFilteredAndPagedItems(items);
-    totalRows = filteredItems['totalRows'];
+    Map filteredItems = getFilteredAndPagedItems(items);
+    totalRows = filteredItems['totalRows'] as int;
     List<TItem> newRows = filteredItems['rows'] as List<TItem>;
 
     groups = <core.Group>[];
@@ -892,7 +900,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
       groups = extractGroups(newRows);
       if (groups.length > 0) {
         addTotals(groups);
-        newRows = flattenGroupedRows(groups);
+        newRows = new List<TItem>.from(flattenGroupedRows(groups));
       }
     }
 
@@ -1022,7 +1030,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
 
   // TODO(zoechi) set type annotations
   void syncGridCellCssStyles(grid.BwuDatagrid grid, String key) {
-    Map<int, Map<String, String>> hashById;
+    Map<Object, Map<String, String>> hashById;
     bool inHandler;
 
     void storeCellCssStyles(Map<int, Map<String, String>> hash) {
@@ -1044,7 +1052,7 @@ class DataView<TItem extends core.ItemBase> extends DataProvider<TItem> {
         final Map<int, Map<String, String>> newHash =
             <int, Map<String, String>>{};
         // the id needs to be a valid map key
-        for (final int id in hashById.keys) {
+        for (final Object id in hashById.keys) {
           int row = rowsById[id];
           if (row != null) {
             newHash[row] = hashById[id];

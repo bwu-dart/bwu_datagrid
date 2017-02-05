@@ -96,7 +96,7 @@ class AppElement extends PolymerElement {
   }
 
   @reflectable
-  void undo([_, __]) {
+  void undo([dynamic _, dynamic __]) {
     final EditCommand command = _commandQueue.removeLast();
     if (command != null && globalEditorLock.cancelCurrentEdit()) {
       command.undo();
@@ -112,10 +112,10 @@ class AppElement extends PolymerElement {
     try {
       gridOptions.editCommandHandler = queueAndExecuteCommand;
 
-      grid = $['myGrid'];
+      grid = $['myGrid'] as BwuDatagrid;
       final DataProvider<ItemBase> data = new MapDataItemProvider<ItemBase>();
       for (int i = 0; i < 500; i++) {
-        data.items.add(new MapDataItem(<String, dynamic>{
+        data.items.add(new MapDataItem<String, dynamic>(<String, dynamic>{
           'title': 'Task ${i}',
           "description":
               'This is a sample task description.\n  It can be multiline',

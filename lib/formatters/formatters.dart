@@ -42,7 +42,7 @@ class PercentCompleteFormatter extends CellFormatter {
     target.children.clear();
     if (value == null || value == "") {
       target.text = '-';
-    } else if (value < 50) {
+    } else if ((value as num) < 50) {
       target.append(new dom.SpanElement()
         ..style.color = 'red'
         ..style.fontWeight = 'bold'
@@ -64,9 +64,9 @@ class PercentCompleteBarFormatter extends CellFormatter {
 
     String color;
 
-    if (value < 30) {
+    if ((value as num) < 30) {
       color = 'red';
-    } else if (value < 70) {
+    } else if ((value as num) < 70) {
       color = 'silver';
     } else {
       color = 'green';
@@ -84,7 +84,7 @@ class YesNoFormatter extends CellFormatter {
   @override
   void format(dom.Element target, int row, int cell, dynamic value,
       Column columnDef, core.ItemBase dataContext) {
-    target.text = value ? 'Yes' : 'No';
+    target.text = value != null && '${value}'.isNotEmpty ? 'Yes' : 'No';
   }
 }
 
