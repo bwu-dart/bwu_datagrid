@@ -1,9 +1,7 @@
 library bwu_dart.bwu_datagrid.dataview.test;
 
-import 'package:polymer/polymer.dart';
 import 'package:test/test.dart';
 import 'package:bwu_datagrid/dataview/dataview.dart';
-//import 'package:bwu_datagrid/datagrid/helpers.dart';
 import 'package:bwu_datagrid/core/core.dart' as core;
 import 'package:bwu_datagrid/datagrid/helpers.dart';
 
@@ -95,8 +93,8 @@ void main() {
     test("alternative idProperty", () {
       var dv = new DataView();
       dv.setItems([
-        {'uid': 0},
-        {'uid': 1}
+        new MapDataItem({'uid': 0}),
+        new MapDataItem({'uid': 1})
       ], "uid");
       assertConsistency(dv, "uid");
     });

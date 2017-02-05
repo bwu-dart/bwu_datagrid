@@ -4,8 +4,6 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 import 'dart:math' as math;
 
-import 'package:bwu_datagrid/dataview/dataview.dart';
-
 /***
  * A sample AJAX data store implementation.
  * Right now, it's hooked up to load Hackernews stories, but can
@@ -38,7 +36,7 @@ class RemoteModel {
   }
 
   void clear() {
-    for (final key in data) {
+    for (final key in data.keys) {
       data.remove(key);
     }
     data['length'] = 0;

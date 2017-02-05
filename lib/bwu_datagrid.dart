@@ -2446,7 +2446,7 @@ class BwuDatagrid extends PolymerElement {
   }
 
   void _updateRowPositions() {
-    for (final int row in _rowsCache) {
+    for (final int row in _rowsCache.keys) {
       _rowsCache[row].rowNode.style.top = "${_getRowTop(row)}px";
     }
   }
