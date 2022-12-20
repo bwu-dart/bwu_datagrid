@@ -3,6 +3,8 @@
 
 [![Build Status](https://drone.io/github.com/bwu-dart/bwu_datagrid/status.png)](https://drone.io/github.com/bwu-dart/bwu_datagrid/latest)
 
+# Moved to https://gitlab.com/bewellup/bwu_datagrid
+
 # Welcome to BWU Datagrid
 
 ## BWU Datagrid is an advanced Polymer.dart grid/spreadsheet component
